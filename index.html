@@ -72,6 +72,17 @@
       margin-top : 14px;
     }
 
+    .icon-edit-sucsess{
+      font-family: AppleSDGothicNeo, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 0.4px;
+      margin-right: 14px;
+      margin-top : 14px;
+      border: 1px solid red;
+      padding : 10px 10px 10px 10px;
+    }
+
     .icon-kakao-sucsess{
       font-family: AppleSDGothicNeo, sans-serif;
       font-size: 18px;
@@ -327,7 +338,7 @@
       </div>
       <div class="icon a">
         <img src="assets/btn-close.png" srcset="assets/btn-close@2x.png 2x, assets/btn-close@3x.png 3x" class="icon-images close">
-        <img src="assets/btn-back.png" srcset="assets/btn-back@2x.png 2x, assets/btn-back@3x.png 3x" class="icon-images back">
+        <img onclick="typeLoadControl(1);" src="assets/btn-back.png" srcset="assets/btn-back@2x.png 2x, assets/btn-back@3x.png 3x" class="icon-images back">
         <div class="icon-view-writer">
           <div class="view-avatar">
             <img src="http://cfile4.uf.tistory.com/image/21398A3A553E02D90D364A">
@@ -339,9 +350,10 @@
       </div>
 
       <div class="icon b">
-        <img src="assets/btn-next.png" srcset="assets/btn-next@2x.png 2x, assets/btn-next@3x.png 3x" class="icon-images next">
+        <img onclick="typeLoadControl(5);" src="assets/btn-next.png" srcset="assets/btn-next@2x.png 2x, assets/btn-next@3x.png 3x" class="icon-images next">
         <div onclick="typeLoadControl(4);" class="icon-text-sucsess">완료</div>
-        <div class="icon-kakao-sucsess">완료</div>
+        <div onclick="typeLoadControl(1);" class="icon-edit-sucsess">완료</div>
+        <div onclick="typeLoadControl(1, 1);" class="icon-kakao-sucsess">완료</div>
       </div>
 
       <div class="icon c">
@@ -351,7 +363,7 @@
       <div class="icon d">
         <img onclick="typeLoadControl(3);" src="assets/btn-add-emoji.png" srcset="assets/btn-add-emoji@2x.png 2x, assets/btn-add-emoji@3x.png 3x" class="icon-images emoji">
         <img onclick="typeLoadControl(2);" src="assets/btn-add-txt.png" srcset="assets/btn-add-txt@2x.png 2x, assets/btn-add-txt@3x.png 3x" class="icon-images text">
-        <img onclick="typeLoadControl(1, true);" src="assets/btn-trash.png" srcset="assets/btn-trash@2x.png 2x, assets/btn-trash@3x.png 3x" class="icon-images trash">
+        <img onclick="typeLoadControl(1, 0);" src="assets/btn-trash.png" srcset="assets/btn-trash@2x.png 2x, assets/btn-trash@3x.png 3x" class="icon-images trash">
         <div class="icon-view-sucsess">완료</div>
       </div>
 
@@ -469,6 +481,8 @@
                     document.querySelector('.icon-images.text').style.display  = 'none';
 
                     document.querySelector('.icon-text-sucsess').style.display = 'none';
+                    document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                        
                     document.querySelector('.emoji-box-wrapper').style.display = 'none';
 
                     document.querySelector('.icon-images.trash').style.display = 'none';
@@ -490,6 +504,8 @@
                     document.querySelector('.icon-images.text').style.display  = 'block';
 
                     document.querySelector('.icon-text-sucsess').style.display = 'none';
+                    document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                        
                     document.querySelector('.emoji-box-wrapper').style.display = 'none';
 
                     document.querySelector('.icon-images.trash').style.display = 'none';
@@ -511,6 +527,8 @@
                     document.querySelector('.icon-images.text').style.display  = 'none';
 
                     document.querySelector('.icon-text-sucsess').style.display = 'block';
+                    document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                        
                     document.querySelector('.emoji-box-wrapper').style.display = 'none';
                     
                     document.querySelector('.icon-images.trash').style.display = 'none';
@@ -532,6 +550,8 @@
                     document.querySelector('.icon-images.text').style.display  = 'none';
 
                     document.querySelector('.icon-text-sucsess').style.display = 'none';
+                    document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                        
                     document.querySelector('.emoji-box-wrapper').style.display = 'block';
                     
                     document.querySelector('.icon-images.trash').style.display = 'none';
@@ -553,6 +573,8 @@
                     document.querySelector('.icon-images.text').style.display  = 'none';
 
                     document.querySelector('.icon-text-sucsess').style.display = 'none';
+                    document.querySelector('.icon-edit-sucsess').style.display  = 'block';
+                                        
                     document.querySelector('.emoji-box-wrapper').style.display = 'none';
 
                     document.querySelector('.icon-images.trash').style.display = 'block';
@@ -574,6 +596,8 @@
                     document.querySelector('.icon-images.text').style.display  = 'none';
 
                     document.querySelector('.icon-text-sucsess').style.display = 'none';
+                    document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                        
                     document.querySelector('.emoji-box-wrapper').style.display = 'none';
 
                     document.querySelector('.icon-images.trash').style.display = 'none';
@@ -595,6 +619,8 @@
                     document.querySelector('.icon-images.text').style.display   = 'none';
 
                     document.querySelector('.icon-text-sucsess').style.display  = 'none';
+                    document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                        
                     document.querySelector('.emoji-box-wrapper').style.display  = 'none';
 
                     document.querySelector('.icon-images.trash').style.display  = 'none';
@@ -616,6 +642,8 @@
                     document.querySelector('.icon-images.text').style.display   = 'none';
 
                     document.querySelector('.icon-text-sucsess').style.display  = 'none';
+                    document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+
                     document.querySelector('.emoji-box-wrapper').style.display  = 'none';
 
                     document.querySelector('.icon-images.trash').style.display  = 'none';
@@ -636,6 +664,7 @@
 
 
       function typeLoadControl(type, deleted){
+        // console.log('load control : ', type);
           
           var entity = letsee.getEntity('https://d.letsee.io/GkXH1Waj7OS2');
 
@@ -649,8 +678,21 @@
           }
 
           if(deleted){
-            content.remove(editObject);
-            editObject = null;
+            switch(deleted){
+                case 0 :
+                    content.remove(editObject);
+                    break;
+                case 1 :
+                    content.children.forEach(function(item){
+                      content.remove(item);
+                    });
+                    break;
+                case 2 :
+
+                    break;                                    
+                default : break;
+            }
+
 
           }          
 
@@ -663,6 +705,7 @@
                 break;
             case 1 :
                 create(entity);
+                editObject = null;
                 break;
             case 2 :
                 inputText(entity);
@@ -709,20 +752,23 @@
           
           world.position.y = 0;
 
-          renderables.create.wrapper = createDOMRanderable('', 'create-target-wrapper');
-          renderables.create.emoji   = createDOMRanderable('<img src="assets/btn-add-emoji.png" srcset="assets/btn-add-emoji@2x.png 2x, assets/btn-add-emoji@3x.png 3x">', 'create-target-emoji');
-          renderables.create.text    = createDOMRanderable('<img src="assets/btn-add-txt.png" srcset="assets/btn-add-txt@2x.png 2x, assets/btn-add-txt@3x.png 3x">', 'create-target-text');
+          if(content.children.length === 0){
+            renderables.create.wrapper = createDOMRanderable('', 'create-target-wrapper');
+            renderables.create.emoji   = createDOMRanderable('<img src="assets/btn-add-emoji.png" srcset="assets/btn-add-emoji@2x.png 2x, assets/btn-add-emoji@3x.png 3x">', 'create-target-emoji');
+            renderables.create.text    = createDOMRanderable('<img src="assets/btn-add-txt.png" srcset="assets/btn-add-txt@2x.png 2x, assets/btn-add-txt@3x.png 3x">', 'create-target-text');
 
 
-          renderables.create.emoji.position.x = -15;
-          renderables.create.text.position.x  = 15;
+            renderables.create.emoji.position.x = -15;
+            renderables.create.text.position.x  = 15;
 
-          renderables.create.emoji.scale.set(.5,.5,.5);
-          renderables.create.text.scale.set(.5,.5,.5);
+            renderables.create.emoji.scale.set(.5,.5,.5);
+            renderables.create.text.scale.set(.5,.5,.5);
 
-          world.add(renderables.create.wrapper);
-          world.add(renderables.create.emoji);
-          world.add(renderables.create.text);
+            world.add(renderables.create.wrapper);
+            world.add(renderables.create.emoji);
+            world.add(renderables.create.text);
+              
+          }          
 
       }
 
