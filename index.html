@@ -719,7 +719,7 @@
                     });
                     break;
                 case 2 :
-                    insert('bin9', content);
+                    insert(guid(), content);
 
                     break;                                    
                 default : break;
@@ -983,7 +983,13 @@
           database.ref('stickers/' + key).set({
             data : data
           });
-      }      
+      }
+
+      function guid(){
+        function s4(){ return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);}
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+      }
+
     </script>
   </body>
 </html>
