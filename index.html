@@ -403,14 +403,14 @@
       window.addEventListener('letsee.load', function(){
 
           var entity = letsee.getEntity('https://d.letsee.io/GkXH1Waj7OS2');
-          // typeLoadControl(entity, 0);
-          // typeLoadControl(entity, 1);
-          // typeLoadControl(entity, 2);
-          // typeLoadControl(entity, 3);
-          // typeLoadControl(entity, 4);
-          // typeLoadControl(entity, 5);
-          // typeLoadControl(entity, 6);
-          typeLoadControl(entity, 7);
+          typeLoadControl(0);
+          // typeLoadControl(1);
+          // typeLoadControl(2);
+          // typeLoadControl(3);
+          // typeLoadControl(4);
+          // typeLoadControl(5);
+          // typeLoadControl(6);
+          // typeLoadControl(7);
 
           letsee.addEventListener('trackstart', function(e){
               typeStartControl(e);
@@ -608,8 +608,11 @@
 
 
 
-      function typeLoadControl(entity, type){
+      function typeLoadControl(type, target){
           
+
+          var entity = target ? target : letsee.getEntity('https://d.letsee.io/GkXH1Waj7OS2');
+
           if(world){
             entity.removeRenderable(world);
             world = null;
@@ -737,14 +740,9 @@
       
 
       function createLettet(){
-        alert('test');
+        typeLoadControl(1);
 
       }
-
-
-
-
-
 
 
       function typeStartControl(e){
