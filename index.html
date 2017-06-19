@@ -362,7 +362,7 @@
         <img onclick="typeLoadControl(3);" src="assets/btn-add-emoji.png" srcset="assets/btn-add-emoji@2x.png 2x, assets/btn-add-emoji@3x.png 3x" class="icon-images emoji">
         <img onclick="typeLoadControl(2);" src="assets/btn-add-txt.png" srcset="assets/btn-add-txt@2x.png 2x, assets/btn-add-txt@3x.png 3x" class="icon-images text">
         <img onclick="typeLoadControl(1);" src="assets/btn-trash.png" srcset="assets/btn-trash@2x.png 2x, assets/btn-trash@3x.png 3x" class="icon-images trash">
-        <div class="icon-view-sucsess">완료</div>
+        <div onclick="typeLoadControl(0, 1);" class="icon-view-sucsess">완료</div>
       </div>
 
       <div class="emoji-box-wrapper">
@@ -408,7 +408,8 @@
           threadType = 0;
 
       var 
-          notificationKey = '';
+          notificationKey = '',
+          notificationObject = null;
 
       var world,
           content,
@@ -464,6 +465,8 @@
                 switch(value[0]){
                   case 'type' :
                       notificationKey = value[1];
+                      
+                      select(notificationKey);
                       break;
                   default : break;
                 }
@@ -821,7 +824,7 @@
           alert('이 링크의 메세지 키 : '+notificationKey);
 
           renderables.notification.title   = createDOMRanderable('<p><label id="noti-name">김정빈</label>님의</p> <p>메세지가 담겨있어요</p>', 'notification-title');
-          renderables.notification.icon    = createDOMRanderable('<img src="assets/icn-open-messege.png" srcset="assets/icn-open-messege@2x.png 2x, assets/icn-open-messege@3x.png 3x">', 'notification-icon');
+          renderables.notification.icon    = createDOMRanderable('<img src="assets/icn-open-messege.png" srcset="assets/icn-open-messege@2x.png 2x, assets/icn-open-messege@3x.png 3x">', 'notification-icon', viewContent);
           renderables.notification.content = createDOMRanderable('터치해 메세지 확인', 'notification-content');
 
           renderables.notification.title.position.y   =  45;
@@ -831,6 +834,38 @@
           world.add(renderables.notification.icon);
           world.add(renderables.notification.content);
 
+      }
+
+      function view(entity){
+
+        if(notificationObject){
+          notificationObject.forEach(function(item){
+              console.log(item);
+              
+              var 
+                  element = document.createElement('div');
+
+              element.innerText = item.text;
+
+              var 
+                  object = new DOMRenderable(element);
+
+              object.position.set(item.position.x, item.position.y, item.position.z);
+              object.rotateX(item.rotation.x);
+              object.rotateY(item.rotation.y);
+              object.rotateZ(item.rotation.z);
+              object.scale.set(item.scale,item.scale,item.scale);
+
+              content.add(object);
+
+          });
+        } else{
+          alert('정상적으로 등록되지 않은 메세지입니다.');
+          typeLoadControl(6);
+
+        };
+
+        
       }
 
       function edit(renderable){
@@ -850,6 +885,11 @@
           typeLoadControl(1);
 
       }
+
+      function viewContent(){
+          typeLoadControl(7);
+
+      }      
 
 
       function typeStartControl(e){
@@ -984,6 +1024,16 @@
             data : data
           });
       }
+
+      function select(key){
+          database.ref('stickers/' + key)
+          .once('value')
+          .then(function(data){
+              notificationObject = data.val().data;
+              console.log(notificationObject);
+
+          });
+      }      
 
       function guid(){
         function s4(){ return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);}
