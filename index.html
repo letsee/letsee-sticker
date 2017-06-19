@@ -308,7 +308,7 @@
 }
 
   </style>
-  
+  <script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
   <script src="vendor/TouchControl.js"></script>
   </head>
   <body>
@@ -394,6 +394,16 @@
 
     <script>
 
+      var config = {
+        apiKey: "AIzaSyAdY-yp074zuymgIbqeR1EKgGWwSQb0-pc",
+        authDomain: "sticker-webapp.firebaseapp.com",
+        databaseURL: "https://sticker-webapp.firebaseio.com",
+        projectId: "sticker-webapp",
+        storageBucket: "",
+        messagingSenderId: "11949169975"
+      },
+      database;
+
       var 
           threadType = 0;
 
@@ -432,6 +442,9 @@
           };
 
       window.addEventListener('letsee.load', function(){
+          firebase.initializeApp(config);
+          database = firebase.database();
+
           var
               entity = letsee.getEntity('https://d.letsee.io/GkXH1Waj7OS2');
 
@@ -803,6 +816,7 @@
       }
 
       function notification(entity){
+          if(database) alert('파이어베이스 연결');
           alert('이 링크의 메세지 키 : '+notificationKey);
 
           renderables.notification.title   = createDOMRanderable('<p><label id="noti-name">김정빈</label>님의</p> <p>메세지가 담겨있어요</p>', 'notification-title');
