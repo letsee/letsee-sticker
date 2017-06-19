@@ -300,6 +300,7 @@
   </style>
 
   <!--<script src="vendor/letsee-main-effect.js"></script>-->
+  <script src="vendor/TouchControl.js"></script>
   </head>
   <body>
 
@@ -390,6 +391,7 @@
           content,
           editText,          
           editObject,
+          touchControl,
           renderables = {
               ready : {
                   target : null,
@@ -434,6 +436,8 @@
           // typeLoadControl(5);
           // typeLoadControl(6);
           // typeLoadControl(7);
+
+          touchControlInit();          
 
           letsee.addEventListener('trackstart', function(e){
               typeStartControl(e);
@@ -646,6 +650,7 @@
 
           if(deleted){
             content.remove(editObject);
+            editObject = null;
 
           }          
 
@@ -817,6 +822,56 @@
         if(clickCallback) element.onclick = clickCallback;
 
         return new DOMRenderable(element);
+      }
+
+
+
+      
+
+      function touchControlInit(){
+          
+          var speed  = 2,
+              rotate = .06,
+              zoom   = .04,
+              scale  = 1;
+          
+          touchControl = new TouchControl.Mobile();
+
+          touchControl.element.addEventListener('touchmove', function(e){
+
+                if(editObject){
+
+                    switch(touchControl.touch.type){
+                        case 'north':
+                            touchControl.touch.len ===  3 ? editObject.rotateX(-rotate) : editObject.position.y+=speed;
+                            break;
+                        case 'south':
+                            touchControl.touch.len ===  3 ? editObject.rotateX(rotate) : editObject.position.y-=speed;
+                            break;
+                        case 'east' :
+                            touchControl.touch.len ===  3 ? editObject.rotateY(rotate) : editObject.position.x+=speed;
+                            break;
+                        case 'west' :
+                            touchControl.touch.len ===  3 ? editObject.rotateY(-rotate) : editObject.position.x-=speed;
+                            break;
+                        case 'pinch':
+
+                            if(scale > 0) touchControl.touch.pinch.zoom >= 1 ? scale-=zoom : scale+=zoom;
+                            else scale = 0.1;
+
+                            editObject.scale.set(scale, scale, scale);
+                            break;
+                        case 'drag':
+                            touchControl.touch.drag.delta >= 1 ? editObject.position.z+=speed : editObject.position.z-=speed;
+
+                            break;
+                        default : break;
+                    }
+
+                }
+
+          });
+
       }
     </script>
   </body>
