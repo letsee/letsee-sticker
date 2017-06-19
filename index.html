@@ -327,7 +327,7 @@
             <img src="assets/icn-kakao.png" srcset="assets/icn-kakao@2x.png 2x, assets/icn-kakao@3x.png 3x">
           </div>
 
-          <div class="kakao-text">
+          <div onclick="typeLoadControl(1, 2);" class="kakao-text">
             <span>카카오톡으로 링크 보내기</span>
           </div>
 
@@ -335,7 +335,7 @@
 
       </div>
       <div class="icon a">
-        <img onclick="typeLoadControl(0);" src="assets/btn-close.png" srcset="assets/btn-close@2x.png 2x, assets/btn-close@3x.png 3x" class="icon-images close">
+        <img onclick="typeLoadControl(0, 1);" src="assets/btn-close.png" srcset="assets/btn-close@2x.png 2x, assets/btn-close@3x.png 3x" class="icon-images close">
         <img onclick="typeLoadControl(1);" src="assets/btn-back.png" srcset="assets/btn-back@2x.png 2x, assets/btn-back@3x.png 3x" class="icon-images back">
         <div class="icon-view-writer">
           <div class="view-avatar">
@@ -719,6 +719,7 @@
                     });
                     break;
                 case 2 :
+                    insert('bin9', content);
 
                     break;                                    
                 default : break;
@@ -952,6 +953,37 @@
           });
 
       }
+
+      function insert(key, object){
+          var data = [];
+
+          object.children.forEach(function(item){
+            var prop = {
+              position : {
+                x : item.position.x,
+                y : item.position.y,
+                z : item.position.z
+              },
+              rotation : {
+                x : item.rotation.x,
+                y : item.rotation.y,
+                z : item.rotation.z
+              },
+              scale : item.scale.x,
+              text  : item.element.innerText
+            };
+
+            data.push(prop);
+            
+          });
+
+          console.log('key', key);
+          console.log('data', data);
+
+          database.ref('stickers/' + key).set({
+            data : data
+          });
+      }      
     </script>
   </body>
 </html>
