@@ -1039,7 +1039,7 @@
               document.getElementById('view-avatar-image').src = data.val().avatar;
               document.getElementById('noti-name').innerText = data.val().name;
               document.getElementById('view-writer').innerText = data.val().name;
-              document.getElementById('view-datetime').innerText = data.val().datetime;
+              document.getElementById('view-datetime').innerText = formatDate(data.val().datetime, 'yyyy년 MM월 dd일');
 
               notificationObject = data.val().data;
               console.log(notificationObject);
@@ -1052,6 +1052,33 @@
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
       }
 
+      function formatDate(time, format) {
+          var t = new Date(time);
+          var tf = function (i) { return (i < 10 ? '0' : '') + i };
+          return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function (a) {
+              switch (a) {
+                  case 'yyyy':
+                      return tf(t.getFullYear());
+                      break;
+                  case 'MM':
+                      return tf(t.getMonth() + 1);
+                      break;
+                  case 'mm':
+                      return tf(t.getMinutes());
+                      break;
+                  case 'dd':
+                      return tf(t.getDate());
+                      break;
+                  case 'HH':
+                      return tf(t.getHours());
+                      break;
+                  case 'ss':
+                      return tf(t.getSeconds());
+                      break;
+              }
+          })
+}
+    
     </script>
   </body>
 </html>
