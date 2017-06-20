@@ -339,7 +339,7 @@
         <img onclick="typeLoadControl(1);" src="assets/btn-back.png" srcset="assets/btn-back@2x.png 2x, assets/btn-back@3x.png 3x" class="icon-images back">
         <div class="icon-view-writer">
           <div class="view-avatar">
-            <img src="http://cfile4.uf.tistory.com/image/21398A3A553E02D90D364A">
+            <img id="view-avatar-image" src="">
           </div>
           <div class="view-content">
             <label id="view-writer">김정빈님이</label> <label id="view-datetime">2017년 3월 21일</label>에 보냄
@@ -1036,6 +1036,7 @@
           .once('value')
           .then(function(data){
 
+              document.getElementById('view-avatar-image').src = data.val().avatar;
               document.getElementById('noti-name').innerText = data.val().name;
               document.getElementById('view-writer').innerText = data.val().name;
               document.getElementById('view-datetime').innerText = data.val().datetime;
