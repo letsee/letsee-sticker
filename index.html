@@ -342,7 +342,7 @@
             <img src="http://cfile4.uf.tistory.com/image/21398A3A553E02D90D364A">
           </div>
           <div class="view-content">
-            <label>김정빈님이</label> 2017년 3월 21일에 보냄
+            <label id="view-writer">김정빈님이</label> <label id="view-datetime">2017년 3월 21일</label>에 보냄
           </div>
         </div>
       </div>
@@ -691,7 +691,6 @@
 
 
       function typeLoadControl(type, deleted){
-        // console.log('load control : ', type);
           
           var entity = letsee.getEntity('https://d.letsee.io/GkXH1Waj7OS2');
 
@@ -818,7 +817,7 @@
           if(database) alert('파이어베이스 연결');
           alert('이 링크의 메세지 키 : '+notificationKey);
 
-          renderables.notification.title   = createDOMRanderable('<p><label id="noti-name">김정빈</label>님의</p> <p>메세지가 담겨있어요</p>', 'notification-title');
+          renderables.notification.title   = createDOMRanderable('<p><label id="noti-name"></label>님의</p> <p>메세지가 담겨있어요</p>', 'notification-title');
           renderables.notification.icon    = createDOMRanderable('<img src="assets/icn-open-messege.png" srcset="assets/icn-open-messege@2x.png 2x, assets/icn-open-messege@3x.png 3x">', 'notification-icon', viewContent);
           renderables.notification.content = createDOMRanderable('터치해 메세지 확인', 'notification-content');
 
@@ -834,6 +833,7 @@
       function view(entity){
 
         if(notificationObject){
+
           notificationObject.forEach(function(item){
               console.log(item);
               
@@ -996,6 +996,7 @@
 
       function insert(key, object){
           var data = [],
+              avatar = 'https://avatars1.githubusercontent.com/u/21367010?v=3&s=160',
               name = '유명재',
               datetime = new Date().getTime();
 
@@ -1023,6 +1024,7 @@
           console.log('data', data);
 
           database.ref('stickers/' + key).set({
+            avatar : avatar,
             name : name,
             datetime : datetime,
             data : data
@@ -1033,6 +1035,11 @@
           database.ref('stickers/' + key)
           .once('value')
           .then(function(data){
+
+              document.getElementById('noti-name').innerText = data.val().name;
+              document.getElementById('view-writer').innerText = data.val().name;
+              document.getElementById('view-datetime').innerText = data.val().datetime;
+
               notificationObject = data.val().data;
               console.log(notificationObject);
 
