@@ -423,7 +423,8 @@
 
       var 
           threadType = 0,
-          isTraking  = false;
+          isTraking  = false,
+          currentTarget = null;
 
       var 
           notificationKey = '',
@@ -513,6 +514,7 @@
 
           letsee.addEventListener('trackend', function(e){
               isTraking = false;
+              typeEndControl(e);
 
           });
 
@@ -754,16 +756,20 @@
                 ready(entity);
                 break;
             case 1 :
+                document.body.style.backgroundColor = 'transparent';            
                 create(entity);
                 editObject = null;
                 break;
             case 2 :
+                document.body.style.backgroundColor = 'rgba(0,0,0,0.2)';
                 inputText(entity);
                 break;      
             case 3 :
+                document.body.style.backgroundColor = 'rgba(0,0,0,0.2)';            
                 inputEmoji(entity);
                 break;
             case 4 :
+                document.body.style.backgroundColor = 'transparent';
                 edit(createDOMRanderable(editText));
                 break;                
             case 5 :
@@ -784,8 +790,9 @@
       function ready(entity){
 
           world.position.y = 20;
-
-          renderables.ready.target = createDOMRanderable('', 'target-ready-content');
+          
+          var name = isTraking ? currentTarget.name+'에' : '';
+          renderables.ready.target = createDOMRanderable(name, 'target-ready-content');
           renderables.ready.text   = createDOMRanderable("<div>메세지를 담아 보내세요", 'target-ready-content');
           renderables.ready.plus   = createDOMRanderable('<h1>+</h1>', 'ready-button', createLettet);
 
@@ -827,7 +834,7 @@
           renderables.input.text.textarea = createDOMRanderable('<textarea id="ar-textarea" placeholder="메세지를 입력해주세요" type="text"></textarea>','input-text-area');
           
           world.add(renderables.input.text.textarea);
-          if(isTraking) setTimeout(function(){ document.getElementById('ar-textarea').focus(); }, 500);
+          if(isTraking) setTimeout(function(){ document.getElementById('ar-textarea').focus(); }, 200);
 
       }
 
@@ -855,7 +862,6 @@
         if(notificationObject){
 
           notificationObject.forEach(function(item){
-              console.log(item);
               
               var 
                   element = document.createElement('div');
@@ -887,7 +893,6 @@
           content.add(renderable);
 
           editObject = renderable;
-          console.log(editObject);
 
       }
 
@@ -915,7 +920,9 @@
       function typeStartControl(e){
             switch(threadType){
                 case 0 :
-                    renderables.ready.target.element.innerHTML = e.target.name+'에';
+                    document.body.style.backgroundColor = 'rgba(0,0,0,0.2)';
+                    currentTarget = e.target;
+                    renderables.ready.target.element.innerHTML = currentTarget.name+'에';
                     break;
                 case 1 :
                     var w = e.target.size.width,
@@ -926,8 +933,38 @@
 
                     break;                
                 case 2 :
-                    console.log(document.getElementById('ar-textarea'));
                     document.getElementById('ar-textarea').focus();
+                    break;
+                case 3 :
+
+                    break;
+                case 4 :
+
+                    break;
+                case 5 :
+                
+                    break;
+                case 6 :
+                    currentTarget = e.target;
+
+                    break;
+                case 7 :
+                    
+                    break;
+                default : break;
+            }
+      }
+
+      function typeEndControl(e){
+            switch(threadType){
+                case 0 :
+                    document.body.style.backgroundColor = 'transparent';
+                    break;
+                case 1 :
+
+                    break;                
+                case 2 :
+
                     break;
                 case 3 :
 
@@ -947,8 +984,6 @@
                 default : break;
             }
       }
-
-
 
 
 
@@ -1041,9 +1076,6 @@
             
           });
 
-          console.log('key', key);
-          console.log('data', data);
-
           database.ref('stickers/' + key).set({
             avatar : avatar,
             name : name,
@@ -1066,7 +1098,6 @@
               document.getElementById('view-datetime').innerText = formatDate(data.val().datetime, 'yyyy년 MM월 dd일');
 
               notificationObject = data.val().data;
-              console.log(notificationObject);
 
           });
       }      
