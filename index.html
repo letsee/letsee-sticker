@@ -367,20 +367,12 @@
 
       <div class="emoji-box-wrapper">
         <div class="emoji-box-content">
-          <span>😀</span>
-          <span>😘</span>
-          <span>😂</span>
-          <span>😢</span>
-          <span>😉</span>
-          <span>❤️️</span>
-          <span>😀</span>
-          <span>😀</span>
-          <span>😘</span>
-          <span>😂</span>
-          <span>😢</span>
-          <span>😉</span>
-          <span>❤️</span>
-          <span>️😀</span>
+          <span onclick="addEmoji('😀');">😀</span>
+          <span onclick="addEmoji('😘');">😘</span>
+          <span onclick="addEmoji('😂');">😂</span>
+          <span onclick="addEmoji('😢');">😢</span>
+          <span onclick="addEmoji('😉');">😉</span>
+          <span onclick="addEmoji('❤️️');">❤️️</span>
         </div>
       </div>
 
@@ -413,7 +405,8 @@
 
       var world,
           content,
-          editText,          
+          editText,
+          editEmoji,
           editObject,
           touchControl,
           renderables = {
@@ -702,7 +695,9 @@
           
           var entity = letsee.getEntity('https://d.letsee.io/GkXH1Waj7OS2');
 
-          if(type === 4) editText = document.getElementById('ar-textarea').value;
+          if(type === 4){
+             editText = document.getElementById('ar-textarea') ? document.getElementById('ar-textarea').value : editEmoji;
+          }
           
           if(world){
               world.children.forEach(function(item){
@@ -891,6 +886,11 @@
 
       }      
 
+      function addEmoji(text){
+          editEmoji = text;
+          typeLoadControl(4);
+
+      }
 
       function typeStartControl(e){
             switch(threadType){
