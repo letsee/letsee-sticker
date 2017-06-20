@@ -995,7 +995,9 @@
       }
 
       function insert(key, object){
-          var data = [];
+          var data = [],
+              name = '유명재',
+              datetime = new Date().getTime();
 
           object.children.forEach(function(item){
             var prop = {
@@ -1021,6 +1023,8 @@
           console.log('data', data);
 
           database.ref('stickers/' + key).set({
+            name : name,
+            datetime : datetime,
             data : data
           });
       }
