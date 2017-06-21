@@ -387,29 +387,7 @@
 
       Kakao.init('c110db620b05965c23c894a29d720c0d');
       var uuid = guid();
-
-      Kakao.Link.createDefaultButton({
-        container: '#kakao-link-btn',
-        objectType: 'feed',
-        content: {
-          title: '카카오 링크를 확인해주세요.',
-          description: '당신에게 메세지가 도착했습니다.',
-          imageUrl: 'https://media.rocketpunch.com/cache/8b/da/8bda8d31513e91244f4b47de1e69dd89.jpg',
-          link: {
-            mobileWebUrl: 'http://192.168.1.92:7777/stic/?type='+uuid,
-            webUrl: 'http://192.168.1.92:7777/stic/?type='+uuid
-          }
-        },
-        buttons: [
-          {
-            title: '렛시 웹앱으로 이동하기',
-            link: {
-              mobileWebUrl: 'http://192.168.1.92:7777/stic/?type='+uuid,
-              webUrl: 'http://192.168.1.92:7777/stic/?type='+uuid
-            }
-          }
-        ]
-      });  
+      var USER_NAME = '유명재';  
             
       var config = {
         apiKey: "AIzaSyAdY-yp074zuymgIbqeR1EKgGWwSQb0-pc",
@@ -478,7 +456,7 @@
 
           if(param[1] !== undefined){
             var
-                value = param[1].split("=");
+                value = param[1].split("/");
 
                 switch(value[0]){
                   case 'type' :
@@ -737,7 +715,7 @@
           threadType = type;
 
           if(type === 4){
-             editText = document.getElementById('ar-textarea') ? document.getElementById('ar-textarea').value : editEmoji;
+             editText = document.getElementById('ar-textarea') ? '<h1>' + document.getElementById('ar-textarea').value + '</h1>' : editEmoji;
           }
           
           if(world){
@@ -757,7 +735,35 @@
                   });
                   break;
               case 2 :
-                  insert(uuid, content);
+                    insert(uuid, content);
+                    
+                    // var IMAGE_URL = currentTarget.image ? currentTarget.image : 'https://intra.letsee.io/test/assets/img-kakao@3x.png';
+
+                    Kakao.Link.createDefaultButton({
+                        container: '#kakao-link-btn',
+                        objectType: 'feed',
+                        content: {
+                        title: '렛시 증강현실 편지가 도착했어요!',
+                        description: USER_NAME+'님이 '+currentTarget.name+'에 증강현실 편지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요.',
+                        // imageUrl: IMAGE_URL,
+                        imageUrl: 'https://intra.letsee.io/test/assets/img-kakao@3x.png',
+                        link: {
+                            /* http://192.168.1.92:7777/stic/?type='+uuid */
+                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            // androidExecParams : 'https://goo.gl/9gSW7w'
+                        }
+                        },
+                        buttons: [
+                        {
+                            title: '렛시 브라우저로 보기',
+                            link: {
+                                /* http://192.168.1.92:7777/stic/?type='+uuid */
+                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                                // androidExecParams : 'https://goo.gl/9gSW7w'
+                            }
+                        }
+                        ]
+                    });
 
                   break;                                    
               default : break;
@@ -810,7 +816,7 @@
 
           renderables.ready.target = createDOMRanderable('<label id="current-target-name">'+name+'</label>', 'target-ready-content');
 
-          renderables.ready.text   = createDOMRanderable("<div>메세지를 담아 보내세요", 'target-ready-content');
+          renderables.ready.text   = createDOMRanderable("<div>증강현실 편지를 담아 보내세요", 'target-ready-content');
           renderables.ready.plus   = createDOMRanderable('<h1>+</h1>', 'ready-button', createLettet);
 
           renderables.ready.target.position.y = 10;
@@ -883,7 +889,7 @@
               var 
                   element = document.createElement('div');
 
-              element.innerText = item.text;
+              element.innerHTML = '<h1>'+item.text+'</h1>';
 
               var 
                   object = new DOMRenderable(element);
@@ -1077,7 +1083,7 @@
       function insert(key, object){
           var data = [],
               avatar = 'https://avatars1.githubusercontent.com/u/21367010?v=3&s=160',
-              name = '유명재',
+              name = USER_NAME,
               datetime = new Date().getTime();
 
           object.children.forEach(function(item){
@@ -1093,7 +1099,7 @@
                 z : item.rotation.z
               },
               scale : item.scale.x,
-              text  : item.element.innerText
+              text  : item.element.innerHTML
             };
 
             data.push(prop);
