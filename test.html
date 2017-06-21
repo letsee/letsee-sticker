@@ -249,14 +249,28 @@
 /* ======================================================================*/
 /* create lettet ar */
 /* ======================================================================*/
+.create-target-wrapper-frame{
+    position: absolute;
+    width : 20%;
+    height: 20%;
+}
+
+.create-target-wrapper-frame.rt, .create-target-wrapper-frame.rb{
+    right: 0;
+}
+
+.create-target-wrapper-frame.lb, .create-target-wrapper-frame.rb{
+    bottom: 0;
+}
+
 .create-target-wrapper{
-  border: 1px dotted #fff;
-  opacity: 0.4;
+  /*border: 1px dotted #fff;*/
+  /*opacity: 0.4;*/
 }
 
 .create-target-emoji, .create-target-text{
-	opacity: 0.24;
-	box-shadow: 0 0 13px 0 rgba(0, 0, 0, 0.5);  
+	/*opacity: 0.24;*/
+	/*box-shadow: 0 0 13px 0 rgba(0, 0, 0, 0.5);  */
 }
 
 /* ======================================================================*/
@@ -846,16 +860,28 @@
 
           if(content.children.length === 0){
             renderables.create.wrapper = createDOMRanderable('', 'create-target-wrapper');
-            renderables.create.emoji   = createDOMRanderable('<img src="assets/btn-add-emoji.png" srcset="assets/btn-add-emoji@2x.png 2x, assets/btn-add-emoji@3x.png 3x">', 'create-target-emoji');
-            renderables.create.text    = createDOMRanderable('<img src="assets/btn-add-txt.png" srcset="assets/btn-add-txt@2x.png 2x, assets/btn-add-txt@3x.png 3x">', 'create-target-text');
+            renderables.create.emoji   = createDOMRanderable('<img src="assets/group-2-copy-3.png" srcset="assets/group-2-copy-3@2x.png 2x, assets/group-2-copy-3@3x.png 3x">', 'create-target-emoji');
+            renderables.create.text    = createDOMRanderable('<img src="assets/icn-ar-text.png" srcset="assets/icn-ar-text@2x.png 2x, assets/icn-ar-text@3x.png 3x">', 'create-target-text');
 
 
             renderables.create.emoji.position.x = -15;
             renderables.create.text.position.x  = 15;
 
-            renderables.create.emoji.scale.set(.5,.5,.5);
-            renderables.create.text.scale.set(.5,.5,.5);
+            renderables.create.emoji.scale.set(.3,.3,.3);
+            renderables.create.text.scale.set(.3,.3,.3);
 
+            var w = currentTarget.size.width,
+                h = currentTarget.size.height;
+            
+            renderables.create.wrapper.element.style.width  = w +'px';
+            renderables.create.wrapper.element.style.height = h +'px';
+
+            renderables.create.wrapper.element.innerHTML = ''
+            +'<img class="create-target-wrapper-frame lt" src="assets/frame-w-lt.png" srcset="assets/frame-w-lt@2x.png 2x, assets/frame-w-lt@3x.png 3x">'
+            +'<img class="create-target-wrapper-frame rt" src="assets/frame-w-rt.png" srcset="assets/frame-w-rt@2x.png 2x, assets/frame-w-rt@3x.png 3x">'
+            +'<img class="create-target-wrapper-frame lb" src="assets/frame-w-lb.png" srcset="assets/frame-w-lb@2x.png 2x, assets/frame-w-lb@3x.png 3x">'
+            +'<img class="create-target-wrapper-frame rb" src="assets/frame-w-rb.png" srcset="assets/frame-w-rb@2x.png 2x, assets/frame-w-rb@3x.png 3x">';
+            
             world.add(renderables.create.wrapper);
             world.add(renderables.create.emoji);
             world.add(renderables.create.text);
