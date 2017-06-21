@@ -928,6 +928,7 @@
                   element = document.createElement('div');
 
               element.innerHTML = '<h1>'+item.text+'</h1>';
+              element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
 
               var 
                   object = new DOMRenderable(element);
@@ -951,6 +952,8 @@
       }
 
       function edit(renderable){
+          renderable.element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
+          
           content.add(renderable);
 
           editObject = renderable;
