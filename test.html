@@ -32,6 +32,7 @@
     }
 
     .icon.a{
+        width: 100%;
 
     }
     .icon.b{
@@ -119,18 +120,18 @@
     .icon-view-writer{
       width: 100%;
       height: 60px;
+      text-align: center;
+      /*border: 1px solid red;*/      
     }
 
     .icon-view-writer .view-content{
       text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
-      /*float: left;        */
       font-family: AppleSDGothicNeo, sans-serif;
       font-size: 15px;
       letter-spacing: 0.4px;
       margin-left : 10px;
       margin-top  : 19.5px;
       opacity: 0.7;
-      border: 1px solid red;
     }    
 
 /* ======================================================================*/
@@ -280,7 +281,9 @@
   text-decoration: none;
   color: #fff;
   outline: none;
-  border: 1px solid rgba(255, 255, 255, 0);
+  /*border: 1px solid rgba(255, 255, 255, 0);*/
+  margin-top : 110px;
+  margin-left : 100px;
 }
 
 .input-text-area textarea::-webkit-input-placeholder{
@@ -358,7 +361,7 @@
         <img onclick="typeLoadControl(1);" src="assets/btn-back.png" srcset="assets/btn-back@2x.png 2x, assets/btn-back@3x.png 3x" class="icon-images back">
         <div class="icon-view-writer">
           <div class="view-content">
-            <label id="view-writer"></label> <label id="view-datetime"></label>에 보냄
+            <label id="view-writer"></label>님이 <label id="view-datetime"></label>에 보냄
           </div>
         </div>
       </div>
