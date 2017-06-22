@@ -656,6 +656,10 @@
             switch(threadType){
                 case 0 :
                     document.querySelector('.intro-title').innerText = '증강현실 편지를 남길 대상을 비춰주세요';
+                    if(!isTraking){
+                        document.querySelector('.target-intro-wrapper').style.display = 'block';
+                        document.querySelector('.intro-title').style.display = 'block';
+                    }
                     document.querySelector('.icon-images.capture').style.display = 'none';
                     document.querySelector('.icon-images.close').style.display = 'none';
                     document.querySelector('.icon-images.next').style.display  = 'none';
@@ -1170,7 +1174,8 @@
                 
                     break;
                 case 6 :
-                
+                    document.querySelector('.target-intro-wrapper').style.display = 'block';
+                    document.querySelector('.intro-title').style.display = 'block';                
                     break;
                 case 7 :
                     
