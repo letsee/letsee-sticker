@@ -282,8 +282,8 @@
 /* ======================================================================*/
 .create-target-wrapper-frame{
     position: absolute;
-    width : 20%;
-    height: 20%;
+    width : 5%;
+    height: 5%;
 }
 
 .create-target-wrapper-frame.rt, .create-target-wrapper-frame.rb{
@@ -423,7 +423,7 @@
 	opacity: 0.8;
 	font-family: AppleSDGothicNeo, sans-serif;
 	font-weight: 800;
-	text-align: center;    
+	text-align: center;
 
 }
   </style>
@@ -491,7 +491,7 @@
 
       <div class="icon b">
         <img onclick="typeLoadControl(5);" src="assets/btn-next.png" srcset="assets/btn-next@2x.png 2x, assets/btn-next@3x.png 3x" class="icon-images next">
-        <div onclick="typeLoadControl(4);" class="icon-text-sucsess">완료</div>
+        <div onclick="typeLoadControl(1);typeLoadControl(4);" class="icon-text-sucsess">완료</div>
         <div onclick="typeLoadControl(1);" class="icon-edit-sucsess">완료</div>
         <div onclick="typeLoadControl(1, 1);" class="icon-kakao-sucsess">완료</div>
       </div>
@@ -705,7 +705,8 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 1 :
                     document.querySelector('.icon-images.capture').style.display = 'block';
@@ -729,7 +730,8 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 2 :
                     document.querySelector('.icon-images.capture').style.display = 'none';
@@ -753,7 +755,8 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 3 :
                     document.querySelector('.icon-images.capture').style.display = 'none';
@@ -777,7 +780,8 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 4 :
                     document.querySelector('.icon-images.capture').style.display = 'none';
@@ -801,7 +805,8 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-2f-edit-type').style.display = 'block'; document.querySelector('.icon-1f-edit-type').style.display = 'block';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'block';
+                    document.querySelector('.icon-1f-edit-type').style.display = 'block';
                     break;
                 case 5 :
                     document.querySelector('.icon-images.capture').style.display = 'none';
@@ -825,7 +830,8 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 6 :
                     
@@ -853,7 +859,8 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none';
+                    document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 7 :
                     document.querySelector('.icon-images.capture').style.display = 'block';
@@ -964,6 +971,8 @@
                 break;
             case 4 :
                 document.body.style.backgroundColor = 'transparent';
+                edit1FControl('position');
+                edit2FControl('scale');
                 edit(createDOMRanderable(editText));
                 break;                
             case 5 :
@@ -1425,7 +1434,7 @@
 
                 switch(edit2FControlType){
                     case 'scale' :
-                        if(scale > 0) scale += touch.pinch.zoom >= 1 ? -.05 : .05;
+                        if(scale > 0) scale += touch.pinch.zoom >= 1 ? -.02 : .02;
                         else scale = 0.1;
                         editObject.scale.set(scale,scale,scale);
                         break;
