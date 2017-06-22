@@ -545,6 +545,7 @@
 
       var 
           threadType = 0,
+          isRedit    = false,
           isTraking  = false,
           isModeView = false,
           CURRENT_URI = '',
@@ -647,13 +648,10 @@
                             typeLoadControl(0, 1);
                         }
 
-                        CURRENT_URI = uri;                        
+                        CURRENT_URI = uri;                  
 
-                        console.log(world.children.length);
-                        console.log(content.children.length);
                         e.target.addRenderable(world);
                         e.target.addRenderable(content);
-                        console.log(e.target);
                     }
 
                     typeStartControl(e);
@@ -973,7 +971,8 @@
                 document.body.style.backgroundColor = 'transparent';
                 edit1FControl('position');
                 edit2FControl('scale');
-                edit(createDOMRanderable(editText));
+                isRedit ? editObject : edit(createDOMRanderable(editText));
+
                 break;                
             case 5 :
             
@@ -1111,6 +1110,8 @@
       }
 
       function edit(renderable){
+          if(isRedit) isRedit = false;
+
           content.children.forEach(function(item){
               item.element.removeEventListener('touchstart', selectEditObject);
               item.element.style.opacity = '0.3';
@@ -1142,11 +1143,10 @@
       }
 
       function selectEditObject(e){
-
           content.children.forEach(function(item){
-              
+                
               if(item.element == e.target.parentElement){
-                  editEmoji = e.target;
+                  isRedit = true;
                   editObject = item;
                   typeLoadControl(4);
               }
