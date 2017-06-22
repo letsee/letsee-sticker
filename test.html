@@ -405,7 +405,6 @@
   </style>
   <script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
   <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-  <script src="vendor/TouchControl.js"></script>
   </head>
   <body>
     <div id="target">
@@ -536,7 +535,6 @@
           editText,
           editEmoji,
           editObject,
-          touchControl,
           renderables = {
               ready : {
                   target : null,
@@ -599,8 +597,6 @@
                 
                 typeLoadControl(6);
           }else typeLoadControl(0);
-
-          touchControlInit();
 
           letsee.addEventListener("trackstart", function(e) {
 
@@ -1199,56 +1195,6 @@
         return new DOMRenderable(element);
       }
 
-
-
-      
-
-      function touchControlInit(){
-          
-          var speed  = 2,
-              rotate = .06,
-              zoom   = .04,
-              scale  = 1;
-          
-          touchControl = new TouchControl.Mobile();
-
-          touchControl.element.addEventListener('touchmove', function(e){
-
-                if(editObject){
-
-                    switch(touchControl.touch.type){
-                        case 'north':
-                            touchControl.touch.len ===  3 ? editObject.rotateX(-rotate) : editObject.position.y+=speed;
-                            break;
-                        case 'south':
-                            touchControl.touch.len ===  3 ? editObject.rotateX(rotate) : editObject.position.y-=speed;
-                            break;
-                        case 'east' :
-                            touchControl.touch.len ===  3 ? editObject.rotateY(rotate) : editObject.position.x+=speed;
-                            break;
-                        case 'west' :
-                            touchControl.touch.len ===  3 ? editObject.rotateY(-rotate) : editObject.position.x-=speed;
-                            break;
-                        case 'pinch':
-
-                            if(scale > 0) touchControl.touch.pinch.zoom >= 1 ? scale-=zoom : scale+=zoom;
-                            else scale = 0.1;
-
-                            editObject.scale.set(scale, scale, scale);
-                            break;
-                        case 'drag':
-                            touchControl.touch.drag.delta >= 1 ? editObject.position.z+=speed : editObject.position.z-=speed;
-
-                            break;
-                        default : break;
-                    }
-
-                }
-
-          });
-
-      }
-
       function insert(key, object){
           var data = [],
               avatar = 'https://avatars1.githubusercontent.com/u/21367010?v=3&s=160',
@@ -1337,5 +1283,98 @@
 }
     
     </script>
+    <script>
+
+        var scale = 1;
+        var touch = {
+                isTouch : false,
+                isPinch : false,
+                delta : { 
+                    x : 0,
+                    y : 0
+                },           
+                move  : { 
+                    x : 0,
+                    y : 0
+                },
+                pinch : {
+                    start : 0.0,
+                    end   : 0.0,
+                    zoom  : 0.0,
+                    delta : { 
+                        x : 0,
+                        y : 0
+                    },                 
+                }                
+            };
+
+        window.addEventListener('touchstart', touchDown);    
+        window.addEventListener('touchend', touchUp);
+        window.addEventListener('touchmove', touchMove);
+
+        function touchDown(e){
+            if(!editObject)return;
+
+            touch.isTouch = true;
+            if(e.touches.length > 1){
+
+                touch.pinch.x = e.touches[0].pageX - e.touches[1].pageX;
+                touch.pinch.y = e.touches[0].pageY - e.touches[1].pageY;
+    
+                touch.pinch.start = Math.sqrt(touch.pinch.x * touch.pinch.x + touch.pinch.y * touch.pinch.y);
+                touch.pinch.end = touch.pinch.start;
+                return;
+            }
+
+            touch.move.x = e.touches[0].pageX;
+            touch.move.y = e.touches[0].pageY;
+        }
+
+        function touchUp(e){
+            if(!editObject)return;
+            
+            touch.isTouch = false;
+            touch.isPinch = false;
+
+        }
+
+        function touchMove(e){
+            if(!editObject)return;
+            if(!touch.isTouch) return;
+            
+            if(e.touches.length > 1){
+
+                touch.pinch.x = e.touches[0].pageX - e.touches[1].pageX;
+                touch.pinch.y = e.touches[0].pageY - e.touches[1].pageY;
+                touch.pinch.end = Math.sqrt(touch.pinch.x * touch.pinch.x + touch.pinch.y * touch.pinch.y);
+
+                touch.pinch.zoom = touch.pinch.start / touch.pinch.end;
+                touch.pinch.start = touch.pinch.end;
+                if(scale > 0) scale += touch.pinch.zoom >= 1 ? -.1 : .1;
+                else scale = 0.1;
+
+                editObject.scale.set(scale,scale,scale);
+                console.log(scale);
+
+                touch.isPinch = true;
+                return;
+            }
+                            
+            touch.delta = {
+                x : e.touches[0].pageX - touch.move.x,
+                y : e.touches[0].pageY - touch.move.y
+            };            
+
+            console.log(touch.delta.x, touch.delta.y);
+
+            touch.move.x = e.touches[0].pageX;
+            touch.move.y = e.touches[0].pageY;
+
+            editObject.position.x += touch.delta.x;
+            editObject.position.y += -touch.delta.y;
+
+        }
+
+    </script>    
   </body>
 </html>
