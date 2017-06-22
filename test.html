@@ -89,7 +89,19 @@
       margin-top : 14px;
     }
 
-    .icon-edit-type{
+    .icon-2f-edit-type{
+        font-family: AppleSDGothicNeo, sans-serif;
+        border-radius: 7px;
+        font-weight: bold;
+        letter-spacing: 0.4px;
+        border: 1px solid #fff;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+        margin-left : 10px;
+        margin-bottom : 20px;
+        padding : 10px;
+    }
+
+    .icon-1f-edit-type{
         font-family: AppleSDGothicNeo, sans-serif;
         border-radius: 7px;
         font-weight: bold;
@@ -486,7 +498,8 @@
 
       <div class="icon c"> 
         <img src="assets/btn-capture.png" srcset="assets/btn-capture@2x.png 2x, assets/btn-capture@3x.png 3x" class="icon-images capture">
-        <div onclick="flagEditType()" class="icon-edit-type">Z-axis 조정</div>
+        <div onclick="flag2FEditType()" class="icon-2f-edit-type">2F Scale</div>
+        <div onclick="flag1FEditType()" class="icon-1f-edit-type">1F Position</div>
       </div>
 
       <div class="icon d">
@@ -548,7 +561,8 @@
           editText,
           editEmoji,
           editObject,
-          editControlType = 'z-axis',
+          edit1FControlType = 'position'
+          edit2FControlType = 'scale',
           renderables = {
               ready : {
                   target : null,
@@ -691,7 +705,7 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 1 :
                     document.querySelector('.icon-images.capture').style.display = 'block';
@@ -715,7 +729,7 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 2 :
                     document.querySelector('.icon-images.capture').style.display = 'none';
@@ -739,7 +753,7 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 3 :
                     document.querySelector('.icon-images.capture').style.display = 'none';
@@ -763,7 +777,7 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 4 :
                     document.querySelector('.icon-images.capture').style.display = 'none';
@@ -787,7 +801,7 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-edit-type').style.display = 'block';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'block'; document.querySelector('.icon-1f-edit-type').style.display = 'block';
                     break;
                 case 5 :
                     document.querySelector('.icon-images.capture').style.display = 'none';
@@ -811,7 +825,7 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 6 :
                     
@@ -839,7 +853,7 @@
                     document.querySelector('.icon-view-writer').style.display  = 'none';
                     document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                    document.querySelector('.icon-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 case 7 :
                     document.querySelector('.icon-images.capture').style.display = 'block';
@@ -863,7 +877,7 @@
                     document.querySelector('.icon-view-writer').style.display  = 'block';
                     document.querySelector('.icon-view-sucsess').style.display = 'block';
 
-                    document.querySelector('.icon-edit-type').style.display = 'none';
+                    document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
                     break;
                 default : break;
             }
@@ -1124,19 +1138,37 @@
 
       }
 
-      function flagEditType(){
-          editControlType === 'scale' ? editControl('z-axis') : editControl('scale');
+      function flag2FEditType(){
+          edit2FControlType === 'scale' ? edit2FControl('z-axis') : edit2FControl('scale');
       }
 
-      function editControl(value){
+      function edit2FControl(value){
           switch(value){
               case 'scale':
-                document.querySelector('.icon-edit-type').innerHTML = 'Z-axis 조정';
-                editControlType = value;
+                document.querySelector('.icon-2f-edit-type').innerHTML = '2F Scale';
+                edit2FControlType = value;
                 break;
               case 'z-axis':
-                document.querySelector('.icon-edit-type').innerHTML = 'Scale 조정';
-                editControlType = value;
+                document.querySelector('.icon-2f-edit-type').innerHTML = '2F Z-axis';
+                edit2FControlType = value;
+                break;
+              default : break;
+          }
+      }
+
+      function flag1FEditType(){
+          edit1FControlType === 'position' ? edit1FControl('rotation') : edit1FControl('position');
+      }
+
+      function edit1FControl(value){
+          switch(value){
+              case 'position':
+                document.querySelector('.icon-1f-edit-type').innerHTML = '1F Position';
+                edit1FControlType = value;
+                break;
+              case 'rotation':
+                document.querySelector('.icon-1f-edit-type').innerHTML = '1F Rotation';
+                edit1FControlType = value;
                 break;
               default : break;
           }
@@ -1391,7 +1423,7 @@
                 touch.pinch.zoom = touch.pinch.start / touch.pinch.end;
                 touch.pinch.start = touch.pinch.end;
 
-                switch(editControlType){
+                switch(edit2FControlType){
                     case 'scale' :
                         if(scale > 0) scale += touch.pinch.zoom >= 1 ? -.05 : .05;
                         else scale = 0.1;
@@ -1415,8 +1447,17 @@
             touch.move.x = e.touches[0].pageX;
             touch.move.y = e.touches[0].pageY;
 
-            editObject.position.x += touch.delta.x;
-            editObject.position.y += -touch.delta.y;
+            switch(edit1FControlType){
+                case 'rotation' :
+                    editObject.rotateX(touch.delta.y/100);
+                    editObject.rotateY(touch.delta.x/100);
+                    break;
+                case 'position' :
+                    editObject.position.x += touch.delta.x;
+                    editObject.position.y += -touch.delta.y;
+                    break;
+                default : break;
+            }
 
         }
 
