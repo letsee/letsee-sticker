@@ -263,18 +263,13 @@
   margin: auto;
   width  : 30px;
   height : 30px;
-  opacity: 0.7;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  border: 2px solid #ffffff;
-  border-radius: 100%;
 }
 
-.ready-button h1{
+.ready-button img{
+  width: 100%;
+  height: 100%;
   position: absolute;
-  font-size : 20px;
-  opacity: 0.7;
-  margin-top: 1px;
-  margin-left: 9px;
 }
 
 /* ======================================================================*/
@@ -282,8 +277,8 @@
 /* ======================================================================*/
 .create-target-wrapper-frame{
     position: absolute;
-    width : 5%;
-    height: 5%;
+    width : 10%;
+    height: 10%;
 }
 
 .create-target-wrapper-frame.rt, .create-target-wrapper-frame.rb{
@@ -1000,7 +995,8 @@
           renderables.ready.target = createDOMRanderable('<label id="current-target-name">'+name+'</label>', 'target-ready-content');
 
           renderables.ready.text   = createDOMRanderable("<div>증강현실 편지를 담아 보내세요", 'target-ready-content');
-          renderables.ready.plus   = createDOMRanderable('<h1>+</h1>', 'ready-button', createLettet);
+        //   renderables.ready.plus   = createDOMRanderable('<h1>+</h1>', 'ready-button', createLettet);
+          renderables.ready.plus   = createDOMRanderable('<img src="assets/btn-add-content.png" srcset="assets/btn-add-content@2x.png 2x, assets/btn-add-content@3x.png 3x">', 'ready-button', createLettet);
 
           renderables.ready.target.position.y = 10;
           renderables.ready.plus.position.y   = -30;
