@@ -491,8 +491,8 @@
 
       <div class="icon b">
         <img onclick="typeLoadControl(5);" src="assets/btn-next.png" srcset="assets/btn-next@2x.png 2x, assets/btn-next@3x.png 3x" class="icon-images next">
-        <div onclick="typeLoadControl(1);typeLoadControl(4);" class="icon-text-sucsess">완료</div>
-        <div onclick="typeLoadControl(1);" class="icon-edit-sucsess">완료</div>
+        <div onclick="typeLoadControl(4);" class="icon-text-sucsess">완료</div>
+        <div onclick="editSucsess();" class="icon-edit-sucsess">완료</div>
         <div onclick="typeLoadControl(1, 1);" class="icon-kakao-sucsess">완료</div>
       </div>
 
@@ -1111,6 +1111,12 @@
       }
 
       function edit(renderable){
+          content.children.forEach(function(item){
+              item.element.removeEventListener('touchstart', selectEditObject);
+              item.element.style.opacity = '0.3';
+
+          });
+
           renderable.element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
           renderable.element.style.opacity = '0.8';
           
@@ -1123,7 +1129,21 @@
 
 
 
-      
+      function editSucsess(){
+          content.children.forEach(function(item){
+              item.element.style.opacity = '0.8';
+              item.element.addEventListener('touchstart', selectEditObject);
+
+          });
+
+          typeLoadControl(1);
+
+
+      }
+
+      function selectEditObject(e){
+          console.log('test');
+      }
 
       function createLettet(){
           typeLoadControl(1);
