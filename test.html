@@ -1489,8 +1489,8 @@
                     editObject.rotateY(touch.delta.x/100);
                     break;
                 case 'position' :
-                    editObject.position.x += touch.delta.x;
-                    editObject.position.y += -touch.delta.y;
+                    editObject.position.x += touch.delta.x/2;
+                    editObject.position.y += -touch.delta.y/2;
                     break;
                 default : break;
             }
