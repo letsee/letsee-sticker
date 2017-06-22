@@ -971,7 +971,7 @@
                 document.body.style.backgroundColor = 'transparent';
                 edit1FControl('position');
                 edit2FControl('scale');
-                isRedit ? editObject : edit(createDOMRanderable(editText));
+                isRedit ? edit(editObject) : edit(createDOMRanderable(editText));
 
                 break;                
             case 5 :
@@ -1110,7 +1110,6 @@
       }
 
       function edit(renderable){
-          if(isRedit) isRedit = false;
 
           content.children.forEach(function(item){
               item.element.removeEventListener('touchstart', selectEditObject);
@@ -1121,7 +1120,7 @@
           renderable.element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
           renderable.element.style.opacity = '0.8';
           
-          content.add(renderable);
+          if(!isRedit) content.add(renderable);
 
           editObject = renderable;
 
@@ -1131,6 +1130,8 @@
 
 
       function editSucsess(){
+          if(isRedit) isRedit = false;
+
           content.children.forEach(function(item){
               item.element.style.opacity = '0.8';
               item.element.addEventListener('touchstart', selectEditObject);
@@ -1460,6 +1461,7 @@
 
                 touch.pinch.zoom = touch.pinch.start / touch.pinch.end;
                 touch.pinch.start = touch.pinch.end;
+                if(touch.pinch.zoom === 1) touch.pinch.zoom = 1.1;
 
                 switch(edit2FControlType){
                     case 'scale' :
