@@ -1142,7 +1142,16 @@
       }
 
       function selectEditObject(e){
-          console.log('test');
+
+          content.children.forEach(function(item){
+              
+              if(item.element == e.target.parentElement){
+                  editEmoji = e.target;
+                  editObject = item;
+                  typeLoadControl(4);
+              }
+
+          });
       }
 
       function createLettet(){
