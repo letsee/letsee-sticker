@@ -395,15 +395,24 @@
     
 }            
 
+#target h3{
+	opacity: 0.8;
+	font-family: AppleSDGothicNeo, sans-serif;
+	font-weight: 800;
+	text-align: center;    
+
+}
   </style>
   <script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
   <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
   <script src="vendor/TouchControl.js"></script>
   </head>
   <body>
-
+    <div id="target">
+        <h3>로딩중..</h3>
+    </div>
     <div id="wrapper">
-      <div class="intro-title">증강현실 편지를 남길 대상을 비춰주세요</div>
+      <div class="intro-title"></div>
 
       <div class="target-intro-wrapper">
         <div class="letsee-main-wrapper">
@@ -597,7 +606,9 @@
 
                 var 
                     uri = e.target.uri;
-
+                document.querySelector('.target-intro-wrapper').style.display = 'none';
+                document.querySelector('.intro-title').style.display = 'none';
+                
                 if(uri !== "unknown"){
                     isTraking = true;
                     if(isModeView && uri !== notificationEntityURI) return alert('메시지가 담긴 사물이 아닙니다.');
@@ -644,6 +655,7 @@
 
             switch(threadType){
                 case 0 :
+                    document.querySelector('.intro-title').innerText = '증강현실 편지를 남길 대상을 비춰주세요';
                     document.querySelector('.icon-images.capture').style.display = 'none';
                     document.querySelector('.icon-images.close').style.display = 'none';
                     document.querySelector('.icon-images.next').style.display  = 'none';
@@ -782,7 +794,11 @@
 
                     break;
                 case 6 :
-                    document.querySelector('.icon-images.capture').style.display = 'block';
+                    
+                    if(notificationObject){
+                        document.querySelector('.intro-title').innerHTML = notificationEntityName+'<span>를 비춰</span><br><span>'+notificationName+'님의 증강현실 편지를 확인하세요</span>';
+                    }
+                    document.querySelector('.icon-images.capture').style.display = 'none';
                     document.querySelector('.icon-images.close').style.display  = 'none';
                     document.querySelector('.icon-images.next').style.display   = 'none';
                     document.querySelector('.icon-images.emoji').style.display  = 'none';
@@ -1087,8 +1103,6 @@
       }
 
       function typeStartControl(e){
-            document.querySelector('.target-intro-wrapper').style.display = 'none';
-            document.querySelector('.intro-title').style.display = 'none';
 
             switch(threadType){
                 case 0 :
@@ -1260,7 +1274,8 @@
             avatar : avatar,
             name : name,
             datetime : datetime,
-            entity : CURRENT_URI,            
+            entity : CURRENT_URI,
+            entityName : currentTarget.name,
             data : data
           });
       }
@@ -1274,6 +1289,7 @@
 
               notificationName = data.val().name;
               notificationEntityURI = data.val().entity;
+              notificationEntityName = data.val().entityName;
               notificationObject = data.val().data;
 
               document.getElementById('view-writer').innerText = notificationName;
