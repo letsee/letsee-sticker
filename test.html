@@ -303,7 +303,7 @@
 /* ======================================================================*/
 .input-text-area textarea, textarea{
   overflow: hidden;
-  width  : 110px;
+  width  : 120px;
   font-family: AppleSDGothicNeo, sans-serif;
   font-size: 18px;
   background: transparent;
@@ -425,6 +425,8 @@
   <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
   </head>
   <body>
+    <div id="temp" style=" font-size: 18px; position:absolute; border:1px solid red; visibility: hidden;"></div>
+
     <div id="target">
         <h3>로딩중..</h3>
     </div>
@@ -1103,6 +1105,8 @@
                   object.element.children[0].readOnly = true;
                   object.element.children[0].style.height = '24px';
                   object.element.children[0].style.height = object.element.children[0].scrollHeight + 'px';
+                  document.getElementById("temp").innerText = object.element.children[0].value;
+                  object.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';                  
               }              
 
           });
@@ -1132,7 +1136,9 @@
 
           editObject.element.children[0].readOnly = true;
           editObject.element.children[0].style.height = '24px';
-          editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';          
+          editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';
+          document.getElementById("temp").innerText = editObject.element.children[0].value;
+          editObject.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';
 
       }
 
@@ -1374,6 +1380,11 @@
       function resizeTextarea(ev) {
           this.style.height = '24px';
           this.style.height = this.scrollHeight + 'px';
+          
+          document.getElementById("temp").innerText = this.value;
+          this.style.width = (document.getElementById("temp").offsetWidth+20)+'px';
+
+
       }
 
       function guid(){
