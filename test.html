@@ -328,20 +328,20 @@
 .notification-title{
   opacity: 0.8;
   text-align: center;
-  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);    
 }
 
 .notification-title p{
   margin: 0;
   font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 11px;
+  font-size: 1em;
   font-weight: 800;
 }
 
 .notification-icon{
   opacity: 0.8;  
-  width: 45px;
-  height: 45px;
+  width: 130px;
+  height: 130px;
 }
 
 .notification-icon img{  
@@ -352,7 +352,7 @@
 .notification-content{
   opacity: 0.8;
   font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 9px;
+  font-size: 1em;
   font-weight: 800;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
@@ -1107,14 +1107,11 @@
           renderables.notification.icon    = createDOMRanderable('<img src="assets/icn-open-messege.png" srcset="assets/icn-open-messege@2x.png 2x, assets/icn-open-messege@3x.png 3x">', 'notification-icon', viewContent);
           renderables.notification.content = createDOMRanderable('메세지 확인', 'notification-content');
 
-          renderables.notification.title.position.y   =  45;
-          renderables.notification.content.position.y = -45;
-
           world.add(renderables.notification.title);
           world.add(renderables.notification.icon);
           world.add(renderables.notification.content);
 
-      }
+      }  
 
       function view(){
 
@@ -1322,6 +1319,23 @@
                 case 6 :
                     currentTarget = e.target;
                     if(document.getElementById('noti-name')) document.getElementById('noti-name').innerText = notificationName;
+
+                    if(currentTarget.size.width > 100){
+
+                        renderables.notification.title.position.y   =  85;
+                        renderables.notification.content.position.y = -85;
+                        renderables.notification.icon.scale.set(.6,.6,.6);
+
+                    }else{
+
+                        renderables.notification.title.position.y   =  35;
+                        renderables.notification.content.position.y = -35;
+
+                        renderables.notification.title.scale.set(.4,.4,.4);
+                        renderables.notification.icon.scale.set(.2,.2,.2);
+                        renderables.notification.content.scale.set(.4,.4,.4);
+
+                    }                                                      
 
                     break;
                 case 7 :
