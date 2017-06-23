@@ -302,6 +302,7 @@
 /* input text ar */
 /* ======================================================================*/
 .input-text-area textarea, textarea{
+  resize:none;
   overflow: hidden;
   width  : 120px;
   font-family: AppleSDGothicNeo, sans-serif;
@@ -312,7 +313,6 @@
   outline: none;
   border: 1px solid rgba(255, 255, 255, 0);
   text-align: center;
-  margin-top : 50%;
 }
 
 .input-text-area textarea::-webkit-input-placeholder{
@@ -1104,6 +1104,7 @@
               if(item.text.indexOf('<textarea') !== -1){
                   object.element.children[0].readOnly = true;
                   object.element.children[0].style.height = '24px';
+                  object.element.children[0].style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
                   object.element.children[0].style.height = object.element.children[0].scrollHeight + 'px';
                   document.getElementById("temp").innerText = object.element.children[0].value;
                   object.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';                  
@@ -1134,11 +1135,14 @@
 
           editObject = renderable;
 
-          editObject.element.children[0].readOnly = true;
-          editObject.element.children[0].style.height = '24px';
-          editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';
-          document.getElementById("temp").innerText = editObject.element.children[0].value;
-          editObject.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';
+          if(editObject.element.children[0].tagName === 'TEXTAREA'){
+            editObject.element.children[0].readOnly = true;
+            editObject.element.children[0].style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
+            editObject.element.children[0].style.height = '24px';
+            editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';
+            document.getElementById("temp").innerText = editObject.element.children[0].value;
+            editObject.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';
+          }
 
       }
 
@@ -1487,7 +1491,7 @@
 
                 touch.pinch.zoom = touch.pinch.start / touch.pinch.end;
                 touch.pinch.start = touch.pinch.end;
-                if(touch.pinch.zoom === 1) touch.pinch.zoom = 1.1;
+                if(touch.pinch.zoom === 1) touch.pinch.zoom = 1.02;
 
                 switch(edit2FControlType){
                     case 'scale' :
