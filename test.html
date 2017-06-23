@@ -301,9 +301,9 @@
 /* ======================================================================*/
 /* input text ar */
 /* ======================================================================*/
-.input-text-area textarea{
+.input-text-area textarea, textarea{
+  overflow: hidden;
   width  : 110px;
-  height : 100px;
   font-family: AppleSDGothicNeo, sans-serif;
   font-size: 18px;
   background: transparent;
@@ -888,7 +888,7 @@
           threadType = type;
 
           if(type === 4){
-             editText = document.getElementById('ar-textarea') ? '<h1>' + document.getElementById('ar-textarea').value + '</h1>' : editEmoji;
+             editText = document.getElementById('ar-textarea') ? '<textarea>' + document.getElementById('ar-textarea').value + '</textarea>' : editEmoji;
           }
           
           if(world){
@@ -1046,7 +1046,12 @@
           renderables.input.text.textarea = createDOMRanderable('<textarea id="ar-textarea" placeholder="메세지를 입력해주세요" type="text"></textarea>','input-text-area');
           
           world.add(renderables.input.text.textarea);
-          if(isTraking) setTimeout(function(){ document.getElementById('ar-textarea').focus(); }, 200);
+
+          if(isTraking) setTimeout(function(){
+              document.getElementById('ar-textarea').addEventListener('keyup', resizeTextarea);
+              document.getElementById('ar-textarea').focus();
+
+          }, 200);
 
       }
 
@@ -1078,7 +1083,8 @@
               var 
                   element = document.createElement('div');
 
-              element.innerHTML = '<h1>'+item.text+'</h1>';
+            //   element.innerHTML = '<h1>'+item.text+'</h1>';
+              element.innerHTML = item.text;
               element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
               element.style.opacity = '0.8';
 
@@ -1092,6 +1098,12 @@
               object.scale.set(item.scale,item.scale,item.scale);
 
               content.add(object);
+
+              if(item.text.indexOf('<textarea') !== -1){
+                  object.element.children[0].readOnly = true;
+                  object.element.children[0].style.height = '24px';
+                  object.element.children[0].style.height = object.element.children[0].scrollHeight + 'px';
+              }              
 
           });
         } else{
@@ -1117,6 +1129,10 @@
           if(!isRedit) content.add(renderable);
 
           editObject = renderable;
+
+          editObject.element.children[0].readOnly = true;
+          editObject.element.children[0].style.height = '24px';
+          editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';          
 
       }
 
@@ -1354,6 +1370,11 @@
 
           });
       }      
+
+      function resizeTextarea(ev) {
+          this.style.height = '24px';
+          this.style.height = this.scrollHeight + 'px';
+      }
 
       function guid(){
         function s4(){ return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);}
