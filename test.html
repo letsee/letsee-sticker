@@ -250,26 +250,26 @@
 /* ======================================================================*/
 
   .target-ready-content{
+    width : 1000px;
     opacity: 0.8;
     text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
     font-family: AppleSDGothicNeo, sans-serif;
     font-weight: 800;
-    font-size: .5em;
+    font-size: 1em;
     letter-spacing: -0.8px;
     text-align: center;
     margin : 0;
   }
 
 .ready-button{
-  margin: auto;
-  width  : 30px;
-  height : 30px;
+  width  : 130px;
+  height : 130px;
 }
 
 .ready-button img{
   width: 100%;
   height: 100%;
-  position: absolute;
+  /*position: absolute;*/
 }
 
 /* ======================================================================*/
@@ -628,6 +628,13 @@
 
           letsee.addEventListener("trackstart", function(e) {
 
+                if(e.target.size.width > 100){
+                    // resize
+                }else{
+                    letsee.getEntity('unknown').renderables[0].scale.set(0.3,0.3,0.3);
+                    letsee.getEntity('unknown').renderables[1].scale.set(0.3,0.3,0.3);
+                }
+                
                 var 
                     uri = e.target.uri;
                 document.querySelector('.target-intro-wrapper').style.display = 'none';
@@ -898,7 +905,6 @@
 
                 return;
             }
-            console.log(user);
             USER_NAME = user.lastname+user.firstname;
         }
     
@@ -1010,8 +1016,23 @@
           renderables.ready.text   = createDOMRanderable("<div>증강현실 편지를 담아 보내세요", 'target-ready-content');
           renderables.ready.plus   = createDOMRanderable('<img src="assets/btn-add-content.png" srcset="assets/btn-add-content@2x.png 2x, assets/btn-add-content@3x.png 3x">', 'ready-button', createLettet);
 
-          renderables.ready.target.position.y = 10;
-          renderables.ready.plus.position.y   = -30;
+          if(currentTarget){
+
+              if(currentTarget.size.width > 100){
+                  renderables.ready.target.position.y = 10;
+                  renderables.ready.plus.position.y   = -30;
+
+                  renderables.ready.text.scale.set(.5,.5,.5);
+                  renderables.ready.target.scale.set(.5,.5,.5);
+                  renderables.ready.plus.scale.set(.3,.3,.3);
+              }else{
+                  renderables.ready.target.position.y = 7;
+                  renderables.ready.plus.position.y   = -20; 
+                  renderables.ready.text.scale.set(.3,.3,.3);
+                  renderables.ready.target.scale.set(.3,.3,.3);
+                  renderables.ready.plus.scale.set(.2,.2,.2);
+              }
+          }
 
           world.add(renderables.ready.target);
           world.add(renderables.ready.text);
@@ -1084,7 +1105,7 @@
 
           renderables.notification.title   = createDOMRanderable('<p><label id="noti-name">'+notificationName+'</label>님의</p> <p>편지가 담겨있어요</p>', 'notification-title');
           renderables.notification.icon    = createDOMRanderable('<img src="assets/icn-open-messege.png" srcset="assets/icn-open-messege@2x.png 2x, assets/icn-open-messege@3x.png 3x">', 'notification-icon', viewContent);
-          renderables.notification.content = createDOMRanderable('터치해 메세지 확인', 'notification-content');
+          renderables.notification.content = createDOMRanderable('메세지 확인', 'notification-content');
 
           renderables.notification.title.position.y   =  45;
           renderables.notification.content.position.y = -45;
@@ -1260,8 +1281,23 @@
                     document.querySelector('.icon-images.capture').style.display = 'block';
 
                     document.body.style.backgroundColor = 'rgba(0,0,0,0.1)';
-                    currentTarget = e.target;
+                    currentTarget = e.target;                    
                     renderables.ready.target.element.innerHTML = currentTarget.name+'에';
+
+                    if(currentTarget.size.width > 100){
+                        renderables.ready.target.position.y = 10;
+                        renderables.ready.plus.position.y   = -30;
+
+                        renderables.ready.text.scale.set(.5,.5,.5);
+                        renderables.ready.target.scale.set(.5,.5,.5);
+                        renderables.ready.plus.scale.set(.3,.3,.3);
+                    }else{
+                        renderables.ready.target.position.y = 7;
+                        renderables.ready.plus.position.y   = -20; 
+                        renderables.ready.text.scale.set(.3,.3,.3);
+                        renderables.ready.target.scale.set(.3,.3,.3);
+                        renderables.ready.plus.scale.set(.2,.2,.2);
+                    }                    
                     break;
                 case 1 :
                     var w = e.target.size.width,
