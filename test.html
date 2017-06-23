@@ -251,6 +251,7 @@
 
   .target-ready-content{
     opacity: 0.8;
+    text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
     font-family: AppleSDGothicNeo, sans-serif;
     font-weight: 800;
     font-size: .5em;
@@ -327,13 +328,14 @@
 .notification-title{
   opacity: 0.8;
   text-align: center;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
 
 .notification-title p{
   margin: 0;
-	font-family: AppleSDGothicNeo, sans-serif;
-	font-size: 11px;
-	font-weight: 800;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
 }
 
 .notification-icon{
@@ -349,9 +351,10 @@
 
 .notification-content{
   opacity: 0.8;
-	font-family: AppleSDGothicNeo, sans-serif;
-	font-size: 9px;
-	font-weight: 800;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -903,6 +906,7 @@
           switch(deleted){
               case 0 :
                   content.remove(editObject);
+                  editSucsess();
                   break;
               case 1 :
                   content.children.forEach(function(item){
