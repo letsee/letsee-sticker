@@ -1006,6 +1006,13 @@
             renderables.create.emoji   = createDOMRanderable('<img src="assets/group-2-copy-3.png" srcset="assets/group-2-copy-3@2x.png 2x, assets/group-2-copy-3@3x.png 3x">', 'create-target-emoji');
             renderables.create.text    = createDOMRanderable('<img src="assets/icn-ar-text.png" srcset="assets/icn-ar-text@2x.png 2x, assets/icn-ar-text@3x.png 3x">', 'create-target-text');
 
+            renderables.create.emoji.element.addEventListener("click", function(){
+                typeLoadControl(3);
+            });
+            renderables.create.text.element.addEventListener("click", function(){
+                typeLoadControl(2);
+            });
+
 
             if(currentTarget.size.width > 100){
                 renderables.create.emoji.position.x = -28;
