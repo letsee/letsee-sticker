@@ -750,6 +750,8 @@
 
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
+                        
+                        document.querySelector('.ar-renderer').addEventListener('touchend', closeAddEmoji); 
 
                         break;
                     case 4 :
@@ -870,6 +872,10 @@
             threadType = type;
 
             if(type === 4){
+                if(document.getElementById('ar-textarea')){
+                    if(document.getElementById('ar-textarea').value === '') return typeLoadControl(1);
+                }
+
                 editText = document.getElementById('ar-textarea') ? '<textarea>' + document.getElementById('ar-textarea').value + '</textarea>' : editEmoji;
             }
             
@@ -936,10 +942,13 @@
                     inputText();
                     break;      
                 case 3 :
-                    document.body.style.backgroundColor = 'rgba(0,0,0,0.1)';            
+
+                    document.body.style.backgroundColor = 'rgba(0,0,0,0.1)';                   
                     inputEmoji();
+
                     break;
                 case 4 :
+
                     document.body.style.backgroundColor = 'transparent';
                     isRedit ? edit(editObject) : edit(createDOMRanderable(editText));
 
@@ -1131,9 +1140,22 @@
           renderable.element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
           renderable.element.style.opacity = '0.8';
           
-          if(!isRedit) content.add(renderable);
+          if(!isRedit){
+              content.add(renderable);
+              
+              touch.current = {
+                    x        : 0,
+                    y        : 0,
+                    z        : 0,
+                    scale    : 1,
+                    rotation : 0
+              };              
+          }
 
           editObject = renderable;
+
+          console.log(touch.current);
+          
           scale = 1.0;
 
           if(editObject.element.children[0].tagName === 'TEXTAREA'){
@@ -1170,6 +1192,15 @@
               if(item.element == e.target.parentElement){
                   isRedit = true;
                   editObject = item;
+
+                  touch.current = {
+                      x        : editObject.position.x,
+                      y        : editObject.position.y,
+                      z        : editObject.position.z,
+                      scale    : editObject.scale.x,
+                      rotation : editObject.rotation.z
+                  };
+
                   typeLoadControl(4);
               }
 
@@ -1191,10 +1222,16 @@
           typeLoadControl(0, 1);
 
       }      
-
+      
       function addEmoji(text){
+          document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
           editEmoji = text;
           typeLoadControl(4);
+
+      }
+      function closeAddEmoji(){
+          document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
+          typeLoadControl(1);
 
       }
 
