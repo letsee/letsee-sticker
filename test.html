@@ -89,30 +89,6 @@
       margin-top : 14px;
     }
 
-    .icon-2f-edit-type{
-        font-family: AppleSDGothicNeo, sans-serif;
-        border-radius: 7px;
-        font-weight: bold;
-        letter-spacing: 0.4px;
-        border: 1px solid #fff;
-        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
-        margin-left : 10px;
-        margin-bottom : 20px;
-        padding : 10px;
-    }
-
-    .icon-1f-edit-type{
-        font-family: AppleSDGothicNeo, sans-serif;
-        border-radius: 7px;
-        font-weight: bold;
-        letter-spacing: 0.4px;
-        border: 1px solid #fff;
-        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
-        margin-left : 10px;
-        margin-bottom : 20px;
-        padding : 10px;
-    }
-
     .icon-kakao-sucsess{
       font-family: AppleSDGothicNeo, sans-serif;
       font-size: 18px;
@@ -424,6 +400,7 @@
 
 }
   </style>
+  <script src="https://hammerjs.github.io/dist/hammer.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
   <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
   </head>
@@ -497,8 +474,6 @@
 
       <div class="icon c"> 
         <img onclick="browser.openCapture();" src="assets/btn-capture.png" srcset="assets/btn-capture@2x.png 2x, assets/btn-capture@3x.png 3x" class="icon-images capture">
-        <div onclick="flag2FEditType()" class="icon-2f-edit-type">2F Scale</div>
-        <div onclick="flag1FEditType()" class="icon-1f-edit-type">1F Position</div>
       </div>
 
       <div class="icon d">
@@ -561,8 +536,6 @@
           editText,
           editEmoji,
           editObject,
-          edit1FControlType = 'position'
-          edit2FControlType = 'scale',
           renderables = {
               ready : {
                   target : null,
@@ -709,8 +682,6 @@
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                        document.querySelector('.icon-2f-edit-type').style.display = 'none';
-                        document.querySelector('.icon-1f-edit-type').style.display = 'none';
                         break;
                     case 1 :
                         document.querySelector('.icon-images.capture').style.display = 'block';
@@ -734,8 +705,6 @@
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                        document.querySelector('.icon-2f-edit-type').style.display = 'none';
-                        document.querySelector('.icon-1f-edit-type').style.display = 'none';
                         break;
                     case 2 :
                         document.querySelector('.icon-images.capture').style.display = 'none';
@@ -759,8 +728,6 @@
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                        document.querySelector('.icon-2f-edit-type').style.display = 'none';
-                        document.querySelector('.icon-1f-edit-type').style.display = 'none';
                         break;
                     case 3 :
                         document.querySelector('.icon-images.capture').style.display = 'none';
@@ -784,8 +751,6 @@
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                        document.querySelector('.icon-2f-edit-type').style.display = 'none';
-                        document.querySelector('.icon-1f-edit-type').style.display = 'none';
                         break;
                     case 4 :
                         document.querySelector('.icon-images.capture').style.display = 'none';
@@ -809,8 +774,6 @@
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                        document.querySelector('.icon-2f-edit-type').style.display = 'block';
-                        document.querySelector('.icon-1f-edit-type').style.display = 'block';
                         break;
                     case 5 :
                         document.querySelector('.icon-images.capture').style.display = 'none';
@@ -834,8 +797,6 @@
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                        document.querySelector('.icon-2f-edit-type').style.display = 'none';
-                        document.querySelector('.icon-1f-edit-type').style.display = 'none';
                         break;
                     case 6 :
                         
@@ -863,8 +824,6 @@
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
 
-                        document.querySelector('.icon-2f-edit-type').style.display = 'none';
-                        document.querySelector('.icon-1f-edit-type').style.display = 'none';
                         break;
                     case 7 :
                         document.querySelector('.icon-images.capture').style.display = 'block';
@@ -888,7 +847,6 @@
                         document.querySelector('.icon-view-writer').style.display  = 'block';
                         document.querySelector('.icon-view-sucsess').style.display = 'block';
 
-                        document.querySelector('.icon-2f-edit-type').style.display = 'none'; document.querySelector('.icon-1f-edit-type').style.display = 'none';
                         break;
                     default : break;
                 }
@@ -983,8 +941,6 @@
                     break;
                 case 4 :
                     document.body.style.backgroundColor = 'transparent';
-                    edit1FControl('position');
-                    edit2FControl('scale');
                     isRedit ? edit(editObject) : edit(createDOMRanderable(editText));
 
                     break;                
@@ -1171,6 +1127,7 @@
           if(!isRedit) content.add(renderable);
 
           editObject = renderable;
+          scale = 1.0;
 
           if(editObject.element.children[0].tagName === 'TEXTAREA'){
             editObject.element.children[0].readOnly = true;
@@ -1232,42 +1189,6 @@
           editEmoji = text;
           typeLoadControl(4);
 
-      }
-
-      function flag2FEditType(){
-          edit2FControlType === 'scale' ? edit2FControl('z-axis') : edit2FControl('scale');
-      }
-
-      function edit2FControl(value){
-          switch(value){
-              case 'scale':
-                document.querySelector('.icon-2f-edit-type').innerHTML = '2F Scale';
-                edit2FControlType = value;
-                break;
-              case 'z-axis':
-                document.querySelector('.icon-2f-edit-type').innerHTML = '2F Z-axis';
-                edit2FControlType = value;
-                break;
-              default : break;
-          }
-      }
-
-      function flag1FEditType(){
-          edit1FControlType === 'position' ? edit1FControl('rotation') : edit1FControl('position');
-      }
-
-      function edit1FControl(value){
-          switch(value){
-              case 'position':
-                document.querySelector('.icon-1f-edit-type').innerHTML = '1F Position';
-                edit1FControlType = value;
-                break;
-              case 'rotation':
-                document.querySelector('.icon-1f-edit-type').innerHTML = '1F Rotation';
-                edit1FControlType = value;
-                break;
-              default : break;
-          }
       }
 
       function typeStartControl(e){
@@ -1493,111 +1414,219 @@
     </script>
     <script>
 
-        var scale = 1;
-        var touch = {
-                isTouch : false,
-                isPinch : false,
-                delta : { 
-                    x : 0,
-                    y : 0
-                },           
-                move  : { 
-                    x : 0,
-                    y : 0
-                },
-                pinch : {
-                    start : 0.0,
-                    end   : 0.0,
-                    zoom  : 0.0,
-                    delta : { 
+            window.addEventListener('touchstart', touchDown);
+            window.addEventListener('touchend', touchUp);
+            window.addEventListener('touchmove', touchMove);
+
+            // console.log(Hammer);
+
+            var manager   = new Hammer.Manager(document.body),
+                Pan       = new Hammer.Pan(),
+                Rotate    = new Hammer.Rotate(),
+                Pinch     = new Hammer.Pinch(),
+                Press     = new Hammer.Press({ time : 1000 , threshold : 15 });
+
+            /* recognizeWith : http://hammerjs.github.io/recognize-with
+            */
+            Rotate.recognizeWith([Pan]);
+            Pinch.recognizeWith([Rotate, Pan]);
+
+            manager.add(Press);
+            manager.add(Pan);
+            manager.add(Rotate);
+            manager.add(Pinch);
+
+            var 
+                touch = {
+                    current : {
+                        x        : 0,
+                        y        : 0,
+                        z        : 0,
+                        scale    : 1,
+                        rotation : 0
+                    },
+                    OLD_ROTATE_Z : null,
+                    move : {
                         x : 0,
                         y : 0
-                    },                 
-                }                
-            };
+                    },
+                    delta : {
+                        x : 0,
+                        y : 0
+                    },
+                    press : false,
+                    helper : null,
+                    gestureF3 : {
+                        enable : false,
+                        count : 0,
+                    }
 
-        window.addEventListener('touchstart', touchDown);    
-        window.addEventListener('touchend', touchUp);
-        window.addEventListener('touchmove', touchMove);
+                };
 
-        function touchDown(e){
-            if(!editObject)return;
+            manager.on('panmove', function(e) {
+                if(!editObject)return;
 
-            touch.isTouch = true;
-            if(e.touches.length > 1){
+                if(touch.press) {
+                    var dZ = touch.current.z + (e.deltaY);
 
-                touch.pinch.x = e.touches[0].pageX - e.touches[1].pageX;
-                touch.pinch.y = e.touches[0].pageY - e.touches[1].pageY;
-    
-                touch.pinch.start = Math.sqrt(touch.pinch.x * touch.pinch.x + touch.pinch.y * touch.pinch.y);
-                touch.pinch.end = touch.pinch.start;
-                return;
-            }
+                    editObject.position.z = -dZ;
 
-            touch.move.x = e.touches[0].pageX;
-            touch.move.y = e.touches[0].pageY;
-        }
+                } else {
+                    var dX = touch.current.x + (e.deltaX);
+                    var dY = touch.current.y + (e.deltaY);
 
-        function touchUp(e){
-            if(!editObject)return;
-            
-            touch.isTouch = false;
-            touch.isPinch = false;
+                    editObject.position.x = dX;
+                    editObject.position.y = -dY
 
-        }
+                };
 
-        function touchMove(e){
-            if(!editObject)return;
-            if(!touch.isTouch) return;
-            
-            if(e.touches.length > 1){
+            });
 
-                touch.pinch.x = e.touches[0].pageX - e.touches[1].pageX;
-                touch.pinch.y = e.touches[0].pageY - e.touches[1].pageY;
-                touch.pinch.end = Math.sqrt(touch.pinch.x * touch.pinch.x + touch.pinch.y * touch.pinch.y);
+            manager.on('panend', function(e) {
+                if(!editObject)return;
 
-                touch.pinch.zoom = touch.pinch.start / touch.pinch.end;
-                touch.pinch.start = touch.pinch.end;
-                if(touch.pinch.zoom === 1) touch.pinch.zoom = 1.02;
+                if(touch.press) {
+                    touch.press = false;
+                    world.remove(touch.helper);
 
-                switch(edit2FControlType){
-                    case 'scale' :
-                        if(scale > 0) scale += touch.pinch.zoom >= 1 ? -.02 : .02;
-                        else scale = 0.1;
-                        editObject.scale.set(scale,scale,scale);
-                        break;
-                    case 'z-axis' :
-                        editObject.position.z += touch.pinch.zoom >= 1 ? -2 : 2;
-                        break;
-                    default : break;
+                    touch.current.z = touch.current.z + e.deltaY;
+                    manager.get('pinch').set({ enable : true });
+                    manager.get('rotate').set({ enable : true });
+
+                } else {
+                    touch.current.x = touch.current.x + e.deltaX;
+                    touch.current.y = touch.current.y + e.deltaY;
                 }
 
-                touch.isPinch = true;
-                return;
+            });
+
+            manager.on('pinchmove', function(e) {
+                if(!editObject)return;
+
+                var 
+                    scale = e.scale * touch.current.scale;
+
+                editObject.scale.set(scale, scale, scale);
+
+                var dX = touch.current.x + (e.deltaX);
+                var dY = touch.current.y + (e.deltaY);
+
+                editObject.position.x = dX;
+                editObject.position.y = -dY;                
+
+            });
+
+            manager.on('pinchend', function(e) {
+                if(!editObject)return;
+
+                touch.current.scale = e.scale * touch.current.scale;
+
+            });
+
+            manager.on('rotatemove', function(e) {
+                if(!editObject)return;
+
+                if(touch.OLD_ROTATE_Z) editObject.rotateZ( (touch.OLD_ROTATE_Z - e.rotation) / 60 );
+                touch.OLD_ROTATE_Z = e.rotation;
+
+            });
+
+            manager.on('rotateend', function(e) {
+                if(!editObject)return;
+
+                touch.OLD_ROTATE_Z = null;
+
+            });
+
+            manager.on('press', function(e) {
+                if(!editObject)return;
+
+                touch.press = true;
+
+                var helpElement = document.createElement('div');
+                helpElement.innerHTML = '<h1 style="color:#ff00ff"> Z Position </h1>';
+                
+                touch.helper = new DOMRenderable(helpElement);
+                touch.helper.position.y = 50;
+
+                world.add(touch.helper);
+                manager.get('pinch').set({ enable : false });
+                manager.get('rotate').set({ enable : false });                
+
+            });          
+            
+            // 3F
+            function touchMove(e){
+                if(!editObject)return;
+
+                if(e.touches.length > 2){
+
+                    var
+                        speed = 0.01;
+
+                    var x = e.touches[1].pageX - touch.move.x,
+                        y = e.touches[1].pageY - touch.move.y;
+
+                    var mX = new Matrix4(),
+                        mY = new Matrix4();
+
+                    mX.makeRotationX( y * speed );
+                    mY.makeRotationY( x * speed );
+
+                    var m = new Matrix4(),
+                        mQ = new Quaternion();
+                        
+                    m.multiplyMatrices( mX, mY );
+                    mQ.setFromRotationMatrix(m);
+
+                    mQ.multiply(editObject.quaternion);
+
+                    editObject.quaternion.copy(mQ);
+
+                    touch.move.x = e.touches[1].pageX;
+                    touch.move.y = e.touches[1].pageY;
+
+                }
+
             }
-                            
-            touch.delta = {
-                x : e.touches[0].pageX - touch.move.x,
-                y : e.touches[0].pageY - touch.move.y
-            };
 
-            touch.move.x = e.touches[0].pageX;
-            touch.move.y = e.touches[0].pageY;
+            function touchDown(e){
+                if(!editObject)return;
 
-            switch(edit1FControlType){
-                case 'rotation' :
-                    editObject.rotateX(touch.delta.y/100);
-                    editObject.rotateY(touch.delta.x/100);
-                    break;
-                case 'position' :
-                    editObject.position.x += touch.delta.x/2;
-                    editObject.position.y += -touch.delta.y/2;
-                    break;
-                default : break;
+                if(e.touches.length > 2){
+                    touch.gestureF3.enable = true;
+
+                    manager.get('pan').set({ enable : false });
+                    manager.get('pinch').set({ enable : false });
+                    manager.get('rotate').set({ enable : false });
+
+                    touch.move.x = e.touches[1].pageX;
+                    touch.move.y = e.touches[1].pageY;
+                    
+                }
+
             }
 
-        }
+            function touchUp(e){
+                if(!editObject)return;
+                
+                if(touch.gestureF3.enable) touch.gestureF3.count++;
 
-    </script>    
+                if(touch.gestureF3.count === 3){
+                    manager.get('pan').set({ enable : true });
+                    manager.get('pinch').set({ enable : true });
+                    manager.get('rotate').set({ enable : true });
+                    
+                    touch.gestureF3.count = 0;
+                    touch.gestureF3.enable = false;
+
+                }
+
+            }
+
+
+
+
+    </script>     
   </body>
 </html>
