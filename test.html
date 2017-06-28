@@ -1587,15 +1587,15 @@
                 touch.press = true;
 
                 var helpElement = document.createElement('div');
-                helpElement.innerHTML = '<img src="assets/idc-zpos.png" srcset="assets/idc-zpos@2x.png 2x, assets/idc-zpos@3x.png 3x">';
+                helpElement.innerHTML = '<img style="opacity : .6;" src="assets/idc-zpos.png" srcset="assets/idc-zpos@2x.png 2x, assets/idc-zpos@3x.png 3x">';
                 
                 touch.helper = new DOMRenderable(helpElement);
                 
-                var scale = editObject.scale.x;
+                var scale = editObject.scale.x /1.4;
                 touch.helper.scale.set(scale,scale,scale);
 
                 touch.helper.position.x = editObject.position.x;
-                touch.helper.position.y = editObject.position.y - (scale*20);
+                touch.helper.position.y = editObject.position.y - (scale * 24.5);
                 touch.helper.position.z = editObject.position.z - 5;
 
                 touch.helper.rotateX(Math.PI/2);
