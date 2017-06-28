@@ -1196,7 +1196,7 @@
                   touch.current = {
                       x        : editObject.position.x,
                       y        : -editObject.position.y,
-                      z        : editObject.position.z,
+                      z        : -editObject.position.z,
                       scale    : editObject.scale.x,
                       rotation : editObject.rotation.z
                   };
@@ -1512,6 +1512,7 @@
                     var dZ = touch.current.z + (e.deltaY);
 
                     editObject.position.z = -dZ;
+                    touch.helper.position.z = editObject.position.z - 5;
 
                 } else {
                     var dX = touch.current.x + (e.deltaX);
