@@ -1518,7 +1518,7 @@
                     var dY = touch.current.y + (e.deltaY);
 
                     editObject.position.x = dX;
-                    editObject.position.y = -dY
+                    editObject.position.y = -dY;
 
                 };
 
@@ -1586,10 +1586,18 @@
                 touch.press = true;
 
                 var helpElement = document.createElement('div');
-                helpElement.innerHTML = '<h1 style="color:#ff00ff"> Z Position </h1>';
+                helpElement.innerHTML = '<img src="assets/idc-zpos.png" srcset="assets/idc-zpos@2x.png 2x, assets/idc-zpos@3x.png 3x">';
                 
                 touch.helper = new DOMRenderable(helpElement);
-                touch.helper.position.y = 50;
+                
+                var scale = editObject.scale.x;
+                touch.helper.scale.set(scale,scale,scale);
+
+                touch.helper.position.x = editObject.position.x;
+                touch.helper.position.y = editObject.position.y - (scale*20);
+                touch.helper.position.z = editObject.position.z - 5;
+
+                touch.helper.rotateX(Math.PI/2);
 
                 world.add(touch.helper);
                 manager.get('pinch').set({ enable : false });
