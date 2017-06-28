@@ -76,6 +76,10 @@
         margin-top: 50px;
     }
 
+    .icon-images.next{
+        opacity: .3;
+    }
+
     .icon-text-sucsess{
       font-family: AppleSDGothicNeo, sans-serif; 
       font-size: 18px;
@@ -353,7 +357,7 @@
   overflow: hidden;
 }
 
-.text {
+.target-intro-text {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -368,7 +372,7 @@
   opacity: 0;
 }
 
-.circle {
+.target-intro-circle {
   border-radius: 50%;
   background-color: rgba(0, 234, 255, 0.1);
   position: absolute;
@@ -379,19 +383,19 @@
   transform-origin: 50% 50%;
 }
 
-.circle.a {
+.target-intro-circle.a {
   width: 45px;
   height: 45px;
   animation: 4s letsee infinite;
 }
 
-.circle.b {
+.target-intro-circle.b {
   width: 37.5px;
   height: 37.5px;
   animation: 4s letsee infinite;
 }
 
-.circle.c {
+.target-intro-circle.c {
   width: 27.5px;
   height: 27.5px;
   animation: 3.7s letsee infinite;
@@ -447,10 +451,10 @@
       <div class="intro-title"></div>
             
         <div class="target-intro-wrapper">
-            <div class="circle a"></div>
-            <div class="circle b"></div>
-            <div class="circle c"></div>
-            <div class="text">Letsee..</div>
+            <div class="target-intro-circle a"></div>
+            <div class="target-intro-circle b"></div>
+            <div class="target-intro-circle c"></div>
+            <div class="target-intro-text">Letsee..</div>
         </div>
         
       <div class="edit-title">위치/크기 조정</div>
@@ -887,6 +891,8 @@
         }
     
         function typeLoadControl(type, deleted){
+            if(type === 5 && content.children.length === 0) return;
+
             threadType = type;
 
             if(type === 4){
@@ -907,11 +913,14 @@
             switch(deleted){
                 case 0 :
                     content.remove(editObject);
+                    if(content.children.length === 0) document.querySelector('.icon-images.next').style.opacity = '.3';
+
                     editSucsess();
                     break;
                 case 1 :
                     content.children.forEach(function(item){
                         content.remove(item);
+                        document.querySelector('.icon-images.next').style.opacity = '.3';
                     });
                     break;
                 case 2 :
@@ -1160,6 +1169,7 @@
           
           if(!isRedit){
               content.add(renderable);
+              document.querySelector('.icon-images.next').style.opacity = '1.0';
               
               touch.current = {
                     x        : 0,
