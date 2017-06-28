@@ -1093,9 +1093,9 @@
 
       function notification(){
 
-          renderables.notification.title   = createDOMRanderable('<p><label id="noti-name">'+notificationName+'</label>님의</p> <p>편지가 담겨있어요</p>', 'notification-title');
+          renderables.notification.title   = createDOMRanderable('<p><label id="noti-name">'+notificationName+'</label>님의</p> <p>스티커 메세지</p>', 'notification-title');
           renderables.notification.icon    = createDOMRanderable('<img src="assets/icn-open-messege.png" srcset="assets/icn-open-messege@2x.png 2x, assets/icn-open-messege@3x.png 3x">', 'notification-icon', viewContent);
-          renderables.notification.content = createDOMRanderable('메세지 확인', 'notification-content');
+          renderables.notification.content = createDOMRanderable('열어 볼까요?', 'notification-content');
 
           world.add(renderables.notification.title);
           world.add(renderables.notification.icon);
