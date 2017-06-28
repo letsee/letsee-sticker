@@ -76,7 +76,7 @@
     }
 
     .icon-text-sucsess{
-      /* font-family: AppleSDGothicNeo, sans-serif; */
+      font-family: AppleSDGothicNeo, sans-serif; 
       font-size: 18px;
       font-weight: bold;
       letter-spacing: 0.4px;
@@ -85,7 +85,7 @@
     }
 
     .icon-edit-sucsess{
-      /* font-family: AppleSDGothicNeo, sans-serif; */
+      font-family: AppleSDGothicNeo, sans-serif; 
       font-size: 18px;
       font-weight: bold;
       letter-spacing: 0.4px;
@@ -94,7 +94,7 @@
     }
 
     .icon-kakao-sucsess{
-      /* font-family: AppleSDGothicNeo, sans-serif; */
+      font-family: AppleSDGothicNeo, sans-serif; 
       font-size: 18px;
       font-weight: bold;
       letter-spacing: 0.4px;
@@ -106,8 +106,7 @@
       position: absolute;
       bottom: -60px;
       margin-left : -100px;
-
-      /* font-family: AppleSDGothicNeo, sans-serif; */
+      font-family: AppleSDGothicNeo, sans-serif; 
       font-size: 18px;
       font-weight: bold;
       letter-spacing: 0.4px;
@@ -130,7 +129,7 @@
 
     .icon-view-writer .view-content{
       text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
-      /* font-family: AppleSDGothicNeo, sans-serif; */
+      font-family: AppleSDGothicNeo, sans-serif; 
       font-size: 15px;
       letter-spacing: 0.4px;
       margin-left : 10px;
@@ -159,7 +158,7 @@
     .edit-title{
       width: 100%;
       opacity: 0.8;
-      /* font-family: AppleSDGothicNeo, sans-serif; */
+     font-family: AppleSDGothicNeo, sans-serif; 
       opacity: 0.5;
       font-size: 16px;
       text-align: center;
@@ -169,7 +168,7 @@
     .intro-title{
       width: 100%;
       opacity: 0.8;
-      /* font-family: AppleSDGothicNeo, sans-serif; */
+      font-family: AppleSDGothicNeo, sans-serif;
       opacity: 0.5;
       font-size: 16px;
       text-align: center;
@@ -189,7 +188,7 @@
     }
 
     .kakao-background-content{
-      /* font-family: AppleSDGothicNeo, sans-serif; */
+      font-family: AppleSDGothicNeo, sans-serif; 
       font-size: 18px;
       line-height: 1.44;
       margin-top:70%;
@@ -293,6 +292,7 @@
   color: #fff;
   outline: none;
   border: 1px solid rgba(255, 255, 255, 0);
+  /*border: 1px solid red;*/
   text-align: center;
   text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
 }
@@ -333,7 +333,7 @@
 
 .notification-content{
   opacity: 0.8;
-  /* font-family: AppleSDGothicNeo, sans-serif; */
+  /*font-family: AppleSDGothicNeo, sans-serif; */
   font-size: 1em;
   font-weight: 800;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
@@ -400,10 +400,13 @@
 
 #target h3{
 	opacity: 0.8;
-	/* font-family: AppleSDGothicNeo, sans-serif; */
+	font-family: AppleSDGothicNeo, sans-serif; 
 	font-weight: 800;
 	text-align: center;
+}
 
+.renderable-item span{
+    font-size: 4.5em;
 }
   </style>
   <script src="https://hammerjs.github.io/dist/hammer.js"></script>
@@ -494,12 +497,12 @@
 
       <div class="emoji-box-wrapper">
         <div class="emoji-box-content">
-          <span onclick="addEmoji('<h1>😀</h1>');">😀</span>
-          <span onclick="addEmoji('<h1>😘</h1>');">😘</span>
-          <span onclick="addEmoji('<h1>😂</h1>');">😂</span>
-          <span onclick="addEmoji('<h1>😢</h1>');">😢</span>
-          <span onclick="addEmoji('<h1>😉</h1>');">😉</span>
-          <span onclick="addEmoji('<h1>❤️️</h1>');">❤️️</span>
+          <span onclick="addEmoji('<span>😀</span>');">😀</span>
+          <span onclick="addEmoji('<span>😘</span>');">😘</span>
+          <span onclick="addEmoji('<span>😂</span>');">😂</span>
+          <span onclick="addEmoji('<span>😢</span>');">😢</span>
+          <span onclick="addEmoji('<span>😉</span>');">😉</span>
+          <span onclick="addEmoji('<span>❤️️</span>');">❤️️</span>
         </div>
       </div>
 
@@ -1100,7 +1103,7 @@
               var 
                   element = document.createElement('div');
 
-            //   element.innerHTML = '<h1>'+item.text+'</h1>';
+            //   element.innerHTML = '<span>'+item.text+'</span>';
               element.innerHTML = item.text;
               element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
               element.style.opacity = '0.8';
@@ -1145,6 +1148,7 @@
 
           renderable.element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
           renderable.element.style.opacity = '0.8';
+          renderable.element.className = 'renderable-item';
           
           if(!isRedit){
               content.add(renderable);
@@ -1164,6 +1168,11 @@
           
           scale = 1.0;
 
+          if(editObject.element.children[0].tagName === 'SPAN'){
+              editObject.scale.set(.3,.3,.3);
+              touch.current.scale = editObject.scale.x;
+
+          }
           if(editObject.element.children[0].tagName === 'TEXTAREA'){
             editObject.element.children[0].readOnly = true;
             editObject.element.children[0].style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
