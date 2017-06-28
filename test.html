@@ -1147,7 +1147,7 @@
 
           content.children.forEach(function(item){
               item.element.removeEventListener('touchstart', selectEditObject);
-              item.element.style.opacity = '0.3';
+              if(editObject !== item ) item.element.style.opacity = '0.2';
 
           });
 
@@ -1195,7 +1195,7 @@
           if(isRedit) isRedit = false;
 
           content.children.forEach(function(item){
-              item.element.style.opacity = '0.8';
+              item.element.style.opacity = '0.9';
               item.element.addEventListener('touchstart', selectEditObject);
 
           });
