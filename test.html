@@ -529,7 +529,7 @@
 
     <script>
 
-      Kakao.init('268d83b5b3629f64b515bd27ed0aa2d2');
+      Kakao.init('c110db620b05965c23c894a29d720c0d');
       var uuid = guid();
       var USER_NAME = '';
             
@@ -936,14 +936,14 @@
                         description: USER_NAME+'님이 '+currentTarget.name+'에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!',
                         imageUrl: 'https://intra.letsee.io/test/assets/img-kakao@3x.png',
                         link: {
-                            andoidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                         }
                         },
                         buttons: [
                         {
                             title: '렛시 브라우저로 보기',
                             link: {
-                                andoidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                             }
                         }
                         ]
@@ -1168,6 +1168,8 @@
           renderable.element.className = 'renderable-item';
           
           if(!isRedit){
+              if(renderable.element.children[0].tagName === 'SPAN') renderable.scale.set(.3,.3,.3);
+
               content.add(renderable);
               document.querySelector('.icon-images.next').style.opacity = '1.0';
               
@@ -1182,13 +1184,11 @@
 
           editObject = renderable;
 
-        //   console.log(touch.current);
-          
-          scale = 1.0;
+          //console.log(touch.current);
 
           if(editObject.element.children[0].tagName === 'SPAN'){
-              editObject.scale.set(.3,.3,.3);
               touch.current.scale = editObject.scale.x;
+              console.log('test', touch.current.scale);
 
           }
           if(editObject.element.children[0].tagName === 'TEXTAREA'){
@@ -1579,8 +1579,7 @@
             manager.on('pinchmove', function(e) {
                 if(!editObject)return;
 
-                var 
-                    scale = e.scale * touch.current.scale;
+                var scale = e.scale * touch.current.scale;
 
                 editObject.scale.set(scale, scale, scale);
 
