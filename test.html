@@ -105,20 +105,17 @@
 
     .icon-view-sucsess{
       position: absolute;
-      bottom: -60px;
-      margin-left : -100px;
-      font-family: AppleSDGothicNeo, sans-serif; 
-      font-size: 18px;
-      font-weight: bold;
-      letter-spacing: 0.4px;
+      bottom: -55px;
+      margin-left : -70px;
+      width: 109px;
+      height: 32px;
+    }
 
-      width: 147px;
-      border-radius: 100px;
-      background-color: #00bfd7;
-      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
-      text-align: center;
-      padding-top    : 15px;
-      padding-bottom : 15px;
+    icon-view-sucsess img{
+        margin: 0;
+        padding : 0;
+        width: 100%;
+        height: 100%;
     }
 
     .icon-view-writer{
@@ -159,11 +156,13 @@
     .edit-title{
       width: 100%;
       opacity: 0.8;
-     font-family: AppleSDGothicNeo, sans-serif; 
+      font-family: AppleSDGothicNeo, sans-serif; 
       opacity: 0.5;
-      font-size: 16px;
+      font-size: 18px;
+      letter-spacing: 0.4px;
       text-align: center;
-      margin-top: 20px;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+      margin-top: 24px;
     }
 
     .intro-title{
@@ -295,7 +294,7 @@
   border: 1px solid rgba(255, 255, 255, 0);
   /*border: 1px solid red;*/
   text-align: center;
-  text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 
 .input-text-area textarea::-webkit-input-placeholder{
@@ -496,7 +495,8 @@
         <img onclick="typeLoadControl(1, 0);" src="assets/btn-trash.png" srcset="assets/btn-trash@2x.png 2x, assets/btn-trash@3x.png 3x" class="icon-images trash">
         <img onclick="typeLoadControl(1);" src="assets/btn-create.png" srcset="assets/btn-create@2x.png 2x, assets/btn-create@3x.png 3x" class="icon-images create">
 
-        <div onclick="viewSucsess();" class="icon-view-sucsess">편지 남기기 <img src="assets/btn-go.png" srcset="assets/btn-go@2x.png 2x, assets/btn-go@3x.png 3x"></div>
+        <!--<div onclick="viewSucsess();" class="icon-view-sucsess">편지 남기기 <img src="assets/btn-go.png" srcset="assets/btn-go@2x.png 2x, assets/btn-go@3x.png 3x"></div>-->
+        <div onclick="viewSucsess();" class="icon-view-sucsess"><img src="assets/btn-gocreate.png" srcset="assets/btn-gocreate@2x.png 2x, assets/btn-gocreate@3x.png 3x"></div>
 
       </div>
 
@@ -1110,7 +1110,7 @@
 
             //   element.innerHTML = '<span>'+item.text+'</span>';
               element.innerHTML = item.text;
-              element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
+              element.style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
               element.style.opacity = '0.8';
 
               var 
@@ -1127,7 +1127,7 @@
               if(item.text.indexOf('<textarea') !== -1){
                   object.element.children[0].readOnly = true;
                   object.element.children[0].style.height = '24px';
-                  object.element.children[0].style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
+                  object.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
                   object.element.children[0].style.height = object.element.children[0].scrollHeight + 'px';
                   document.getElementById("temp").innerText = object.element.children[0].value;
                   object.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';                  
@@ -1151,8 +1151,7 @@
 
           });
 
-          renderable.element.style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
-          renderable.element.style.opacity = '0.8';
+          renderable.element.style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
           renderable.element.className = 'renderable-item';
           
           if(!isRedit){
@@ -1180,7 +1179,7 @@
           }
           if(editObject.element.children[0].tagName === 'TEXTAREA'){
             editObject.element.children[0].readOnly = true;
-            editObject.element.children[0].style.textShadow = '0 0 12px rgba(0, 0, 0, 0.5)';
+            editObject.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
             editObject.element.children[0].style.height = '24px';
             editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';
             document.getElementById("temp").innerText = editObject.element.children[0].value;
