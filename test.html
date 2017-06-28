@@ -288,9 +288,9 @@
 .input-text-area textarea, textarea{
   resize:none;
   overflow: hidden;
-  width  : 120px;
+  width  : 360px;
   /* font-family: AppleSDGothicNeo, sans-serif; */
-  font-size: 18px;
+  font-size: 36px;
   background: transparent;
   text-decoration: none;
   color: #fff;
@@ -303,7 +303,7 @@
 
 .input-text-area textarea::-webkit-input-placeholder{
   color: rgba(255, 255, 255, .6);
-  font-size: 10px;
+  font-size: 30px;
   text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
 }
 
@@ -442,7 +442,7 @@
   <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
   </head>
   <body>
-    <div id="temp" style=" font-size: 18px; position:absolute; border:1px solid red; visibility: hidden;"></div>
+    <div id="temp" style=" font-size: 36px; position:absolute; border:1px solid red; visibility: hidden;"></div>
 
     <div id="target">
         <h3>로딩중..</h3>
@@ -1086,6 +1086,7 @@
 
           renderables.input.text.textarea = createDOMRanderable('<textarea id="ar-textarea" placeholder="메세지를 입력해주세요" type="text"></textarea>','input-text-area');
           
+          renderables.input.text.textarea.scale.set(.3,.3,.3);
           world.add(renderables.input.text.textarea);
 
           if(isTraking) setTimeout(function(){
@@ -1139,11 +1140,11 @@
 
               if(item.text.indexOf('<textarea') !== -1){
                   object.element.children[0].readOnly = true;
-                  object.element.children[0].style.height = '24px';
+                  object.element.children[0].style.height = '48px';
                   object.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
                   object.element.children[0].style.height = object.element.children[0].scrollHeight + 'px';
                   document.getElementById("temp").innerText = object.element.children[0].value;
-                  object.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';                  
+                  object.element.children[0].style.width = (document.getElementById("temp").offsetWidth+40)+'px';
               }              
 
           });
@@ -1169,6 +1170,7 @@
           
           if(!isRedit){
               if(renderable.element.children[0].tagName === 'SPAN') renderable.scale.set(.3,.3,.3);
+              if(renderable.element.children[0].tagName === 'TEXTAREA') renderable.scale.set(.3,.3,.3);
 
               content.add(renderable);
               document.querySelector('.icon-images.next').style.opacity = '1.0';
@@ -1183,15 +1185,10 @@
           }
 
           editObject = renderable;
+          touch.current.scale = editObject.scale.x;
 
-          //console.log(touch.current);
-
-          if(editObject.element.children[0].tagName === 'SPAN'){
-              touch.current.scale = editObject.scale.x;
-              console.log('test', touch.current.scale);
-
-          }
           if(editObject.element.children[0].tagName === 'TEXTAREA'){
+
             editObject.element.children[0].readOnly = true;
             editObject.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
             editObject.element.children[0].style.height = '24px';
@@ -1447,11 +1444,11 @@
       }      
 
       function resizeTextarea(ev) {
-          this.style.height = '24px';
+          this.style.height = '48px';
           this.style.height = this.scrollHeight + 'px';
           
           document.getElementById("temp").innerText = this.value;
-          this.style.width = (document.getElementById("temp").offsetWidth+20)+'px';
+          this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
 
 
       }
