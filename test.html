@@ -1611,6 +1611,14 @@
 
             });
 
+            manager.on('pressup', function(e){
+                if(touch.press) {
+                    touch.press = false;
+                    world.remove(touch.helper);
+                }
+                
+            })
+
             manager.on('press', function(e) {
                 if(!editObject)return;
 
