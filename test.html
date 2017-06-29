@@ -1091,6 +1091,10 @@
           
           renderables.input.text.textarea.scale.set(.3,.3,.3);
           world.add(renderables.input.text.textarea);
+          
+          content.children.forEach(function(item){
+              item.element.style.opacity = '0.2';
+          });
 
           if(isTraking) setTimeout(function(){
               document.getElementById('ar-textarea').addEventListener('keyup', resizeTextarea);
