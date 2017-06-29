@@ -1508,7 +1508,8 @@
           this.style.height = this.scrollHeight + 'px';
           
           document.getElementById("temp").innerText = this.value;
-          this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
+          if(document.getElementById("temp").innerText === '') this.style.width = '360px';
+          else this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
 
 
       }
