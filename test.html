@@ -691,12 +691,13 @@
 
                     if(uri !== CURRENT_URI){
                         if(CURRENT_URI){
-                            letsee.getEntity(CURRENT_URI).removeRenderable(world);
-                            letsee.getEntity(CURRENT_URI).removeRenderable(content);
-                            content.children.forEach(function(item){
-                                content.remove(item);
-                            });
-                            typeLoadControl(0, 1);
+                            return alert('사물의 저작을 종료한 후에 비춰주세요.');
+                            // letsee.getEntity(CURRENT_URI).removeRenderable(world);
+                            // letsee.getEntity(CURRENT_URI).removeRenderable(content);
+                            // content.children.forEach(function(item){
+                            //     content.remove(item);
+                            // });
+                            // typeLoadControl(0, 1);
                         }
 
                         CURRENT_URI = uri;                  
@@ -756,6 +757,7 @@
 
                         break;
                     case 1 :
+                        CURRENT_URI = '';
                         document.querySelector('.icon-images.capture').style.display = 'block';
                         document.querySelector('.icon-images.close').style.display = 'block';
                         document.querySelector('.icon-images.next').style.display  = 'block';
