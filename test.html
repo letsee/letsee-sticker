@@ -1537,6 +1537,7 @@
                 };
 
             manager.on('panmove', function(e) {
+                if(touch.gestureF3.enable)return;
                 if(!editObject)return;                
 
                 if(touch.press) {
@@ -1557,6 +1558,7 @@
             });
 
             manager.on('panend', function(e) {
+                if(touch.gestureF3.enable)return;
                 if(!editObject)return;
 
                 if(touch.press) {
@@ -1575,6 +1577,7 @@
             });
 
             manager.on('pinchmove', function(e) {
+                if(touch.gestureF3.enable)return;
                 if(!editObject)return;
 
                 var scale = e.scale * touch.current.scale;
@@ -1590,6 +1593,7 @@
             });
 
             manager.on('pinchend', function(e) {
+                if(touch.gestureF3.enable)return;
                 if(!editObject)return;
 
                 touch.current.scale = e.scale * touch.current.scale;
@@ -1597,6 +1601,7 @@
             });
 
             manager.on('rotatemove', function(e) {
+                if(touch.gestureF3.enable)return;
                 if(!editObject)return;
 
                 if(touch.OLD_ROTATE_Z) editObject.rotateZ( (touch.OLD_ROTATE_Z - e.rotation) / 60 );
@@ -1605,6 +1610,7 @@
             });
 
             manager.on('rotateend', function(e) {
+                if(touch.gestureF3.enable)return;
                 if(!editObject)return;
 
                 touch.OLD_ROTATE_Z = null;
@@ -1612,6 +1618,7 @@
             });
 
             manager.on('pressup', function(e){
+                if(touch.gestureF3.enable)return;
                 if(touch.press) {
                     touch.press = false;
                     world.remove(touch.helper);
@@ -1620,6 +1627,7 @@
             })
 
             manager.on('press', function(e) {
+                if(touch.gestureF3.enable)return;
                 if(!editObject)return;
 
                 touch.press = true;
@@ -1649,6 +1657,7 @@
                 if(!editObject)return;
 
                 if(e.touches.length > 2){
+                    if(!touch.gestureF3.enable)return;
 
                     var
                         speed = 0.01;
