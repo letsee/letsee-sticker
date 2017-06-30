@@ -439,6 +439,64 @@
 	text-align: center;
 }
 
+
+
+/* loader */
+
+@keyframes loader-bounce {
+  0%, 80%, 100% { 
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  
+  40% { 
+    -webkit-transform: scale(1.4);
+    transform: scale(1.4);
+  }
+}
+
+.loader {
+  /*width: 100px;
+  height: 100px;*/
+  /*position: fixed;*/
+  top: 50%;
+  /*left: 50%;*/
+  /*transform: translate(-50%, -50%);*/
+  text-align: center;
+}
+.loader .circles {
+  line-height: 0;
+}
+.loader .circles .circle {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: loader-bounce 1.4s infinite ease-in-out both;
+}
+.loader .circles .circle.green {
+  background-color: rgba(0, 234, 255, 0.7);
+  animation-delay: -0.32s;
+}
+.loader .circles .circle.blue {
+  background-color: #1c1cff;
+  margin: 0 10px;
+  animation-delay: -0.16s;
+}
+.loader .circles .circle.red {
+  background-color: #ff4d00;
+}
+.loader .text {
+  margin-top: 23px;
+  opacity: 0.8;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+}
+
+
   </style>
   <script src="https://hammerjs.github.io/dist/hammer.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
@@ -448,7 +506,13 @@
     <div id="temp" style=" font-size: 36px; position:absolute; border:1px solid red; visibility: hidden;"></div>
 
     <div id="target">
-        <h3>로딩중..</h3>
+        <div class="loader">
+        <div class="circles"><div class="circle green"></div><div class="circle blue"></div><div class="circle red"></div></div>
+        
+        <div class="text">
+            로딩중..
+        </div>
+        </div>
     </div>
     <div id="wrapper">
 
@@ -656,6 +720,24 @@
                 document.querySelector('.target-intro-wrapper').style.display = 'none';
                 document.querySelector('.intro-title').style.display = 'none';
                 
+                if(uri === "unknown"){
+                    document.querySelector('.loader').style.width = (e.pixelSize.width*10) + 'px';
+                    document.querySelector('.loader').style.height = (e.pixelSize.height) + 'px';
+
+                    var 
+                        size = Math.sqrt( Math.pow(e.pixelSize.width, 2) + Math.pow(e.pixelSize.height, 2));
+                    // alert(size);
+                    // alert((e.pixelSize.width)/3);
+
+                    document.querySelector('.loader .circles .circle.green').style.width = (size)/3 + 'px';
+                    document.querySelector('.loader .circles .circle.green').style.height = (size)/3 + 'px';
+                    document.querySelector('.loader .circles .circle.red').style.width = (size)/3 + 'px';
+                    document.querySelector('.loader .circles .circle.red').style.height = (size)/3 + 'px';
+                    document.querySelector('.loader .circles .circle.blue').style.width = (size)/3 + 'px';
+                    document.querySelector('.loader .circles .circle.blue').style.height = (size)/3+ 'px';           
+                    document.querySelector('.loader .text').style.fontSize =  (size)/3 + 'px';
+
+                }
                 if(uri !== "unknown"){
                     isTraking = true;
                     if(isModeView && uri !== notificationEntityURI) return alert('메시지가 담긴 사물이 아닙니다.');
@@ -1118,7 +1200,7 @@
               if(editObject !== item ) item.element.style.opacity = '0.2';
 
           });
-          
+
           renderables.input.text.textarea = createDOMRanderable('<textarea id="ar-textarea" placeholder="메세지를 입력해주세요" type="text"></textarea>','input-text-area');
           
           renderables.input.text.textarea.scale.set(.3,.3,.3);
@@ -1180,6 +1262,7 @@
 
               if(item.text.indexOf('<textarea') !== -1){
                   object.element.children[0].readOnly = true;
+                  object.element.children[0].disabled = true;
                   object.element.children[0].style.height = '48px';
                   object.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
                   object.element.children[0].style.height = object.element.children[0].scrollHeight + 'px';
@@ -1230,6 +1313,7 @@
           if(editObject.element.children[0].tagName === 'TEXTAREA'){
 
             editObject.element.children[0].readOnly = true;
+            object.element.children[0].disabled = true;
             editObject.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
             editObject.element.children[0].style.height = '24px';
             editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';
