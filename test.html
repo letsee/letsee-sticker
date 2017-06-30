@@ -1305,7 +1305,204 @@
       }
 
       function typeStartControl(e){
-            layout();
+
+                document.querySelector('.icon-images.create').style.display = 'none';
+
+                switch(threadType){
+                    case 0 :
+                        document.querySelector('.intro-title').innerText = '';
+                        if(!isTraking){
+                            document.querySelector('.target-intro-wrapper').style.display = 'block';
+                            document.querySelector('.intro-title').style.display = 'block';
+                        }
+
+                        document.querySelector('.icon-images.capture').style.display = 'none';
+                        document.querySelector('.icon-images.close').style.display = 'none';
+                        document.querySelector('.icon-images.next').style.display  = 'none';
+                        document.querySelector('.icon-images.emoji').style.display = 'none';
+                        document.querySelector('.icon-images.text').style.display  = 'none';
+
+                        document.querySelector('.icon-text-sucsess').style.display = 'none';
+                        document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                            
+                        document.querySelector('.emoji-box-wrapper').style.display = 'none';
+
+                        document.querySelector('.icon-images.trash').style.display = 'none';
+                        document.querySelector('.edit-title').style.display = 'none';
+
+                        document.querySelector('.kakao-background').style.display   = 'none';
+                        document.querySelector('.icon-images.back').style.display   = 'none';
+                        document.querySelector('.icon-kakao-sucsess').style.display = 'none';
+
+                        document.querySelector('.icon-view-writer').style.display  = 'none';
+                        document.querySelector('.icon-view-sucsess').style.display = 'none';
+
+                        break;
+                    case 1 :
+                        document.querySelector('.icon-images.capture').style.display = 'block';
+                        document.querySelector('.icon-images.close').style.display = 'block';
+                        document.querySelector('.icon-images.next').style.display  = 'block';
+                        document.querySelector('.icon-images.emoji').style.display = 'block';
+                        document.querySelector('.icon-images.text').style.display  = 'block';
+
+                        document.querySelector('.icon-text-sucsess').style.display = 'none';
+                        document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                            
+                        document.querySelector('.emoji-box-wrapper').style.display = 'none';
+
+                        document.querySelector('.icon-images.trash').style.display = 'none';
+                        document.querySelector('.edit-title').style.display = 'none';
+
+                        document.querySelector('.kakao-background').style.display   = 'none';
+                        document.querySelector('.icon-images.back').style.display   = 'none';
+                        document.querySelector('.icon-kakao-sucsess').style.display = 'none';
+
+                        document.querySelector('.icon-view-writer').style.display  = 'none';
+                        document.querySelector('.icon-view-sucsess').style.display = 'none';
+
+                        break;
+                    case 2 :
+                        document.querySelector('.icon-images.capture').style.display = 'none';
+                        document.querySelector('.icon-images.close').style.display = 'none';
+                        document.querySelector('.icon-images.next').style.display  = 'none';
+                        document.querySelector('.icon-images.emoji').style.display = 'none';
+                        document.querySelector('.icon-images.text').style.display  = 'none';
+
+                        document.querySelector('.icon-text-sucsess').style.display = 'block';
+                        document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                            
+                        document.querySelector('.emoji-box-wrapper').style.display = 'none';
+                        
+                        document.querySelector('.icon-images.trash').style.display = 'none';
+                        document.querySelector('.edit-title').style.display = 'none';
+
+                        document.querySelector('.kakao-background').style.display   = 'none';
+                        document.querySelector('.icon-images.back').style.display   = 'none';
+                        document.querySelector('.icon-kakao-sucsess').style.display = 'none';
+
+                        document.querySelector('.icon-view-writer').style.display  = 'none';
+                        document.querySelector('.icon-view-sucsess').style.display = 'none';
+
+                        break;
+                    case 3 :
+                        document.querySelector('.icon-images.capture').style.display = 'none';
+                        document.querySelector('.icon-images.close').style.display = 'none';
+                        document.querySelector('.icon-images.next').style.display  = 'none';
+                        document.querySelector('.icon-images.emoji').style.display = 'none';
+                        document.querySelector('.icon-images.text').style.display  = 'none';
+
+                        document.querySelector('.icon-text-sucsess').style.display = 'none';
+                        document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                            
+                        document.querySelector('.emoji-box-wrapper').style.display = 'block';
+                        
+                        document.querySelector('.icon-images.trash').style.display = 'none';
+                        document.querySelector('.edit-title').style.display = 'none';
+
+                        document.querySelector('.kakao-background').style.display   = 'none';
+                        document.querySelector('.icon-images.back').style.display   = 'none';
+                        document.querySelector('.icon-kakao-sucsess').style.display = 'none';
+
+                        document.querySelector('.icon-view-writer').style.display  = 'none';
+                        document.querySelector('.icon-view-sucsess').style.display = 'none';
+
+                        break;
+                    case 4 :
+                        document.querySelector('.icon-images.capture').style.display = 'none';
+                        document.querySelector('.icon-images.close').style.display = 'none';
+                        document.querySelector('.icon-images.next').style.display  = 'none';
+                        document.querySelector('.icon-images.emoji').style.display = 'none';
+                        document.querySelector('.icon-images.text').style.display  = 'none';
+
+                        document.querySelector('.icon-text-sucsess').style.display = 'none';
+                        document.querySelector('.icon-edit-sucsess').style.display  = 'block';
+                                            
+                        document.querySelector('.emoji-box-wrapper').style.display = 'none';
+
+                        document.querySelector('.icon-images.trash').style.display = 'block';
+                        document.querySelector('.edit-title').style.display = 'block';
+
+                        document.querySelector('.kakao-background').style.display   = 'none';
+                        document.querySelector('.icon-images.back').style.display   = 'none';
+                        document.querySelector('.icon-kakao-sucsess').style.display = 'none';
+
+                        document.querySelector('.icon-view-writer').style.display  = 'none';
+                        document.querySelector('.icon-view-sucsess').style.display = 'none';
+
+                        break;
+                    case 5 :
+                        document.querySelector('.icon-images.capture').style.display = 'none';
+                        document.querySelector('.icon-images.close').style.display = 'none';
+                        document.querySelector('.icon-images.next').style.display  = 'none';
+                        document.querySelector('.icon-images.emoji').style.display = 'none';
+                        document.querySelector('.icon-images.text').style.display  = 'none';
+
+                        document.querySelector('.icon-text-sucsess').style.display = 'none';
+                        document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                            
+                        document.querySelector('.emoji-box-wrapper').style.display = 'none';
+
+                        document.querySelector('.icon-images.trash').style.display = 'none';
+                        document.querySelector('.edit-title').style.display = 'none';
+
+                        document.querySelector('.kakao-background').style.display   = 'block';
+                        document.querySelector('.icon-images.back').style.display   = 'block';
+                        document.querySelector('.icon-kakao-sucsess').style.display = 'block';
+
+                        document.querySelector('.icon-view-writer').style.display  = 'none';
+                        document.querySelector('.icon-view-sucsess').style.display = 'none';
+
+                        break;
+                    case 6 :
+ 
+                        document.querySelector('.icon-images.capture').style.display = 'none';
+                        document.querySelector('.icon-images.close').style.display  = 'none';
+                        document.querySelector('.icon-images.next').style.display   = 'none';
+                        document.querySelector('.icon-images.emoji').style.display  = 'none';
+                        document.querySelector('.icon-images.text').style.display   = 'none';
+
+                        document.querySelector('.icon-text-sucsess').style.display  = 'none';
+                        document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+                                            
+                        document.querySelector('.emoji-box-wrapper').style.display  = 'none';
+
+                        document.querySelector('.icon-images.trash').style.display  = 'none';
+                        document.querySelector('.edit-title').style.display         = 'none';
+
+                        document.querySelector('.kakao-background').style.display   = 'none';
+                        document.querySelector('.icon-images.back').style.display   = 'none';
+                        document.querySelector('.icon-kakao-sucsess').style.display = 'none';
+
+                        document.querySelector('.icon-view-writer').style.display  = 'none';
+                        document.querySelector('.icon-view-sucsess').style.display = 'none';
+
+                        break;
+                    case 7 :
+                        document.querySelector('.icon-images.capture').style.display = 'block';
+                        document.querySelector('.icon-images.close').style.display  = 'none';
+                        document.querySelector('.icon-images.next').style.display   = 'none';
+                        document.querySelector('.icon-images.emoji').style.display  = 'none';
+                        document.querySelector('.icon-images.text').style.display   = 'none';
+
+                        document.querySelector('.icon-text-sucsess').style.display  = 'none';
+                        document.querySelector('.icon-edit-sucsess').style.display  = 'none';
+
+                        document.querySelector('.emoji-box-wrapper').style.display  = 'none';
+
+                        document.querySelector('.icon-images.trash').style.display  = 'none';
+                        document.querySelector('.edit-title').style.display         = 'none';
+
+                        document.querySelector('.kakao-background').style.display   = 'none';
+                        document.querySelector('.icon-images.back').style.display   = 'none';
+                        document.querySelector('.icon-kakao-sucsess').style.display = 'none';
+                        
+                        document.querySelector('.icon-view-writer').style.display  = 'block';
+                        document.querySelector('.icon-view-sucsess').style.display = 'block';
+
+                        break;
+                    default : break;
+                }
+
             document.querySelector('.edit-target-see-wrapper').style.display = 'none';
             switch(threadType){
                 case 0 :
