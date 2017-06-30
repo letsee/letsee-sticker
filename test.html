@@ -1113,7 +1113,12 @@
       }
 
       function inputText(){
+          content.children.forEach(function(item){
+              item.element.removeEventListener('touchstart', selectEditObject);
+              if(editObject !== item ) item.element.style.opacity = '0.2';
 
+          });
+          
           renderables.input.text.textarea = createDOMRanderable('<textarea id="ar-textarea" placeholder="메세지를 입력해주세요" type="text"></textarea>','input-text-area');
           
           renderables.input.text.textarea.scale.set(.3,.3,.3);
