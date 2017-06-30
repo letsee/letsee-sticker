@@ -1478,7 +1478,7 @@
           this.style.height = this.scrollHeight + 'px';
           
           document.getElementById("temp").innerText = this.value;
-          console.log(this.value);
+
           if(this.value === '') this.style.width = '360px';
           else this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
         //   this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
@@ -1564,13 +1564,32 @@
                     gestureF3 : {
                         enable : false,
                         count : 0,
-                    }
+                    },
+                    isBoundary : false
 
                 };
 
             manager.on('panmove', function(e) {
                 if(touch.gestureF3.enable)return;
-                if(!editObject)return;                
+                if(!editObject)return;
+                if(touch.isBoundary) return;
+
+                if(currentTarget.size.width*2 < editObject.position.x || -currentTarget.size.width*2 > editObject.position.x){
+                    editObject.position.x = editObject.position.x > 0 ? (currentTarget.size.width*2)-1 : -( (currentTarget.size.width*2)-1)
+
+                    touch.current.x = editObject.position.x;
+                    touch.current.y = -editObject.position.y
+                    touch.isBoundary = true;
+                    return;
+                }
+                if(currentTarget.size.height*2 < editObject.position.y || -currentTarget.size.height*2 > editObject.position.y){
+                    editObject.position.y = editObject.position.y > 0 ? (currentTarget.size.height*2)-1 : -( (currentTarget.size.height*2)-1)
+
+                    touch.current.x = editObject.position.x;
+                    touch.current.y = -editObject.position.y
+                    touch.isBoundary = true;
+                    return;
+                }
 
                 if(touch.press) {
                     var dZ = touch.current.z + (e.deltaY);
@@ -1593,17 +1612,20 @@
                 if(touch.gestureF3.enable)return;
                 if(!editObject)return;
 
-                if(touch.press) {
-                    touch.press = false;
-                    world.remove(touch.helper);
+                if(touch.isBoundary) touch.isBoundary = false;
+                else{
+                    if(touch.press) {
+                        touch.press = false;
+                        world.remove(touch.helper);
 
-                    touch.current.z = touch.current.z + e.deltaY;
-                    manager.get('pinch').set({ enable : true });
-                    manager.get('rotate').set({ enable : true });
+                        touch.current.z = touch.current.z + e.deltaY;
+                        manager.get('pinch').set({ enable : true });
+                        manager.get('rotate').set({ enable : true });
 
-                } else {
-                    touch.current.x = touch.current.x + e.deltaX;
-                    touch.current.y = touch.current.y + e.deltaY;
+                    } else {
+                        touch.current.x = touch.current.x + e.deltaX;
+                        touch.current.y = touch.current.y + e.deltaY;
+                    }
                 }
 
             });
@@ -1611,6 +1633,25 @@
             manager.on('pinchmove', function(e) {
                 if(touch.gestureF3.enable)return;
                 if(!editObject)return;
+
+                if(touch.isBoundary) return;
+
+                if(currentTarget.size.width*2 < editObject.position.x || -currentTarget.size.width*2 > editObject.position.x){
+                    editObject.position.x = editObject.position.x > 0 ? (currentTarget.size.width*2)-1 : -( (currentTarget.size.width*2)-1)
+
+                    touch.current.x = editObject.position.x;
+                    touch.current.y = -editObject.position.y
+                    touch.isBoundary = true;
+                    return;
+                }
+                if(currentTarget.size.height*2 < editObject.position.y || -currentTarget.size.height*2 > editObject.position.y){
+                    editObject.position.y = editObject.position.y > 0 ? (currentTarget.size.height*2)-1 : -( (currentTarget.size.height*2)-1)
+
+                    touch.current.x = editObject.position.x;
+                    touch.current.y = -editObject.position.y
+                    touch.isBoundary = true;
+                    return;
+                }
 
                 var scale = e.scale * touch.current.scale;
 
@@ -1627,6 +1668,7 @@
             manager.on('pinchend', function(e) {
                 if(touch.gestureF3.enable)return;
                 if(!editObject)return;
+                if(touch.isBoundary) touch.isBoundary = false;
 
                 touch.current.scale = e.scale * touch.current.scale;
 
