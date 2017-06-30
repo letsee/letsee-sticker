@@ -351,76 +351,41 @@
 /* ======================================================================*/
 .target-intro-wrapper {
   margin: auto;
-  width: 800px;
-  height: 800px;
-  text-align: center;
+  margin-top : 20%;
   position: relative;
   overflow: hidden;
 }
 
 .target-intro-text {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 24.5px;
-	font-weight: 600;
-  font-family: SFUIDisplay, sans-serif;
-/*   letter-spacing: -0.2px; */
-	text-shadow: 0 0 20px #00b3c4;
-  animation: 2.5s letsee-text infinite;
-  opacity: 0;
+  width : 100%;
+  top: 48%;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: -0.8px;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+}
+.target-intro-text p{
+  margin: 0;
+  opacity: 0.6;
 }
 
-.target-intro-circle {
-  border-radius: 50%;
-  background-color: rgba(0, 234, 255, 0.1);
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transform-origin: 50% 50%;
+.target-intro-frame{
+    position: absolute;
+	width: 20px;
+	height: 20px;
+	object-fit: contain;
+	opacity: 0.7;    
 }
 
-.target-intro-circle.a {
-  width: 45px;
-  height: 45px;
-  animation: 4s letsee infinite;
+.target-intro-frame.rt, .target-intro-frame.rb{
+    right: 0;
 }
 
-.target-intro-circle.b {
-  width: 37.5px;
-  height: 37.5px;
-  animation: 4s letsee infinite;
-}
-
-.target-intro-circle.c {
-  width: 27.5px;
-  height: 27.5px;
-  animation: 3.7s letsee infinite;
-}
-
-@keyframes letsee{
-  60% {
-    opacity: 0.8;
-  }
-  
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(20);
-  }
-}
-
-@keyframes letsee-text{
-  60% {
-    opacity: 0.5;
-  }
-  
-  100% {
-    opacity: 0;
-  }
+.target-intro-frame.lb, .target-intro-frame.rb{
+    bottom: 0;
 }
 
 #target h3{
@@ -501,10 +466,15 @@
       <div class="intro-title"></div>
             
         <div class="target-intro-wrapper">
-            <div class="target-intro-circle a"></div>
-            <div class="target-intro-circle b"></div>
-            <div class="target-intro-circle c"></div>
-            <div class="target-intro-text">Letsee..</div>
+            <img class="target-intro-frame lt" src="assets/frame-b-lt.png" srcset="assets/frame-b-lt@2x.png 2x, assets/frame-b-lt@3x.png 3x">
+            <img class="target-intro-frame rt" src="assets/frame-b-rt.png" srcset="assets/frame-b-rt@2x.png 2x, assets/frame-b-rt@3x.png 3x">
+            <img class="target-intro-frame lb" src="assets/frame-b-lb.png" srcset="assets/frame-b-lb@2x.png 2x, assets/frame-b-lb@3x.png 3x">          
+            <img class="target-intro-frame rb" src="assets/frame-b-rb.png" srcset="assets/frame-b-rb@2x.png 2x, assets/frame-b-rb@3x.png 3x">
+                        
+            <div class="target-intro-text">
+                <p>스티커 메세지를 남길</p>
+                <p>제품을 비춰주세요</p>
+            </div>
         </div>
         
       <div class="edit-title">위치/크기 조정</div>
@@ -642,8 +612,8 @@
           
           var
             intro = document.querySelector('.target-intro-wrapper');
-          intro.style.width  = window.screen.availWidth+'px';
-          intro.style.height = window.screen.availHeight+'px';  
+          intro.style.width  = window.screen.availWidth-(window.screen.availWidth/5)+'px';
+          intro.style.height = window.screen.availHeight-(window.screen.availHeight/4)+'px';  
 
           firebase.initializeApp(config);
           database = firebase.database();
@@ -729,7 +699,7 @@
 
                 switch(threadType){
                     case 0 :
-                        document.querySelector('.intro-title').innerText = '스티커 메세지를 남길 제품을 비춰주세요';
+                        document.querySelector('.intro-title').innerText = '';
                         if(!isTraking){
                             document.querySelector('.target-intro-wrapper').style.display = 'block';
                             document.querySelector('.intro-title').style.display = 'block';
