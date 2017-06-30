@@ -3,7 +3,7 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title> AR Sticker </title>
+  <title> Sticker </title>
   
   <style media="place">
     #target{
@@ -97,6 +97,7 @@
       letter-spacing: 0.4px;
       margin-right: 14px;
       margin-top : 14px;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
     }
 
     .icon-kakao-sucsess{
@@ -160,14 +161,14 @@
 
     .edit-title{
       width: 100%;
-      opacity: 0.8;
+      /*opacity: 0.8;*/
       font-family: AppleSDGothicNeo, sans-serif; 
-      opacity: 0.5;
+      /*opacity: 0.5;*/
       font-size: 18px;
       letter-spacing: 0.4px;
       text-align: center;
       text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
-      margin-top: 24px;
+      margin-top: 14px;
     }
 
     .intro-title{
@@ -279,7 +280,7 @@
 }
 
 .create-target-emoji, .create-target-text{
-    opacity: 0.7;
+    /*opacity: 0.7;*/
 	/*opacity: 0.24;*/
 	/*box-shadow: 0 0 13px 0 rgba(0, 0, 0, 0.5);  */
 }
@@ -352,7 +353,7 @@
 /* ======================================================================*/
 .target-intro-wrapper {
   margin: auto;
-  margin-top : 20%;
+  margin-top : 26%;
   position: relative;
   overflow: hidden;
 }
@@ -370,7 +371,7 @@
 }
 .target-intro-text p{
   margin: 0;
-  opacity: 0.6;
+  /*opacity: 0.6;*/
 }
 
 .target-intro-frame{
@@ -378,7 +379,7 @@
 	width: 20px;
 	height: 20px;
 	object-fit: contain;
-	opacity: 0.7;    
+	/*opacity: 0.7;        */
 }
 
 .target-intro-frame.rt, .target-intro-frame.rb{
@@ -414,7 +415,7 @@
 }
 
 .edit-target-see-content{
-    margin-top : 95%;
+    margin-top : 75%;
 }
 
 .edit-target-see-frame{
@@ -678,7 +679,7 @@
           var
             intro = document.querySelector('.target-intro-wrapper');
           intro.style.width  = window.screen.availWidth-(window.screen.availWidth/5)+'px';
-          intro.style.height = window.screen.availHeight-(window.screen.availHeight/4)+'px';  
+          intro.style.height = (window.screen.availHeight-(window.screen.availHeight/4.55))+'px';  
 
           firebase.initializeApp(config);
           database = firebase.database();
@@ -729,13 +730,14 @@
                     // alert(size);
                     // alert((e.pixelSize.width)/3);
 
-                    document.querySelector('.loader .circles .circle.green').style.width = (size)/3 + 'px';
-                    document.querySelector('.loader .circles .circle.green').style.height = (size)/3 + 'px';
-                    document.querySelector('.loader .circles .circle.red').style.width = (size)/3 + 'px';
-                    document.querySelector('.loader .circles .circle.red').style.height = (size)/3 + 'px';
-                    document.querySelector('.loader .circles .circle.blue').style.width = (size)/3 + 'px';
-                    document.querySelector('.loader .circles .circle.blue').style.height = (size)/3+ 'px';           
-                    document.querySelector('.loader .text').style.fontSize =  (size)/3 + 'px';
+                    document.querySelector('.loader .circles .circle.green').style.width = (size)/6 + 'px';
+                    document.querySelector('.loader .circles .circle.green').style.height = (size)/6 + 'px';
+                    document.querySelector('.loader .circles .circle.red').style.width = (size)/6 + 'px';
+                    document.querySelector('.loader .circles .circle.red').style.height = (size)/6 + 'px';
+                    document.querySelector('.loader .circles .circle.blue').style.width = (size)/6 + 'px';
+                    document.querySelector('.loader .circles .circle.blue').style.height = (size)/6+ 'px';       
+                    document.querySelector('.loader .text').style.fontSize =  (size)/8 + 'px';
+                    // alert('test');
 
                 }
                 if(uri !== "unknown"){
@@ -1309,7 +1311,7 @@
 
           editObject = renderable;
           touch.current.scale = editObject.scale.x;
-
+          editObject.element.style.border = '1px solid rgba(0 ,177 , 199, 0.8)';
           if(editObject.element.children[0].tagName === 'TEXTAREA'){
 
             editObject.element.children[0].readOnly = true;
@@ -1328,6 +1330,7 @@
 
       function editSucsess(){
           if(isRedit) isRedit = false;
+          editObject.element.style.border = 'none';
 
           content.children.forEach(function(item){
               item.element.style.opacity = '0.9';
@@ -1667,8 +1670,8 @@
       }
 
       function typeEndControl(e){
-            document.querySelector('.icon-images.capture').style.display = 'none';
-            document.querySelector('.icon-images.close').style.display = 'none';
+            document.querySelector('.icon-images.capture').style.display = 'block';
+            // document.querySelector('.icon-images.close').style.display = 'block';
             document.querySelector('.icon-images.next').style.display  = 'none';
             document.querySelector('.icon-images.emoji').style.display = 'none';
             document.querySelector('.icon-images.text').style.display  = 'none';
@@ -1697,27 +1700,34 @@
                     document.querySelector('.intro-title').style.display = 'block';
                     break;
                 case 1 :
+                    document.querySelector('.icon-images.close').style.display = 'block';
                     document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none'; document.querySelector('.icon-images.text').style.display  = 'none';
                     break;                
                 case 2 :
+                    document.querySelector('.icon-images.close').style.display = 'block';
                     document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none'; document.querySelector('.icon-images.text').style.display  = 'none';
                    
                     break;
                 case 3 :
+                    document.querySelector('.icon-images.close').style.display = 'block';
                     document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none'; document.querySelector('.icon-images.text').style.display  = 'none';
                     break;
                 case 4 :
+                    document.querySelector('.icon-images.close').style.display = 'block';
                     document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none'; document.querySelector('.icon-images.text').style.display  = 'none';
 
                     break;
                 case 5 :
+                    document.querySelector('.icon-images.close').style.display = 'block';
                     document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none'; document.querySelector('.icon-images.text').style.display  = 'none';
                     break;
                 case 6 :
+                    document.querySelector('.icon-images.close').style.display = 'block';
                     document.querySelector('.target-intro-wrapper').style.display = 'block';
                     document.querySelector('.intro-title').style.display = 'block';                
                     break;
                 case 7 :
+                    document.querySelector('.icon-images.close').style.display = 'block';
                     document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none'; document.querySelector('.icon-images.text').style.display  = 'none';
                     break;
                 default : break;
@@ -1913,7 +1923,7 @@
                     var dZ = touch.current.z + (e.deltaY);
 
                     editObject.position.z = -dZ;
-                    touch.helper.position.z = editObject.position.z - 5;
+                    touch.helper.position.z = editObject.position.z - 0;
 
                 } else {
                     var dX = touch.current.x + (e.deltaX);
@@ -2025,16 +2035,16 @@
                 touch.press = true;
 
                 var helpElement = document.createElement('div');
-                helpElement.innerHTML = '<img style="opacity : .6;" src="assets/idc-zpos.png" srcset="assets/idc-zpos@2x.png 2x, assets/idc-zpos@3x.png 3x">';
+                helpElement.innerHTML = '<img style="" src="assets/idc-zpos.png" srcset="assets/idc-zpos@2x.png 2x, assets/idc-zpos@3x.png 3x">';
                 
                 touch.helper = new DOMRenderable(helpElement);
                 
-                var scale = editObject.scale.x /1.4;
+                var scale = editObject.scale.x /.9;
                 touch.helper.scale.set(scale,scale,scale);
 
                 touch.helper.position.x = editObject.position.x;
-                touch.helper.position.y = editObject.position.y - (scale * 24.5);
-                touch.helper.position.z = editObject.position.z - 5;
+                touch.helper.position.y = editObject.position.y - (scale * 35);
+                touch.helper.position.z = editObject.position.z - 0;
 
                 touch.helper.rotateX(Math.PI/2);
 
