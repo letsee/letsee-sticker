@@ -1007,7 +1007,10 @@
                     if(document.getElementById('ar-textarea').value === '') return typeLoadControl(1);
                 }
 
-                editText = document.getElementById('ar-textarea') ? '<textarea>' + document.getElementById('ar-textarea').value + '</textarea>' : editEmoji;
+                // editText = document.getElementById('ar-textarea') ? '<textarea>' + document.getElementById('ar-textarea').value + '</textarea>' : editEmoji;
+                editText = document.getElementById('ar-textarea') ? renderables.input.text.textarea : editEmoji;                
+                 
+
             }
             
             if(world){
@@ -1087,7 +1090,13 @@
                 case 4 :
 
                     document.body.style.backgroundColor = 'transparent';
-                    isRedit ? edit(editObject) : edit(createDOMRanderable(editText));
+                    isRedit ? edit(editObject) : (function(){
+                        typeof editText === 'string' ? edit(createDOMRanderable(editText)) : (function(){
+                            editText.element.children[0].id = '';
+                            edit(editText);
+
+                        })();
+                    })();
 
                     break;                
                 case 5 :
@@ -1282,8 +1291,8 @@
         
       }
 
-      function edit(renderable){
-
+      function edit(renderable){ 
+          
           content.children.forEach(function(item){
               item.element.removeEventListener('touchstart', selectEditObject);
               if(editObject !== item ) item.element.style.opacity = '0.2';
@@ -1317,10 +1326,10 @@
             editObject.element.children[0].readOnly = true;
             object.element.children[0].disabled = true;
             editObject.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
-            editObject.element.children[0].style.height = '24px';
-            editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';
-            document.getElementById("temp").innerText = editObject.element.children[0].value;
-            editObject.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';
+            // editObject.element.children[0].style.height = '24px';
+            // editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';
+            // document.getElementById("temp").innerText = editObject.element.children[0].value;
+            // editObject.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';
           }
 
       }
