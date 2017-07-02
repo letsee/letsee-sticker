@@ -794,7 +794,7 @@
               }
           };
 
-      window.addEventListener('letsee.load', function(){
+      window.addEventListener('letsee.load', function(){ 
   
           var
             intro = document.querySelector('.target-intro-wrapper');
@@ -865,14 +865,17 @@
                     if(isModeView && uri !== notificationEntityURI) return alert('메시지가 담긴 사물이 아닙니다.');
 
                     if(uri !== CURRENT_URI){
-                        if(CURRENT_URI){
+                        if(CURRENT_URI){ 
                             letsee.getEntity(CURRENT_URI).removeRenderable(world);
                             letsee.getEntity(CURRENT_URI).removeRenderable(content);
                             content.children.forEach(function(item){
                                 content.remove(item);
                             });
-                            typeLoadControl(0, 1);
 
+                            CURRENT_URI = uri;
+                            currentTarget = letsee.getEntity(CURRENT_URI);
+                            
+                            ready();
                         }
 
                         CURRENT_URI = uri;                  
@@ -899,7 +902,7 @@
 
 
 
-        function layout(){
+        function layout(){ 
                 document.querySelector('.icon-images.create').style.display = 'none';
 
                 switch(threadType){
@@ -1051,7 +1054,7 @@
 
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
-
+ 
                         break;
                     case 6 :
                         
@@ -1078,6 +1081,8 @@
 
                         document.querySelector('.icon-view-writer').style.display  = 'none';
                         document.querySelector('.icon-view-sucsess').style.display = 'none';
+
+                        document.querySelector('.target-intro-text').style.display = 'none';
 
                         break;
                     case 7 :
@@ -1157,7 +1162,7 @@
                         document.querySelector('.icon-images.next').style.opacity = '.3';
                     });
                     break;
-                case 2 :
+                case 2 : 
                     insert(uuid, content);
                     
                     // var IMAGE_URL = currentTarget.image ? currentTarget.image : 'https://intra.letsee.io/test/assets/img-kakao@3x.png';
@@ -1170,16 +1175,16 @@
                         description: USER_NAME+'님이 '+currentTarget.name+'에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!',
                         imageUrl: 'https://intra.letsee.io/test/assets/img-kakao@3x.png',
                         link: {
-                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://141ccde0.ngrok.io/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://141ccde0.ngrok.io/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                         }
                         },
                         buttons: [
                         {
                             title: '렛시 브라우저로 보기',
-                            link: {
-                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            link: {//192.168.1.92:7777
+                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://141ccde0.ngrok.io/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://141ccde0.ngrok.io/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                             }
                         }
                         ]
@@ -1239,7 +1244,7 @@
         }
 
       function ready(){
-
+          
           world.position.y = 20;
 
           var name = '';
@@ -1258,19 +1263,17 @@
           if(currentTarget){
 
               if(currentTarget.size.width > 100){
-                  renderables.ready.target.position.y = 10;
-                  renderables.ready.plus.position.y   = -30;
-
-                  renderables.ready.text.scale.set(.5,.5,.5);
-                  renderables.ready.target.scale.set(.5,.5,.5);
-                  renderables.ready.plus.scale.set(.3,.3,.3);
+                  renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
+                  renderables.ready.text.position.y = ((currentTarget.size.height/2)-50);
+                  renderables.ready.plus.scale.set(.6,.6,.6);
               }else{
                   renderables.ready.target.position.y = 7;
                   renderables.ready.plus.position.y   = -20; 
                   renderables.ready.text.scale.set(.3,.3,.3);
                   renderables.ready.target.scale.set(.3,.3,.3);
                   renderables.ready.plus.scale.set(.2,.2,.2);
-              }
+              } 
+
           }
 
           world.add(renderables.ready.target);
@@ -1298,10 +1301,10 @@
 
 
             if(currentTarget.size.width > 100){
-                renderables.create.emoji.position.x = -28;
-                renderables.create.text.position.x  = 28;
-                renderables.create.emoji.scale.set(.5,.5,.5);
-                renderables.create.text.scale.set(.5,.5,.5);
+                renderables.create.emoji.position.x = -48;
+                renderables.create.text.position.x  = 48;
+                renderables.create.emoji.scale.set(.8,.8,.8);
+                renderables.create.text.scale.set(.8,.8,.8);
             }else{
                 renderables.create.emoji.position.x = -12;
                 renderables.create.text.position.x  = 12;
@@ -1540,6 +1543,7 @@
       }
 
       function typeStartControl(e){
+                // alert(threadType);
 
                 document.querySelector('.icon-images.create').style.display = 'none';
 
@@ -1745,17 +1749,15 @@
                     document.querySelector('.icon-images.capture').style.display = 'block';
 
                     document.body.style.backgroundColor = 'rgba(0,0,0,0.1)';
-                    currentTarget = e.target;                    
+                    currentTarget = e.target;
+
                     renderables.ready.target.element.innerHTML = currentTarget.name+'에';
                     document.getElementById('edit-target-see-name').innerText = currentTarget.name;
-
+ 
                     if(currentTarget.size.width > 100){
-                        renderables.ready.target.position.y = 10;
-                        renderables.ready.plus.position.y   = -30;
-
-                        renderables.ready.text.scale.set(.5,.5,.5);
-                        renderables.ready.target.scale.set(.5,.5,.5);
-                        renderables.ready.plus.scale.set(.3,.3,.3);
+                        renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
+                        renderables.ready.text.position.y = ((currentTarget.size.height/2)-50);
+                        renderables.ready.plus.scale.set(.6,.6,.6);
                     }else{
                         renderables.ready.target.position.y = 7;
                         renderables.ready.plus.position.y   = -20; 
@@ -1790,9 +1792,9 @@
 
                     if(currentTarget.size.width > 100){
 
-                        renderables.notification.title.position.y   =  85;
-                        renderables.notification.content.position.y = -85;
-                        renderables.notification.icon.scale.set(.6,.6,.6);
+                        renderables.notification.title.position.y   =  105;
+                        renderables.notification.content.position.y = -105;
+                        renderables.notification.icon.scale.set(.8,.8,.8);
 
                     }else{
 
@@ -1865,12 +1867,22 @@
                     document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none'; document.querySelector('.icon-images.text').style.display  = 'none';
                     break;
                 case 6 :
-                    document.querySelector('.icon-images.close').style.display = 'block';
+                    document.querySelector('.icon-images.close').style.display = 'none';
                     document.querySelector('.target-intro-wrapper').style.display = 'block';
-                    document.querySelector('.intro-title').style.display = 'block';                
+                    document.querySelector('.intro-title').style.display = 'block';
+                    
+                    document.querySelector('.target-intro-text').style.display = 'none';
+                                    
                     break;
                 case 7 :
-                    document.querySelector('.icon-images.close').style.display = 'block';
+
+                    var name = '';
+                    if(currentTarget){
+                        name = currentTarget.name;
+                        document.getElementById('edit-target-see-name').innerText = currentTarget.name;
+                    }
+
+                    document.querySelector('.icon-images.close').style.display = 'none';
                     document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none'; document.querySelector('.icon-images.text').style.display  = 'none';
                     break;
                 default : break;
