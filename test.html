@@ -1265,7 +1265,8 @@
               if(currentTarget.size.width > 100){
                   renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
                   renderables.ready.text.position.y = ((currentTarget.size.height/2)-50);
-                  renderables.ready.plus.scale.set(.6,.6,.6);
+                  renderables.ready.plus.position.y = -20;
+                  renderables.ready.plus.scale.set(.5,.5,.5);
               }else{
                   renderables.ready.target.position.y = 7;
                   renderables.ready.plus.position.y   = -20; 
@@ -1341,7 +1342,9 @@
 
           renderables.input.text.textarea = createDOMRanderable('<textarea id="ar-textarea" placeholder="메세지를 입력해주세요" type="text"></textarea>','input-text-area');
           
-          renderables.input.text.textarea.scale.set(.3,.3,.3);
+          if(currentTarget.size.width > 100) renderables.input.text.textarea.scale.set(.7,.7,.7);
+          else renderables.input.text.textarea.scale.set(.3,.3,.3);
+
           world.add(renderables.input.text.textarea);
           
           content.children.forEach(function(item){
@@ -1430,8 +1433,8 @@
           renderable.element.className = 'renderable-item';
           
           if(!isRedit){
-              if(renderable.element.children[0].tagName === 'SPAN') renderable.scale.set(.3,.3,.3);
-              if(renderable.element.children[0].tagName === 'TEXTAREA') renderable.scale.set(.3,.3,.3);
+              if(renderable.element.children[0].tagName === 'SPAN') currentTarget.size.width > 100 ? renderable.scale.set(.7,.7,.7) : renderable.scale.set(.3,.3,.3);
+            //   if(renderable.element.children[0].tagName === 'TEXTAREA') renderable.scale.set(.3,.3,.3);
 
               content.add(renderable);
               document.querySelector('.icon-images.next').style.opacity = '1.0';
@@ -1758,6 +1761,7 @@
                     if(currentTarget.size.width > 100){
                         renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
                         renderables.ready.text.position.y = ((currentTarget.size.height/2)-50);
+                        renderables.ready.plus.position.y = -20;
                         renderables.ready.plus.scale.set(.6,.6,.6);
                     }else{
                         renderables.ready.target.position.y = 7;
@@ -1884,32 +1888,13 @@
                     }
 
                     document.querySelector('.icon-images.close').style.display = 'none';
-                    document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none'; document.querySelector('.icon-images.text').style.display  = 'none';
+                    document.querySelector('.edit-target-see-wrapper').style.display = 'block'; document.querySelector('.icon-images.emoji').style.display = 'none';
+                    document.querySelector('.icon-images.text').style.display  = 'none';
                     break;
                 default : break;
             }
       }
 
-
-
-      function createEmojiBox(){
-          
-          var emojiArray = [
-              '😀',
-              '😘',
-              '😢',
-              '😉',
-              '❤'️️ 
-          ];
-          
-          for(var i = emojiArray.length; i--;){   
-              var 
-                  span = document.createElement('span');
-              span.innerHTML = '<span onclick="addEmoji('+emojiArray[i]+');">'+emojiArray[i]+'</span>';
-              document.querySelector('.emoji-box-item').appendChild(span);
-          }
-
-      }
       function createDOMRanderable(value, className, clickCallback){
 
         var
@@ -1920,6 +1905,25 @@
         if(clickCallback) element.onclick = clickCallback;
 
         return new DOMRenderable(element);
+      }
+
+      function createEmojiBox(){
+          
+        //   var emojiArray = [
+        //        '😀',
+        //        '😘',
+        //        '😢',
+        //        '😉',
+        //        '❤'️️ 
+        //   ];
+          
+        //   for(var i = emojiArray.length; i--;){   
+            //   var 
+                //   span = document.createElement('span');
+            //   span.innerHTML = '<span onclick="addEmoji('+emojiArray[i]+');">'+emojiArray[i]+'</span>';
+            //   document.querySelector('.emoji-box-item').appendChild(span);
+        //   }
+
       }
 
       function insert(key, object){
