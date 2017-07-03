@@ -1175,16 +1175,16 @@
                         description: USER_NAME+'님이 '+currentTarget.name+'에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!',
                         imageUrl: 'https://intra.letsee.io/test/assets/img-kakao@3x.png',
                         link: {
-                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://141ccde0.ngrok.io/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://141ccde0.ngrok.io/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                         }
                         },
                         buttons: [
                         {
                             title: '렛시 브라우저로 보기',
                             link: {//192.168.1.92:7777
-                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://141ccde0.ngrok.io/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://141ccde0.ngrok.io/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                             }
                         }
                         ]
@@ -1533,6 +1533,7 @@
       function addEmoji(text){
           document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
           editEmoji = text;
+        //   editEmoji = '<span>'+text+'</span>';          
           typeLoadControl(4);
 
       }
@@ -1891,7 +1892,24 @@
 
 
 
+      function createEmojiBox(){
+          
+          var emojiArray = [
+              '😀',
+              '😘',
+              '😢',
+              '😉',
+              '❤'️️ 
+          ];
+          
+          for(var i = emojiArray.length; i--;){   
+              var 
+                  span = document.createElement('span');
+              span.innerHTML = '<span onclick="addEmoji('+emojiArray[i]+');">'+emojiArray[i]+'</span>';
+              document.querySelector('.emoji-box-item').appendChild(span);
+          }
 
+      }
       function createDOMRanderable(value, className, clickCallback){
 
         var
