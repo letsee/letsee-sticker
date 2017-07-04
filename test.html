@@ -1308,11 +1308,12 @@
               if(item.text.indexOf('<textarea') !== -1){
                   object.element.children[0].readOnly = true;
                   object.element.children[0].disabled = true;
-                  object.element.children[0].style.height = '48px';
+                  object.element.children[0].style.width = '600px';
+                  object.element.children[0].style.height = '500px';
                   object.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
-                  object.element.children[0].style.height = object.element.children[0].scrollHeight + 'px';
-                  document.getElementById("temp").innerText = object.element.children[0].value;
-                  object.element.children[0].style.width = (document.getElementById("temp").offsetWidth+40)+'px';
+                //   object.element.children[0].style.height = object.element.children[0].scrollHeight + 'px';
+                //   document.getElementById("temp").innerText = object.element.children[0].value;
+                //   object.element.children[0].style.width = (document.getElementById("temp").offsetWidth+40)+'px';
               }              
 
           });
