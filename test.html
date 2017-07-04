@@ -640,7 +640,8 @@
 
     <script>
 
-      Kakao.init('268d83b5b3629f64b515bd27ed0aa2d2');
+    //   Kakao.init('268d83b5b3629f64b515bd27ed0aa2d2');
+      Kakao.init('c110db620b05965c23c894a29d720c0d');
       var uuid = guid();
       var USER_NAME = '';
             
@@ -1079,16 +1080,16 @@
                         description: USER_NAME+'님이 '+currentTarget.name+'에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!',
                         imageUrl: 'https://intra.letsee.io/test/assets/img-kakao@3x.png',
                         link: {
-                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                         }
                         },
                         buttons: [
                         {
                             title: '렛시 브라우저로 보기',
                             link: {//192.168.1.92:7777
-                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                             }
                         }
                         ]
@@ -2058,14 +2059,14 @@
                 }
 
                 if(touch.press) {
-                    var dZ = touch.current.z + (e.deltaY);
+                    var dZ = touch.current.z + (e.deltaY/4);
 
                     editObject.position.z = -dZ;
                     touch.helper.position.z = editObject.position.z - 0;
 
                 } else {
-                    var dX = touch.current.x + (e.deltaX);
-                    var dY = touch.current.y + (e.deltaY);
+                    var dX = touch.current.x + (e.deltaX/4);
+                    var dY = touch.current.y + (e.deltaY/4);
 
                     editObject.position.x = dX;
                     editObject.position.y = -dY;
@@ -2084,13 +2085,13 @@
                         touch.press = false;
                         world.remove(touch.helper);
 
-                        touch.current.z = touch.current.z + e.deltaY;
+                        touch.current.z = touch.current.z + e.deltaY/4;
                         manager.get('pinch').set({ enable : true });
                         manager.get('rotate').set({ enable : true });
 
                     } else {
-                        touch.current.x = touch.current.x + e.deltaX;
-                        touch.current.y = touch.current.y + e.deltaY;
+                        touch.current.x = touch.current.x + e.deltaX/4;
+                        touch.current.y = touch.current.y + e.deltaY/4;
                     }
                 }
 
@@ -2118,13 +2119,18 @@
                     touch.isBoundary = true;
                     return;
                 }
-
-                var scale = e.scale * touch.current.scale;
+                
+                console.log(e.scale);
+                console.log(e.scale/9);
+                console.log((e.scale/9)-e.scale);
+                console.log('-----------------');
+                var scale = e.scale * touch.current.scale;                
+                // var scale = (e.scale-(e.scale/2)) * touch.current.scale;
 
                 editObject.scale.set(scale, scale, scale);
 
-                var dX = touch.current.x + (e.deltaX);
-                var dY = touch.current.y + (e.deltaY);
+                var dX = touch.current.x + (e.deltaX/4);
+                var dY = touch.current.y + (e.deltaY/4);
 
                 editObject.position.x = dX;
                 editObject.position.y = -dY;                
@@ -2137,6 +2143,7 @@
                 if(touch.isBoundary) touch.isBoundary = false;
 
                 touch.current.scale = e.scale * touch.current.scale;
+                // touch.current.scale = (e.scale-(e.scale/2)) * touch.current.scale;
 
             });
 
