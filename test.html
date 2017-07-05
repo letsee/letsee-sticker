@@ -1294,10 +1294,13 @@
 
           notificationObject.forEach(function(item){
               
-              var 
-                  element = document.createElement('div');
+
+              var element;
+
+              item.text.indexOf('<textarea') !== -1 ? element = document.createElement('textarea') : element = document.createElement('div');
 
               element.innerHTML = item.text;
+
               element.style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
               element.className = 'renderable-item';
 
@@ -1313,14 +1316,9 @@
               content.add(object);
 
               if(item.text.indexOf('<textarea') !== -1){
+                  object.element.children[0].value = item.content;
                   object.element.children[0].readOnly = true;
-                  object.element.children[0].disabled = true;
-                  object.element.children[0].style.width = '600px';
-                  object.element.children[0].style.height = '500px';
                   object.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
-                //   object.element.children[0].style.height = object.element.children[0].scrollHeight + 'px';
-                //   document.getElementById("temp").innerText = object.element.children[0].value;
-                //   object.element.children[0].style.width = (document.getElementById("temp").offsetWidth+40)+'px';
               }              
 
           });
@@ -1346,7 +1344,6 @@
           
           if(!isRedit){
               if(renderable.element.children[0].tagName === 'SPAN') currentTarget.size.width > 100 ? renderable.scale.set(.7,.7,.7) : renderable.scale.set(.3,.3,.3);
-            //   if(renderable.element.children[0].tagName === 'TEXTAREA') renderable.scale.set(.3,.3,.3);
 
               content.add(renderable);
               document.querySelector('.icon-images.next').style.opacity = '1.0';
@@ -1366,12 +1363,8 @@
           if(editObject.element.children[0].tagName === 'TEXTAREA'){
 
             editObject.element.children[0].readOnly = true;
-            object.element.children[0].disabled = true;
+            // object.element.children[0].disabled = true;
             editObject.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
-            // editObject.element.children[0].style.height = '24px';
-            // editObject.element.children[0].style.height = editObject.element.children[0].scrollHeight + 'px';
-            // document.getElementById("temp").innerText = editObject.element.children[0].value;
-            // editObject.element.children[0].style.width = (document.getElementById("temp").offsetWidth+20)+'px';
           }
 
       }
@@ -1895,11 +1888,17 @@
       }
 
       function insert(key, object){
+          console.log(key);
+
           var data = [],
               name = USER_NAME,
               datetime = new Date().getTime();
 
           object.children.forEach(function(item){
+            console.log(item.element.children[0]);
+
+            var content = item.element.children[0].value ? item.element.children[0].value : '';
+
             var prop = {
               position : {
                 x : item.position.x,
@@ -1912,7 +1911,8 @@
                 z : item.rotation.z
               },
               scale : item.scale.x,
-              text  : item.element.innerHTML
+              text  : item.element.innerHTML,
+              content : content
             };
 
             data.push(prop);
@@ -2126,10 +2126,6 @@
                     return;
                 }
                 
-                console.log(e.scale);
-                console.log(e.scale/9);
-                console.log((e.scale/9)-e.scale);
-                console.log('-----------------');
                 var scale = e.scale * touch.current.scale;                
                 // var scale = (e.scale-(e.scale/2)) * touch.current.scale;
 
