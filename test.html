@@ -787,6 +787,12 @@
 
                         e.target.addRenderable(world);
                         e.target.addRenderable(content);
+                        console.log(e);
+
+                        var depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
+
+                        world.position.z = depth;
+                        content.position.z = depth;
                     }
 
                     typeStartControl(e);
