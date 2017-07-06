@@ -427,9 +427,9 @@
     opacity: .9;
 }
 
-.renderable-item span{
+/*.renderable-item span{
     font-size: 4.5em;
-}
+}*/
 
 .edit-target-see-wrapper{
     width: 80%;
@@ -1081,7 +1081,8 @@
                         document.querySelector('.icon-images.next').style.opacity = '.3';
                     });
                     break;
-                case 2 : 
+                case 2 :
+                    uuid = guid();
                     insert(uuid, content);
                     
                     // var IMAGE_URL = currentTarget.image ? currentTarget.image : 'https://intra.letsee.io/test/assets/img-kakao@3x.png';
@@ -1302,14 +1303,14 @@
 
           notificationObject.forEach(function(item){
               
-
-              var element;
-
-            //   item.text.indexOf('<textarea') !== -1 ? element = document.createElement('textarea') : element = document.createElement('div');
-              element = document.createElement('div');
-
-              element.innerHTML = item.text;
-
+              var element = document.createElement('div');
+              var 
+                div = document.createElement('div');
+            
+                div.className = 'target-text-content';
+                div.innerHTML = item.text;
+              
+              element.appendChild(div);
               element.style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
               element.className = 'renderable-item';
 
@@ -1323,12 +1324,6 @@
               object.scale.set(item.scale,item.scale,item.scale);
 
               content.add(object);
-
-              if(item.text.indexOf('<textarea') !== -1){
-                  object.element.children[0].value = item.content;
-                  object.element.children[0].readOnly = true;
-                  object.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
-              }              
 
           });
         } else{
@@ -1371,8 +1366,6 @@
                   div.innerHTML = value;
 
                   renderable.element.appendChild(div);
-
-                  alert('textarea');
 
 
               }              
@@ -1928,9 +1921,7 @@
               datetime = new Date().getTime();
 
           object.children.forEach(function(item){
-            console.log(item.element.children[0]);
-
-            var content = item.element.children[0].value ? item.element.children[0].value : '';
+            console.log(item.element.children[0].innerHTML);
 
             var prop = {
               position : {
@@ -1944,8 +1935,7 @@
                 z : item.rotation.z
               },
               scale : item.scale.x,
-              text  : item.element.innerHTML,
-              content : content
+              text  : item.element.children[0].innerHTML
             };
 
             data.push(prop);
