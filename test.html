@@ -427,9 +427,9 @@
     opacity: .9;
 }
 
-/*.renderable-item span{
-    font-size: 4.5em;
-}*/
+.renderable-item span{
+    font-size: 4.5rem;
+}
 
 .edit-target-see-wrapper{
     width: 80%;
@@ -1921,7 +1921,9 @@
               datetime = new Date().getTime();
 
           object.children.forEach(function(item){
-            console.log(item.element.children[0].innerHTML);
+            
+            var 
+                text = item.element.children[0].tagName === 'SPAN' ? item.element.innerHTML : item.element.children[0].innerHTML;
 
             var prop = {
               position : {
@@ -1935,7 +1937,7 @@
                 z : item.rotation.z
               },
               scale : item.scale.x,
-              text  : item.element.children[0].innerHTML
+              text  : text
             };
 
             data.push(prop);
