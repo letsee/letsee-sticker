@@ -1297,7 +1297,8 @@
 
               var element;
 
-              item.text.indexOf('<textarea') !== -1 ? element = document.createElement('textarea') : element = document.createElement('div');
+            //   item.text.indexOf('<textarea') !== -1 ? element = document.createElement('textarea') : element = document.createElement('div');
+              element = document.createElement('div');
 
               element.innerHTML = item.text;
 
