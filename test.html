@@ -524,6 +524,14 @@
 }
 
 
+/* target textarea class */
+.target-text-content{
+  width: fit-content;
+  font-size: 36px;  
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);  
+  text-align : center;  
+}
+
   </style>
   <script src="https://hammerjs.github.io/dist/hammer.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
@@ -1346,6 +1354,29 @@
           if(!isRedit){
               if(renderable.element.children[0].tagName === 'SPAN') currentTarget.size.width > 100 ? renderable.scale.set(.7,.7,.7) : renderable.scale.set(.3,.3,.3);
 
+              if(renderable.element.children[0].tagName === 'TEXTAREA'){
+                  
+                  console.log(renderable.element.children[0].value);
+                  console.log(renderable.element.children[0].value.replace(/\n/g, '<br/>'));
+
+                  var 
+                      value = renderable.element.children[0].value.replace(/\n/g, '<br/>');
+
+                  renderable.element.removeChild(renderable.element.children[0]);
+
+                  var 
+                      div = document.createElement('div');
+                  
+                  div.className = 'target-text-content';
+                  div.innerHTML = value;
+
+                  renderable.element.appendChild(div);
+
+                  alert('textarea');
+
+
+              }              
+
               content.add(renderable);
               document.querySelector('.icon-images.next').style.opacity = '1.0';
               
@@ -1394,6 +1425,9 @@
               if(item.element == e.target.parentElement){
                   isRedit = true;
                   editObject = item;
+                  //
+
+                  //
 
                   touch.current = {
                       x        : editObject.position.x,
@@ -1686,8 +1720,6 @@
 
                     break;                
                 case 2 :
-                    document.getElementById('ar-textarea').focus();
-                    document.getElementById('ar-textarea').focus();
                     document.getElementById('ar-textarea').focus();
                     break;
                 case 3 :
