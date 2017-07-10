@@ -180,9 +180,13 @@
     .emoji-box-content{ 
       margin-top: 30px;
       font-size : 50px;
-      overflow : hidden;      
       height: 100%;
       text-align: center;
+      overflow : hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .emoji-box-item{
     }
 
     .edit-title{
@@ -539,7 +543,7 @@
   </head>
   <body>
     <div id="temp" style=" font-size: 36px; position:absolute; border:1px solid red; visibility: hidden;"></div>
-
+        
     <div id="target">
         <div class="loader">
         <div class="circles"><div class="circle green"></div><div class="circle blue"></div><div class="circle red"></div></div>
@@ -633,7 +637,7 @@
       </div>
 
       <div class="emoji-box-wrapper">
-
+          
         <div class="emoji-box-btn">
           <div class="emoji-box-btn-frame"></div>
         </div>
@@ -1095,16 +1099,16 @@
                         description: USER_NAME+'님이 '+currentTarget.name+'에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!',
                         imageUrl: 'https://intra.letsee.io/test/assets/img-kakao@3x.png',
                         link: {
-                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.93:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.93:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                         }
                         },
                         buttons: [
                         {
                             title: '렛시 브라우저로 보기',
-                            link: {//192.168.1.92:7777
-                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.92:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            link: {//192.168.1.93:7777
+                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.93:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://192.168.1.93:7777/stic/test.html?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                             }
                         }
                         ]
@@ -1462,11 +1466,19 @@
           
           document.querySelector('.emoji-box-content').style.overflow = wrapper.classList.toString() === 'emoji-box-wrapper' ? 'scroll' : 'hidden';
 
+          var ctrl = wrapper.classList.toString() === 'emoji-box-wrapper' ? false : true;
+
+          manager.get('pan').set({ enable : ctrl });
+          manager.get('pinch').set({ enable : ctrl });
+          manager.get('rotate').set({ enable : ctrl });
+
           document.querySelector('.emoji-box-content').scrollTop = 0;
           wrapper.classList.toggle('transform-active');
       }
  
       function addEmoji(text){
+          if(wrapper.classList.toString() !== 'emoji-box-wrapper') scrollClick();
+
           document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
         //   editEmoji = text;
           editEmoji = '<span>'+text+'</span>';          
@@ -1474,6 +1486,7 @@
 
       }
       function closeAddEmoji(){
+          if(wrapper.classList.toString() !== 'emoji-box-wrapper') scrollClick();
           document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
           typeLoadControl(1);
 
