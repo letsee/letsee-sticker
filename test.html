@@ -1477,7 +1477,7 @@
       }
  
       function addEmoji(text){
-          if(wrapper.classList.toString() !== 'emoji-box-wrapper') scrollClick();
+          if(document.querySelector('.emoji-box-wrapper').classList.toString() !== 'emoji-box-wrapper') scrollClick();
 
           document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
         //   editEmoji = text;
@@ -1486,7 +1486,8 @@
 
       }
       function closeAddEmoji(){
-          if(wrapper.classList.toString() !== 'emoji-box-wrapper') scrollClick();
+          if(document.querySelector('.emoji-box-wrapper').classList.toString() !== 'emoji-box-wrapper') scrollClick();
+          
           document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
           typeLoadControl(1);
 
