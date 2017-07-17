@@ -439,7 +439,7 @@
     width: 80%;
     height: 78%;
     margin-left : 10%;
-    margin-top : 20%;
+    margin-top : 50px;
     display: none;
 
 }
@@ -470,64 +470,6 @@
 	text-align: center;
 }
 
-
-
-/* loader */
-
-@keyframes loader-bounce {
-  0%, 80%, 100% { 
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
-  
-  40% { 
-    -webkit-transform: scale(1.4);
-    transform: scale(1.4);
-  }
-}
-
-.loader {
-  /*width: 100px;
-  height: 100px;*/
-  /*position: fixed;*/
-  top: 50%;
-  /*left: 50%;*/
-  /*transform: translate(-50%, -50%);*/
-  text-align: center;
-}
-.loader .circles {
-  line-height: 0;
-}
-.loader .circles .circle {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: loader-bounce 1.4s infinite ease-in-out both;
-}
-.loader .circles .circle.green {
-  background-color: rgba(0, 234, 255, 0.7);
-  animation-delay: -0.32s;
-}
-.loader .circles .circle.blue {
-  background-color: #1c1cff;
-  margin: 0 10px;
-  animation-delay: -0.16s;
-}
-.loader .circles .circle.red {
-  background-color: #ff4d00;
-}
-.loader .text {
-  margin-top: 23px;
-  opacity: 0.8;
-  font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 15px;
-  font-weight: 800;
-  color: #fff;
-}
-
-
 /* target textarea class */
 .target-text-content{
   width: fit-content;
@@ -543,16 +485,7 @@
   </head>
   <body>
     <div id="temp" style=" font-size: 36px; position:absolute; border:1px solid red; visibility: hidden;"></div>
-        
-    <div id="target">
-        <div class="loader">
-        <div class="circles"><div class="circle green"></div><div class="circle blue"></div><div class="circle red"></div></div>
-        
-        <div class="text">
-            로딩중..
-        </div>
-        </div>
-    </div>
+
     <div id="wrapper">
 
       <div class="edit-target-see-wrapper">
@@ -622,7 +555,7 @@
       </div>
 
       <div class="icon c"> 
-        <img onclick="browser.openCapture();" src="assets/btn-capture.png" srcset="assets/btn-capture@2x.png 2x, assets/btn-capture@3x.png 3x" class="icon-images capture">
+        <img onclick="_app.openCapture();" src="assets/btn-capture.png" srcset="assets/btn-capture@2x.png 2x, assets/btn-capture@3x.png 3x" class="icon-images capture">
       </div>
 
       <div class="icon d">
@@ -743,72 +676,56 @@
                 }
                 
                 typeLoadControl(6);
-          }else typeLoadControl(0);
+          } else typeLoadControl(0);
+
+          letsee.addEventListener("userchange", onUserInfoReceive);
 
           letsee.addEventListener("trackstart", function(e) {
-
-                if(e.target.size.width > 100){
-                    // resize
-                }else{
-                    // letsee.getEntity('unknown').renderables[0].scale.set(0.3,0.3,0.3);
-                    // letsee.getEntity('unknown').renderables[1].scale.set(0.3,0.3,0.3);
-                }
+              if (e.target.size.width > 100){
+                  // resize
+              } else {
+                  // letsee.getEntity('unknown').renderables[0].scale.set(0.3,0.3,0.3);
+                  // letsee.getEntity('unknown').renderables[1].scale.set(0.3,0.3,0.3);
+              }
                 
-                var 
-                    uri = e.target.uri;
-                document.querySelector('.target-intro-wrapper').style.display = 'none';
-                document.querySelector('.intro-title').style.display = 'none';
-                
-                if(uri === "unknown"){
-                    document.querySelector('.loader').style.width = (e.pixelSize.width*10) + 'px';
-                    document.querySelector('.loader').style.height = (e.pixelSize.height) + 'px';
+              var uri = e.target.uri;
+              document.querySelector('.target-intro-wrapper').style.display = 'none';
+              document.querySelector('.intro-title').style.display = 'none';
 
-                    var 
-                        size = Math.sqrt( Math.pow(e.pixelSize.width, 2) + Math.pow(e.pixelSize.height, 2));
+              isTraking = true;
 
-                    document.querySelector('.loader .circles .circle.green').style.width = (size)/6 + 'px';
-                    document.querySelector('.loader .circles .circle.green').style.height = (size)/6 + 'px';
-                    document.querySelector('.loader .circles .circle.red').style.width = (size)/6 + 'px';
-                    document.querySelector('.loader .circles .circle.red').style.height = (size)/6 + 'px';
-                    document.querySelector('.loader .circles .circle.blue').style.width = (size)/6 + 'px';
-                    document.querySelector('.loader .circles .circle.blue').style.height = (size)/6+ 'px';       
-                    document.querySelector('.loader .text').style.fontSize =  (size)/8 + 'px';
-                    // alert('test');
+              if (isModeView && uri !== notificationEntityURI) {
+                  return alert('메시지가 담긴 사물이 아닙니다.');
+              }
 
-                }
-                if(uri !== "unknown"){
-                    isTraking = true;
-                    if(isModeView && uri !== notificationEntityURI) return alert('메시지가 담긴 사물이 아닙니다.');
+              if (uri !== CURRENT_URI) {
+                  if (CURRENT_URI) {
+                      letsee.getEntity(CURRENT_URI).removeRenderable(world);
+                      letsee.getEntity(CURRENT_URI).removeRenderable(content);
 
-                    if(uri !== CURRENT_URI){
-                        if(CURRENT_URI){ 
-                            letsee.getEntity(CURRENT_URI).removeRenderable(world);
-                            letsee.getEntity(CURRENT_URI).removeRenderable(content);
-                            content.children.forEach(function(item){
-                                content.remove(item);
-                            });
+                      content.children.forEach(function(item){
+                          content.remove(item);
+                      });
 
-                            CURRENT_URI = uri;
-                            currentTarget = letsee.getEntity(CURRENT_URI);
-                            
-                            ready();
-                        }
+                      CURRENT_URI = uri;
+                      currentTarget = letsee.getEntity(CURRENT_URI);
 
-                        CURRENT_URI = uri;                  
+                      ready();
+                  }
 
-                        e.target.addRenderable(world);
-                        e.target.addRenderable(content);
-                        console.log(e);
+                  CURRENT_URI = uri;
 
-                        var depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
+                  e.target.addRenderable(world);
+                  e.target.addRenderable(content);
+                  console.log(e);
 
-                        world.position.z = depth;
-                        content.position.z = depth;
-                    }
+                  var depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
 
-                    typeStartControl(e);
+                  world.position.z = depth;
+                  content.position.z = depth;
+              }
 
-                }                 
+              typeStartControl(e);
           });
 
           letsee.addEventListener('trackend', function(e){
@@ -1036,12 +953,16 @@
 
 
 
-        function onUserInfoReceive(user) {
+        function onUserInfoReceive(e) {
+            var user = e.user;
 
             if (!user) {
                 if (confirm("로그인 되어 있지 않습니다.\n로그인 하시겠습니까?")) {
-                    browser.openLogin();
-                } else typeLoadControl(0);
+                    _app.openLogin();
+
+                } else {
+                    typeLoadControl(0);
+                }
 
                 return;
             }
@@ -1098,20 +1019,20 @@
                         description: USER_NAME+'님이 '+currentTarget.name+'에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!',
                         imageUrl: 'https://intra.letsee.io/test/assets/img-kakao@3x.png',
                         link: {
-                            mobileWebUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            webUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            mobileWebUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            webUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                         }
                         },
                         buttons: [
                         {
                             title: '렛시 브라우저로 보기',
                             link: {
-                                mobileWebUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                                webUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',                                
-                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=http://intra.letsee.io/test/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                                mobileWebUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                                webUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',                                
+                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                             }
                         }
                         ]
@@ -1211,7 +1132,7 @@
       }
 
       function create(){
-          browser.getUser();          
+          _app.getUser();
 
           world.position.y = 0;
 
