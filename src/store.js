@@ -13,6 +13,7 @@ const initialState = {
     byUri: {},
     allUris: [],
   },
+  selectedMessage: null,
 };
 
 const sagaMiddleware = createSagaMiddleware();
