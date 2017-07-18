@@ -1,0 +1,468 @@
+body, textarea {
+  font-family:'Noto Sans KR Black';
+}
+
+body {
+  color: #fff;
+}
+
+#wrapper {
+  margin-top : 25px;
+  /* border: 1px solid red; */
+}
+
+/* ======================================================================*/
+/* screen icon */
+/* ======================================================================*/
+
+.emoji-box-wrapper, .edit-title, .intro-title, .kakao-background, .edit-target-see-wrapper {
+  position: absolute;
+  /*border: 1px solid red;*/
+}
+
+.icon {
+  position: absolute;
+  /* border: 1px solid red; */
+
+  &.a {
+    width: 100%;
+  }
+
+  &.b {
+    right: 0;
+  }
+
+  &.c, &.d {
+    bottom: 0;
+  }
+
+  &.d {
+    right: 0;
+    width: 54px;
+    height: 120px;
+    margin-right: 10px;
+    bottom: 80px;
+  }
+}
+
+.icon-images {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+
+  &.emoji, &.text{
+    float: left;
+    margin-bottom: 5px;
+  }
+
+  &.trash{
+    margin-top: 80px;
+  }
+
+  &.create{
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    margin-left: -15px;
+    margin-top: 50px;
+  }
+
+  &.next {
+    opacity: .3;
+  }
+}
+
+.icon-text-sucsess{
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  margin-right: 14px;
+  margin-top: 14px;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.icon-edit-sucsess{
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  margin-right: 14px;
+  margin-top: 14px;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.icon-kakao-sucsess {
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  margin-right: 14px;
+  margin-top: 14px;
+}
+
+.icon-view-sucsess {
+  position: absolute;
+  bottom: -55px;
+  margin-left : -70px;
+  width: 109px;
+  height: 32px;
+
+  img {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.icon-view-writer {
+  width: 100%;
+  height: 60px;
+  text-align: center;
+
+  .view-content {
+    text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+    font-family: AppleSDGothicNeo, sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.4px;
+    margin-left : 10px;
+    margin-top  : 19.5px;
+    opacity: 0.7;
+  }
+}
+
+/* ======================================================================*/
+/* create emoji */
+/* ======================================================================*/
+
+.emoji-box-wrapper{
+  width: 100%;
+  height: 120px;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  overflow : hidden;
+  -webkit-transition: 1s;
+  transition: 1s;
+  border-top-right-radius: 10px;
+  border-top-left-radius : 10px;
+}
+
+.transform-active{
+  height: 80%;
+}
+
+.emoji-box-btn{
+  padding-top : 20px;
+  padding-bottom : 20px;
+  position : fixed;
+  width: 100%;
+}
+
+.emoji-box-btn-frame{
+   margin : auto;
+   width: 55px;
+   height: 7px;
+   opacity: 0.4;
+   border-radius: 56px;
+   background-color: #ffffff;
+}
+
+.emoji-box-content{
+  margin-top: 30px;
+  font-size : 50px;
+  height: 100%;
+  text-align: center;
+  overflow : hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.emoji-box-item{
+}
+
+.edit-title{
+  width: 100%;
+  /*opacity: 0.8;*/
+  font-family: AppleSDGothicNeo, sans-serif;
+  /*opacity: 0.5;*/
+  font-size: 18px;
+  letter-spacing: 0.4px;
+  text-align: center;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  margin-top: 14px;
+}
+
+.intro-title{
+  width: 100%;
+  opacity: 0.8;
+  font-family: AppleSDGothicNeo, sans-serif;
+  opacity: 0.5;
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 86px;
+  bottom: 0;
+}
+
+/* ======================================================================*/
+/* kakao background */
+/* ======================================================================*/
+
+.kakao-background{
+  margin-top: -25px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.kakao-background-content{
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 18px;
+  line-height: 1.44;
+  margin-top:70%;
+  text-align: center;
+  margin-bottom: 20px;
+
+  p {
+    margin: 0;
+  }
+}
+
+
+.kakao-background-button{
+  width: 260px;
+  height: 60px;
+  margin: auto;
+  border-radius: 6px;
+  border: solid 0.5px #f9e03d;
+  /*font-weight: bold;*/
+
+  .kakao-icon, .kakao-text{
+    float: left;
+    color: #f9e03d;
+  }
+
+  .kakao-icon{
+    margin-left: 10px;
+    margin-top: 14px;
+  }
+
+  .kakao-text{
+    margin-left: 10px;
+    margin-top: 16px;
+  }
+}
+
+/* ======================================================================*/
+/* ready ar */
+/* ======================================================================*/
+
+.target-ready-content{
+  width : 1000px;
+  opacity: 0.8;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  /* font-family: AppleSDGothicNeo, sans-serif; */
+  font-weight: 800;
+  font-size: 1em;
+  letter-spacing: -0.8px;
+  text-align: center;
+  margin : 0;
+}
+
+.ready-button {
+  width: 130px;
+  height: 130px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    /*position: absolute;*/
+  }
+}
+
+/* ======================================================================*/
+/* create lettet ar */
+/* ======================================================================*/
+.create-target-wrapper-frame {
+  position: absolute;
+  width : 10%;
+  height: 10%;
+
+  &.rt, &.rb{
+    right: 0;
+  }
+
+  &.lb, &.rb{
+    bottom: 0;
+  }
+}
+
+.create-target-wrapper{
+/*border: 1px dotted #fff;*/
+/*opacity: 0.4;*/
+}
+
+.create-target-emoji, .create-target-text{
+/*opacity: 0.7;*/
+/*opacity: 0.24;*/
+/*box-shadow: 0 0 13px 0 rgba(0, 0, 0, 0.5);  */
+}
+
+/* ======================================================================*/
+/* input text ar */
+/* ======================================================================*/
+.input-text-area textarea, textarea {
+  resize:none;
+  overflow: hidden;
+  width  : 360px;
+  /* font-family: AppleSDGothicNeo, sans-serif; */
+  font-size: 36px;
+  background: transparent;
+  text-decoration: none;
+  color: #fff;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0);
+  /*border: 1px solid red;*/
+  text-align: center;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.input-text-area textarea::-webkit-input-placeholder{
+  color: rgba(255, 255, 255, .6);
+  font-size: 30px;
+  text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+}
+
+/* ======================================================================*/
+/* notification ar */
+/* ======================================================================*/
+
+.notification-title {
+  opacity: 0.8;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+
+  p {
+    margin: 0;
+    /* font-family: AppleSDGothicNeo, sans-serif; */
+    font-size: 1em;
+    font-weight: 800;
+  }
+}
+
+.notification-icon{
+  opacity: 0.8;
+  width: 130px;
+  height: 130px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.notification-content{
+  opacity: 0.8;
+  /*font-family: AppleSDGothicNeo, sans-serif; */
+  font-size: 1em;
+  font-weight: 800;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+
+/* ======================================================================*/
+/* target intro */
+/* ======================================================================*/
+.target-intro-wrapper {
+  margin: auto;
+  margin-top: 26%;
+  position: relative;
+  overflow: hidden;
+}
+
+.target-intro-text {
+  position: absolute;
+  width : 100%;
+  top: 48%;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: -0.8px;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+
+  p {
+    margin: 0;
+    /*opacity: 0.6;*/
+  }
+}
+.target-intro-frame{
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  /*opacity: 0.7;        */
+
+  &.rt, &.rb{
+    right: 0;
+  }
+
+  &.lb, &.rb{
+    bottom: 0;
+  }
+}
+
+#target h3{
+  opacity: 0.8;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-weight: 800;
+  text-align: center;
+}
+
+.renderable-item {
+  opacity: .9;
+
+  span {
+    font-size: 4.5rem;
+  }
+}
+
+.edit-target-see-wrapper{
+  width: 80%;
+  height: 78%;
+  margin-left : 10%;
+  margin-top : 50px;
+  display: none;
+}
+
+.edit-target-see-content{
+  margin-top : 75%;
+}
+
+.edit-target-see-frame{
+  position: absolute;
+
+  &.rt, &.rb{
+    right: 0;
+  }
+
+  &.lb, &.rb{
+    bottom: 0;
+  }
+}
+
+.edit-target-see-wrapper p{
+  margin: 0;
+  font-family: AppleSDGothicNeo, sans-serif;
+  opacity: 0.6;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  text-align: center;
+}
+
+/* target textarea class */
+.target-text-content{
+  width: fit-content;
+  font-size: 36px;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  text-align : center;
+}
