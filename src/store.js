@@ -5,6 +5,7 @@ import createSagaMiddleware from 'redux-saga';
 import reducers from './reducers';
 
 const initialState = {
+  currentEntity: null,
   messages: {
     byId: {},
     allIds: [],

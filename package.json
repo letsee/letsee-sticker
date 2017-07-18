@@ -47,14 +47,24 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
+    "classnames": "^2.2.5",
     "es6-promise": "^4.1.1",
     "firebase": "^4.1.3",
     "hammerjs": "^2.0.8",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",
+    "polished": "^1.3.0",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-helmet": "^5.1.3",
+    "react-redux": "^5.0.5",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
-    "redux-saga": "^0.15.4"
+    "redux-orm": "^0.9.4",
+    "redux-saga": "^0.15.4",
+    "styled-components": "^2.1.1",
+    "uuid": "^3.1.0"
   }
 }
