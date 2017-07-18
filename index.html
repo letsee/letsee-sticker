@@ -585,10 +585,12 @@
 
     <script>
 
-      Kakao.init('3674002005a38de9efee20f0548a93f5');
+      Kakao.init('268d83b5b3629f64b515bd27ed0aa2d2');
       var uuid = guid();
       var USER_NAME = '';
-            
+      var SERVICE_URL = 'https://intra.letsee.io/apps/sticker';
+//      var SERVICE_URL = 'https://apps.letsee.io/stickers';
+
       var config = {
         apiKey: "AIzaSyAdY-yp074zuymgIbqeR1EKgGWwSQb0-pc",
         authDomain: "sticker-webapp.firebaseapp.com",
@@ -1017,22 +1019,22 @@
                         content: {
                         title: '렛시 스티커 메세지가 도착했어요!',
                         description: USER_NAME+'님이 '+currentTarget.name+'에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!',
-                        imageUrl: 'https://intra.letsee.io/test/assets/img-kakao@3x.png',
+                        imageUrl: SERVICE_URL + '/assets/img-kakao@3x.png',
                         link: {
-                            mobileWebUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            webUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                            mobileWebUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=' + SERVICE_URL + '?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            webUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=' + SERVICE_URL + '?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=' + SERVICE_URL + '?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                            iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=' + SERVICE_URL + '?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                         }
                         },
                         buttons: [
                         {
                             title: '렛시 브라우저로 보기',
                             link: {
-                                mobileWebUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                                webUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',                                
-                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
-                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=https://intra.letsee.io/apps/sticker?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
+                                mobileWebUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=' + SERVICE_URL + '?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                                webUrl: 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=' + SERVICE_URL + '?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                                androidExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=' + SERVICE_URL + '?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser',
+                                iosExecParams : 'https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=' + SERVICE_URL + '?type/'+uuid+'&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser'
                             }
                         }
                         ]
