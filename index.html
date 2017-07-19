@@ -11,7 +11,13 @@
         -letsee-position: coord(0, 0, 0);
     }     
   </style>
-
+  
+  <style>
+    @font-face{font-family:'NotoSans-Black'; src:url('assets/fonts/NotoSans-Black.eot')}
+    @font-face{font-family:'NotoSans-Black'; src:url('assets/fonts/NotoSans-Black.otf')}
+    @font-face{font-family:'NotoSans-Black'; src:url('assets/fonts/NotoSans-Black.woff')}
+    body, textarea {font-family:'NotoSans-Black';}  
+  </style>
   <link rel="stylesheet" href="styles/style.css"/>
 
   <script src="https://hammerjs.github.io/dist/hammer.js"></script>
@@ -118,6 +124,7 @@
     <div id="target"></div>
 
     <script src="src/js/app.js"></script>
+    <script src="src/js/flowevent.js"></script>
     <script src="src/js/control/trackload.js"></script>
     <script src="src/js/control/trackstart.js"></script>
     <script src="src/js/control/trackend.js"></script>
