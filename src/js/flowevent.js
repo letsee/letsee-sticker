@@ -42,6 +42,19 @@
 
 
 
+    function addEmoji(text) {
+        if (document.querySelector('.emoji-box-wrapper').classList.toString() !== 'emoji-box-wrapper') scrollClick();
+
+        document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);
+        editEmoji = '<span>'+text+'</span>';          
+        typeLoadControl(4);
+
+    }
+
+
+
+
+
 
 
     function edit(renderable) { 
