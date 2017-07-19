@@ -84,10 +84,9 @@
 
         letsee.addEventListener("trackstart", function(e) {
             if (e.target.size.width > 100) {
-                // resize
+
             } else {
-                // letsee.getEntity('unknown').renderables[0].scale.set(0.3,0.3,0.3);
-                // letsee.getEntity('unknown').renderables[1].scale.set(0.3,0.3,0.3);
+
             }
             
             var uri = e.target.uri;
@@ -383,7 +382,6 @@
         if (editObject.element.children[0].tagName === 'TEXTAREA') {
 
         editObject.element.children[0].readOnly = true;
-        // object.element.children[0].disabled = true;
         editObject.element.children[0].style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
         }
 
@@ -582,7 +580,6 @@
 
         if (this.value === '') this.style.width = '360px';
         else this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
-    //   this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
 
 
     }
