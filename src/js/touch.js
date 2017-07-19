@@ -1,3 +1,10 @@
+/*
+    http://hammerjs.github.io/
+
+    3F 터치를 제외한 모든 구성은 hammer.js와 디펜더시가 걸려있습니다.
+
+    @ymj
+ */
     window.addEventListener('touchstart', touchDown);
     window.addEventListener('touchend', touchUp);
     window.addEventListener('touchmove', touchMove);
@@ -47,8 +54,8 @@
         };
 
     manager.on('panmove', function(e) {
-        if (touch.gestureF3.enable)return;
-        if (!editObject)return;
+        if (touch.gestureF3.enable)return; // 3F 제스처중이라면
+        if (!editObject)return; // 수정중인 오브젝트가 없다면
         if (touch.isBoundary) return;
 
         if (currentTarget.size.width*2 < editObject.position.x || -currentTarget.size.width*2 > editObject.position.x) {
@@ -206,6 +213,7 @@
     });          
 
     // 3F
+    /* hammer.js에 3F 제스처 요소가 없기에 퓨어로 구성 */
     function touchMove(e) {
         if (!editObject)return;
 
@@ -247,6 +255,7 @@
         if (e.touches.length > 2) {
             touch.gestureF3.enable = true;
 
+            /* 충돌관련 문제로 인하여 3F 제스처가 활성화되어있다면 pan pinch, roate 요소를 잠시 꺼둔다. */
             manager.get('pan').set({ enable : false });
             manager.get('pinch').set({ enable : false });
             manager.get('rotate').set({ enable : false });
@@ -261,15 +270,16 @@
     function touchUp(e) {
         if (!editObject)return;
         
+        /* 3F 제스처중 때었을 때 한손가락씩 때어질때마다 순차적으로 카운트가 오기에 카운터를 돌림 */
         if (touch.gestureF3.enable) touch.gestureF3.count++;
 
-        if (touch.gestureF3.count === 3) {
+        if (touch.gestureF3.count === 3) { // 세손가락이 모두 때어졌을 시 다시 활성화
             manager.get('pan').set({ enable : true });
             manager.get('pinch').set({ enable : true });
             manager.get('rotate').set({ enable : true });
             
-            touch.gestureF3.count = 0;
-            touch.gestureF3.enable = false;
+            touch.gestureF3.count = 0;      // 카운터는 0
+            touch.gestureF3.enable = false; // 3F 제스처 비활성화
 
         }
 
