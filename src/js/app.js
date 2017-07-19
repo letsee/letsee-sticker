@@ -156,6 +156,7 @@
         USER_NAME = user.lastname+user.firstname;
     }
 
+
     function editClose() {
     typeLoadControl(0, 1);
     }
@@ -176,17 +177,28 @@
 
     }      
 
+
     function createDOMRanderable(value, className, clickCallback) {
 
-    var
-        element = document.createElement('div');
+        var
+            element = document.createElement('div');
 
-    element.innerHTML = value;
-    element.className = className ? className : '';
-    if (clickCallback) element.onclick = clickCallback;
+        element.innerHTML = value;
+        element.className = className ? className : '';
+        if (clickCallback) element.onclick = clickCallback;
 
-    return new DOMRenderable(element);
+        return new DOMRenderable(element);
     }
+
+
+
+
+
+
+
+
+
+
 
 
     /* ---------------------------------- util ------------------------------------------------- */
@@ -203,8 +215,8 @@
     }
 
     function guid() {
-    function s4() { return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);}
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+        function s4() { return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);}
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
 
     function formatDate(time, format) {
