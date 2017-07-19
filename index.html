@@ -835,7 +835,7 @@
               }
           };
 
-      window.addEventListener('letsee.load', function(){ 
+      window.addEventListener('letsee.load', function() { 
           createEmojiBox();
   
           var
@@ -852,15 +852,15 @@
           var
               param = window.location.href.split("?");
 
-          if(param[1] !== undefined){
+          if (param[1] !== undefined) {
             var
                 value = param[1].split("/");
 
-                switch(value[0]){
+                switch(value[0]) {
                   case 'type' :
                       notificationKey = value[1];
                       
-                      if(!notificationObject) select(notificationKey);
+                      if (!notificationObject) select(notificationKey);
                       isModeView = true;
                       break;
                   default : break;
@@ -872,7 +872,7 @@
           letsee.addEventListener("userchange", onUserInfoReceive);
 
           letsee.addEventListener("trackstart", function(e) {
-              if (e.target.size.width > 100){
+              if (e.target.size.width > 100) {
                   // resize
               } else {
                   // letsee.getEntity('unknown').renderables[0].scale.set(0.3,0.3,0.3);
@@ -894,7 +894,7 @@
                       letsee.getEntity(CURRENT_URI).removeRenderable(world);
                       letsee.getEntity(CURRENT_URI).removeRenderable(content);
 
-                      content.children.forEach(function(item){
+                      content.children.forEach(function(item) {
                           content.remove(item);
                       });
 
@@ -919,7 +919,7 @@
               typeStartControl(e);
           });
 
-          letsee.addEventListener('trackend', function(e){
+          letsee.addEventListener('trackend', function(e) {
               isTraking = false;
               typeEndControl(e);
 
@@ -932,13 +932,13 @@
 
 
 
-        function layout(){ 
+        function layout() { 
                 document.querySelector('.icon-images.create').style.display = 'none';
 
-                switch(threadType){
+                switch(threadType) {
                     case 0 :
                         document.querySelector('.intro-title').innerText = '';
-                        if(!isTraking){
+                        if (!isTraking) {
                             document.querySelector('.target-intro-wrapper').style.display = 'block';
                             document.querySelector('.intro-title').style.display = 'block';
                         }
@@ -1088,7 +1088,7 @@
                         break;
                     case 6 :
                         
-                        if(notificationObject){
+                        if (notificationObject) {
                             document.querySelector('.intro-title').innerHTML = notificationEntityName+'<span>를 비춰</span><br><span>'+notificationName+'님의 스티커 메세지를 확인하세요</span>';
                         }
                         document.querySelector('.icon-images.capture').style.display = 'none';
@@ -1160,14 +1160,14 @@
             USER_NAME = user.lastname+user.firstname;
         }
     
-        function typeLoadControl(type, deleted){
-            if(type === 5 && content.children.length === 0) return;
+        function typeLoadControl(type, deleted) {
+            if (type === 5 && content.children.length === 0) return;
 
             threadType = type;
 
-            if(type === 4){
-                if(document.getElementById('ar-textarea')){
-                    if(document.getElementById('ar-textarea').value === '') return typeLoadControl(1);
+            if (type === 4) {
+                if (document.getElementById('ar-textarea')) {
+                    if (document.getElementById('ar-textarea').value === '') return typeLoadControl(1);
                 }
 
                 // editText = document.getElementById('ar-textarea') ? '<textarea>' + document.getElementById('ar-textarea').value + '</textarea>' : editEmoji;
@@ -1176,22 +1176,22 @@
 
             }
             
-            if(world){
-                world.children.forEach(function(item){
+            if (world) {
+                world.children.forEach(function(item) {
                     world.remove(item);
 
                 });
             }
 
-            switch(deleted){
+            switch(deleted) {
                 case 0 :
                     content.remove(editObject);
-                    if(content.children.length === 0) document.querySelector('.icon-images.next').style.opacity = '.3';
+                    if (content.children.length === 0) document.querySelector('.icon-images.next').style.opacity = '.3';
 
                     editSucsess();
                     break;
                 case 1 :
-                    content.children.forEach(function(item){
+                    content.children.forEach(function(item) {
                         content.remove(item);
                         document.querySelector('.icon-images.next').style.opacity = '.3';
                     });
@@ -1235,7 +1235,7 @@
 
             layout();
             
-            switch(type){
+            switch(type) {
                 case 0 :
                     ready();
                     document.querySelector('.edit-target-see-wrapper').style.display = 'none';
@@ -1258,8 +1258,8 @@
                 case 4 :
 
                     document.body.style.backgroundColor = 'transparent';
-                    isRedit ? edit(editObject) : (function(){
-                        typeof editText === 'string' ? edit(createDOMRanderable(editText)) : (function(){
+                    isRedit ? edit(editObject) : (function() {
+                        typeof editText === 'string' ? edit(createDOMRanderable(editText)) : (function() {
                             editText.element.children[0].id = '';
                             edit(editText);
 
@@ -1282,31 +1282,31 @@
             }
         }
 
-      function ready(){
+      function ready() {
           
           world.position.y = 20;
 
           var name = '';
-          if(currentTarget){
+          if (currentTarget) {
               name = currentTarget.name;
               document.getElementById('edit-target-see-name').innerText = currentTarget.name;
           }
 
-          if(isTraking) document.querySelector('.icon-images.create').style.display = 'block';
+          if (isTraking) document.querySelector('.icon-images.create').style.display = 'block';
 
           renderables.ready.target = createDOMRanderable('<label id="current-target-name">'+name+'</label>', 'target-ready-content');
 
           renderables.ready.text   = createDOMRanderable("<div>스티커 메세지를 남겨보세요", 'target-ready-content');
           renderables.ready.plus   = createDOMRanderable('<img src="assets/btn-add-content.png" srcset="assets/btn-add-content@2x.png 2x, assets/btn-add-content@3x.png 3x">', 'ready-button', createLettet);
 
-          if(currentTarget){
+          if (currentTarget) {
 
-              if(currentTarget.size.width > 100){
+              if (currentTarget.size.width > 100) {
                   renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
                   renderables.ready.text.position.y = ((currentTarget.size.height/2)-50);
                   renderables.ready.plus.position.y = -20;
                   renderables.ready.plus.scale.set(.5,.5,.5);
-              }else{
+              } else {
                   renderables.ready.target.position.y = 7;
                   renderables.ready.plus.position.y   = -20; 
                   renderables.ready.text.scale.set(.3,.3,.3);
@@ -1322,30 +1322,30 @@
 
       }
 
-      function create(){
+      function create() {
           _app.getUser();
 
           world.position.y = 0;
 
-          if(content.children.length === 0){
+          if (content.children.length === 0) {
             renderables.create.wrapper = createDOMRanderable('', 'create-target-wrapper');
             renderables.create.emoji   = createDOMRanderable('<img src="assets/group-2-copy-3.png" srcset="assets/group-2-copy-3@2x.png 2x, assets/group-2-copy-3@3x.png 3x">', 'create-target-emoji');
             renderables.create.text    = createDOMRanderable('<img src="assets/icn-ar-text.png" srcset="assets/icn-ar-text@2x.png 2x, assets/icn-ar-text@3x.png 3x">', 'create-target-text');
 
-            renderables.create.emoji.element.addEventListener("click", function(){
+            renderables.create.emoji.element.addEventListener("click", function() {
                 typeLoadControl(3);
             });
-            renderables.create.text.element.addEventListener("click", function(){
+            renderables.create.text.element.addEventListener("click", function() {
                 typeLoadControl(2);
             });
 
 
-            if(currentTarget.size.width > 100){
+            if (currentTarget.size.width > 100) {
                 renderables.create.emoji.position.x = -48;
                 renderables.create.text.position.x  = 48;
                 renderables.create.emoji.scale.set(.8,.8,.8);
                 renderables.create.text.scale.set(.8,.8,.8);
-            }else{
+            } else {
                 renderables.create.emoji.position.x = -12;
                 renderables.create.text.position.x  = 12;
                 renderables.create.emoji.scale.set(.2,.2,.2);
@@ -1372,25 +1372,25 @@
 
       }
 
-      function inputText(){
-          content.children.forEach(function(item){
+      function inputText() {
+          content.children.forEach(function(item) {
               item.element.removeEventListener('touchstart', selectEditObject);
-              if(editObject !== item ) item.element.style.opacity = '0.2';
+              if (editObject !== item ) item.element.style.opacity = '0.2';
 
           });
 
           renderables.input.text.textarea = createDOMRanderable('<textarea id="ar-textarea" placeholder="메세지를 입력해주세요" type="text"></textarea>','input-text-area');
           
-          if(currentTarget.size.width > 100) renderables.input.text.textarea.scale.set(.7,.7,.7);
+          if (currentTarget.size.width > 100) renderables.input.text.textarea.scale.set(.7,.7,.7);
           else renderables.input.text.textarea.scale.set(.3,.3,.3);
 
           world.add(renderables.input.text.textarea);
           
-          content.children.forEach(function(item){
+          content.children.forEach(function(item) {
               item.element.style.opacity = '0.2';
           });
 
-          if(isTraking) setTimeout(function(){
+          if (isTraking) setTimeout(function() {
               document.getElementById('ar-textarea').addEventListener('keyup', resizeTextarea);
               document.getElementById('ar-textarea').focus();
               document.getElementById('ar-textarea').focus();
@@ -1400,11 +1400,11 @@
 
       }
 
-      function inputEmoji(){
+      function inputEmoji() {
 
       }
 
-      function notification(){
+      function notification() {
 
           renderables.notification.title   = createDOMRanderable('<p><label id="noti-name">'+notificationName+'</label>님의</p> <p>스티커 메세지</p>', 'notification-title');
           renderables.notification.icon    = createDOMRanderable('<img src="assets/icn-open-messege.png" srcset="assets/icn-open-messege@2x.png 2x, assets/icn-open-messege@3x.png 3x">', 'notification-icon', viewContent);
@@ -1416,11 +1416,11 @@
 
       }  
 
-      function view(){
+      function view() {
 
-        if(notificationObject){
+        if (notificationObject) {
 
-          notificationObject.forEach(function(item){
+          notificationObject.forEach(function(item) {
               
               var element = document.createElement('div');
               var 
@@ -1454,21 +1454,21 @@
         
       }
 
-      function edit(renderable){ 
+      function edit(renderable) { 
           
-          content.children.forEach(function(item){
+          content.children.forEach(function(item) {
               item.element.removeEventListener('touchstart', selectEditObject);
-              if(editObject !== item ) item.element.style.opacity = '0.2';
+              if (editObject !== item ) item.element.style.opacity = '0.2';
 
           });
 
           renderable.element.style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
           renderable.element.className = 'renderable-item';
           
-          if(!isRedit){
-              if(renderable.element.children[0].tagName === 'SPAN') currentTarget.size.width > 100 ? renderable.scale.set(.7,.7,.7) : renderable.scale.set(.3,.3,.3);
+          if (!isRedit) {
+              if (renderable.element.children[0].tagName === 'SPAN') currentTarget.size.width > 100 ? renderable.scale.set(.7,.7,.7) : renderable.scale.set(.3,.3,.3);
 
-              if(renderable.element.children[0].tagName === 'TEXTAREA'){
+              if (renderable.element.children[0].tagName === 'TEXTAREA') {
                   
                   console.log(renderable.element.children[0].value);
                   console.log(renderable.element.children[0].value.replace(/\n/g, '<br/>'));
@@ -1504,7 +1504,7 @@
           editObject = renderable;
           touch.current.scale = editObject.scale.x;
           editObject.element.style.border = '1px solid rgba(0 ,177 , 199, 0.8)';
-          if(editObject.element.children[0].tagName === 'TEXTAREA'){
+          if (editObject.element.children[0].tagName === 'TEXTAREA') {
 
             editObject.element.children[0].readOnly = true;
             // object.element.children[0].disabled = true;
@@ -1516,11 +1516,11 @@
 
 
 
-      function editSucsess(){
-          if(isRedit) isRedit = false;
+      function editSucsess() {
+          if (isRedit) isRedit = false;
           editObject.element.style.border = 'none';
 
-          content.children.forEach(function(item){
+          content.children.forEach(function(item) {
               item.element.style.opacity = '0.9';
               item.element.addEventListener('touchstart', selectEditObject);
 
@@ -1531,10 +1531,10 @@
 
       }
 
-      function selectEditObject(e){
-          content.children.forEach(function(item){
+      function selectEditObject(e) {
+          content.children.forEach(function(item) {
                 
-              if(item.element == e.target.parentElement){
+              if (item.element == e.target.parentElement) {
                   isRedit = true;
                   editObject = item;
                   //
@@ -1555,27 +1555,27 @@
           });
       }
 
-      function editClose(){
+      function editClose() {
         typeLoadControl(0, 1);
       }
 
-      function createLettet(){
+      function createLettet() {
           typeLoadControl(1);
 
       }
 
-      function viewContent(){
+      function viewContent() {
           typeLoadControl(7);
 
       }
 
-      function viewSucsess(){
+      function viewSucsess() {
           isModeView = false;
           typeLoadControl(0, 1);
 
       }      
  
-      function scrollClick(){
+      function scrollClick() {
           var 
               wrapper = document.querySelector('.emoji-box-wrapper');
           
@@ -1591,8 +1591,8 @@
           wrapper.classList.toggle('transform-active');
       }
  
-      function addEmoji(text){
-          if(document.querySelector('.emoji-box-wrapper').classList.toString() !== 'emoji-box-wrapper') scrollClick();
+      function addEmoji(text) {
+          if (document.querySelector('.emoji-box-wrapper').classList.toString() !== 'emoji-box-wrapper') scrollClick();
 
           document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
         //   editEmoji = text;
@@ -1600,22 +1600,22 @@
           typeLoadControl(4);
 
       }
-      function closeAddEmoji(){
-          if(document.querySelector('.emoji-box-wrapper').classList.toString() !== 'emoji-box-wrapper') scrollClick();
+      function closeAddEmoji() {
+          if (document.querySelector('.emoji-box-wrapper').classList.toString() !== 'emoji-box-wrapper') scrollClick();
           
           document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
           typeLoadControl(1);
 
       }
 
-      function typeStartControl(e){
+      function typeStartControl(e) {
 
                 document.querySelector('.icon-images.create').style.display = 'none';
 
-                switch(threadType){
+                switch(threadType) {
                     case 0 :
                         document.querySelector('.intro-title').innerText = '';
-                        if(!isTraking){
+                        if (!isTraking) {
                             document.querySelector('.target-intro-wrapper').style.display = 'block';
                             document.querySelector('.intro-title').style.display = 'block';
                         }
@@ -1808,7 +1808,7 @@
                 }
 
             document.querySelector('.edit-target-see-wrapper').style.display = 'none';
-            switch(threadType){
+            switch(threadType) {
                 case 0 :
                     document.querySelector('.icon-images.create').style.display = 'block';
                     document.querySelector('.icon-images.capture').style.display = 'block';
@@ -1819,12 +1819,12 @@
                     renderables.ready.target.element.innerHTML = currentTarget.name+'에';
                     document.getElementById('edit-target-see-name').innerText = currentTarget.name;
  
-                    if(currentTarget.size.width > 100){
+                    if (currentTarget.size.width > 100) {
                         renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
                         renderables.ready.text.position.y = ((currentTarget.size.height/2)-50);
                         renderables.ready.plus.position.y = -20;
                         renderables.ready.plus.scale.set(.6,.6,.6);
-                    }else{
+                    } else {
                         renderables.ready.target.position.y = 7;
                         renderables.ready.plus.position.y   = -20; 
                         renderables.ready.text.scale.set(.3,.3,.3);
@@ -1852,15 +1852,15 @@
                     break;
                 case 6 :
                     currentTarget = e.target;
-                    if(document.getElementById('noti-name')) document.getElementById('noti-name').innerText = notificationName;
+                    if (document.getElementById('noti-name')) document.getElementById('noti-name').innerText = notificationName;
 
-                    if(currentTarget.size.width > 100){
+                    if (currentTarget.size.width > 100) {
 
                         renderables.notification.title.position.y   =  85;
                         renderables.notification.content.position.y = -75;
                         renderables.notification.icon.scale.set(.8,.8,.8);
 
-                    }else{
+                    } else {
 
                         renderables.notification.title.position.y   =  35;
                         renderables.notification.content.position.y = -35;
@@ -1878,7 +1878,7 @@
             }
       }
 
-      function typeEndControl(e){
+      function typeEndControl(e) {
             document.querySelector('.icon-images.capture').style.display = 'block';
             // document.querySelector('.icon-images.close').style.display = 'block';
             document.querySelector('.icon-images.next').style.display  = 'none';
@@ -1900,7 +1900,7 @@
             document.querySelector('.icon-view-writer').style.display  = 'none';
             document.querySelector('.icon-view-sucsess').style.display = 'none';          
 
-            switch(threadType){
+            switch(threadType) {
                 case 0 :
                     document.body.style.backgroundColor = 'transparent';
                     document.querySelector('.icon-images.create').style.display = 'none';
@@ -1941,7 +1941,7 @@
                 case 7 :
 
                     var name = '';
-                    if(currentTarget){
+                    if (currentTarget) {
                         name = currentTarget.name;
                         document.getElementById('edit-target-see-name').innerText = currentTarget.name;
                     }
@@ -1954,19 +1954,19 @@
             }
       }
 
-      function createDOMRanderable(value, className, clickCallback){
+      function createDOMRanderable(value, className, clickCallback) {
 
         var
             element = document.createElement('div');
 
         element.innerHTML = value;
         element.className = className ? className : '';
-        if(clickCallback) element.onclick = clickCallback;
+        if (clickCallback) element.onclick = clickCallback;
 
         return new DOMRenderable(element);
       }
 
-      function createEmojiBox(){
+      function createEmojiBox() {
           
           var emojiArray =[
                 '❤️',
@@ -2030,8 +2030,8 @@
                 '✋'
             ];
                 
-          // for(var i = emojiArray.length; i--;){
-          for(var i = 0; i < emojiArray.length; i++){
+          // for(var i = emojiArray.length; i--;) {
+          for(var i = 0; i < emojiArray.length; i++) {
               var 
                   span = document.createElement('span');
               span.innerHTML = '<span onclick="addEmoji(\''+emojiArray[i]+'\');">'+emojiArray[i]+'</span>';
@@ -2042,14 +2042,14 @@
           document.querySelector('.emoji-box-item').appendChild(document.createElement('br'));
       }
 
-      function insert(key, object){
+      function insert(key, object) {
           console.log(key);
 
           var data = [],
               name = USER_NAME,
               datetime = new Date().getTime();
 
-          object.children.forEach(function(item){
+          object.children.forEach(function(item) {
             
             var 
                 text = item.element.children[0].tagName === 'SPAN' ? item.element.innerHTML : item.element.children[0].innerHTML;
@@ -2082,11 +2082,11 @@
           });
       }
 
-      function select(key){
+      function select(key) {
 
           database.ref('stickers/' + key)
           .once('value')
-          .then(function(data){
+          .then(function(data) {
 
               notificationName = data.val().name;
               notificationEntityURI = data.val().entity;
@@ -2106,15 +2106,15 @@
           
           document.getElementById("temp").innerText = this.value;
 
-          if(this.value === '') this.style.width = '360px';
+          if (this.value === '') this.style.width = '360px';
           else this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
         //   this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
 
 
       }
 
-      function guid(){
-        function s4(){ return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);}
+      function guid() {
+        function s4() { return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);}
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
       }
 
@@ -2197,11 +2197,11 @@
                 };
 
             manager.on('panmove', function(e) {
-                if(touch.gestureF3.enable)return;
-                if(!editObject)return;
-                if(touch.isBoundary) return;
+                if (touch.gestureF3.enable)return;
+                if (!editObject)return;
+                if (touch.isBoundary) return;
 
-                if(currentTarget.size.width*2 < editObject.position.x || -currentTarget.size.width*2 > editObject.position.x){
+                if (currentTarget.size.width*2 < editObject.position.x || -currentTarget.size.width*2 > editObject.position.x) {
                     editObject.position.x = editObject.position.x > 0 ? (currentTarget.size.width*2)-1 : -( (currentTarget.size.width*2)-1)
 
                     touch.current.x = editObject.position.x;
@@ -2209,7 +2209,7 @@
                     touch.isBoundary = true;
                     return;
                 }
-                if(currentTarget.size.height*2 < editObject.position.y || -currentTarget.size.height*2 > editObject.position.y){
+                if (currentTarget.size.height*2 < editObject.position.y || -currentTarget.size.height*2 > editObject.position.y) {
                     editObject.position.y = editObject.position.y > 0 ? (currentTarget.size.height*2)-1 : -( (currentTarget.size.height*2)-1)
 
                     touch.current.x = editObject.position.x;
@@ -2218,7 +2218,7 @@
                     return;
                 }
 
-                if(touch.press) {
+                if (touch.press) {
                     var dZ = touch.current.z + (e.deltaY/4);
 
                     editObject.position.z = -dZ;
@@ -2236,12 +2236,12 @@
             });
 
             manager.on('panend', function(e) {
-                if(touch.gestureF3.enable)return;
-                if(!editObject)return;
+                if (touch.gestureF3.enable)return;
+                if (!editObject)return;
 
-                if(touch.isBoundary) touch.isBoundary = false;
+                if (touch.isBoundary) touch.isBoundary = false;
                 else{
-                    if(touch.press) {
+                    if (touch.press) {
                         touch.press = false;
                         world.remove(touch.helper);
 
@@ -2258,12 +2258,12 @@
             });
 
             manager.on('pinchmove', function(e) {
-                if(touch.gestureF3.enable)return;
-                if(!editObject)return;
+                if (touch.gestureF3.enable)return;
+                if (!editObject)return;
 
-                if(touch.isBoundary) return;
+                if (touch.isBoundary) return;
 
-                if(currentTarget.size.width*2 < editObject.position.x || -currentTarget.size.width*2 > editObject.position.x){
+                if (currentTarget.size.width*2 < editObject.position.x || -currentTarget.size.width*2 > editObject.position.x) {
                     editObject.position.x = editObject.position.x > 0 ? (currentTarget.size.width*2)-1 : -( (currentTarget.size.width*2)-1)
 
                     touch.current.x = editObject.position.x;
@@ -2271,7 +2271,7 @@
                     touch.isBoundary = true;
                     return;
                 }
-                if(currentTarget.size.height*2 < editObject.position.y || -currentTarget.size.height*2 > editObject.position.y){
+                if (currentTarget.size.height*2 < editObject.position.y || -currentTarget.size.height*2 > editObject.position.y) {
                     editObject.position.y = editObject.position.y > 0 ? (currentTarget.size.height*2)-1 : -( (currentTarget.size.height*2)-1)
 
                     touch.current.x = editObject.position.x;
@@ -2294,9 +2294,9 @@
             });
 
             manager.on('pinchend', function(e) {
-                if(touch.gestureF3.enable)return;
-                if(!editObject)return;
-                if(touch.isBoundary) touch.isBoundary = false;
+                if (touch.gestureF3.enable)return;
+                if (!editObject)return;
+                if (touch.isBoundary) touch.isBoundary = false;
 
                 touch.current.scale = e.scale * touch.current.scale;
                 // touch.current.scale = (e.scale-(e.scale/2)) * touch.current.scale;
@@ -2304,25 +2304,25 @@
             });
 
             manager.on('rotatemove', function(e) {
-                if(touch.gestureF3.enable)return;
-                if(!editObject)return;
+                if (touch.gestureF3.enable)return;
+                if (!editObject)return;
 
-                if(touch.OLD_ROTATE_Z) editObject.rotateZ( (touch.OLD_ROTATE_Z - e.rotation) / 60 );
+                if (touch.OLD_ROTATE_Z) editObject.rotateZ( (touch.OLD_ROTATE_Z - e.rotation) / 60 );
                 touch.OLD_ROTATE_Z = e.rotation;
 
             });
 
             manager.on('rotateend', function(e) {
-                if(touch.gestureF3.enable)return;
-                if(!editObject)return;
+                if (touch.gestureF3.enable)return;
+                if (!editObject)return;
 
                 touch.OLD_ROTATE_Z = null;
 
             });
 
-            manager.on('pressup', function(e){
-                if(touch.gestureF3.enable)return;
-                if(touch.press) {
+            manager.on('pressup', function(e) {
+                if (touch.gestureF3.enable)return;
+                if (touch.press) {
                     touch.press = false;
                     world.remove(touch.helper);
                 }
@@ -2330,8 +2330,8 @@
             })
 
             manager.on('press', function(e) {
-                if(touch.gestureF3.enable)return;
-                if(!editObject)return;
+                if (touch.gestureF3.enable)return;
+                if (!editObject)return;
 
                 touch.press = true;
 
@@ -2356,11 +2356,11 @@
             });          
             
             // 3F
-            function touchMove(e){
-                if(!editObject)return;
+            function touchMove(e) {
+                if (!editObject)return;
 
-                if(e.touches.length > 2){
-                    if(!touch.gestureF3.enable)return;
+                if (e.touches.length > 2) {
+                    if (!touch.gestureF3.enable)return;
 
                     var
                         speed = 0.01;
@@ -2391,10 +2391,10 @@
 
             }
 
-            function touchDown(e){
-                if(!editObject)return;
+            function touchDown(e) {
+                if (!editObject)return;
 
-                if(e.touches.length > 2){
+                if (e.touches.length > 2) {
                     touch.gestureF3.enable = true;
 
                     manager.get('pan').set({ enable : false });
@@ -2408,12 +2408,12 @@
 
             }
 
-            function touchUp(e){
-                if(!editObject)return;
+            function touchUp(e) {
+                if (!editObject)return;
                 
-                if(touch.gestureF3.enable) touch.gestureF3.count++;
+                if (touch.gestureF3.enable) touch.gestureF3.count++;
 
-                if(touch.gestureF3.count === 3){
+                if (touch.gestureF3.count === 3) {
                     manager.get('pan').set({ enable : true });
                     manager.get('pinch').set({ enable : true });
                     manager.get('rotate').set({ enable : true });
