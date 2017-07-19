@@ -363,15 +363,6 @@
         wrapper.classList.toggle('transform-active');
     }
 
-    function addEmoji(text) {
-        if (document.querySelector('.emoji-box-wrapper').classList.toString() !== 'emoji-box-wrapper') scrollClick();
-
-        document.querySelector('.ar-renderer').removeEventListener('touchend', closeAddEmoji);          
-    //   editEmoji = text;
-        editEmoji = '<span>'+text+'</span>';          
-        typeLoadControl(4);
-
-    }
     function closeAddEmoji() {
         if (document.querySelector('.emoji-box-wrapper').classList.toString() !== 'emoji-box-wrapper') scrollClick();
         
@@ -390,82 +381,6 @@
     if (clickCallback) element.onclick = clickCallback;
 
     return new DOMRenderable(element);
-    }
-
-    function createEmojiBox() {
-        
-        var emojiArray =[
-            '❤️',
-            '😜',
-            '😝',
-            '🤡',
-            '😞',
-            '😣',
-            '😖',
-            '😫',
-            '😤',
-            '😡',
-            '😵',
-            '😱',
-            '😰',
-            '😭',
-            '😷',
-            '🤒',
-            '🤕', 
-            '👿',
-            '💩',
-            '👻',
-            '👍',
-            '👊',
-            '🙏',
-            '👓',
-            '😎',
-            '🐶',
-            '🐱',
-            '🐼',
-            '🐯',
-            '🐷',
-            '🐽',
-            '😻',
-            '😼',
-            '😽',
-            '🙀',
-            '😿',
-            '🔥',
-            '🌈',
-            '⭐',
-            '✨',
-            '🥂',
-            '🍷',
-            '💕',
-            '💯',
-            '♨️',
-            '💤',
-            '💋',
-            '👄',
-            '👅',
-            '🙆',
-            '🙇',
-            '👨‍🍳',
-            '🐸 ',
-            '🍎',
-            '🎮',
-            '🎨 ',
-            '✌️',
-            '✊ ',
-            '✋'
-        ];
-            
-        // for(var i = emojiArray.length; i--;) {
-        for(var i = 0; i < emojiArray.length; i++) {
-            var 
-                span = document.createElement('span');
-            span.innerHTML = '<span onclick="addEmoji(\''+emojiArray[i]+'\');">'+emojiArray[i]+'</span>';
-            document.querySelector('.emoji-box-item').appendChild(span);
-        }
-
-        document.querySelector('.emoji-box-item').appendChild(document.createElement('br'));
-        document.querySelector('.emoji-box-item').appendChild(document.createElement('br'));
     }
 
 
