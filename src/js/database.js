@@ -1,3 +1,4 @@
+    // API 키
     var config = {
             apiKey: "AIzaSyAdY-yp074zuymgIbqeR1EKgGWwSQb0-pc",
             authDomain: "sticker-webapp.firebaseapp.com",
@@ -8,11 +9,26 @@
         },
         database;
     
-    window.addEventListener('letsee.load', function() {
+    // window.addEventListener('letsee.load', function() {
+
+        // 데이터베이스 초기화
         firebase.initializeApp(config);
         database = firebase.database();
-    });
 
+    // });
+
+    /* sticker db insert 
+         담기는 정보
+         name               : 유저 이름
+         datetime           : 날짜
+         entity             : 인식 사물
+         entityName         : 인식 사물명
+         data               : 스티커 정보 { }
+            position
+            rotation
+            scale
+            text : innerHTML
+    */
     function insert(key, object) {
 
         var data = [],
@@ -52,6 +68,7 @@
         });
     }
 
+    /* sticker db select */
     function select(key) {
 
         database.ref('stickers/' + key)
