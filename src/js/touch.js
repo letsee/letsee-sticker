@@ -75,15 +75,17 @@
             return;
         }
 
+        var moveDelta = currentTarget.size.width > 100 ? 2 : 4; // 실측 사이즈별 감도 분기
+
         if (touch.press) {
-            var dZ = touch.current.z + (e.deltaY/4);
+            var dZ = touch.current.z + (e.deltaY/moveDelta); // Z축 감도 지정
 
             editObject.position.z = -dZ;
             touch.helper.position.z = editObject.position.z - 0;
 
         } else {
-            var dX = touch.current.x + (e.deltaX/4);
-            var dY = touch.current.y + (e.deltaY/4);
+            var dX = touch.current.x + (e.deltaX/moveDelta); // X축 감도 지정
+            var dY = touch.current.y + (e.deltaY/moveDelta); // Y축 감도 지정
 
             editObject.position.x = dX;
             editObject.position.y = -dY;
@@ -98,17 +100,20 @@
 
         if (touch.isBoundary) touch.isBoundary = false;
         else{
+        
+            var moveDelta = currentTarget.size.width > 100 ? 2 : 4; // 실측 사이즈별 감도 분기
+
             if (touch.press) {
                 touch.press = false;
                 world.remove(touch.helper);
 
-                touch.current.z = touch.current.z + e.deltaY/4;
+                touch.current.z = touch.current.z + e.deltaY/moveDelta;
                 manager.get('pinch').set({ enable : true });
                 manager.get('rotate').set({ enable : true });
 
             } else {
-                touch.current.x = touch.current.x + e.deltaX/4;
-                touch.current.y = touch.current.y + e.deltaY/4;
+                touch.current.x = touch.current.x + e.deltaX/moveDelta;
+                touch.current.y = touch.current.y + e.deltaY/moveDelta;
             }
         }
 
@@ -136,14 +141,14 @@
             touch.isBoundary = true;
             return;
         }
-        
-        var scale = e.scale * touch.current.scale;                
-        // var scale = (e.scale-(e.scale/2)) * touch.current.scale;
+
+        var moveDelta = currentTarget.size.width > 100 ? 2 : 4; // 실측 사이즈별 감도 분기
+        var scale = e.scale * touch.current.scale;
 
         editObject.scale.set(scale, scale, scale);
 
-        var dX = touch.current.x + (e.deltaX/4);
-        var dY = touch.current.y + (e.deltaY/4);
+        var dX = touch.current.x + (e.deltaX/moveDelta); // X축 감도 지정
+        var dY = touch.current.y + (e.deltaY/moveDelta); // Y축 감도 지정
 
         editObject.position.x = dX;
         editObject.position.y = -dY;                
@@ -156,7 +161,6 @@
         if (touch.isBoundary) touch.isBoundary = false;
 
         touch.current.scale = e.scale * touch.current.scale;
-        // touch.current.scale = (e.scale-(e.scale/2)) * touch.current.scale;
 
     });
 
