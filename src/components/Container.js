@@ -1,14 +1,7 @@
-html {
-  position: relative;
-}
+// @flow
+import styled from 'styled-components';
 
-body {
-  margin: 0;
-  font-family: AppleSDGothicNeo, sans-serif;
-  overflow: hidden;
-}
-
-.container {
+const Container = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
@@ -19,4 +12,6 @@ body {
   background-color: transparent;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-}
+`;
+
+export default Container;

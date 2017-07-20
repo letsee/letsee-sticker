@@ -1,20 +1,17 @@
 // @flow
 import React from 'react';
-import classNames from 'classnames';
-import styles from './styles.scss';
+import { ImageButton } from '../Button';
 
 import trashIcon from './btn-trash.png';
 import trashIcon2x from './btn-trash@2x.png';
 import trashIcon3x from './btn-trash@3x.png';
 
 const TrashButton = ({
-  className,
   children,
   ...other
 }) => (
-  <button
+  <ImageButton
     type="button"
-    className={classNames(styles.trashBtn, className)}
     {...other}
   >
     <img
@@ -22,7 +19,7 @@ const TrashButton = ({
       src={trashIcon}
       srcSet={`${trashIcon2x} 2x, ${trashIcon3x} 3x`}
     />
-  </button>
+  </ImageButton>
 );
 
 export default TrashButton;

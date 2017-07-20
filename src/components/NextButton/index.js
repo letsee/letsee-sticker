@@ -1,20 +1,23 @@
 // @flow
 import React from 'react';
-import classNames from 'classnames';
-import styles from './styles.scss';
+import { ImageButton } from '../Button';
 
 import nextIcon from './btn-next.png';
 import nextIcon2x from './btn-next@2x.png';
 import nextIcon3x from './btn-next@3x.png';
 
+const StyledImageButton = ImageButton.extend`
+  &:disabled {
+    opacity: 0.3;
+  }
+`;
+
 const NextButton = ({
-  className,
   children,
   ...other
 }) => (
-  <button
+  <StyledImageButton
     type="button"
-    className={classNames(styles.nextBtn, className)}
     {...other}
   >
     <img
@@ -22,7 +25,7 @@ const NextButton = ({
       src={nextIcon}
       srcSet={`${nextIcon2x} 2x, ${nextIcon3x} 3x`}
     />
-  </button>
+  </StyledImageButton>
 );
 
 export default NextButton;

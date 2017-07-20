@@ -1,20 +1,17 @@
 // @flow
 import React from 'react';
-import classNames from 'classnames';
-import styles from './styles.scss';
+import { ImageButton } from '../Button';
 
 import leaveMessageIcon from './btn-gocreate.png';
 import leaveMessageIcon2x from './btn-gocreate@2x.png';
 import leaveMessageIcon3x from './btn-gocreate@3x.png';
 
 const LeaveMessageButton = ({
-  className,
   children,
   ...other
 }) => (
-  <button
+  <ImageButton
     type="button"
-    className={classNames(styles.leaveMessageBtn, className)}
     {...other}
   >
     <img
@@ -22,7 +19,7 @@ const LeaveMessageButton = ({
       src={leaveMessageIcon}
       srcSet={`${leaveMessageIcon2x} 2x, ${leaveMessageIcon3x} 3x`}
     />
-  </button>
+  </ImageButton>
 );
 
 export default LeaveMessageButton;
