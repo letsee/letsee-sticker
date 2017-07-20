@@ -16,11 +16,10 @@ export const addSticker = (entityUri: string, text: string) => ({
   },
 });
 
-export const deleteSticker = (id: string, entityUri: string) => ({
+export const deleteSticker = (id: string) => ({
   type: DELETE_STICKER,
   payload: {
     id,
-    entityUri,
   },
 });
 

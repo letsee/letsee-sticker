@@ -1,0 +1,108 @@
+@charset 'UTF-8';
+
+.carousel {
+  &.carousel-slider {
+    overflow: visible;
+  }
+
+  .slide {
+    background: transparent;
+  }
+
+  .control-dots {
+    bottom: 100%;
+    margin: 25px 0;
+
+    .dot {
+      opacity: 1;
+      background: #d8d8d8;
+      box-shadow: none;
+
+      &.selected {
+        background: #00b1c7;
+      }
+    }
+  }
+}
+
+:local .dots {
+  position: absolute;
+  bottom: 100%;
+
+  display: block;
+
+  width: 100%;
+  padding: 0;
+  margin: 0 0 25px 0;
+
+  list-style: none;
+
+  text-align: center;
+
+  > li {
+    position: relative;
+
+    display: inline-block;
+
+    width: 8px;
+    height: 8px;
+    margin: 0 7.5px;
+    padding: 0;
+
+    cursor: pointer;
+
+    > button {
+      font-size: 0;
+      line-height: 0;
+
+      display: block;
+
+      width: 8px;
+      height: 8px;
+      padding: 0;
+
+      cursor: pointer;
+
+      color: transparent;
+      border: 0;
+      outline: none;
+      background: transparent;
+
+      &:hover, &:focus {
+        outline: none;
+
+        &:before {
+          opacity: 1;
+        }
+      }
+
+      &:before {
+        font-family: 'slick';
+        font-size: 8px;
+        line-height: 8px;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 8px;
+        height: 8px;
+
+        content: '\2022';
+        text-align: center;
+
+        opacity: 1;
+        color: #d8d8d8;
+
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    }
+
+    &:global(.slick-active) {
+      > button:before {
+        color: #00b1c7;
+      }
+    }
+  }
+}
