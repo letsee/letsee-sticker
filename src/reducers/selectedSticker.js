@@ -1,25 +1,25 @@
 // @flow
 import {
-  SELECT_MESSAGE,
-  DESELECT_MESSAGE,
-  DELETE_MESSAGE,
+  SELECT_STICKER,
+  DESELECT_STICKER,
+  DELETE_STICKER,
 } from '../actions';
 
-const selectedMessage = (state: string | null = null, action) => {
+const selectedSticker = (state: string | null = null, action) => {
   switch (action.type) {
-    case SELECT_MESSAGE:
+    case SELECT_STICKER:
       if (state === null) {
         return action.payload;
       }
 
       return state;
-    case DESELECT_MESSAGE:
+    case DESELECT_STICKER:
       if (state === action.payload) {
         return null;
       }
 
       return state;
-    case DELETE_MESSAGE:
+    case DELETE_STICKER:
       if (state === action.payload.id) {
         return null;
       }
@@ -30,4 +30,4 @@ const selectedMessage = (state: string | null = null, action) => {
   }
 };
 
-export default selectedMessage;
+export default selectedSticker;

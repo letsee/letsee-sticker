@@ -1,16 +1,16 @@
 // @flow
 import { combineReducers } from 'redux';
 import {
-  ADD_MESSAGE,
-  DELETE_MESSAGE,
-  TRANSLATE_MESSAGE,
-  ROTATE_MESSAGE,
-  SCALE_MESSAGE,
+  ADD_STICKER,
+  DELETE_STICKER,
+  TRANSLATE_STICKER,
+  ROTATE_STICKER,
+  SCALE_STICKER,
 } from '../actions';
 
 const message = (state = null, action) => {
   switch (action.type) {
-    case ADD_MESSAGE:
+    case ADD_STICKER:
       return {
         ...action.payload,
         position: {
@@ -25,11 +25,11 @@ const message = (state = null, action) => {
         },
         scale: 1,
       };
-    case DELETE_MESSAGE:
+    case DELETE_STICKER:
       return null;
-    case TRANSLATE_MESSAGE:
-    case ROTATE_MESSAGE:
-    case SCALE_MESSAGE:
+    case TRANSLATE_STICKER:
+    case ROTATE_STICKER:
+    case SCALE_STICKER:
       return {
         ...state,
         ...action.payload,
@@ -41,11 +41,11 @@ const message = (state = null, action) => {
 
 const byId = (state = {}, action) => {
   switch (action.type) {
-    case ADD_MESSAGE:
-    case DELETE_MESSAGE:
-    case TRANSLATE_MESSAGE:
-    case ROTATE_MESSAGE:
-    case SCALE_MESSAGE:
+    case ADD_STICKER:
+    case DELETE_STICKER:
+    case TRANSLATE_STICKER:
+    case ROTATE_STICKER:
+    case SCALE_STICKER:
       return {
         ...state,
         [action.payload.id]: message(state[action.payload.id], action),
@@ -56,14 +56,16 @@ const byId = (state = {}, action) => {
 };
 
 const allIds = (state = [], action) => {
+  let index;
+
   switch (action.type) {
-    case ADD_MESSAGE:
+    case ADD_STICKER:
       return [
         ...state,
         action.payload.id,
       ];
-    case DELETE_MESSAGE:
-      const index = state.findIndex(id => id === action.payload.id);
+    case DELETE_STICKER:
+      index = state.findIndex(id => id === action.payload.id);
 
       return [
         ...state.slice(0, index),
@@ -74,9 +76,9 @@ const allIds = (state = [], action) => {
   }
 };
 
-const messages = combineReducers({
+const stickers = combineReducers({
   byId,
   allIds,
 });
 
-export default messages;
+export default stickers;
