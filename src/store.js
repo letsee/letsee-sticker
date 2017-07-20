@@ -8,15 +8,16 @@ const initialState = {
   letseeLoaded: false,
   currentEntity: null,
   currentUser: null,
-  messages: {
-    byId: {},
-    allIds: [],
-  },
   entities: {
     byUri: {},
     allUris: [],
   },
-  selectedMessage: null,
+  messageForm: null,
+  selectedSticker: null,
+  stickers: {
+    byId: {},
+    allIds: [],
+  },
 };
 
 const sagaMiddleware = createSagaMiddleware();

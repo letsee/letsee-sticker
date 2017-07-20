@@ -8,7 +8,7 @@ import {
   SCALE_STICKER,
 } from '../actions';
 
-const message = (state = null, action) => {
+const sticker = (state = null, action) => {
   switch (action.type) {
     case ADD_STICKER:
       return {
@@ -48,7 +48,7 @@ const byId = (state = {}, action) => {
     case SCALE_STICKER:
       return {
         ...state,
-        [action.payload.id]: message(state[action.payload.id], action),
+        [action.payload.id]: sticker(state[action.payload.id], action),
       };
     default:
       return state;

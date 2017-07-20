@@ -52,6 +52,7 @@ const Text = styled.div`
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+  font-family: AppleSDGothicNeo, sans-serif;
   opacity: 0.8;
   font-size: 20px;
   font-weight: bold;
@@ -61,34 +62,35 @@ const Text = styled.div`
 `;
 
 type PropTypes = {
+  text: string,
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-const AppLoader = ({ children, ...other }: PropTypes) => (
+const AppLoader = ({ text, children, ...other }: PropTypes) => (
   <Container {...other}>
     <div>
       <FrameLeftTop
         src={leftTop}
         srcSet={`${leftTop2x} 2x, ${leftTop3x} 3x`}
-        alt="스티커 메세지를 남길 제품을 비춰주세요"
+        alt={text}
       />
 
       <FrameRightTop
         src={rightTop}
         srcSet={`${rightTop2x} 2x, ${rightTop3x} 3x`}
-        alt="스티커 메세지를 남길 제품을 비춰주세요"
+        alt={text}
       />
 
       <FrameLeftBottom
         src={leftBottom}
         srcSet={`${leftBottom2x} 2x, ${leftBottom3x} 3x`}
-        alt="스티커 메세지를 남길 제품을 비춰주세요"
+        alt={text}
       />
 
       <FrameRightBottom
         src={rightBottom}
         srcSet={`${rightBottom2x} 2x, ${rightBottom3x} 3x`}
-        alt="스티커 메세지를 남길 제품을 비춰주세요"
+        alt={text}
       />
     </div>
 
@@ -98,5 +100,9 @@ const AppLoader = ({ children, ...other }: PropTypes) => (
     </Text>
   </Container>
 );
+
+AppLoader.defaultProps = {
+  text: '스티커 메세지를 남길 제품을 비춰주세요',
+};
 
 export default AppLoader;
