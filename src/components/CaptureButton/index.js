@@ -1,20 +1,17 @@
 // @flow
 import React from 'react';
-import classNames from 'classnames';
-import styles from './styles.scss';
+import { ImageButton } from '../Button';
 
 import captureIcon from './btn-capture.png';
 import captureIcon2x from './btn-capture@2x.png';
 import captureIcon3x from './btn-capture@3x.png';
 
 const CaptureButton = ({
-  className,
   children,
   ...other
 }) => (
-  <button
+  <ImageButton
     type="button"
-    className={classNames(styles.captureBtn, className)}
     {...other}
   >
     <img
@@ -22,7 +19,7 @@ const CaptureButton = ({
       src={captureIcon}
       srcSet={`${captureIcon2x} 2x, ${captureIcon3x} 3x`}
     />
-  </button>
+  </ImageButton>
 );
 
 export default CaptureButton;

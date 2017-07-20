@@ -1,28 +1,25 @@
 // @flow
 import React from 'react';
-import classNames from 'classnames';
-import styles from './styles.scss';
+import { ImageButton } from '../Button';
 
 import closeIcon from './btn-close.png';
 import closeIcon2x from './btn-close@2x.png';
 import closeIcon3x from './btn-close@3x.png';
 
-const CaptureButton = ({
-  className,
+const CloseButton = ({
   children,
   ...other
 }) => (
-  <button
+  <ImageButton
     type="button"
-    className={classNames(styles.closeBtn, className)}
     {...other}
   >
     <img
-      alt="Capture"
+      alt="Close"
       src={closeIcon}
       srcSet={`${closeIcon2x} 2x, ${closeIcon3x} 3x`}
     />
-  </button>
+  </ImageButton>
 );
 
-export default CaptureButton;
+export default CloseButton;
