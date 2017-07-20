@@ -10,15 +10,15 @@ import textIcon from './icn-ar-text.png';
 import textIcon2x from './icn-ar-text@2x.png';
 import textIcon3x from './icn-ar-text@3x.png';
 
-type TextButtonPropTypes = {
+type AddTextButtonPropTypes = {
   small: boolean,
 };
 
-const TextButton = ({
+const AddTextButton = ({
   small,
   children,
   ...other
-}: TextButtonPropTypes) => (
+}: AddTextButtonPropTypes) => (
   <ImageButton
     type="button"
     {...other}
@@ -39,8 +39,8 @@ const TextButton = ({
   </ImageButton>
 );
 
-TextButton.defaultProps = {
+AddTextButton.defaultProps = {
   small: false,
 };
 
-export default TextButton;
+export default AddTextButton;

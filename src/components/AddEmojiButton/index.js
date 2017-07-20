@@ -10,15 +10,15 @@ import emojiIcon from './group-2-copy-3.png';
 import emojiIcon2x from './group-2-copy-3@2x.png';
 import emojiIcon3x from './group-2-copy-3@3x.png';
 
-type EmojiButtonPropTypes = {
+type AddEmojiButtonPropTypes = {
   small: boolean,
 };
 
-const EmojiButton = ({
+const AddEmojiButton = ({
   small,
   children,
   ...other
-}: EmojiButtonPropTypes) => (
+}: AddEmojiButtonPropTypes) => (
   <ImageButton
     type="button"
     {...other}
@@ -39,8 +39,8 @@ const EmojiButton = ({
   </ImageButton>
 );
 
-EmojiButton.defaultProps = {
+AddEmojiButton.defaultProps = {
   small: false,
 };
 
-export default EmojiButton;
+export default AddEmojiButton;
