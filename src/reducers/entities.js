@@ -32,14 +32,22 @@ const byUri = (state = {}, action) => {
 };
 
 const allUris = (state = [], action) => {
+  let index;
+
   switch (action.type) {
     case ADD_ENTITY:
-      return [
-        ...state,
-        action.payload.uri,
-      ];
+      index = state.findIndex(uri => uri === action.payload.uri);
+
+      if (index < 0) {
+        return [
+          ...state,
+          action.payload.uri,
+        ];
+      }
+
+      return state;
     case DELETE_ENTITY:
-      const index = state.findIndex(uri => uri === action.payload.uri);
+      index = state.findIndex(uri => uri === action.payload.uri);
 
       return [
         ...state.slice(0, index),

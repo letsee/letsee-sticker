@@ -11,6 +11,13 @@ import { Provider } from 'react-redux';
 import store, { runSaga } from './store';
 import sagas from './sagas';
 import App from './components/App';
+import {
+  letseeLoad,
+  setCurrentUser,
+  addEntity,
+  startTrackEntity,
+  endTrackEntity,
+} from './actions';
 
 runSaga(sagas);
 
@@ -23,6 +30,55 @@ const handleWindowResize = () => {
 
 window.addEventListener('resize', handleWindowResize);
 handleWindowResize();
+
+window.addEventListener('letsee.load', () => {
+  if (typeof window._app !== 'undefined' && window._app !== null && window._app.getUser) {
+    window._app.getUser();
+  }
+
+  store.dispatch(letseeLoad());
+
+  letsee.addEventListener('userchange', (e) => {
+    store.dispatch(setCurrentUser(e.user));
+  });
+
+  letsee.addEventListener('trackstart', (e) => {
+    const {
+      image,
+      name,
+      size,
+      uri,
+    } = e.target;
+
+    const entity = {
+      image,
+      name,
+      size,
+      uri,
+    };
+
+    store.dispatch(addEntity(entity));
+    store.dispatch(startTrackEntity(entity));
+  });
+
+  letsee.addEventListener('trackend', (e) => {
+    const {
+      image,
+      name,
+      size,
+      uri,
+    } = e.target;
+
+    const entity = {
+      image,
+      name,
+      size,
+      uri,
+    };
+
+    store.dispatch(endTrackEntity(entity));
+  });
+});
 
 render(
   <Provider store={store}>
