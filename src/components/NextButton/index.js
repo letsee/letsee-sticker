@@ -7,6 +7,8 @@ import nextIcon2x from './btn-next@2x.png';
 import nextIcon3x from './btn-next@3x.png';
 
 const StyledImageButton = ImageButton.extend`
+  visibility: ${props => (props.hidden ? 'hidden' : 'visible')};
+
   &:disabled {
     opacity: 0.3;
   }

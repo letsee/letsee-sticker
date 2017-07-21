@@ -8,6 +8,7 @@ import {
   SCALE_STICKER,
   SELECT_STICKER,
   DESELECT_STICKER,
+  CLEAR_MESSAGE_FORM,
 } from '../actions';
 
 const sticker = (state = null, action) => {
@@ -33,20 +34,38 @@ const sticker = (state = null, action) => {
     case TRANSLATE_STICKER:
     case ROTATE_STICKER:
     case SCALE_STICKER:
-      return {
-        ...state,
-        ...action.payload,
-      };
+      if (state !== null) {
+        return {
+          ...state,
+          ...action.payload,
+        };
+      }
+
+      return state;
     case SELECT_STICKER:
-      return {
-        ...state,
-        selected: true,
-      };
+      if (state !== null) {
+        return {
+          ...state,
+          selected: true,
+        };
+      }
+
+      return state;
     case DESELECT_STICKER:
-      return {
-        ...state,
-        selected: false,
-      };
+      if (state !== null) {
+        return {
+          ...state,
+          selected: false,
+        };
+      }
+
+      return state;
+    case CLEAR_MESSAGE_FORM:
+      if (state !== null && state.entityUri === action.payload.uri) {
+        return null;
+      }
+
+      return state;
     default:
       return state;
   }
@@ -61,6 +80,7 @@ const byId = (state = {}, action) => {
     case SCALE_STICKER:
     case SELECT_STICKER:
     case DESELECT_STICKER:
+    case CLEAR_MESSAGE_FORM:
       return {
         ...state,
         [action.payload.id]: sticker(state[action.payload.id], action),
@@ -72,6 +92,7 @@ const byId = (state = {}, action) => {
 
 const allIds = (state = [], action) => {
   let index;
+  let stickerIds;
 
   switch (action.type) {
     case ADD_STICKER:
@@ -86,6 +107,9 @@ const allIds = (state = [], action) => {
         ...state.slice(0, index),
         ...state.slice(index + 1),
       ];
+    case CLEAR_MESSAGE_FORM:
+      stickerIds = action.payload.stickerIds;
+      return state.filter(id => stickerIds.indexOf(id) < 0);
     default:
       return state;
   }
