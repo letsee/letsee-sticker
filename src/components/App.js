@@ -99,7 +99,6 @@ const App = ({
         <Entity
           data={currentEntityData}
           onNewClick={() => {
-            console.log(currentUser, window._app);
             if (currentUser === null) {
               if (window._app && window._app.openLogin) {
                 const logIn = confirm('로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?');
