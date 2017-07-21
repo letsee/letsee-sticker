@@ -26,6 +26,7 @@ const Main = styled.div`
 `;
 
 const App = ({
+  currentUser,
   entities,
   currentEntity,
   selectedSticker,
@@ -54,7 +55,19 @@ const App = ({
             dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
           }}
           nextDisabled={stickersById.length === 0 || messageForm.submitting}
-          onNext={() => dispatch(submitMessageForm(messageForm.uri))}
+          onNext={() => {
+            if (currentUser === null) {
+              if (window._app && window._app.openLogin) {
+                const logIn = confirm('로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?');
+
+                if (logIn) {
+                  window._app.openLogin();
+                }
+              }
+            } else {
+              dispatch(submitMessageForm(messageForm.uri));
+            }
+          }}
           onCaptureClick={openCapture}
           onStickerClick={id => dispatch(selectSticker(id))}
           onTextInput={(value) => {
@@ -85,7 +98,20 @@ const App = ({
       <Main>
         <Entity
           data={currentEntityData}
-          onNewClick={() => dispatch(initMessageForm(currentEntity))}
+          onNewClick={() => {
+            console.log(currentUser, window._app);
+            if (currentUser === null) {
+              if (window._app && window._app.openLogin) {
+                const logIn = confirm('로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?');
+
+                if (logIn) {
+                  window._app.openLogin();
+                }
+              }
+            } else {
+              dispatch(initMessageForm(currentEntity));
+            }
+          }}
           onCaptureClick={openCapture}
         />
       </Main>
