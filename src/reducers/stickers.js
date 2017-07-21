@@ -6,6 +6,8 @@ import {
   TRANSLATE_STICKER,
   ROTATE_STICKER,
   SCALE_STICKER,
+  SELECT_STICKER,
+  DESELECT_STICKER,
 } from '../actions';
 
 const sticker = (state = null, action) => {
@@ -13,6 +15,7 @@ const sticker = (state = null, action) => {
     case ADD_STICKER:
       return {
         ...action.payload,
+        selected: false,
         position: {
           x: 0,
           y: 0,
@@ -34,6 +37,16 @@ const sticker = (state = null, action) => {
         ...state,
         ...action.payload,
       };
+    case SELECT_STICKER:
+      return {
+        ...state,
+        selected: true,
+      };
+    case DESELECT_STICKER:
+      return {
+        ...state,
+        selected: false,
+      };
     default:
       return state;
   }
@@ -46,6 +59,8 @@ const byId = (state = {}, action) => {
     case TRANSLATE_STICKER:
     case ROTATE_STICKER:
     case SCALE_STICKER:
+    case SELECT_STICKER:
+    case DESELECT_STICKER:
       return {
         ...state,
         [action.payload.id]: sticker(state[action.payload.id], action),

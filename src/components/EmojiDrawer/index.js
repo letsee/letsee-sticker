@@ -89,12 +89,16 @@ class EmojiDrawer extends Component {
   };
 
   componentDidMount() {
+    // TODO choose between click and touch?
     window.addEventListener('click', this.handleWindowClick);
+    window.addEventListener('touchend', this.handleWindowClick);
     window.addEventListener('resize', this.handleWindowResize);
   }
 
   componentWillUnmount() {
+    // TODO choose between click and touch?
     window.removeEventListener('click', this.handleWindowClick);
+    window.removeEventListener('touchend', this.handleWindowClick);
     window.removeEventListener('resize', this.handleWindowResize);
   }
 
@@ -107,11 +111,12 @@ class EmojiDrawer extends Component {
     this.setState({ perPage: calculatePerPage() });
   };
 
-  handleWindowClick = (e: MouseEvent) => {
+  handleWindowClick = (e: MouseEvent | TouchEvent) => {
     let target = e.target;
 
     while (target !== document.body) {
-      if (target === this.drawer) {
+
+      if (target === this.drawer || target === null) {
         return;
       }
 
