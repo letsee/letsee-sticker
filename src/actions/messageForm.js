@@ -35,10 +35,11 @@ export const submitMessageForm = (uri: string) => ({
   },
 });
 
-export const submitMessageFormSuccess = (uri: string) => ({
+export const submitMessageFormSuccess = (uri: string, path: string[]) => ({
   type: SUBMIT_MESSAGE_FORM_SUCCESS,
   payload: {
     uri,
+    path,
   },
 });
 

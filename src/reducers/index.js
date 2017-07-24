@@ -1,5 +1,6 @@
 // @flow
 import { combineReducers } from 'redux';
+import { firebaseStateReducer } from 'react-redux-firebase';
 import currentEntity from './currentEntity';
 import currentUser from './currentUser';
 import entities from './entities';
@@ -16,6 +17,7 @@ const reducers = combineReducers({
   messageForm,
   selectedSticker,
   stickers,
+  firebase: firebaseStateReducer,
 });
 
 export default reducers;

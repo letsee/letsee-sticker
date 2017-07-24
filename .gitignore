@@ -61,4 +61,7 @@ fabric.properties
 .DS_Store
 .idea
 .env
+.env.production
+.env.development
+.env.staging
 public

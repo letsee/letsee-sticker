@@ -7,12 +7,20 @@ import {
   SUBMIT_MESSAGE_FORM_ERROR,
 } from '../actions';
 
-const messageForm = (state = null, action) => {
+type MessageFormType = {
+  uri: string,
+  path: string[],
+  submitting: boolean,
+  submitted: boolean,
+} | null;
+
+const messageForm = (state: MessageFormType = null, action) => {
   switch (action.type) {
     case INIT_MESSAGE_FORM:
       if (state === null) {
         return {
           ...action.payload,
+          path: [],
           submitting: false,
           submitted: false,
         };
@@ -39,6 +47,7 @@ const messageForm = (state = null, action) => {
       if (state !== null && state.uri === action.payload.uri) {
         return {
           ...state,
+          path: action.payload.path,
           submitting: false,
           submitted: true,
         };

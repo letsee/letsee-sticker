@@ -8,6 +8,7 @@ import 'normalize.css';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
+import { getFirebase } from 'react-redux-firebase';
 import store, { runSaga } from './store';
 import sagas from './sagas';
 import App from './components/App';
@@ -19,7 +20,8 @@ import {
   endTrackEntity,
 } from './actions';
 
-runSaga(sagas);
+runSaga(sagas, getFirebase);
+Kakao.init(process.env.KAKAO_APP_KEY);
 
 const app = document.getElementById('app');
 
