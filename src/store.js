@@ -20,6 +20,7 @@ const initialState = {
     byId: {},
     allIds: [],
   },
+  kakaoLinkModal: null,
 };
 
 const sagaMiddleware = createSagaMiddleware();

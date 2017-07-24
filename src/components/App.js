@@ -6,6 +6,7 @@ import './App.scss';
 import AppLoader from './AppLoader';
 import Entity from './Entity';
 import MessageForm from './MessageForm';
+import KakaoLink from './KakaoLink';
 import {
   initMessageForm,
   clearMessageForm,
@@ -15,6 +16,7 @@ import {
   deselectSticker,
   deleteSticker,
   addSticker,
+  closeKakaoLinkModal,
 } from '../actions';
 
 const openCapture = () => window._app && window._app.openCapture && window._app.openCapture();
@@ -26,6 +28,7 @@ const Main = styled.div`
 `;
 
 const App = ({
+  kakaoLinkModal,
   currentUser,
   entities,
   currentEntity,
@@ -133,6 +136,7 @@ export default connect(
     entities,
     selectedSticker,
     messageForm,
+    kakaoLinkModal,
   }) => ({
     letseeLoaded,
     currentEntity,
@@ -141,5 +145,6 @@ export default connect(
     entities,
     selectedSticker,
     messageForm,
+    kakaoLinkModal,
   }),
 )(App);

@@ -80,7 +80,7 @@ type MessageFormPropTypes = {
   entityTracked: boolean,
   nextDisabled: boolean,
   submitting: boolean,
-  onStickerClick?: string => mixed,
+  onStickerClick?: string => mixed, // eslint-disable-line react/require-default-props
   onTextInput?: string => mixed, // eslint-disable-line react/require-default-props
   onEmojiInput?: string => mixed, // eslint-disable-line react/require-default-props
   onTransformationComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
