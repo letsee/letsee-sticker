@@ -174,7 +174,7 @@ class Message extends Component {
       const tmp = document.createElement('template');
       tmp.innerHTML = renderToString(<Envelope data={author} size={diagonal} />);
       const envelope = tmp.content.firstChild;
-      const envelopeButton = envelope.children[1];
+      const envelopeButton = envelope.querySelector('button');
       const envelopeRenderable = new DOMRenderable(envelope);
 
       if (diagonal !== realDiagonal) {
@@ -185,7 +185,7 @@ class Message extends Component {
         envelopeRenderable.position.setZ(depth / 2);
       }
 
-      const handleEnvelopeClick = () => {
+      envelopeButton.addEventListener('click', () => {
         this.setState({ opened: true }, () => {
           this.messageObject.remove(envelopeRenderable);
 
@@ -203,11 +203,9 @@ class Message extends Component {
           // TODO
           // const stickersObj = createStickers(stickers);
           // this.messageObject.add(stickersObj);
-          envelopeButton.removeEventListener('click', handleEnvelopeClick);
         });
-      };
+      });
 
-      envelopeButton.addEventListener('click', handleEnvelopeClick);
       this.messageObject.add(envelopeRenderable);
     }
   }
