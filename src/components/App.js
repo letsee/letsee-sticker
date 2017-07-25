@@ -20,6 +20,7 @@ import {
 } from '../actions';
 
 const openCapture = () => window._app && window._app.openCapture && window._app.openCapture();
+const generateKakaoLinkUrl = (messageId: string) => `https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}${messageId}&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser`;
 
 const Main = styled.div`
   width: 100%;
@@ -90,6 +91,55 @@ const App = ({
           onTransformationComplete={() => dispatch(deselectSticker(selectedSticker))}
           onDelete={() => dispatch(deleteSticker(selectedSticker))}
         />
+
+        {kakaoLinkModal !== null && (
+          <KakaoLink
+            onClose={() => dispatch(closeKakaoLinkModal())}
+            onComplete={() => {
+              dispatch(destroyMessageForm(messageForm.uri));
+              dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
+              dispatch(closeKakaoLinkModal());
+            }}
+            onKakaoLinkClick={() => {
+              const messageId = kakaoLinkModal.path[1];
+              const kakaoLinkUrl = generateKakaoLinkUrl(messageId);
+              const authorName = `${currentUser.firstname} ${currentUser.lastname}`.trim();
+              const entityName = messageEntity.name;
+              const imageUrl = `${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}img/img-kakao@3x.png`;
+              console.log('KAKAO LINK CLICK!', kakaoLinkModal, messageId, kakaoLinkUrl, authorName, entityName, imageUrl);
+
+              Kakao.Link.sendDefault({
+                objectType: 'feed',
+                content: {
+                  title: '렛시 스티커 메세지가 도착했어요!',
+                  description: `${authorName}님이 ${entityName}에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!`,
+                  imageUrl,
+                  link: {
+                    mobileWebUrl: kakaoLinkUrl,
+                    webUrl: kakaoLinkUrl,
+                    androidExecParams: kakaoLinkUrl,
+                    iosExecParams: kakaoLinkUrl,
+                  },
+                },
+                buttons: [{
+                  title: '렛시 브라우저로 보기',
+                  link: {
+                    mobileWebUrl: kakaoLinkUrl,
+                    webUrl: kakaoLinkUrl,
+                    androidExecParams: kakaoLinkUrl,
+                    iosExecParams: kakaoLinkUrl,
+                  },
+                }],
+                success: (messageObj) => {
+                  console.log(messageObj);
+                },
+                fail: (...args) => {
+                  console.log(args);
+                },
+              });
+            }}
+          />
+        )}
       </Main>
     );
   }
