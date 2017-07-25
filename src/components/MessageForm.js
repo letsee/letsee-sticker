@@ -14,6 +14,7 @@ import TextInput from './TextInput';
 import Transformation from './Transformation';
 import Spinner from './Spinner';
 import { getObjectById } from '../createOrUpdateStickerObject';
+import styles from './App.scss';
 
 const MAX_DIAGONAL = 500;
 const MIN_DIAGONAL = 400;
@@ -106,7 +107,15 @@ const FrameText = styled.div`
 `;
 
 type MessageFormPropTypes = {
-  entity: { uri: string, name: string },
+  entity: {
+    uri: string,
+    name: string,
+    size: {
+      width: number,
+      height: number,
+      depth: number,
+    },
+  },
   entityTracked: boolean,
   nextDisabled: boolean,
   submitting: boolean,
@@ -156,13 +165,13 @@ class MessageForm extends Component {
 
   props: MessageFormPropTypes;
 
-  renderAR({ entity: { uri }, stickers, onStickerClick }: MessageFormPropTypes) {
+  renderAR({ entity: { uri, size }, stickers, onStickerClick }: MessageFormPropTypes) {
     if (this.state.mode !== 'default') {
       return;
     }
 
     const entity = letsee.getEntity(uri);
-    const { width, height, depth } = entity.size;
+    const { width, height, depth } = size;
 
     if (this.messageObject.parent !== entity.object) {
       entity.addRenderable(this.messageObject);
@@ -243,22 +252,56 @@ class MessageForm extends Component {
       this.messageObject.add(buttonsAR);
     } else {
       for (let i = 0; i < stickers.length; i += 1) {
-        const { id, text, position, rotation, scale, selected } = stickers[i];
+        const { id, type, text, position, rotation, scale, selected } = stickers[i];
         const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
         const obj = getObjectById(this.messageObject, id);
 
         if (obj) {
+          obj.element.className = styles[type];
+
+          if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
+            const diagonal = Math.sqrt(width * width + height * height);
+
+            if (type === 'emoji') {
+              const fontSize = diagonal * 0.22 * 2;
+              obj.element.style.fontSize = `${fontSize}px`;
+              obj.element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
+            } else if (type === 'text') {
+              const fontSize = diagonal * 0.11 * 2;
+              obj.element.style.fontSize = `${fontSize}px`;
+              obj.element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
+              obj.element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
+            }
+          }
+
           obj.element.innerHTML = textWithBreaks;
           obj.position.copy(position);
           obj.rotation.copy(rotation);
-          obj.scale.setScalar(scale);
+          obj.scale.setScalar(scale / 2);
         } else {
           const element = document.createElement('div');
+          element.className = styles[type];
+
+          if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
+            const diagonal = Math.sqrt(width * width + height * height);
+
+            if (type === 'emoji') {
+              const fontSize = diagonal * 0.22 * 2;
+              element.style.fontSize = `${fontSize}px`;
+              element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
+            } else if (type === 'text') {
+              const fontSize = diagonal * 0.11 * 2;
+              element.style.fontSize = `${fontSize}px`;
+              element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
+              element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
+            }
+          }
+
           element.innerHTML = textWithBreaks; // TODO style, select, gesture events, selected
           const newObj = new DOMRenderable(element);
           newObj.position.set(position.x, position.y, position.z);
           newObj.rotation.set(rotation.x, rotation.y, rotation.z);
-          newObj.scale.setScalar(scale);
+          newObj.scale.setScalar(scale / 2);
           this.messageObject.add(newObj);
         }
       }

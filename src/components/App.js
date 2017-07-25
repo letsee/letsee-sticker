@@ -75,14 +75,14 @@ const App = ({
           onCaptureClick={openCapture}
           onStickerClick={id => dispatch(selectSticker(id))}
           onTextInput={(value) => {
-            const action = dispatch(addSticker(messageForm.uri, value));
+            const action = dispatch(addSticker(messageForm.uri, value, 'text'));
 
             if (entityTracked) {
               dispatch(selectSticker(action.payload.id));
             }
           }}
           onEmojiInput={(value) => {
-            const action = dispatch(addSticker(messageForm.uri, value));
+            const action = dispatch(addSticker(messageForm.uri, value, 'emoji'));
 
             if (entityTracked) {
               dispatch(selectSticker(action.payload.id));

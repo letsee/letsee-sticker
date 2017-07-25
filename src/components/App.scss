@@ -20,3 +20,33 @@ body {
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 }
+
+:local .sticker {
+  display: block;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  color: #fff;
+  text-align: center;
+}
+
+:local .text {
+  composes: sticker;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.8px;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+
+:local .emoji {
+  composes: sticker;
+  font-size: 94px;
+  letter-spacing: 3px;
+}

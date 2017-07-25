@@ -55,7 +55,14 @@ const StaticTextarea = Textarea.extend`
 `;
 
 type TextInputPropTypes = {
-  entity: { uri: string },
+  entity: {
+    uri: string,
+    size: {
+      width: number,
+      height: number,
+      depth: number,
+    },
+  },
   entityTracked: boolean,
   onComplete?: string => mixed, // eslint-disable-line react/require-default-props
 };
@@ -100,7 +107,7 @@ class TextInput extends Component {
   };
 
   componentWillMount() {
-    const { entityTracked, entity: { uri } } = this.props;
+    const { entityTracked, entity: { uri, size } } = this.props;
     const entity = letsee.getEntity(uri);
 
     entity.object.children.forEach((child) => {
@@ -109,9 +116,26 @@ class TextInput extends Component {
 
     entity.removeRenderables();
 
-    if (entityTracked) { // TODO size and pos?
+    if (entityTracked) {
+      const { width, height, depth } = size;
+
+      if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
+        const diagonal = Math.sqrt(width * width + height * height);
+        const fontSize = diagonal * 0.11 * 2;
+        this.textareaAR.style.fontSize = `${fontSize}px`;
+        this.textareaAR.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
+        this.textareaAR.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
+      }
+
       this.textareaAR.value = this.state.value;
+
       const textarea = new DOMRenderable(this.textareaAR);
+
+      if (typeof depth !== 'undefined' && depth !== null) { // TODO default Z?
+        textarea.position.setZ(depth / 2);
+      }
+
+      textarea.scale.setScalar(0.5);
       entity.addRenderable(textarea);
     }
   }
