@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 import Transition from 'react-transition-group/Transition';
 import AddEmojiButton from './AddEmojiButton';
@@ -14,6 +15,8 @@ import Transformation from './Transformation';
 import Spinner from './Spinner';
 import { getObjectById } from '../createOrUpdateStickerObject';
 
+const MAX_DIAGONAL = 500;
+const MIN_DIAGONAL = 400;
 const transitionDuration = 200;
 
 const transitionStyles = {
@@ -53,6 +56,33 @@ const NavBottomRight = styled.div`
   position: absolute;
   bottom: 80px;
   right: 10px;
+`;
+
+const AddTextButtonAR = styled(AddTextButton)`
+  display: inline-block;
+
+  img {
+    width: ${props => props.size * 0.2}px;
+  }
+`;
+
+const AddEmojiButtonAR = styled(AddEmojiButton)`
+  display: inline-block;
+  margin-left: ${props => props.size * 0.05}px;
+
+  img {
+    width: ${props => props.size * 0.2}px;
+  }
+`;
+
+const FrameAR = styled(Frame)`
+  position: relative;
+  width: ${props => props.width}px;
+  height: ${props => props.height}px;
+
+  img {
+    width: ${props => Math.sqrt(((props.width * props.width) + (props.height * props.height)) / 2) * 0.06}px;
+  }
 `;
 
 const StyledAddTextButton = styled(AddTextButton)`
@@ -132,6 +162,7 @@ class MessageForm extends Component {
     }
 
     const entity = letsee.getEntity(uri);
+    const { width, height, depth } = entity.size;
 
     if (this.messageObject.parent !== entity.object) {
       entity.addRenderable(this.messageObject);
@@ -141,7 +172,7 @@ class MessageForm extends Component {
       const child = this.messageObject.children[i];
 
       if (child) {
-        const index = stickers.findIndex(sticker => sticker.id === child.uuid);
+        const index = stickers.findIndex(sticker => child.uuid && sticker.id === child.uuid);
 
         if (index < 0) {
           this.messageObject.remove(child);
@@ -149,24 +180,87 @@ class MessageForm extends Component {
       }
     }
 
-    for (let i = 0; i < stickers.length; i += 1) {
-      const { id, text, position, rotation, scale, selected } = stickers[i];
-      const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
-      const obj = getObjectById(this.messageObject, id);
+    if (stickers.length === 0) {
+      let realDiagonal = 500;
 
-      if (obj) {
-        obj.element.innerHTML = textWithBreaks;
-        obj.position.copy(position);
-        obj.rotation.copy(rotation);
-        obj.scale.setScalar(scale);
-      } else {
-        const element = document.createElement('div');
-        element.innerHTML = textWithBreaks; // TODO style, select, gesture events, selected
-        const newObj = new DOMRenderable(element);
-        newObj.position.set(position.x, position.y, position.z);
-        newObj.rotation.set(rotation.x, rotation.y, rotation.z);
-        newObj.scale.setScalar(scale);
-        this.messageObject.add(newObj);
+      if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
+        realDiagonal = Math.sqrt((width * width) + (height * height));
+      }
+
+      const diagonal = Math.min(MAX_DIAGONAL, Math.max(realDiagonal, MIN_DIAGONAL));
+      const realToClamped = realDiagonal / diagonal;
+      const buttonsTmp = document.createElement('template');
+      const framesTmp = document.createElement('template');
+
+      buttonsTmp.innerHTML = renderToString(
+        <div>
+          <AddEmojiButtonAR size={diagonal} />
+          <AddTextButtonAR size={diagonal} />
+        </div>,
+      );
+
+      framesTmp.innerHTML = renderToString(
+        <div>
+          <FrameAR
+            width={width}
+            height={height}
+            vertical={0}
+            horizontal={0}
+            white
+          />
+        </div>,
+      );
+
+      const buttonsElem = buttonsTmp.content.firstChild;
+      const framesElem = framesTmp.content.firstChild;
+
+      const addEmojiButton = buttonsElem.querySelectorAll('button')[0];
+      const addTextButton = buttonsElem.querySelectorAll('button')[1];
+
+      addEmojiButton.addEventListener('click', () => {
+        this.setState({ mode: 'emoji' }, () => {
+          entity.removeRenderable(this.messageObject);
+        });
+      });
+
+      addTextButton.addEventListener('click', () => {
+        this.setState({ mode: 'text' });
+      });
+
+      const buttonsAR = new DOMRenderable(buttonsElem);
+      const framesAR = new DOMRenderable(framesElem);
+
+      if (realDiagonal !== diagonal) {
+        buttonsAR.scale.setScalar(realToClamped);
+      }
+
+      if (typeof depth !== 'undefined' && depth !== null) {
+        framesAR.position.setZ(depth / 2);
+        buttonsAR.position.setZ(depth / 2);
+      }
+
+      this.messageObject.add(framesAR);
+      this.messageObject.add(buttonsAR);
+    } else {
+      for (let i = 0; i < stickers.length; i += 1) {
+        const { id, text, position, rotation, scale, selected } = stickers[i];
+        const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
+        const obj = getObjectById(this.messageObject, id);
+
+        if (obj) {
+          obj.element.innerHTML = textWithBreaks;
+          obj.position.copy(position);
+          obj.rotation.copy(rotation);
+          obj.scale.setScalar(scale);
+        } else {
+          const element = document.createElement('div');
+          element.innerHTML = textWithBreaks; // TODO style, select, gesture events, selected
+          const newObj = new DOMRenderable(element);
+          newObj.position.set(position.x, position.y, position.z);
+          newObj.rotation.set(rotation.x, rotation.y, rotation.z);
+          newObj.scale.setScalar(scale);
+          this.messageObject.add(newObj);
+        }
       }
     }
   }
