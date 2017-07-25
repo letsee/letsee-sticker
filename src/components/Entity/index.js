@@ -13,6 +13,9 @@ import addIcon from './btn-add-content.png';
 import addIcon2x from './btn-add-content@2x.png';
 import addIcon3x from './btn-add-content@3x.png';
 
+const MAX_DIAGONAL = 500;
+const MIN_DIAGONAL = 400;
+
 const StyledCaptureButton = styled(CaptureButton)`
   position: absolute;
   left: 0;
@@ -29,9 +32,9 @@ const StyledImageButton = ImageButton.extend`
 const MessageText = styled.div`
   opacity: 0.8;
   font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 25px;
+  font-size: ${props => props.size * 0.06}px;
   font-weight: 800;
-  letter-spacing: -0.8px;
+  letter-spacing: ${props => -props.size * 0.06 * 0.8 / 25}px;
   text-align: center;
   color: #fff;
 `;
@@ -90,12 +93,20 @@ class Entity extends Component {
 
     entity.removeRenderables();
 
-    // TODO size responsive to width, height
+    let realDiagonal = 500;
+
+    if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
+      realDiagonal = Math.sqrt((width * width) + (height * height));
+    }
+
+    const diagonal = Math.min(MAX_DIAGONAL, Math.max(realDiagonal, MIN_DIAGONAL));
+    const realToClamped = realDiagonal / diagonal;
+
     const nameTmp = document.createElement('template');
     const buttonTmp = document.createElement('template');
 
     nameTmp.innerHTML = renderToString(
-      <MessageText>
+      <MessageText size={diagonal}>
         <div>
           {name}에
         </div>
@@ -112,6 +123,7 @@ class Entity extends Component {
           src={addIcon}
           srcSet={`${addIcon2x} 2x, ${addIcon3x} 3x`}
           alt={`${name}에 스티커 메세지를 남겨보세요`}
+          width={diagonal * 0.33}
         />
       </ImageButton>,
     );
@@ -121,8 +133,13 @@ class Entity extends Component {
 
     buttonElem.addEventListener('click', onNewClick);
 
-    const nameAR = new DOMRenderable(nameElem); // TODO set y position
+    const nameAR = new DOMRenderable(nameElem);
     const buttonAR = new DOMRenderable(buttonElem);
+
+    if (realDiagonal !== diagonal) {
+      nameAR.scale.setScalar(realToClamped);
+      buttonAR.scale.setScalar(realToClamped);
+    }
 
     if (depth !== null && typeof depth !== 'undefined') {
       nameAR.position.setZ(depth / 2);
@@ -130,6 +147,7 @@ class Entity extends Component {
     }
 
     entity.addRenderable(nameAR);
+    nameAR.position.setY((height + (nameElem.clientHeight * realToClamped)) / 2 + realDiagonal * 0.04);
     entity.addRenderable(buttonAR);
   }
 
