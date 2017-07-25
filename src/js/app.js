@@ -56,7 +56,21 @@
         intro = document.querySelector('.target-intro-wrapper');
         intro.style.width  = window.screen.availWidth-(window.screen.availWidth/5)+'px';
         intro.style.height = (window.screen.availHeight-(window.screen.availHeight/4.55))+'px';
-        
+
+        window.addEventListener("orientationchange", function(e) {
+            
+            var
+                intro = document.querySelector('.target-intro-wrapper');
+
+            intro.style.marginTop = window.orientation === 0 ? '26%' : '7%';
+            intro.style.width  = window.screen.availWidth-(window.screen.availWidth/5)+'px';
+            intro.style.height = (window.screen.availHeight-(window.screen.availHeight/4.55))+'px';
+
+            document.querySelector('.intro-title').style.bottom = window.orientation === 0 ? '35%' : '25%';
+
+        });
+
+
         world = new Object3D();
         content = new Object3D();
 
