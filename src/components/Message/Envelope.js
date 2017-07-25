@@ -16,23 +16,28 @@ const Container = styled.div`
 `;
 
 const From = styled.div`
-  font-size: 29px;
-  letter-spacing: -1.2px;
-  text-shadow: 0 0 12px rgba(#000, 0.5);
-  margin-bottom: 23px;
+  font-size: ${props => props.size * 0.07}px;
+  letter-spacing: ${props => -props.size * 0.07 * 1.2 / 29}px;
+  text-shadow: 0 0 ${props => props.size * 0.07 * 12 / 29}px rgba(0, 0, 0, 0.5);
+  margin-bottom: ${props => props.size * 0.06}px;
 `;
 
 const Open = styled.div`
-  font-size: 23px;
-  letter-spacing: -0.8px;
-  margin-top: 27px;
+  font-size: ${props => props.size * 0.05}px;
+  letter-spacing: ${props => -props.size * 0.05 * 0.8 / 23}px;
+  margin-top: ${props => props.size * 0.06}px;
 `;
 
 const EnvelopeButton = ImageButton.extend`
   margin: 0 auto;
+
+  img {
+    width: ${props => props.size * 0.38}px;
+  }
 `;
 
 type EnvelopePropTypes = {
+  size: number,
   data: { firstname: string, lastname: string },
   onClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
 };
@@ -41,12 +46,13 @@ const concatFirstAndLastNames = (firstname: string, lastname: string) => `${firs
 
 const Envelope = ({
   data: { firstname, lastname },
+  size,
   onClick,
   children,
   ...other
 }: EnvelopePropTypes) => (
   <Container {...other}>
-    <From>
+    <From size={size}>
       <div>
         {concatFirstAndLastNames(firstname, lastname)}님의
       </div>
@@ -56,7 +62,7 @@ const Envelope = ({
       </div>
     </From>
 
-    <EnvelopeButton onClick={onClick}>
+    <EnvelopeButton onClick={onClick} size={size}>
       <img
         alt={`${concatFirstAndLastNames(firstname, lastname)}님의 스티커 메세지`}
         src={envelopeIcon}
@@ -64,7 +70,7 @@ const Envelope = ({
       />
     </EnvelopeButton>
 
-    <Open>
+    <Open size={size}>
       열어 볼까요?
     </Open>
   </Container>
