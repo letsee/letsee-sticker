@@ -76,7 +76,7 @@ const createStickers = (stickers) => {
 type MessagePropTypes = {
   currentEntity: string | null,
   data: {
-    entity: { uri: string, name: string },
+    entity: { uri: string, name: string, image?: string },
     author: { firstname: string, lastname: string },
     createdAt: string,
     stickers: {
@@ -236,7 +236,7 @@ class Message extends Component {
       );
     }
 
-    const { entity: { name, uri }, author: { firstname, lastname }, createdAt } = data;
+    const { entity: { name, uri, image }, author: { firstname, lastname }, createdAt } = data;
     const authorName = `${firstname} ${lastname}`.trim();
     const friendlyCreatedAt = moment(createdAt, 'YYYYMMDDHHmmssZZ').format('YYYY년 M월 D일');
     const entityTracked = currentEntity !== null && currentEntity === uri;
