@@ -212,7 +212,8 @@ icon-view-sucsess img{
     font-size: 16px;
     text-align: center;
     margin-bottom: 86px;
-    bottom: 0;
+    /*bottom: 0;*/
+    bottom : 35%;
 }
 
 

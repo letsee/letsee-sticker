@@ -277,7 +277,7 @@
                 case 6 :
                     
                     if (notificationObject) {
-                        document.querySelector('.intro-title').innerHTML = notificationEntityName+'<span>를 비춰</span><br><span>'+notificationName+'님의 스티커 메세지를 확인하세요</span>';
+                        document.querySelector('.intro-title').innerHTML = notificationEntityName+'<span>을(를) 비춰</span><br><span>'+notificationName+'님의 스티커 메세지를 확인하세요</span>';
                     }
                     document.querySelector('.icon-images.capture').style.display = 'none';
                     document.querySelector('.icon-images.close').style.display  = 'none';
