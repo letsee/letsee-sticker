@@ -106,7 +106,6 @@ const App = ({
               const authorName = `${currentUser.firstname} ${currentUser.lastname}`.trim();
               const entityName = messageEntity.name;
               const imageUrl = `${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}img/img-kakao@3x.png`;
-              console.log('KAKAO LINK CLICK!', kakaoLinkModal, messageId, kakaoLinkUrl, authorName, entityName, imageUrl);
 
               Kakao.Link.sendDefault({
                 objectType: 'feed',
@@ -130,10 +129,8 @@ const App = ({
                     iosExecParams: kakaoLinkUrl,
                   },
                 }],
-                success: (messageObj) => {
-                  console.log(messageObj);
-                },
                 fail: (...args) => {
+                  // TODO error
                   console.log(args);
                 },
               });

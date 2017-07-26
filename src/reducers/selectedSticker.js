@@ -9,12 +9,12 @@ const selectedSticker = (state: string | null = null, action) => {
   switch (action.type) {
     case SELECT_STICKER:
       if (state === null) {
-        return action.payload;
+        return action.payload.id;
       }
 
       return state;
     case DESELECT_STICKER:
-      if (state === action.payload) {
+      if (state === action.payload.id) {
         return null;
       }
 

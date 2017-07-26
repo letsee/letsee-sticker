@@ -86,6 +86,13 @@ const FrameAR = styled(Frame)`
   }
 `;
 
+const StickerFrame = styled(Frame)`
+  img {
+    width: ${props => props.imageSize}px;
+    height: ${props => props.imageSize}px;
+  }
+`;
+
 const StyledAddTextButton = styled(AddTextButton)`
   margin-top: 6px;
 `;
@@ -275,6 +282,27 @@ class MessageForm extends Component {
           }
 
           obj.element.innerHTML = textWithBreaks;
+
+          if (selected) {
+            const frameTmp = document.createElement('template');
+            const frameImageSize = Math.sqrt(((width * width) + (height * height)) * 2) * 0.06;
+
+            frameTmp.innerHTML = renderToString(
+              <StickerFrame
+                imageSize={frameImageSize}
+                vertical={-frameImageSize}
+                horizontal={-frameImageSize}
+              />,
+            );
+
+            const frame = frameTmp.content.firstChild;
+            obj.element.appendChild(frame);
+          } else {
+            obj.element.addEventListener('click', () => {
+              onStickerClick && onStickerClick(id);
+            });
+          }
+
           obj.position.copy(position);
           obj.rotation.copy(rotation);
           obj.scale.setScalar(scale / 2);
@@ -297,7 +325,28 @@ class MessageForm extends Component {
             }
           }
 
-          element.innerHTML = textWithBreaks; // TODO style, select, gesture events, selected
+          element.innerHTML = textWithBreaks; // TODO gesture events
+
+          if (selected) {
+            const frameTmp = document.createElement('template');
+            const frameImageSize = Math.sqrt(((width * width) + (height * height)) * 2) * 0.06;
+
+            frameTmp.innerHTML = renderToString(
+              <StickerFrame
+                imageSize={frameImageSize}
+                vertical={-frameImageSize}
+                horizontal={-frameImageSize}
+              />,
+            );
+
+            const frame = frameTmp.content.firstChild;
+            element.appendChild(frame);
+          } else {
+            element.addEventListener('click', () => {
+              onStickerClick && onStickerClick(id);
+            });
+          }
+
           const newObj = new DOMRenderable(element);
           newObj.position.set(position.x, position.y, position.z);
           newObj.rotation.set(rotation.x, rotation.y, rotation.z);
