@@ -32,7 +32,7 @@
                 y        : 0,
                 z        : 0,
                 scale    : 1,
-                rotation : 0
+                // rotation : 0
             },
             OLD_ROTATE_Z : null,
             move : {
@@ -165,6 +165,7 @@
     });
 
     manager.on('rotatemove', function(e) {
+
         if (touch.gestureF3.enable)return;
         if (!editObject)return;
 
