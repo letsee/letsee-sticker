@@ -4,7 +4,7 @@ import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 import CompleteButton from './CompleteButton';
 
-const isIOS = /iPad|iPhone|iPod/.test(window.navigator.userAgent);
+const isIOS = typeof window !== 'undefined' && window !== null && /iPad|iPhone|iPod/.test(window.navigator.userAgent);
 
 const NavTopRight = styled.div`
   position: absolute;
@@ -42,6 +42,7 @@ const Textarea = styled.textarea`
   text-align: center;
   color: #fff;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
 
   &::placeholder {
     opacity: 0.5;
@@ -200,13 +201,12 @@ class TextInput extends Component {
 
   resizeTextarea() {
     const textarea = this.textarea;
+    const textareaAR = this.textareaAR;
+    textareaAR.style.height = '1px';
+    textareaAR.style.height = `${textareaAR.scrollHeight}px`;
 
-    this.setState({
-      height: 1,
-    }, () => {
-      this.setState({
-        height: textarea.scrollHeight,
-      });
+    this.setState({ height: 1 }, () => {
+      this.setState({ height: textarea.scrollHeight });
     });
   }
 
