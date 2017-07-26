@@ -243,22 +243,37 @@ icon-view-sucsess img{
 }
 
 .kakao-background-content{
+    position: absolute;
     font-family: AppleSDGothicNeo, sans-serif; 
     font-size: 18px;
     line-height: 1.44;
-    margin-top:70%;
+    width: 100%;
+    top : 50%;
     text-align: center;
-    margin-bottom: 20px;
 }
 
 .kakao-background-content p{
     margin: 0;
 }
 
+.kakao-background-content-wrapper{
+    position: absolute;
+    width: 100%;
+    bottom : 30%;
+}
+
+.kakao-background-button-wrapper{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top : 50%;
+}    
+
 .kakao-background-button{
     width: 260px;
     height: 60px;
     margin: auto;
+    margin-top : 5%;
     border-radius: 6px;
     border: solid 0.5px #f9e03d;
     /*font-weight: bold;*/
