@@ -1,3 +1,6 @@
+    
+    /* 트랙킹을 시작 하였을 때 레이아웃을 구성
+    */
     function typeStartControl(e) {
 
             document.querySelector('.icon-images.create').style.display = 'none';

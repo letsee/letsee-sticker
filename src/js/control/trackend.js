@@ -1,4 +1,6 @@
-
+    
+    /* 트랙킹이 종료 되었을 때 레이아웃을 구성
+    */
     function typeEndControl(e) {
         document.querySelector('.icon-images.capture').style.display = 'block';
         // document.querySelector('.icon-images.close').style.display = 'block';

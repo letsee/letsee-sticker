@@ -1,3 +1,6 @@
+    
+    /* 엔진이 로드되었을 때 호출되는 구성
+    */
     function typeLoadControl(type, deleted) {
         if (type === 5 && content.children.length === 0) return;
 
