@@ -51,11 +51,13 @@
 
     window.addEventListener('letsee.load', function() { 
         createEmojiBox();
-
-        var
-          intro = document.querySelector('.target-intro-wrapper');
-        intro.style.width  = window.document.documentElement.clientWidth-(window.document.documentElement.clientWidth/5)+'px';
-        intro.style.height = (window.document.documentElement.clientHeight-(window.document.documentElement.clientHeight/4.55))+'px';  
+  
+          var
+            intro = document.querySelector('.target-intro-wrapper');
+            // intro.style.width  = window.document.documentElement.clientWidth-(window.document.documentElement.clientWidth/5)+'px';
+            // intro.style.height = (window.document.documentElement.clientHeight-(window.document.documentElement.clientHeight/4.55))+'px';
+            intro.style.width  = window.screen.availWidth-(window.screen.availWidth/5)+'px';
+            intro.style.height = (window.screen.availHeight-(window.screen.availHeight/4.55))+'px';        
 
         window.addEventListener("orientationchange", function(e) {
             
@@ -63,10 +65,12 @@
                 intro = document.querySelector('.target-intro-wrapper');
 
             intro.style.marginTop = window.orientation === 0 ? '26%' : '7%';
-            intro.style.width  = window.document.documentElement.clientWidth-(window.document.documentElement.clientWidth/5)+'px';
-            intro.style.height = (window.document.documentElement.clientHeight-(window.document.documentElement.clientHeight/4.55))+'px';
+            // intro.style.width  = window.document.documentElement.clientWidth-(window.document.documentElement.clientWidth/5)+'px';
+            // intro.style.height = (window.document.documentElement.clientHeight-(window.document.documentElement.clientHeight/4.55))+'px';
+            intro.style.width  = window.screen.availWidth-(window.screen.availWidth/5)+'px';
+            intro.style.height = (window.screen.availHeight-(window.screen.availHeight/4.55))+'px';
 
-            document.querySelector('.intro-title').style.bottom = window.orientation === 0 ? '35%' : '25%';
+            // document.querySelector('.intro-title').style.bottom = window.orientation === 0 ? '35%' : '0';
 
         });
 
