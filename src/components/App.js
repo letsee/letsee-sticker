@@ -29,6 +29,21 @@ const Main = styled.div`
   background-color: transparent;
 `;
 
+type AppPropTypes = {
+  currentUser: {
+    firstname: string,
+    lastname: string,
+    uid: string,
+  } | null,
+  currentEntity: string | null,
+  selectedSticker: string | null,
+  messageForm: {
+    uri: string,
+    submitting: boolean,
+  } | null,
+  kakaoLinkModal: { entityUri: string, path: [string, string] } | null,
+};
+
 const App = ({
   kakaoLinkModal,
   currentUser,
@@ -38,7 +53,7 @@ const App = ({
   stickers,
   messageForm,
   dispatch,
-}) => {
+}: AppPropTypes) => {
   if (messageForm !== null) {
     const entityTracked = currentEntity !== null && messageForm.uri === currentEntity;
     const messageEntity = entities.byUri[messageForm.uri];

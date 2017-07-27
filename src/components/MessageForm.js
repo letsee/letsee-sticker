@@ -355,6 +355,12 @@ class MessageForm extends Component {
             }
           }
 
+          if (selectedSticker && !selected) {
+            element.style.opacity = 0.3;
+          } else {
+            element.style.opacity = 1;
+          }
+
           element.innerHTML = textWithBreaks; // TODO gesture events
           const newObj = new DOMRenderable(element);
           newObj.uuid = id;
