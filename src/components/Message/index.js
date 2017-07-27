@@ -164,11 +164,11 @@ class Message extends Component {
         stickerElem.className = styles[type];
 
         if (type === 'emoji') {
-          const fontSize = diagonal * 0.22 * 2;
+          const fontSize = diagonal * 0.22;
           stickerElem.style.fontSize = `${fontSize}px`;
           stickerElem.style.letterSpacing = `${-fontSize * 3 / 94}px`;
         } else if (type === 'text') {
-          const fontSize = diagonal * 0.11 * 2;
+          const fontSize = diagonal * 0.11;
           stickerElem.style.fontSize = `${fontSize}px`;
           stickerElem.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
           stickerElem.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
@@ -178,7 +178,7 @@ class Message extends Component {
         const stickerRenderable = new DOMRenderable(stickerElem);
         stickerRenderable.position.set(position.x, position.y, position.z);
         stickerRenderable.rotation.set(rotation.x, rotation.y, rotation.z);
-        stickerRenderable.scale.setScalar(scale / 2);
+        stickerRenderable.scale.setScalar(scale * realToClamped);
         this.messageObject.add(stickerRenderable);
       }
 
@@ -191,10 +191,7 @@ class Message extends Component {
       const envelope = tmp.content.firstChild;
       const envelopeButton = envelope.querySelector('button');
       const envelopeRenderable = new DOMRenderable(envelope);
-
-      if (diagonal !== realDiagonal) {
-        envelopeRenderable.scale.setScalar(realToClamped);
-      }
+      envelopeRenderable.scale.setScalar(realToClamped);
 
       if (typeof depth !== 'undefined' && depth !== null) {
         envelopeRenderable.position.setZ(depth / 2);
@@ -210,11 +207,11 @@ class Message extends Component {
             stickerElem.className = styles[type];
 
             if (type === 'emoji') {
-              const fontSize = diagonal * 0.22 * 2;
+              const fontSize = diagonal * 0.22;
               stickerElem.style.fontSize = `${fontSize}px`;
               stickerElem.style.letterSpacing = `${-fontSize * 3 / 94}px`;
             } else if (type === 'text') {
-              const fontSize = diagonal * 0.11 * 2;
+              const fontSize = diagonal * 0.11;
               stickerElem.style.fontSize = `${fontSize}px`;
               stickerElem.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
               stickerElem.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
@@ -224,7 +221,7 @@ class Message extends Component {
             const stickerRenderable = new DOMRenderable(stickerElem);
             stickerRenderable.position.set(position.x, position.y, position.z);
             stickerRenderable.rotation.set(rotation.x, rotation.y, rotation.z);
-            stickerRenderable.scale.setScalar(scale / 2);
+            stickerRenderable.scale.setScalar(scale * realToClamped);
             this.messageObject.add(stickerRenderable);
           }
 
