@@ -16,7 +16,7 @@ import Transformation from './Transformation';
 import Spinner from './Spinner';
 import TranslateZ from './Transformation/TranslateZ';
 import manager from '../manager';
-import { getObjectById } from '../createOrUpdateStickerObject';
+import getObjectById from '../getObjectById';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
