@@ -9,9 +9,11 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { getFirebase } from 'react-redux-firebase';
+import { match, Router, browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import store, { runSaga } from './store';
 import sagas from './sagas';
-import App from './components/App';
+import routes from './routes';
 import {
   letseeLoad,
   setCurrentUser,
@@ -21,70 +23,73 @@ import {
 } from './actions';
 
 runSaga(sagas, getFirebase);
-Kakao.init(process.env.KAKAO_APP_KEY);
+const history = syncHistoryWithStore(browserHistory, store);
 
-const app = document.getElementById('app');
+match({ history, routes }, (err, redirect, renderProps) => {
+  Kakao.init(process.env.KAKAO_APP_KEY);
+  const app = document.getElementById('app');
 
-const handleWindowResize = () => {
-  app.style.width = `${document.documentElement.clientWidth}px`;
-  app.style.height = `${document.documentElement.clientHeight}px`;
-};
+  const handleWindowResize = () => {
+    app.style.width = `${document.documentElement.clientWidth}px`;
+    app.style.height = `${document.documentElement.clientHeight}px`;
+  };
 
-window.addEventListener('resize', handleWindowResize);
-handleWindowResize();
+  window.addEventListener('resize', handleWindowResize);
+  handleWindowResize();
 
-window.addEventListener('letsee.load', () => {
-  if (typeof window._app !== 'undefined' && window._app !== null && window._app.getUser) {
-    window._app.getUser();
-  }
+  window.addEventListener('letsee.load', () => {
+    if (typeof window._app !== 'undefined' && window._app !== null && window._app.getUser) {
+      window._app.getUser();
+    }
 
-  store.dispatch(letseeLoad());
+    store.dispatch(letseeLoad());
 
-  letsee.addEventListener('userchange', (e) => {
-    store.dispatch(setCurrentUser(e.user));
+    letsee.addEventListener('userchange', (e) => {
+      store.dispatch(setCurrentUser(e.user));
+    });
+
+    letsee.addEventListener('trackstart', (e) => {
+      const {
+        image,
+        name,
+        size,
+        uri,
+      } = e.target;
+
+      const entity = {
+        image,
+        name,
+        size,
+        uri,
+      };
+
+      store.dispatch(addEntity(entity));
+      store.dispatch(startTrackEntity(entity));
+    });
+
+    letsee.addEventListener('trackend', (e) => {
+      const {
+        image,
+        name,
+        size,
+        uri,
+      } = e.target;
+
+      const entity = {
+        image,
+        name,
+        size,
+        uri,
+      };
+
+      store.dispatch(endTrackEntity(entity));
+    });
   });
 
-  letsee.addEventListener('trackstart', (e) => {
-    const {
-      image,
-      name,
-      size,
-      uri,
-    } = e.target;
-
-    const entity = {
-      image,
-      name,
-      size,
-      uri,
-    };
-
-    store.dispatch(addEntity(entity));
-    store.dispatch(startTrackEntity(entity));
-  });
-
-  letsee.addEventListener('trackend', (e) => {
-    const {
-      image,
-      name,
-      size,
-      uri,
-    } = e.target;
-
-    const entity = {
-      image,
-      name,
-      size,
-      uri,
-    };
-
-    store.dispatch(endTrackEntity(entity));
-  });
+  render(
+    <Provider store={store}>
+      <Router {...renderProps} />
+    </Provider>,
+    app,
+  );
 });
-
-render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  app,
-);
