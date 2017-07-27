@@ -129,6 +129,17 @@ type MessageFormPropTypes = {
   },
   selectedSticker: {
     id: string,
+    position: {
+      x: number,
+      y: number,
+      z: number,
+    },
+    rotation: {
+      x: number,
+      y: number,
+      z: number,
+    },
+    scale: number,
   } | null,
   entityTracked: boolean,
   nextDisabled: boolean,
@@ -398,19 +409,23 @@ class MessageForm extends Component {
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
       this.selectedStickerObject.uuid === selectedSticker.id
     ) {
-      const { deltaX, deltaY, scale } = e;
-      const { width, height } = entity.size;
+      const { deltaX, deltaY, pointers } = e;
 
-      const realDiagonal = Math.sqrt((width * width) + (height * height));
-      const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
-      const realToClamped = realDiagonal / diagonal;
-
-      const { x, y } = selectedSticker.position;
-      const { clientWidth, clientHeight } = document.documentElement;
-      const ratio = Math.sqrt(width * width + height * height) / Math.sqrt(clientWidth * clientWidth + clientHeight * clientHeight) * 2;
-      this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
-      this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
-      this.selectedStickerObject.scale.setScalar(selectedSticker.scale * scale * realToClamped);
+      if (pointers.length === 1) {
+        const { width, height } = entity.size;
+        const { x, y } = selectedSticker.position;
+        const { clientWidth, clientHeight } = document.documentElement;
+        const ratio = Math.sqrt(width * width + height * height) / Math.sqrt(clientWidth * clientWidth + clientHeight * clientHeight) * 2;
+        this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
+        this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
+      } else if (pointers.length === 3) {
+        const { x, y } = selectedSticker.rotation;
+        const { rotation } = this.selectedStickerObject;
+        rotation.x = x + deltaY * Math.PI / 180;
+        rotation.y = y + deltaX * Math.PI / 180;
+        this.selectedStickerObject.quaternion.setFromEuler(rotation);
+        // BUG rotation around y axis
+      }
     }
   };
 
