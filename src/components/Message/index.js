@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
 import styled from 'styled-components';
 import moment from 'moment';
+import clamp from 'lodash/clamp';
 import Frame from '../Frame';
 import Envelope from './Envelope';
 import CaptureButton from '../CaptureButton';
@@ -144,7 +145,7 @@ class Message extends Component {
       realDiagonal = Math.sqrt((width * width) + (height * height));
     }
 
-    const diagonal = Math.min(MAX_DIAGONAL, Math.max(realDiagonal, MIN_DIAGONAL));
+    const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
     const realToClamped = realDiagonal / diagonal;
 
     if (this.messageObject.parent !== entity.object) {

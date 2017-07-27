@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
+import clamp from 'lodash/clamp';
 import { ImageButton } from '../Button';
 import CaptureButton from '../CaptureButton';
 
@@ -99,7 +100,7 @@ class Entity extends Component {
       realDiagonal = Math.sqrt((width * width) + (height * height));
     }
 
-    const diagonal = Math.min(MAX_DIAGONAL, Math.max(realDiagonal, MIN_DIAGONAL));
+    const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
     const realToClamped = realDiagonal / diagonal;
 
     const nameTmp = document.createElement('template');
