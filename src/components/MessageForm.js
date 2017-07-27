@@ -14,6 +14,7 @@ import Frame from './Frame';
 import TextInput from './TextInput';
 import Transformation from './Transformation';
 import Spinner from './Spinner';
+import TranslateZ from './Transformation/TranslateZ';
 import manager from '../manager';
 import { getObjectById } from '../createOrUpdateStickerObject';
 import {
@@ -164,6 +165,12 @@ class MessageForm extends Component {
 
     this.messageObject = new Object3D();
     this.selectedStickerObject = null;
+
+    const tmp = document.createElement('template');
+    tmp.innerHTML = renderToString(<TranslateZ />);
+    this.translateZ = new DOMRenderable(tmp.content.firstChild);
+    this.translateZ.rotateX(Math.PI / 2);
+    this.press = false;
   }
 
   state: {
@@ -211,6 +218,7 @@ class MessageForm extends Component {
   }
 
   props: MessageFormPropTypes;
+  press: boolean;
 
   renderAR({ entity: { uri, size }, stickers, onStickerClick, selectedSticker }: MessageFormPropTypes) {
     if (this.state.mode !== 'default') {
@@ -429,13 +437,15 @@ class MessageForm extends Component {
             max = realDiagonal;
           }
 
-          this.selectedStickerObject.position.z = clamp(z + deltaY * ratio, -1.5 * max, 1.5 * max);
+          this.selectedStickerObject.position.z = clamp(z - deltaY * ratio, -1.5 * max, 1.5 * max);
+          this.translateZ.position.copy(this.selectedStickerObject.position);
+          this.translateZ.scale.copy(this.selectedStickerObject.scale);
         } else {
           const { x, y } = selectedSticker.position;
           this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
           this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
         }
-      } else if (pointers.length === 3) {
+      } else if (pointers.length === 3 && !this.press) {
         const { x, y } = selectedSticker.rotation;
         const { rotation } = this.selectedStickerObject;
         rotation.x = x + deltaY * Math.PI / 180;
@@ -455,6 +465,7 @@ class MessageForm extends Component {
     ) {
       if (this.press) {
         this.press = false;
+        this.selectedStickerObject.parent.remove(this.translateZ);
       }
 
       this.handleTransform();
@@ -466,7 +477,8 @@ class MessageForm extends Component {
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
-      this.selectedStickerObject.uuid === selectedSticker.id
+      this.selectedStickerObject.uuid === selectedSticker.id &&
+      !this.press
     ) {
       const { deltaX, deltaY, scale } = e;
       const { width, height } = entity.size;
@@ -500,7 +512,8 @@ class MessageForm extends Component {
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
-      this.selectedStickerObject.uuid === selectedSticker.id
+      this.selectedStickerObject.uuid === selectedSticker.id &&
+      !this.press
     ) {
       this.rotateStart = e.rotation;
     }
@@ -511,7 +524,8 @@ class MessageForm extends Component {
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
-      this.selectedStickerObject.uuid === selectedSticker.id
+      this.selectedStickerObject.uuid === selectedSticker.id &&
+      !this.press
     ) {
       const { z } = selectedSticker.rotation;
       const deltaRotationZ = Math.PI / 180 * (this.rotateStart - e.rotation);
@@ -540,6 +554,7 @@ class MessageForm extends Component {
       this.selectedStickerObject.uuid === selectedSticker.id
     ) {
       this.press = false;
+      this.selectedStickerObject.parent.remove(this.translateZ);
     }
   };
 
@@ -551,6 +566,9 @@ class MessageForm extends Component {
       this.selectedStickerObject.uuid === selectedSticker.id
     ) {
       this.press = true;
+      this.translateZ.position.copy(this.selectedStickerObject.position);
+      this.translateZ.scale.copy(this.selectedStickerObject.scale);
+      this.selectedStickerObject.parent.add(this.translateZ);
     }
   };
 
