@@ -178,6 +178,8 @@ class MessageForm extends Component {
     manager.on('rotatestart', this.handleRotateStart);
     manager.on('rotatemove', this.handleRotateMove);
     manager.on('rotateend', this.handleRotateEnd);
+    manager.on('pressup', this.handlePressUp);
+    manager.on('press', this.handlePress);
 
     const entity = letsee.getEntity(this.props.entity.uri);
     entity.removeRenderables();
@@ -200,6 +202,8 @@ class MessageForm extends Component {
     manager.off('rotatestart', this.handleRotateStart);
     manager.off('rotatemove', this.handleRotateMove);
     manager.off('rotateend', this.handleRotateEnd);
+    manager.off('pressup', this.handlePressUp);
+    manager.off('press', this.handlePress);
 
     const entity = letsee.getEntity(this.props.entity.uri);
     entity.removeRenderable(this.messageObject);
@@ -412,12 +416,25 @@ class MessageForm extends Component {
       const { deltaX, deltaY, pointers } = e;
 
       if (pointers.length === 1) {
-        const { width, height } = entity.size;
-        const { x, y } = selectedSticker.position;
+        const { width, height, depth } = entity.size;
         const { clientWidth, clientHeight } = document.documentElement;
-        const ratio = Math.sqrt(width * width + height * height) / Math.sqrt(clientWidth * clientWidth + clientHeight * clientHeight) * 2;
-        this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
-        this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
+        const realDiagonal = Math.sqrt((width * width) + (height * height)); // TODO depth??
+        const ratio = realDiagonal / Math.sqrt(clientWidth * clientWidth + clientHeight * clientHeight) * 2;
+
+        if (this.press) {
+          const { z } = selectedSticker.position;
+          let max = depth;
+
+          if (typeof depth === 'undefined' || depth === null || depth === 0) {
+            max = realDiagonal;
+          }
+
+          this.selectedStickerObject.position.z = clamp(z + deltaY * ratio, -1.5 * max, 1.5 * max);
+        } else {
+          const { x, y } = selectedSticker.position;
+          this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
+          this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
+        }
       } else if (pointers.length === 3) {
         const { x, y } = selectedSticker.rotation;
         const { rotation } = this.selectedStickerObject;
@@ -436,6 +453,10 @@ class MessageForm extends Component {
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
       this.selectedStickerObject.uuid === selectedSticker.id
     ) {
+      if (this.press) {
+        this.press = false;
+      }
+
       this.handleTransform();
     }
   };
@@ -456,7 +477,7 @@ class MessageForm extends Component {
 
       const { x, y } = selectedSticker.position;
       const { clientWidth, clientHeight } = document.documentElement;
-      const ratio = Math.sqrt(width * width + height * height) / Math.sqrt(clientWidth * clientWidth + clientHeight * clientHeight) * 2;
+      const ratio = realDiagonal / Math.sqrt((clientWidth * clientWidth) + (clientHeight * clientHeight)) * 2;
       this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
       this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
       this.selectedStickerObject.scale.setScalar(selectedSticker.scale * scale * realToClamped);
@@ -508,6 +529,28 @@ class MessageForm extends Component {
       this.selectedStickerObject.uuid === selectedSticker.id
     ) {
       this.handleTransform();
+    }
+  };
+
+  handlePressUp = (e) => {
+    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
+      this.press = false;
+    }
+  };
+
+  handlePress = (e) => {
+    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
+      this.press = true;
     }
   };
 
