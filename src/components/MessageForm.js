@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 import Transition from 'react-transition-group/Transition';
+import clamp from 'lodash/clamp';
 import AddEmojiButton from './AddEmojiButton';
 import AddTextButton from './AddTextButton';
 import CloseButton from './CloseButton';
@@ -201,6 +202,15 @@ class MessageForm extends Component {
 
     const entity = letsee.getEntity(uri);
     const { width, height, depth } = size;
+    let realDiagonal = 500;
+
+    if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
+      realDiagonal = Math.sqrt((width * width) + (height * height));
+    }
+
+    const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
+    const realToClamped = realDiagonal / diagonal;
+
     this.selectedStickerObject = null;
 
     if (this.messageObject.parent !== entity.object) {
@@ -220,14 +230,6 @@ class MessageForm extends Component {
     }
 
     if (stickers.length === 0) {
-      let realDiagonal = 500;
-
-      if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
-        realDiagonal = Math.sqrt((width * width) + (height * height));
-      }
-
-      const diagonal = Math.min(MAX_DIAGONAL, Math.max(realDiagonal, MIN_DIAGONAL));
-      const realToClamped = realDiagonal / diagonal;
       const buttonsTmp = document.createElement('template');
       const framesTmp = document.createElement('template');
 
@@ -289,19 +291,15 @@ class MessageForm extends Component {
         if (obj) {
           obj.element.className = styles[type];
 
-          if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
-            const diagonal = Math.sqrt(width * width + height * height);
-
-            if (type === 'emoji') {
-              const fontSize = diagonal * 0.22 * 2;
-              obj.element.style.fontSize = `${fontSize}px`;
-              obj.element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
-            } else if (type === 'text') {
-              const fontSize = diagonal * 0.11 * 2;
-              obj.element.style.fontSize = `${fontSize}px`;
-              obj.element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
-              obj.element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
-            }
+          if (type === 'emoji') {
+            const fontSize = diagonal * 0.22 * 2;
+            obj.element.style.fontSize = `${fontSize}px`;
+            obj.element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
+          } else if (type === 'text') {
+            const fontSize = diagonal * 0.11 * 2;
+            obj.element.style.fontSize = `${fontSize}px`;
+            obj.element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
+            obj.element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
           }
 
           if (selectedSticker && !selected) {
@@ -314,7 +312,7 @@ class MessageForm extends Component {
 
           if (selected) {
             const frameTmp = document.createElement('template');
-            const frameImageSize = Math.sqrt(((width * width) + (height * height)) * 2) * 0.06;
+            const frameImageSize = diagonal * Math.sqrt(2) * 0.06;
 
             frameTmp.innerHTML = renderToString(
               <StickerFrame
@@ -335,24 +333,20 @@ class MessageForm extends Component {
 
           obj.position.set(position.x, position.y, position.z);
           obj.rotation.set(rotation.x, rotation.y, rotation.z);
-          obj.scale.setScalar(scale / 2);
+          obj.scale.setScalar(scale / 2 * realToClamped);
         } else {
           const element = document.createElement('div');
           element.className = styles[type];
 
-          if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
-            const diagonal = Math.sqrt(width * width + height * height);
-
-            if (type === 'emoji') {
-              const fontSize = diagonal * 0.22 * 2;
-              element.style.fontSize = `${fontSize}px`;
-              element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
-            } else if (type === 'text') {
-              const fontSize = diagonal * 0.11 * 2;
-              element.style.fontSize = `${fontSize}px`;
-              element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
-              element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
-            }
+          if (type === 'emoji') {
+            const fontSize = diagonal * 0.22 * 2;
+            element.style.fontSize = `${fontSize}px`;
+            element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
+          } else if (type === 'text') {
+            const fontSize = diagonal * 0.11 * 2;
+            element.style.fontSize = `${fontSize}px`;
+            element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
+            element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
           }
 
           if (selectedSticker && !selected) {
@@ -361,13 +355,13 @@ class MessageForm extends Component {
             element.style.opacity = 1;
           }
 
-          element.innerHTML = textWithBreaks; // TODO gesture events
+          element.innerHTML = textWithBreaks;
           const newObj = new DOMRenderable(element);
           newObj.uuid = id;
 
           if (selected) {
             const frameTmp = document.createElement('template');
-            const frameImageSize = Math.sqrt(((width * width) + (height * height)) * 2) * 0.06;
+            const frameImageSize = diagonal * Math.sqrt(2) * 0.06;
 
             frameTmp.innerHTML = renderToString(
               <StickerFrame
@@ -388,7 +382,7 @@ class MessageForm extends Component {
 
           newObj.position.set(position.x, position.y, position.z);
           newObj.rotation.set(rotation.x, rotation.y, rotation.z);
-          newObj.scale.setScalar(scale / 2);
+          newObj.scale.setScalar(scale / 2 * realToClamped);
           this.messageObject.add(newObj);
         }
       }
@@ -404,10 +398,17 @@ class MessageForm extends Component {
     ) {
       const { deltaX, deltaY, scale } = e;
       const { width, height } = entity.size;
+
+      const realDiagonal = Math.sqrt((width * width) + (height * height));
+      const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
+      const realToClamped = realDiagonal / diagonal;
+
       const { x, y } = selectedSticker.position;
-      this.selectedStickerObject.position.x = x + deltaX * Math.sqrt(width) / 30;
-      this.selectedStickerObject.position.y = y - deltaY * Math.sqrt(height) / 30;
-      this.selectedStickerObject.scale.setScalar(selectedSticker.scale / 2 * scale);
+      const { clientWidth, clientHeight } = document.documentElement;
+      const ratio = Math.sqrt(width * width + height * height) / Math.sqrt(clientWidth * clientWidth + clientHeight * clientHeight) * 2;
+      this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
+      this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
+      this.selectedStickerObject.scale.setScalar(selectedSticker.scale / 2 * scale * realToClamped);
     }
   };
 
@@ -431,10 +432,17 @@ class MessageForm extends Component {
     ) {
       const { deltaX, deltaY, scale } = e;
       const { width, height } = entity.size;
+
+      const realDiagonal = Math.sqrt((width * width) + (height * height));
+      const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
+      const realToClamped = realDiagonal / diagonal;
+
       const { x, y } = selectedSticker.position;
-      this.selectedStickerObject.position.x = x + deltaX * Math.sqrt(width) / 30;
-      this.selectedStickerObject.position.y = y - deltaY * Math.sqrt(height) / 30;
-      this.selectedStickerObject.scale.setScalar(selectedSticker.scale / 2 * scale);
+      const { clientWidth, clientHeight } = document.documentElement;
+      const ratio = Math.sqrt(width * width + height * height) / Math.sqrt(clientWidth * clientWidth + clientHeight * clientHeight) * 2;
+      this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
+      this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
+      this.selectedStickerObject.scale.setScalar(selectedSticker.scale / 2 * scale * realToClamped);
     }
   };
 
@@ -487,7 +495,12 @@ class MessageForm extends Component {
   };
 
   handleTransform() {
+    const { width, height } = this.props.entity.size;
     const { position, rotation, scale } = this.selectedStickerObject;
+
+    const realDiagonal = Math.sqrt((width * width) + (height * height));
+    const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
+    const realToClamped = realDiagonal / diagonal;
 
     this.props.onStickerTransform(this.props.selectedSticker.id, {
       position: {
@@ -500,7 +513,7 @@ class MessageForm extends Component {
         y: rotation.y,
         z: rotation.z,
       },
-      scale: scale.x * 2,
+      scale: scale.x * 2 / realToClamped,
     });
   }
 
