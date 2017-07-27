@@ -16,10 +16,12 @@ import Transformation from './Transformation';
 import Spinner from './Spinner';
 import manager from '../manager';
 import { getObjectById } from '../createOrUpdateStickerObject';
+import {
+  MAX_DIAGONAL,
+  MIN_DIAGONAL,
+} from '../constants';
 import styles from './App.scss';
 
-const MAX_DIAGONAL = 500;
-const MIN_DIAGONAL = 400;
 const transitionDuration = 200;
 
 const transitionStyles = {
@@ -202,7 +204,7 @@ class MessageForm extends Component {
 
     const entity = letsee.getEntity(uri);
     const { width, height, depth } = size;
-    let realDiagonal = 500;
+    let realDiagonal = MAX_DIAGONAL;
 
     if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
       realDiagonal = Math.sqrt((width * width) + (height * height));

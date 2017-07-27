@@ -10,10 +10,11 @@ import Frame from '../Frame';
 import Envelope from './Envelope';
 import CaptureButton from '../CaptureButton';
 import LeaveMessageButton from '../LeaveMessageButton';
+import {
+  MAX_DIAGONAL,
+  MIN_DIAGONAL,
+} from '../../constants';
 import styles from '../App.scss';
-
-const MAX_DIAGONAL = 500;
-const MIN_DIAGONAL = 400;
 
 const FrameText = styled.div`
   user-select: none;
@@ -139,7 +140,7 @@ class Message extends Component {
   renderAR({ data: { entity: { uri }, author, stickers } }: MessagePropTypes) {
     const entity = letsee.getEntity(uri);
     const { width, height, depth } = entity.size;
-    let realDiagonal = 500;
+    let realDiagonal = MAX_DIAGONAL;
 
     if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
       realDiagonal = Math.sqrt((width * width) + (height * height));

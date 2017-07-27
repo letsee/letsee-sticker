@@ -4,9 +4,10 @@ import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
 import CompleteButton from './CompleteButton';
-
-const MAX_DIAGONAL = 500;
-const MIN_DIAGONAL = 400;
+import {
+  MAX_DIAGONAL,
+  MIN_DIAGONAL,
+} from '../constants';
 
 const isIOS = typeof window !== 'undefined' && window !== null && /iPad|iPhone|iPod/.test(window.navigator.userAgent);
 
@@ -123,7 +124,7 @@ class TextInput extends Component {
 
     if (entityTracked) {
       const { width, height, depth } = size;
-      let realDiagonal = 500;
+      let realDiagonal = MAX_DIAGONAL;
 
       if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
         realDiagonal = Math.sqrt((width * width) + (height * height));

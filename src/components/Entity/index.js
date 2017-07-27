@@ -5,6 +5,10 @@ import styled from 'styled-components';
 import clamp from 'lodash/clamp';
 import { ImageButton } from '../Button';
 import CaptureButton from '../CaptureButton';
+import {
+  MAX_DIAGONAL,
+  MIN_DIAGONAL,
+} from '../../constants';
 
 import createIcon from './btn-create.png';
 import createIcon2x from './btn-create@2x.png';
@@ -13,9 +17,6 @@ import createIcon3x from './btn-create@3x.png';
 import addIcon from './btn-add-content.png';
 import addIcon2x from './btn-add-content@2x.png';
 import addIcon3x from './btn-add-content@3x.png';
-
-const MAX_DIAGONAL = 500;
-const MIN_DIAGONAL = 400;
 
 const StyledCaptureButton = styled(CaptureButton)`
   position: absolute;
@@ -94,7 +95,7 @@ class Entity extends Component {
 
     entity.removeRenderables();
 
-    let realDiagonal = 500;
+    let realDiagonal = MAX_DIAGONAL;
 
     if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
       realDiagonal = Math.sqrt((width * width) + (height * height));
