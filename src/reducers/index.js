@@ -1,5 +1,6 @@
 // @flow
 import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 import { firebaseStateReducer } from 'react-redux-firebase';
 import currentEntity from './currentEntity';
 import currentUser from './currentUser';
@@ -20,6 +21,7 @@ const reducers = combineReducers({
   selectedSticker,
   stickers,
   firebase: firebaseStateReducer,
+  routing: routerReducer,
 });
 
 export default reducers;

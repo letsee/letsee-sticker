@@ -2,7 +2,7 @@
 import Hammer from 'hammerjs';
 
 const manager = new Hammer.Manager(document.body);
-const Pan = new Hammer.Pan();
+const Pan = new Hammer.Pan({ pointers: 0 });
 const Rotate = new Hammer.Rotate();
 const Pinch = new Hammer.Pinch();
 
