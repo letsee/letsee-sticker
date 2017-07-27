@@ -13,6 +13,7 @@ import Frame from './Frame';
 import TextInput from './TextInput';
 import Transformation from './Transformation';
 import Spinner from './Spinner';
+import manager from '../manager';
 import { getObjectById } from '../createOrUpdateStickerObject';
 import styles from './App.scss';
 
@@ -123,6 +124,9 @@ type MessageFormPropTypes = {
       depth: number,
     },
   },
+  selectedSticker: {
+    id: string,
+  } | null,
   entityTracked: boolean,
   nextDisabled: boolean,
   submitting: boolean,
@@ -145,6 +149,7 @@ class MessageForm extends Component {
     };
 
     this.messageObject = new Object3D();
+    this.selectedStickerObject = null;
   }
 
   state: {
@@ -152,6 +157,14 @@ class MessageForm extends Component {
   };
 
   componentWillMount() {
+    manager.on('panmove', this.handlePanMove);
+    manager.on('panend', this.handlePanEnd);
+    manager.on('pinchmove', this.handlePinchMove);
+    manager.on('pinchend', this.handlePinchEnd);
+    manager.on('rotatestart', this.handleRotateStart);
+    manager.on('rotatemove', this.handleRotateMove);
+    manager.on('rotateend', this.handleRotateEnd);
+
     const entity = letsee.getEntity(this.props.entity.uri);
     entity.removeRenderables();
     this.renderAR(this.props);
@@ -166,19 +179,29 @@ class MessageForm extends Component {
   }
 
   componentWillUnmount() {
+    manager.off('panmove', this.handlePanMove);
+    manager.off('panend', this.handlePanEnd);
+    manager.off('pinchmove', this.handlePinchMove);
+    manager.off('pinchend', this.handlePinchEnd);
+    manager.off('rotatestart', this.handleRotateStart);
+    manager.off('rotatemove', this.handleRotateMove);
+    manager.off('rotateend', this.handleRotateEnd);
+
     const entity = letsee.getEntity(this.props.entity.uri);
     entity.removeRenderable(this.messageObject);
+    this.selectedStickerObject = null;
   }
 
   props: MessageFormPropTypes;
 
-  renderAR({ entity: { uri, size }, stickers, onStickerClick }: MessageFormPropTypes) {
+  renderAR({ entity: { uri, size }, stickers, onStickerClick, selectedSticker }: MessageFormPropTypes) {
     if (this.state.mode !== 'default') {
       return;
     }
 
     const entity = letsee.getEntity(uri);
     const { width, height, depth } = size;
+    this.selectedStickerObject = null;
 
     if (this.messageObject.parent !== entity.object) {
       entity.addRenderable(this.messageObject);
@@ -188,7 +211,7 @@ class MessageForm extends Component {
       const child = this.messageObject.children[i];
 
       if (child) {
-        const index = stickers.findIndex(sticker => child.uuid && sticker.id === child.uuid);
+        const index = stickers.findIndex(sticker => sticker.id === child.uuid);
 
         if (index < 0) {
           this.messageObject.remove(child);
@@ -281,6 +304,12 @@ class MessageForm extends Component {
             }
           }
 
+          if (selectedSticker && !selected) {
+            obj.element.style.opacity = 0.3;
+          } else {
+            obj.element.style.opacity = 1;
+          }
+
           obj.element.innerHTML = textWithBreaks;
 
           if (selected) {
@@ -297,14 +326,15 @@ class MessageForm extends Component {
 
             const frame = frameTmp.content.firstChild;
             obj.element.appendChild(frame);
+            this.selectedStickerObject = obj;
           } else {
             obj.element.addEventListener('click', () => {
               onStickerClick && onStickerClick(id);
             });
           }
 
-          obj.position.copy(position);
-          obj.rotation.copy(rotation);
+          obj.position.set(position.x, position.y, position.z);
+          obj.rotation.set(rotation.x, rotation.y, rotation.z);
           obj.scale.setScalar(scale / 2);
         } else {
           const element = document.createElement('div');
@@ -326,6 +356,8 @@ class MessageForm extends Component {
           }
 
           element.innerHTML = textWithBreaks; // TODO gesture events
+          const newObj = new DOMRenderable(element);
+          newObj.uuid = id;
 
           if (selected) {
             const frameTmp = document.createElement('template');
@@ -341,13 +373,13 @@ class MessageForm extends Component {
 
             const frame = frameTmp.content.firstChild;
             element.appendChild(frame);
+            this.selectedStickerObject = newObj;
           } else {
             element.addEventListener('click', () => {
               onStickerClick && onStickerClick(id);
             });
           }
 
-          const newObj = new DOMRenderable(element);
           newObj.position.set(position.x, position.y, position.z);
           newObj.rotation.set(rotation.x, rotation.y, rotation.z);
           newObj.scale.setScalar(scale / 2);
@@ -355,6 +387,115 @@ class MessageForm extends Component {
         }
       }
     }
+  }
+
+  handlePanMove = (e) => {
+    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
+      const { deltaX, deltaY, scale } = e;
+      const { width, height } = entity.size;
+      const { x, y } = selectedSticker.position;
+      this.selectedStickerObject.position.x = x + deltaX * Math.sqrt(width) / 30;
+      this.selectedStickerObject.position.y = y - deltaY * Math.sqrt(height) / 30;
+      this.selectedStickerObject.scale.setScalar(selectedSticker.scale / 2 * scale);
+    }
+  };
+
+  handlePanEnd = () => {
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
+
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
+      this.handleTransform();
+    }
+  };
+
+  handlePinchMove = (e) => {
+    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
+      const { deltaX, deltaY, scale } = e;
+      const { width, height } = entity.size;
+      const { x, y } = selectedSticker.position;
+      this.selectedStickerObject.position.x = x + deltaX * Math.sqrt(width) / 30;
+      this.selectedStickerObject.position.y = y - deltaY * Math.sqrt(height) / 30;
+      this.selectedStickerObject.scale.setScalar(selectedSticker.scale / 2 * scale);
+    }
+  };
+
+  handlePinchEnd = () => {
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
+
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
+      this.handleTransform();
+    }
+  };
+
+  handleRotateStart = (e) => {
+    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
+      this.rotateStart = e.rotation;
+    }
+  }
+
+  handleRotateMove = (e) => {
+    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
+      const { z } = selectedSticker.rotation;
+      const deltaRotationZ = Math.PI / 180 * (this.rotateStart - e.rotation);
+      const { rotation } = this.selectedStickerObject;
+      rotation.z = z + deltaRotationZ;
+      this.selectedStickerObject.quaternion.setFromEuler(rotation);
+    }
+  };
+
+  handleRotateEnd = () => {
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
+
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
+      this.handleTransform();
+    }
+  };
+
+  handleTransform() {
+    const { position, rotation, scale } = this.selectedStickerObject;
+
+    this.props.onStickerTransform(this.props.selectedSticker.id, {
+      position: {
+        x: position.x,
+        y: position.y,
+        z: position.z,
+      },
+      rotation: {
+        x: rotation.x,
+        y: rotation.y,
+        z: rotation.z,
+      },
+      scale: scale.x * 2,
+    });
   }
 
   render() {
@@ -375,10 +516,14 @@ class MessageForm extends Component {
       onEmojiInput,
       onTransformationComplete,
       onDelete,
+      onStickerTransform,
       ...other
     } = this.props;
 
-    if (entityTracked && selectedSticker) {
+    if (
+      entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
+      this.selectedStickerObject.uuid === selectedSticker.id
+    ) {
       return (
         <div {...other}>
           <Transformation

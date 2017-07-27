@@ -6,6 +6,7 @@ export const DELETE_STICKER: 'DELETE_STICKER' = 'DELETE_STICKER';
 export const TRANSLATE_STICKER: 'TRANSLATE_STICKER' = 'TRANSLATE_STICKER';
 export const ROTATE_STICKER: 'ROTATE_STICKER' = 'ROTATE_STICKER';
 export const SCALE_STICKER: 'SCALE_STICKER' = 'SCALE_STICKER';
+export const TRANSFORM_STICKER: 'TRANSFORM_STICKER' = 'TRANSFORM_STICKER';
 
 export const addSticker = (entityUri: string, text: string, type: 'emoji' | 'text') => ({
   type: ADD_STICKER,
@@ -45,5 +46,25 @@ export const scaleSticker = (id: string, scale: number) => ({
   payload: {
     id,
     scale,
+  },
+});
+
+export const transformSticker = (id: string, transform: {
+  scale: number,
+  position: {
+    x: number,
+    y: number,
+    z: number,
+  },
+  rotation: {
+    x: number,
+    y: number,
+    z: number,
+  },
+}) => ({
+  type: TRANSFORM_STICKER,
+  payload: {
+    id,
+    transform,
   },
 });

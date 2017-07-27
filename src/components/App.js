@@ -17,6 +17,7 @@ import {
   deleteSticker,
   addSticker,
   closeKakaoLinkModal,
+  transformSticker,
 } from '../actions';
 
 const openCapture = () => typeof window !== 'undefined' && window !== null && window._app && window._app.openCapture && window._app.openCapture();
@@ -74,6 +75,7 @@ const App = ({
           }}
           onCaptureClick={openCapture}
           onStickerClick={id => dispatch(selectSticker(id))}
+          onStickerTransform={(id, trans) => dispatch(transformSticker(id, trans))}
           onTextInput={(value) => {
             const action = dispatch(addSticker(messageForm.uri, value, 'text'));
 

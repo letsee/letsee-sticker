@@ -1,11 +1,13 @@
 // @flow
 import { combineReducers } from 'redux';
+import zipObject from 'lodash/zipObject';
 import {
   ADD_STICKER,
   DELETE_STICKER,
   TRANSLATE_STICKER,
   ROTATE_STICKER,
   SCALE_STICKER,
+  TRANSFORM_STICKER,
   SELECT_STICKER,
   DESELECT_STICKER,
   CLEAR_MESSAGE_FORM,
@@ -42,6 +44,15 @@ const sticker = (state = null, action) => {
       }
 
       return state;
+    case TRANSFORM_STICKER:
+      if (state !== null) {
+        return {
+          ...state,
+          ...action.payload.transform,
+        };
+      }
+
+      return state;
     case SELECT_STICKER:
       if (state !== null) {
         return {
@@ -60,12 +71,6 @@ const sticker = (state = null, action) => {
       }
 
       return state;
-    case CLEAR_MESSAGE_FORM:
-      if (state !== null && state.entityUri === action.payload.uri) {
-        return null;
-      }
-
-      return state;
     default:
       return state;
   }
@@ -78,12 +83,17 @@ const byId = (state = {}, action) => {
     case TRANSLATE_STICKER:
     case ROTATE_STICKER:
     case SCALE_STICKER:
+    case TRANSFORM_STICKER:
     case SELECT_STICKER:
     case DESELECT_STICKER:
-    case CLEAR_MESSAGE_FORM:
       return {
         ...state,
         [action.payload.id]: sticker(state[action.payload.id], action),
+      };
+    case CLEAR_MESSAGE_FORM:
+      return {
+        ...state,
+        ...zipObject(action.payload.stickerIds, action.payload.stickerIds.map(() => null)),
       };
     default:
       return state;
