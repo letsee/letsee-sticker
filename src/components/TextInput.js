@@ -2,7 +2,11 @@
 import React, { Component } from 'react';
 import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
+import clamp from 'lodash/clamp';
 import CompleteButton from './CompleteButton';
+
+const MAX_DIAGONAL = 500;
+const MIN_DIAGONAL = 400;
 
 const isIOS = typeof window !== 'undefined' && window !== null && /iPad|iPhone|iPod/.test(window.navigator.userAgent);
 
@@ -119,14 +123,18 @@ class TextInput extends Component {
 
     if (entityTracked) {
       const { width, height, depth } = size;
+      let realDiagonal = 500;
 
       if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
-        const diagonal = Math.sqrt(width * width + height * height);
-        const fontSize = diagonal * 0.11 * 2;
-        this.textareaAR.style.fontSize = `${fontSize}px`;
-        this.textareaAR.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
-        this.textareaAR.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
+        realDiagonal = Math.sqrt((width * width) + (height * height));
       }
+
+      const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
+      const realToClamped = realDiagonal / diagonal;
+      const fontSize = diagonal * 0.11 * 2;
+      this.textareaAR.style.fontSize = `${fontSize}px`;
+      this.textareaAR.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
+      this.textareaAR.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
 
       this.textareaAR.value = this.state.value;
 
@@ -136,7 +144,7 @@ class TextInput extends Component {
         textarea.position.setZ(depth / 2);
       }
 
-      textarea.scale.setScalar(0.5);
+      textarea.scale.setScalar(realToClamped / 2);
       entity.addRenderable(textarea);
     }
   }
