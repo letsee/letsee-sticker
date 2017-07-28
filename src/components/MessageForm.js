@@ -220,7 +220,7 @@ class MessageForm extends Component {
   props: MessageFormPropTypes;
   press: boolean;
 
-  renderAR({ entity: { uri, size }, stickers, onStickerClick, selectedSticker }: MessageFormPropTypes) {
+  renderAR({ entity: { uri, size }, stickers, selectedSticker }: MessageFormPropTypes) {
     if (this.state.mode !== 'default') {
       return;
     }
@@ -309,107 +309,72 @@ class MessageForm extends Component {
       this.messageObject.add(buttonsAR);
     } else {
       for (let i = 0; i < stickers.length; i += 1) {
-        const { id, type, text, position, rotation, scale, selected } = stickers[i];
+        const { id, type, text, position, rotation, scale } = stickers[i];
+        const selected = selectedSticker && selectedSticker.id === id;
         const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
-        const obj = getObjectById(this.messageObject, id);
+        const objById = getObjectById(this.messageObject, id);
+        let element = document.createElement('div');
+        let obj = new DOMRenderable(element);
 
-        if (obj) {
-          obj.element.className = styles[type];
-
-          if (type === 'emoji') {
-            const fontSize = diagonal * 0.22;
-            obj.element.style.fontSize = `${fontSize}px`;
-            obj.element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
-          } else if (type === 'text') {
-            const fontSize = diagonal * 0.11;
-            obj.element.style.fontSize = `${fontSize}px`;
-            obj.element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
-            obj.element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
-          }
-
-          if (selectedSticker && !selected) {
-            obj.element.style.opacity = 0.3;
-          } else {
-            obj.element.style.opacity = 1;
-          }
-
-          obj.element.innerHTML = textWithBreaks;
-
-          if (selected) {
-            const frameTmp = document.createElement('template');
-            const frameImageSize = diagonal * Math.sqrt(2) * 0.06;
-
-            frameTmp.innerHTML = renderToString(
-              <StickerFrame
-                imageSize={frameImageSize}
-                vertical={-frameImageSize}
-                horizontal={-frameImageSize}
-              />,
-            );
-
-            const frame = frameTmp.content.firstChild;
-            obj.element.appendChild(frame);
-            this.selectedStickerObject = obj;
-          } else {
-            obj.element.addEventListener('click', () => {
-              onStickerClick && onStickerClick(id);
-            });
-          }
-
-          obj.position.set(position.x, position.y, position.z);
-          obj.rotation.set(rotation.x, rotation.y, rotation.z);
-          obj.scale.setScalar(scale * realToClamped);
+        if (objById) {
+          obj = objById;
+          element = obj.element;
         } else {
-          const element = document.createElement('div');
-          element.className = styles[type];
-
-          if (type === 'emoji') {
-            const fontSize = diagonal * 0.22;
-            element.style.fontSize = `${fontSize}px`;
-            element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
-          } else if (type === 'text') {
-            const fontSize = diagonal * 0.11;
-            element.style.fontSize = `${fontSize}px`;
-            element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
-            element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
-          }
-
-          if (selectedSticker && !selected) {
-            element.style.opacity = 0.3;
-          } else {
-            element.style.opacity = 1;
-          }
-
-          element.innerHTML = textWithBreaks;
-          const newObj = new DOMRenderable(element);
-          newObj.uuid = id;
-
-          if (selected) {
-            const frameTmp = document.createElement('template');
-            const frameImageSize = diagonal * Math.sqrt(2) * 0.06;
-
-            frameTmp.innerHTML = renderToString(
-              <StickerFrame
-                imageSize={frameImageSize}
-                vertical={-frameImageSize}
-                horizontal={-frameImageSize}
-              />,
-            );
-
-            const frame = frameTmp.content.firstChild;
-            element.appendChild(frame);
-            this.selectedStickerObject = newObj;
-          } else {
-            element.addEventListener('click', () => {
-              onStickerClick && onStickerClick(id);
-            });
-          }
-
-          newObj.position.set(position.x, position.y, position.z);
-          newObj.rotation.set(rotation.x, rotation.y, rotation.z);
-          newObj.scale.setScalar(scale * realToClamped);
-          this.messageObject.add(newObj);
+          obj.uuid = id;
+          this.messageObject.add(obj);
         }
+
+        element.className = styles[type];
+
+        if (type === 'emoji') {
+          const fontSize = diagonal * 0.22;
+          element.style.fontSize = `${fontSize}px`;
+          element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
+        } else if (type === 'text') {
+          const fontSize = diagonal * 0.11;
+          element.style.fontSize = `${fontSize}px`;
+          element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
+          element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
+        }
+
+        if (selectedSticker && !selected) {
+          element.style.opacity = 0.3;
+        } else {
+          element.style.opacity = 1;
+        }
+
+        const onClick = () => {
+          element.removeEventListener('click', onClick);
+
+          if (this.props.onStickerClick) {
+            this.props.onStickerClick(id);
+          }
+        };
+
+        element.addEventListener('click', onClick);
+
+        element.innerHTML = textWithBreaks;
+
+        if (selected) {
+          const frameTmp = document.createElement('template');
+          const frameImageSize = diagonal * Math.sqrt(2) * 0.06;
+
+          frameTmp.innerHTML = renderToString(
+            <StickerFrame
+              imageSize={frameImageSize}
+              vertical={-frameImageSize}
+              horizontal={-frameImageSize}
+            />,
+          );
+
+          const frame = frameTmp.content.firstChild;
+          element.appendChild(frame);
+          this.selectedStickerObject = obj;
+        }
+
+        obj.position.set(position.x, position.y, position.z);
+        obj.rotation.set(rotation.x, rotation.y, rotation.z);
+        obj.scale.setScalar(scale * realToClamped);
       }
     }
   }
