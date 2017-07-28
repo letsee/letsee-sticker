@@ -1,8 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { renderToString } from 'react-dom/server';
-import { connect } from 'react-redux';
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
+import { isLoaded, isEmpty } from 'react-redux-firebase';
 import styled from 'styled-components';
 import moment from 'moment';
 import clamp from 'lodash/clamp';
@@ -241,8 +240,6 @@ class Message extends Component {
       data,
       onCaptureClick,
       onLeaveMessageClick,
-      firebase,
-      dispatch,
       children,
       ...other
     } = this.props;
@@ -320,4 +317,4 @@ class Message extends Component {
   }
 }
 
-export default firebaseConnect(({ id }) => ([{ path: `messages/${id}`, storeAs: 'message' }]))(connect(({ firebase: { data: { message } }, currentEntity }) => ({ data: message, currentEntity }))(Message));
+export default Message;

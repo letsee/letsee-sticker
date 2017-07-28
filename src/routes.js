@@ -15,7 +15,7 @@ const routes = {
     {
       path: ':id',
       getComponent: (nextState, callback) => {
-        import('./components/Message').then((module) => {
+        import('./pages/Message').then((module) => {
           callback(null, module.default);
         }).catch((error) => {
           // TODO error

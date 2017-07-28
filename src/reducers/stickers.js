@@ -8,8 +8,6 @@ import {
   ROTATE_STICKER,
   SCALE_STICKER,
   TRANSFORM_STICKER,
-  SELECT_STICKER,
-  DESELECT_STICKER,
   CLEAR_MESSAGE_FORM,
 } from '../actions';
 
@@ -18,7 +16,6 @@ const sticker = (state = null, action) => {
     case ADD_STICKER:
       return {
         ...action.payload,
-        selected: false,
         position: {
           x: 0,
           y: 0,
@@ -53,24 +50,6 @@ const sticker = (state = null, action) => {
       }
 
       return state;
-    case SELECT_STICKER:
-      if (state !== null) {
-        return {
-          ...state,
-          selected: true,
-        };
-      }
-
-      return state;
-    case DESELECT_STICKER:
-      if (state !== null) {
-        return {
-          ...state,
-          selected: false,
-        };
-      }
-
-      return state;
     default:
       return state;
   }
@@ -84,8 +63,6 @@ const byId = (state = {}, action) => {
     case ROTATE_STICKER:
     case SCALE_STICKER:
     case TRANSFORM_STICKER:
-    case SELECT_STICKER:
-    case DESELECT_STICKER:
       return {
         ...state,
         [action.payload.id]: sticker(state[action.payload.id], action),

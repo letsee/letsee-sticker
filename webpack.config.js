@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
@@ -5,8 +6,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = {
-  devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : false,
+const env = process.env.NODE_ENV || 'production';
+const isDev = env !== 'production' && env !== 'staging';
+const publicPath = process.env.PUBLIC_PATH || '/';
+
+module.exports = [{
+  devtool: isDev ? 'source-map' : false,
   entry: {
     react: [
       'react',
@@ -25,7 +30,7 @@ module.exports = {
     path: path.resolve(__dirname, 'public'),
     filename: 'js/[name].[chunkhash].js',
     chunkFilename: 'js/[name].[chunkhash].js',
-    publicPath: process.env.PUBLIC_PATH || '/',
+    publicPath,
   },
   devServer: {
     contentBase: path.join(__dirname, 'public'),
@@ -46,7 +51,7 @@ module.exports = {
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
-            { loader: 'css-loader', options: { importLoaders: 1, camelCase: true, minimize: process.env.NODE_ENV === 'production' } },
+            { loader: 'css-loader', options: { importLoaders: 1, camelCase: true, minimize: !isDev } },
             'postcss-loader',
           ],
         }),
@@ -56,7 +61,7 @@ module.exports = {
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
-            { loader: 'css-loader', options: { importLoaders: 1, camelCase: true, minimize: process.env.NODE_ENV === 'production' } },
+            { loader: 'css-loader', options: { importLoaders: 1, camelCase: true, minimize: !isDev } },
             'postcss-loader',
             'sass-loader',
           ],
@@ -71,9 +76,32 @@ module.exports = {
       },
     ],
   },
-  plugins: [
+  plugins: isDev ? [
     new Dotenv({
-      path: './.env',
+      path: `./.env.${env}`,
+    }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: isDev ? 'development' : 'production',
+      PUBLIC_PATH: publicPath,
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['react', 'vendor', 'manifest'],
+    }),
+    new ExtractTextPlugin({
+      filename: 'css/[name].[contenthash].css',
+      allChunks: true,
+    }),
+    new HtmlWebpackPlugin({
+      filename: '../views/index.ejs',
+      template: 'src/index.html.ejs',
+    }),
+  ] : [
+    new Dotenv({
+      path: `./.env.${env}`,
+    }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: isDev ? 'development' : 'production',
+      PUBLIC_PATH: publicPath,
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['react', 'vendor', 'manifest'],
@@ -86,7 +114,41 @@ module.exports = {
       comments: false,
     }),
     new HtmlWebpackPlugin({
+      filename: '../views/index.ejs',
       template: 'src/index.html.ejs',
     }),
   ],
-};
+}, {
+  entry: {
+    'server.bundle': './server.js',
+  },
+  output: {
+    path: __dirname,
+    filename: '[name].js',
+  },
+  target: 'node',
+  externals: fs.readdirSync(path.resolve(__dirname, 'node_modules')).concat([
+    'react-dom/server',
+  ]).reduce(function (ext, mod) {
+    ext[mod] = 'commonjs ' + mod;
+    return ext;
+  }, {}),
+  node: {
+    __filename: false,
+    __dirname: false,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: 'babel-loader',
+      },
+    ],
+  },
+  plugins: isDev ? [] : [
+    new UglifyJSPlugin({
+      comments: false,
+    }),
+  ],
+}];

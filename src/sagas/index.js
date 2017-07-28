@@ -24,7 +24,7 @@ function* submitMessageForm(getFirebase) {
       const currentUser = yield select(state => state.currentUser);
       const stickers = yield select(state => state.stickers);
       const { uri, name, image } = yield select(state => state.entities.byUri[submitAction.payload.uri]);
-      const stickersById = getStickersByEntity(stickers, uri).map(({ id, entityUri, selected, ...other }) => other);
+      const stickersById = getStickersByEntity(stickers, uri).map(({ id, entityUri, ...other }) => other);
 
       const message = {
         author: {
