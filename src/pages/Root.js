@@ -18,8 +18,7 @@ import {
   transformSticker,
 } from '../actions';
 import openCapture from '../openCapture';
-
-const generateKakaoLinkUrl = (messageId: string) => `https://vm82m.app.goo.gl/?link=https://browser.letsee.io/load?url=${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}${messageId}&apn=io.letsee.browser&isi=1215633022&ibi=io.letsee.ios.browser`;
+import generateKakaoLinkUrl from '../generateKakaoLinkUrl';
 
 type RootPropTypes = {
   currentUser: {
