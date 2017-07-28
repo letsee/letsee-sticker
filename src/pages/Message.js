@@ -7,6 +7,7 @@ import openCapture from '../openCapture';
 
 type MessageType = {
   params: { id: string },
+  currentEntity: string | null,
 };
 
 const Message = ({
