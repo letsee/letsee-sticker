@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 import Transition from 'react-transition-group/Transition';
 import clamp from 'lodash/clamp';
+import { endsWithConsonant, isHangul } from 'hangul-js';
 import AddEmojiButton from './AddEmojiButton';
 import AddTextButton from './AddTextButton';
 import CloseButton from './CloseButton';
@@ -596,6 +597,14 @@ class MessageForm extends Component {
       );
     }
 
+    const trimmedName = entity.name.trim();
+    const lastChar = trimmedName.slice(-1);
+    let suffix = '을(를)';
+
+    if (isHangul(lastChar)) {
+      suffix = endsWithConsonant(trimmedName) ? '을' : '를';
+    }
+
     return (
       <div {...other}>
         {mode === 'default' && [
@@ -644,7 +653,7 @@ class MessageForm extends Component {
           !entityTracked && (
             <Frame key={4}>
               <FrameText>
-                <div>{entity.name}를</div>
+                <div>{entity.name}{suffix}</div>
                 <div>비춰주세요</div>
               </FrameText>
             </Frame>

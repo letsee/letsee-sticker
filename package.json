@@ -58,6 +58,7 @@
     "express": "^4.15.3",
     "firebase": "^4.1.3",
     "hammerjs": "^2.0.8",
+    "hangul-js": "^0.2.4",
     "helmet": "^3.8.0",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",

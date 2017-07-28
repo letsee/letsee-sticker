@@ -5,15 +5,24 @@ import { isLoaded, isEmpty } from 'react-redux-firebase';
 import styled from 'styled-components';
 import moment from 'moment';
 import clamp from 'lodash/clamp';
+import { endsWithConsonant, isHangul } from 'hangul-js';
 import Frame from '../Frame';
 import Envelope from './Envelope';
 import CaptureButton from '../CaptureButton';
 import LeaveMessageButton from '../LeaveMessageButton';
+import Spinner from '../Spinner';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
 } from '../../constants';
 import styles from '../App.scss';
+
+const SpinnerContainer = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+`;
 
 const FrameText = styled.div`
   user-select: none;
@@ -30,6 +39,20 @@ const FrameText = styled.div`
   letter-spacing: -0.8px;
   color: #fff;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+`;
+
+const FromText = styled.div`
+  user-select: none;
+  text-align: center;
+  position: absolute;
+  left: 45px;
+  right: 45px;
+  bottom: 29px;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 16px;
+  letter-spacing: -0.4px;
+  color: #fff;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
 `;
 
 const Header = styled.div`
@@ -245,9 +268,10 @@ class Message extends Component {
     } = this.props;
 
     if (!isLoaded(data)) {
-      // TODO
       return (
-        <h1>LOADING</h1>
+        <SpinnerContainer>
+          <Spinner />
+        </SpinnerContainer>
       );
     }
 
@@ -262,6 +286,14 @@ class Message extends Component {
     const authorName = `${firstname} ${lastname}`.trim();
     const friendlyCreatedAt = moment(createdAt, 'YYYYMMDDHHmmssZZ').format('YYYY년 M월 D일');
     const entityTracked = currentEntity !== null && currentEntity === uri;
+
+    const trimmedName = name.trim();
+    const lastChar = trimmedName.slice(-1);
+    let suffix = '을(를)';
+
+    if (isHangul(lastChar)) {
+      suffix = endsWithConsonant(trimmedName) ? '을' : '를';
+    }
 
     if (!entityTracked) {
       return (
@@ -282,13 +314,17 @@ class Message extends Component {
             )}
 
             <div>
-              {name}를 비춰
+              {name}{suffix}
             </div>
 
             <div>
-              {authorName}님의 스티커 메세지를 확인하세요
+              비춰주세요
             </div>
           </FrameText>
+
+          <FromText>
+            {authorName}님이 보낸 스티커 메세지가 있습니다
+          </FromText>
         </Frame>
       );
     }

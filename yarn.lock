@@ -2857,6 +2857,10 @@ handle-thing@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-1.2.5.tgz#fd7aad726bf1a5fd16dfc29b2f7a6601d27139c4"
 
+hangul-js@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/hangul-js/-/hangul-js-0.2.4.tgz#e8b702e0d4e268291b1c7afbe6c6d65980860159"
+
 har-schema@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/har-schema/-/har-schema-1.0.5.tgz#d263135f43307c02c602afc8fe95970c0151369e"
