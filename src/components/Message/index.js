@@ -299,7 +299,7 @@ class Message extends Component {
       return (
         <Frame>
           <FrameText>
-            {image && (
+            {/* {image && (
               <div>
                 <img
                   src={image}
@@ -311,7 +311,7 @@ class Message extends Component {
                   }}
                 />
               </div>
-            )}
+            )} */}
 
             <div>
               {name}{suffix}

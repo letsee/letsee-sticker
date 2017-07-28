@@ -47,12 +47,16 @@ const Textarea = styled.textarea`
   text-align: center;
   color: #fff;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-  white-space: nowrap;
 
   &::placeholder {
     opacity: 0.5;
     color: #fff;
   }
+`;
+
+const TextareaAR = Textarea.extend`
+  white-space: nowrap;
+  overflow: visible;
 `;
 
 const StaticTextarea = Textarea.extend`
@@ -88,7 +92,7 @@ class TextInput extends Component {
 
     const tmp = document.createElement('template');
     tmp.innerHTML = renderToString(
-      <Textarea
+      <TextareaAR
         placeholder="메세지를 입력해주세요"
         value={this.state.value}
       />,
