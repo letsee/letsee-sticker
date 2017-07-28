@@ -1,6 +1,6 @@
 // @flow
 const routes = {
-  path: '/',
+  path: process.env.PUBLIC_PATH,
   getComponent: (nextState, callback) => {
     import('./components/App').then((module) => {
       callback(null, module.default);

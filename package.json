@@ -9,7 +9,7 @@
     "start": "node server.bundle.js",
     "dev": "NODE_ENV=development DEBUG=genexpress:* node server.bundle.js",
     "build:dev": "NODE_ENV=development webpack",
-    "build:staging": "PUBLIC_PATH=/apps/stickers/ NODE_ENV=staging webpack",
+    "build:staging": "PUBLIC_PATH=/stickers/ NODE_ENV=staging webpack",
     "build:prod": "PUBLIC_PATH=/stickers/ NODE_ENV=production webpack",
     "lint": "eslint src",
     "flow": "flow"

@@ -9,6 +9,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const env = process.env.NODE_ENV || 'production';
 const isDev = env !== 'production' && env !== 'staging';
 const publicPath = process.env.PUBLIC_PATH || '/';
+const outputPath = path.resolve(__dirname, 'public');
 
 module.exports = [{
   devtool: isDev ? 'source-map' : false,
@@ -27,7 +28,7 @@ module.exports = [{
     bundle: './src/index.js',
   },
   output: {
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(path.join(outputPath, publicPath)),
     filename: 'js/[name].[chunkhash].js',
     chunkFilename: 'js/[name].[chunkhash].js',
     publicPath,
@@ -81,7 +82,6 @@ module.exports = [{
       path: `./.env.${env}`,
     }),
     new webpack.EnvironmentPlugin({
-      NODE_ENV: isDev ? 'development' : 'production',
       PUBLIC_PATH: publicPath,
     }),
     new webpack.optimize.CommonsChunkPlugin({
@@ -92,7 +92,7 @@ module.exports = [{
       allChunks: true,
     }),
     new HtmlWebpackPlugin({
-      filename: '../views/index.ejs',
+      filename: path.resolve(__dirname, 'views', 'index.ejs'),
       template: 'src/index.html.ejs',
     }),
   ] : [
@@ -100,7 +100,6 @@ module.exports = [{
       path: `./.env.${env}`,
     }),
     new webpack.EnvironmentPlugin({
-      NODE_ENV: isDev ? 'development' : 'production',
       PUBLIC_PATH: publicPath,
     }),
     new webpack.optimize.CommonsChunkPlugin({
@@ -114,7 +113,7 @@ module.exports = [{
       comments: false,
     }),
     new HtmlWebpackPlugin({
-      filename: '../views/index.ejs',
+      filename: path.resolve(__dirname, 'views', 'index.ejs'),
       template: 'src/index.html.ejs',
     }),
   ],
