@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server",
-    "build:dev": "webpack",
-    "build:staging": "PUBLIC_PATH=/app/stickers/ NODE_ENV=production webpack",
+    "build:dev": "NODE_ENV=development webpack",
+    "build:staging": "PUBLIC_PATH=/apps/stickers/ NODE_ENV=staging webpack",
     "build:prod": "PUBLIC_PATH=/stickers/ NODE_ENV=production webpack",
     "lint": "eslint src",
     "flow": "flow"
