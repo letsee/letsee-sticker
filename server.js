@@ -15,7 +15,7 @@ import sassMiddleware from 'node-sass-middleware';
 import helmet from 'helmet';
 import compression from 'compression';
 
-const debug = require('debug')('genexpress:server');
+const debug = require('debug')('letsee-sticker:server');
 
 const app = express();
 

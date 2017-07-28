@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node server.bundle.js",
-    "dev": "NODE_ENV=development DEBUG=genexpress:* node server.bundle.js",
+    "dev": "NODE_ENV=development DEBUG=letsee-sticker:* node server.bundle.js",
     "build:dev": "NODE_ENV=development webpack",
     "build:staging": "PUBLIC_PATH=/stickers/ NODE_ENV=staging webpack",
     "build:prod": "PUBLIC_PATH=/stickers/ NODE_ENV=production webpack",
