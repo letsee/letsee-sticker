@@ -24,7 +24,7 @@ const AppLoader = ({ children, ...other }) => (
   <Frame {...other}>
     <Text>
       <div>스티커 메세지를 남길</div>
-      <div>제품을 비춰주세요</div>
+      <div>대상을 비춰주세요</div>
     </Text>
   </Frame>
 );
