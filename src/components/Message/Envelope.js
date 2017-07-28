@@ -9,7 +9,7 @@ import envelopeIcon3x from './icn-open-messege@3x.png';
 
 const Container = styled.div`
   opacity: 0.8;
-  font-family: AppleSDGothicNeo, sans-serif;
+  font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
   font-weight: 800;
   text-align: center;
   color: #fff;

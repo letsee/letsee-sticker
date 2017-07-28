@@ -37,7 +37,7 @@ const Textarea = styled.textarea`
   border: 0;
   outline: 0;
   background-color: transparent;
-  font-family: AppleSDGothicNeo, sans-serif;
+  font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
   font-size: 48px;
   font-weight: 800;
   font-style: normal;

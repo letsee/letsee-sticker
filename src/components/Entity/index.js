@@ -33,7 +33,7 @@ const StyledImageButton = ImageButton.extend`
 
 const MessageText = styled.div`
   opacity: 0.8;
-  font-family: AppleSDGothicNeo, sans-serif;
+  font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
   font-size: ${props => props.size * 0.06}px;
   font-weight: 800;
   letter-spacing: ${props => -props.size * 0.06 * 0.8 / 25}px;
