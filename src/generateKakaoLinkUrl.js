@@ -9,7 +9,7 @@ const generateKakaoLinkUrl = (messageId: string): string => {
     url: `${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}${messageId}`,
   };
 
-  const link = `${LETSEE_BROWSER_LOAD_URL}?${qs.stringify(browserParams)}`;
+  const link = `${LETSEE_BROWSER_LOAD_URL}?url=${browserParams.url}`;
 
   const params = {
     link,
