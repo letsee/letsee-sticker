@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import AppLoader from '../components/AppLoader';
 import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
-import ShareModal from '../components/Share';
+import ShareModal from '../components/ShareModal';
 import Help from '../components/Help';
 import TransformationGuide from '../components/TransformationGuide';
 import {
@@ -133,6 +133,10 @@ const Root = ({
             onComplete={() => {
               dispatch(destroyMessageForm(messageForm.uri));
               dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
+              dispatch(closeShareModal());
+            }}
+            onCaptureClick={() => {
+              openCapture();
               dispatch(closeShareModal());
             }}
             onKakaoLinkClick={() => {

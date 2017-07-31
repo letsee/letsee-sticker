@@ -4,7 +4,6 @@ import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
 import { ImageButton } from '../Button';
-import CaptureButton from '../CaptureButton';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
@@ -17,12 +16,6 @@ import createIcon3x from './btn-create@3x.png';
 import addIcon from './btn-add-content.png';
 import addIcon2x from './btn-add-content@2x.png';
 import addIcon3x from './btn-add-content@3x.png';
-
-const StyledCaptureButton = styled(CaptureButton)`
-  position: absolute;
-  left: 0;
-  bottom: 0;
-`;
 
 const StyledImageButton = ImageButton.extend`
   position: absolute;
@@ -164,8 +157,6 @@ class Entity extends Component {
 
     return (
       <div {...other}>
-        <StyledCaptureButton onClick={onCaptureClick} />
-
         <StyledImageButton
           type="button"
           onClick={onNewClick}

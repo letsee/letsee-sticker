@@ -8,7 +8,6 @@ import clamp from 'lodash/clamp';
 import { endsWithConsonant, isHangul } from 'hangul-js';
 import Frame from '../Frame';
 import Envelope from './Envelope';
-import CaptureButton from '../CaptureButton';
 import LeaveMessageButton from '../LeaveMessageButton';
 import Spinner from '../Spinner';
 import {
@@ -67,12 +66,6 @@ const Header = styled.div`
   text-align: center;
   color: #fff;
   text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
-`;
-
-const NavBottomLeft = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
 `;
 
 const NavBottomRight = styled.div`
@@ -338,10 +331,6 @@ class Message extends Component {
             {authorName}님이 {friendlyCreatedAt}에 보냄
           </Header>
         )}
-
-        <NavBottomLeft>
-          <CaptureButton onClick={onCaptureClick} />
-        </NavBottomLeft>
 
         {opened && (
           <NavBottomRight>

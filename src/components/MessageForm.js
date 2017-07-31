@@ -9,7 +9,6 @@ import AddEmojiButton from './AddEmojiButton';
 import AddTextButton from './AddTextButton';
 import CloseButton from './CloseButton';
 import NextButton from './NextButton';
-import CaptureButton from './CaptureButton';
 import EmojiDrawer from './EmojiDrawer';
 import Frame from './Frame';
 import TextInput from './TextInput';
@@ -51,12 +50,6 @@ const SpinnerContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-`;
-
-const NavBottomLeft = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
 `;
 
 const NavBottomRight = styled.div`
@@ -632,10 +625,6 @@ class MessageForm extends Component {
               </div>
             </NavTopRight>
           ),
-
-          <NavBottomLeft key={2}>
-            <CaptureButton onClick={onCaptureClick} />
-          </NavBottomLeft>,
 
           entityTracked && (
             <NavBottomRight key={3}>
