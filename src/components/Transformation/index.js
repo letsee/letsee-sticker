@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import CompleteButton from '../CompleteButton';
 import TrashButton from '../TrashButton';
+import TipButton from '../TipButton';
 
 const NavTopCenter = styled.div`
   position: absolute;
@@ -25,6 +26,12 @@ const NavTopRight = styled.div`
   right: 0;
 `;
 
+const NavBottomLeft = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+`;
+
 const NavBottomRight = styled.div`
   position: absolute;
   bottom: 80px;
@@ -32,11 +39,13 @@ const NavBottomRight = styled.div`
 `;
 
 type TransformationPropTypes = {
+  onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
 };
 
 const Transformation = ({
+  onTipClick,
   onComplete,
   onDelete,
   children,
@@ -50,6 +59,10 @@ const Transformation = ({
     <NavTopRight>
       <CompleteButton onClick={onComplete} />
     </NavTopRight>
+
+    <NavBottomLeft>
+      <TipButton onClick={onTipClick} />
+    </NavBottomLeft>
 
     <NavBottomRight>
       <TrashButton onClick={onDelete} />

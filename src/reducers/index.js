@@ -11,6 +11,7 @@ import { letseeLoaded } from './letsee';
 import messageForm from './messageForm';
 import selectedSticker from './selectedSticker';
 import stickers from './stickers';
+import transformationGuideOpened from './transformationGuideOpened';
 
 const reducers = combineReducers({
   currentEntity,
@@ -22,6 +23,7 @@ const reducers = combineReducers({
   messageForm,
   selectedSticker,
   stickers,
+  transformationGuideOpened,
   firebase: firebaseStateReducer,
   routing: routerReducer,
 });

@@ -154,6 +154,7 @@ type MessageFormPropTypes = {
   onCaptureClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onNext?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
 };
 
 class MessageForm extends Component {
@@ -579,6 +580,7 @@ class MessageForm extends Component {
       onEmojiInput,
       onTransformationComplete,
       onDelete,
+      onTipClick,
       onStickerTransform,
       ...other
     } = this.props;
@@ -591,6 +593,7 @@ class MessageForm extends Component {
         <div {...other}>
           <Transformation
             onComplete={onTransformationComplete}
+            onTipClick={onTipClick}
             onDelete={onDelete}
           />
         </div>

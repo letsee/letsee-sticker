@@ -15,4 +15,5 @@ export default {
   },
   kakaoLinkModal: null,
   helpOpened: false,
+  transformationGuideOpened: false,
 };

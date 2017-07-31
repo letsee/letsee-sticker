@@ -6,6 +6,7 @@ import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
 import KakaoLink from '../components/KakaoLink';
 import Help from '../components/Help';
+import TransformationGuide from '../components/TransformationGuide';
 import {
   initMessageForm,
   clearMessageForm,
@@ -18,12 +19,15 @@ import {
   closeKakaoLinkModal,
   openHelp,
   closeHelp,
+  openTransformationGuide,
+  closeTransformationGuide,
   transformSticker,
 } from '../actions';
 import openCapture from '../openCapture';
 import generateKakaoLinkUrl from '../generateKakaoLinkUrl';
 
 type RootPropTypes = {
+  transformationGuideOpened: boolean,
   helpOpened: boolean,
   currentUser: {
     firstname: string,
@@ -40,6 +44,7 @@ type RootPropTypes = {
 };
 
 const Root = ({
+  transformationGuideOpened,
   helpOpened,
   kakaoLinkModal,
   currentUser,
@@ -50,6 +55,12 @@ const Root = ({
   messageForm,
   dispatch,
 }: RootPropTypes) => {
+  if (transformationGuideOpened) {
+    return (
+      <TransformationGuide onClose={() => dispatch(closeTransformationGuide())} />
+    );
+  }
+
   if (helpOpened) {
     return (
       <Help onCloseClick={() => dispatch(closeHelp())} />
@@ -113,6 +124,7 @@ const Root = ({
           }}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
           onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}
+          onTipClick={() => dispatch(openTransformationGuide())}
         />
 
         {kakaoLinkModal !== null && (
@@ -204,6 +216,7 @@ export default connect(
     messageForm,
     kakaoLinkModal,
     helpOpened,
+    transformationGuideOpened,
   }) => ({
     letseeLoaded,
     currentEntity,
@@ -214,5 +227,6 @@ export default connect(
     messageForm,
     kakaoLinkModal,
     helpOpened,
+    transformationGuideOpened,
   }),
 )(Root);
