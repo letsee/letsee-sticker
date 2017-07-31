@@ -5,6 +5,7 @@ import AppLoader from '../components/AppLoader';
 import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
 import KakaoLink from '../components/KakaoLink';
+import Help from '../components/Help';
 import {
   initMessageForm,
   clearMessageForm,
@@ -49,6 +50,12 @@ const Root = ({
   messageForm,
   dispatch,
 }: RootPropTypes) => {
+  if (helpOpened) {
+    return (
+      <Help onCloseClick={() => dispatch(closeHelp())} />
+    );
+  }
+
   if (messageForm !== null) {
     const entityTracked = currentEntity !== null && messageForm.uri === currentEntity;
     const messageEntity = entities.byUri[messageForm.uri];
