@@ -8,7 +8,6 @@ import envelopeIcon2x from './icn-open-messege@2x.png';
 import envelopeIcon3x from './icn-open-messege@3x.png';
 
 const Container = styled.div`
-  opacity: 0.8;
   font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
   font-weight: 800;
   text-align: center;
@@ -16,6 +15,7 @@ const Container = styled.div`
 `;
 
 const From = styled.div`
+  opacity: 0.8;
   font-size: ${props => props.size * 0.07}px;
   letter-spacing: ${props => -props.size * 0.07 * 1.2 / 29}px;
   text-shadow: 0 0 ${props => props.size * 0.07 * 12 / 29}px rgba(0, 0, 0, 0.5);
@@ -23,6 +23,7 @@ const From = styled.div`
 `;
 
 const Open = styled.div`
+  opacity: 0.8;
   font-size: ${props => props.size * 0.05}px;
   letter-spacing: ${props => -props.size * 0.05 * 0.8 / 23}px;
   margin-top: ${props => props.size * 0.06}px;
