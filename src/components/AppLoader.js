@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Frame from './Frame';
+import HelpButton from './HelpButton';
 
 const Text = styled.div`
   user-select: none;
@@ -20,13 +21,23 @@ const Text = styled.div`
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 `;
 
-const AppLoader = ({ children, ...other }) => (
-  <Frame {...other}>
-    <Text>
-      <div>스티커 메세지를 남길</div>
-      <div>대상을 비춰주세요</div>
-    </Text>
-  </Frame>
+const StyledHelpButton = styled(HelpButton)`
+  position: absolute;
+  top: 25px;
+  right: 0;
+`;
+
+const AppLoader = ({ onHelpClick, children, ...other }) => (
+  <div {...other}>
+    <Frame>
+      <Text>
+        <div>스티커 메세지를 남길</div>
+        <div>대상을 비춰주세요</div>
+      </Text>
+    </Frame>
+
+    <StyledHelpButton onClick={onHelpClick} />
+  </div>
 );
 
 export default AppLoader;

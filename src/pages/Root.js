@@ -15,12 +15,15 @@ import {
   deleteSticker,
   addSticker,
   closeKakaoLinkModal,
+  openHelp,
+  closeHelp,
   transformSticker,
 } from '../actions';
 import openCapture from '../openCapture';
 import generateKakaoLinkUrl from '../generateKakaoLinkUrl';
 
 type RootPropTypes = {
+  helpOpened: boolean,
   currentUser: {
     firstname: string,
     lastname: string,
@@ -36,6 +39,7 @@ type RootPropTypes = {
 };
 
 const Root = ({
+  helpOpened,
   kakaoLinkModal,
   currentUser,
   entities,
@@ -178,7 +182,7 @@ const Root = ({
   }
 
   return (
-    <AppLoader />
+    <AppLoader onHelpClick={() => dispatch(openHelp())} />
   );
 };
 
@@ -192,6 +196,7 @@ export default connect(
     selectedSticker,
     messageForm,
     kakaoLinkModal,
+    helpOpened,
   }) => ({
     letseeLoaded,
     currentEntity,
@@ -201,5 +206,6 @@ export default connect(
     selectedSticker,
     messageForm,
     kakaoLinkModal,
+    helpOpened,
   }),
 )(Root);

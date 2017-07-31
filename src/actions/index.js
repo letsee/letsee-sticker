@@ -2,6 +2,7 @@
 export * from './currentEntity';
 export * from './currentUser';
 export * from './entities';
+export * from './helpOpened';
 export * from './kakaoLinkModal';
 export * from './letsee';
 export * from './messageForm';
