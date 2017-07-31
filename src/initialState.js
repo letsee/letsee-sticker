@@ -13,7 +13,7 @@ export default {
     byId: {},
     allIds: [],
   },
-  kakaoLinkModal: null,
+  shareModal: null,
   helpOpened: false,
   transformationGuideOpened: false,
 };

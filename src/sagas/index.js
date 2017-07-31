@@ -7,7 +7,7 @@ import {
   SUBMIT_MESSAGE_FORM,
   submitMessageFormSuccess,
   submitMessageFormError,
-  openKakaoLinkModal,
+  openShareModal,
 } from '../actions';
 
 const getStickersByEntity = (stickers, uri: string) => stickers.allIds
@@ -50,7 +50,7 @@ function* submitMessageForm(getFirebase) {
 
       if (firebase) {
         yield put(submitMessageFormSuccess(submitAction.payload.uri, firebase.path.o));
-        yield put(openKakaoLinkModal(submitAction.payload.uri, firebase.path.o));
+        yield put(openShareModal(submitAction.payload.uri, firebase.path.o));
       }
     } catch (e) {
       // TODO error

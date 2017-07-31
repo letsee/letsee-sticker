@@ -6,7 +6,7 @@ import currentEntity from './currentEntity';
 import currentUser from './currentUser';
 import entities from './entities';
 import helpOpened from './helpOpened';
-import kakaoLinkModal from './kakaoLinkModal';
+import shareModal from './shareModal';
 import { letseeLoaded } from './letsee';
 import messageForm from './messageForm';
 import selectedSticker from './selectedSticker';
@@ -18,7 +18,7 @@ const reducers = combineReducers({
   currentUser,
   entities,
   helpOpened,
-  kakaoLinkModal,
+  shareModal,
   letseeLoaded,
   messageForm,
   selectedSticker,

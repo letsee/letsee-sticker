@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import AppLoader from '../components/AppLoader';
 import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
-import KakaoLink from '../components/KakaoLink';
+import ShareModal from '../components/Share';
 import Help from '../components/Help';
 import TransformationGuide from '../components/TransformationGuide';
 import {
@@ -16,7 +16,7 @@ import {
   deselectSticker,
   deleteSticker,
   addSticker,
-  closeKakaoLinkModal,
+  closeShareModal,
   openHelp,
   closeHelp,
   openTransformationGuide,
@@ -40,13 +40,13 @@ type RootPropTypes = {
     uri: string,
     submitting: boolean,
   } | null,
-  kakaoLinkModal: { entityUri: string, path: [string, string] } | null,
+  shareModal: { entityUri: string, path: [string, string] } | null,
 };
 
 const Root = ({
   transformationGuideOpened,
   helpOpened,
-  kakaoLinkModal,
+  shareModal,
   currentUser,
   entities,
   currentEntity,
@@ -127,16 +127,16 @@ const Root = ({
           onTipClick={() => dispatch(openTransformationGuide())}
         />
 
-        {kakaoLinkModal !== null && (
-          <KakaoLink
-            onClose={() => dispatch(closeKakaoLinkModal())}
+        {shareModal !== null && (
+          <ShareModal
+            onClose={() => dispatch(closeShareModal())}
             onComplete={() => {
               dispatch(destroyMessageForm(messageForm.uri));
               dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
-              dispatch(closeKakaoLinkModal());
+              dispatch(closeShareModal());
             }}
             onKakaoLinkClick={() => {
-              const messageId = kakaoLinkModal.path[1];
+              const messageId = shareModal.path[1];
               const kakaoLinkUrl = generateKakaoLinkUrl(messageId);
               const authorName = `${currentUser.firstname} ${currentUser.lastname}`.trim();
               const entityName = messageEntity.name;
@@ -214,7 +214,7 @@ export default connect(
     entities,
     selectedSticker,
     messageForm,
-    kakaoLinkModal,
+    shareModal,
     helpOpened,
     transformationGuideOpened,
   }) => ({
@@ -225,7 +225,7 @@ export default connect(
     entities,
     selectedSticker,
     messageForm,
-    kakaoLinkModal,
+    shareModal,
     helpOpened,
     transformationGuideOpened,
   }),
