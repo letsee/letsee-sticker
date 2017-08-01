@@ -147,7 +147,7 @@ class EmojiDrawer extends Component {
               {row.map(emoji => (
                 <Emoji
                   key={emoji}
-                  onTouchEnd={() => onClick && onClick(emoji)}
+                  onClick={() => onClick && onClick(emoji)}
                 >
                   {emoji}
                 </Emoji>
