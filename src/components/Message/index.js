@@ -284,9 +284,54 @@ class Message extends Component {
 
     const { entity: { name, uri, image }, author: { firstname, lastname }, createdAt } = data;
     const authorName = `${firstname} ${lastname}`.trim();
-    const friendlyCreatedAt = moment(createdAt, 'YYYYMMDDHHmmssZZ').format('YYYY년 M월 D일');
-    const entityTracked = currentEntity !== null && currentEntity === uri;
+    const { shareModalOpened } = this.state;
 
+    if (shareModalOpened) {
+      return (
+        <ShareModal
+          onBack={() => this.setState({ shareModalOpened: false })}
+          onComplete={onShareComplete}
+          onCaptureClick={() => {
+            openCapture();
+            this.setState({ shareModalOpened: false });
+          }}
+          onKakaoLinkClick={() => {
+            const kakaoLinkUrl = generateKakaoLinkUrl(id);
+            const imageUrl = `${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}img/img-kakao@3x.png`;
+
+            Kakao.Link.sendDefault({
+              objectType: 'feed',
+              content: {
+                title: '렛시 스티커 메세지가 도착했어요!',
+                description: `${authorName}님이 ${name}에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!`,
+                imageUrl,
+                link: {
+                  mobileWebUrl: kakaoLinkUrl,
+                  webUrl: kakaoLinkUrl,
+                  androidExecParams: kakaoLinkUrl,
+                  iosExecParams: kakaoLinkUrl,
+                },
+              },
+              buttons: [{
+                title: '렛시 브라우저로 보기',
+                link: {
+                  mobileWebUrl: kakaoLinkUrl,
+                  webUrl: kakaoLinkUrl,
+                  androidExecParams: kakaoLinkUrl,
+                  iosExecParams: kakaoLinkUrl,
+                },
+              }],
+              fail: (...args) => {
+                // TODO error
+                console.log(args);
+              },
+            });
+          }}
+        />
+      );
+    }
+
+    const entityTracked = currentEntity !== null && currentEntity === uri;
     const trimmedName = name.trim();
     const lastChar = trimmedName.slice(-1);
     let suffix = '을(를)';
@@ -329,11 +374,13 @@ class Message extends Component {
       );
     }
 
-    const { opened, shareModalOpened } = this.state;
+    const { opened } = this.state;
 
     if (!opened) {
       return null;
     }
+
+    const friendlyCreatedAt = moment(createdAt, 'YYYYMMDDHHmmssZZ').format('YYYY년 M월 D일');
 
     return (
       <div {...other}>
@@ -344,49 +391,6 @@ class Message extends Component {
         <NavTopRight>
           <NextButton onTouchEnd={() => this.setState({ shareModalOpened: true })} />
         </NavTopRight>
-
-        {shareModalOpened && (
-          <ShareModal
-            onBack={() => this.setState({ shareModalOpened: false })}
-            onComplete={onShareComplete}
-            onCaptureClick={() => {
-              openCapture();
-              this.setState({ shareModalOpened: false });
-            }}
-            onKakaoLinkClick={() => {
-              const kakaoLinkUrl = generateKakaoLinkUrl(id);
-              const imageUrl = `${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}img/img-kakao@3x.png`;
-
-              Kakao.Link.sendDefault({
-                objectType: 'feed',
-                content: {
-                  title: '렛시 스티커 메세지가 도착했어요!',
-                  description: `${authorName}님이 ${name}에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!`,
-                  imageUrl,
-                  link: {
-                    mobileWebUrl: kakaoLinkUrl,
-                    webUrl: kakaoLinkUrl,
-                    androidExecParams: kakaoLinkUrl,
-                    iosExecParams: kakaoLinkUrl,
-                  },
-                },
-                buttons: [{
-                  title: '렛시 브라우저로 보기',
-                  link: {
-                    mobileWebUrl: kakaoLinkUrl,
-                    webUrl: kakaoLinkUrl,
-                    androidExecParams: kakaoLinkUrl,
-                    iosExecParams: kakaoLinkUrl,
-                  },
-                }],
-                fail: (...args) => {
-                  // TODO error
-                  console.log(args);
-                },
-              });
-            }}
-          />
-        )}
       </div>
     );
   }

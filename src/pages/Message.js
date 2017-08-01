@@ -21,7 +21,7 @@ const Message = ({
     data={data}
     currentEntity={currentEntity}
     onCaptureClick={openCapture}
-    onShareComplete={() => router.push('/')}
+    onShareComplete={() => router.push(process.env.PUBLIC_PATH || '/')}
   />
 );
 
