@@ -101,7 +101,6 @@ const Root = ({
               dispatch(submitMessageForm(messageForm.uri));
             }
           }}
-          onCaptureClick={openCapture}
           onStickerClick={(id) => {
             if (!selectedStickerData) {
               dispatch(selectSticker(id));
@@ -199,7 +198,6 @@ const Root = ({
             dispatch(initMessageForm(currentEntity));
           }
         }}
-        onCaptureClick={openCapture}
       />
     );
   }
