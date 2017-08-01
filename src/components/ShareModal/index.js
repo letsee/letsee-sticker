@@ -40,7 +40,6 @@ const NavRight = styled.div`
 `;
 
 const Body = styled.div`
-  max-width: 287px;
   position: absolute;
   left: 44px;
   right: 44px;
@@ -49,6 +48,7 @@ const Body = styled.div`
 `;
 
 const Action = styled.div`
+  max-width: 287px;
   width: 100%;
   margin: 0 auto;
 

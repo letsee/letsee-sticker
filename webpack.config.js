@@ -19,11 +19,9 @@ module.exports = [{
       'react-dom',
     ],
     vendor: [
-      'normalize.css',
       'babel-polyfill',
       'es6-promise',
       'isomorphic-fetch',
-      'lodash',
     ],
     bundle: './src/index.js',
   },
