@@ -101,7 +101,7 @@ const Body = styled.div`
 const Contact = styled.div`
   opacity: 0.8;
   font-size: 14px;
-  margin-top: 47px;
+  margin-top: 20px;
 `;
 
 const StyledCloseButton = styled(CloseButton)`
