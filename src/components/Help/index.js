@@ -51,6 +51,10 @@ const StyledCarousel = styled(Carousel)`
       bottom: auto;
       margin: 0;
 
+      @media (max-height: 567px) {
+        top: 45px;
+      }
+
       .dot {
         opacity: 1;
         background: #d8d8d8;
@@ -76,12 +80,31 @@ const Page = styled.div`
   text-align: center;
   color: #fff;
   user-select: none;
+
+  @media (max-height: 567px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const Image = styled.img`
   display: block;
   margin: 0 auto 48px auto;
   width: auto;
+
+  @media (max-height: 567px) {
+    flex-shrink: 0;
+    margin: 0 40px 0 0;
+  }
+`;
+
+const Text = styled.div`
+  @media (max-height: 567px) {
+    width: 100%;
+    max-width: 319px;
+    flex-grow: 1;
+  }
 `;
 
 const Title = styled.div`
@@ -125,7 +148,7 @@ const Help = ({
           alt="인식 대상의 정면을 비추세요"
         />
 
-        <div>
+        <Text>
           <Title>
             인식 대상의 정면을 비추세요
           </Title>
@@ -139,7 +162,7 @@ const Help = ({
               화면 가득히 비추세요.
             </div>
           </Body>
-        </div>
+        </Text>
       </Page>
 
       <Page>
@@ -149,7 +172,7 @@ const Help = ({
           alt="인식이 되지 않나요?"
         />
 
-        <div>
+        <Text>
           <Title>
             인식이 되지 않나요?
           </Title>
@@ -173,7 +196,7 @@ const Help = ({
               contact@letsee.io
             </div>
           </Contact>
-        </div>
+        </Text>
       </Page>
     </StyledCarousel>
 
