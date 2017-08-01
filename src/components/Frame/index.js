@@ -103,7 +103,7 @@ const Frame = ({ vertical, horizontal, white, children, ...other }: FramePropTyp
 
 Frame.defaultProps = {
   white: false,
-  vertical: 78,
+  vertical: 99,
   horizontal: 45,
 };
 

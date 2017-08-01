@@ -37,7 +37,7 @@ const StyledHelpButton = styled(HelpButton)`
 
 const AppLoader = ({ data, onHelpClick, onBannerClick, children, ...other }) => (
   <div {...other}>
-    <Frame vertical={99}>
+    <Frame>
       <Text>
         <div>스티커 메세지를 남길</div>
         <div>대상을 비춰주세요</div>
