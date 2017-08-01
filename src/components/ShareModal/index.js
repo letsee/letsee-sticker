@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../Button';
-import CloseButton from '../CloseButton';
+import BackButton from '../BackButton';
 import CompleteButton from '../CompleteButton';
 
 import kakaoLogo from './icn-kakao.png';
@@ -99,9 +99,9 @@ const ButtonText = styled.span`
   vertical-align: middle;
 `;
 
-const KakaoLink = ({
+const ShareModal = ({
   onCaptureClick,
-  onClose,
+  onBack,
   onComplete,
   onKakaoLinkClick,
   children,
@@ -110,7 +110,7 @@ const KakaoLink = ({
   <Container {...other}>
     <Nav>
       <NavLeft>
-        <CloseButton onClick={onClose} />
+        <BackButton onClick={onBack} />
       </NavLeft>
 
       <NavRight>
@@ -160,4 +160,4 @@ const KakaoLink = ({
   </Container>
 );
 
-export default KakaoLink;
+export default ShareModal;

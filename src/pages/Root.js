@@ -129,7 +129,7 @@ const Root = ({
 
         {shareModal !== null && (
           <ShareModal
-            onClose={() => dispatch(closeShareModal())}
+            onBack={() => dispatch(closeShareModal())}
             onComplete={() => {
               dispatch(destroyMessageForm(messageForm.uri));
               dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
