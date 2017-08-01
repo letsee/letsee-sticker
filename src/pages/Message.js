@@ -21,7 +21,7 @@ const Message = ({
     data={data}
     currentEntity={currentEntity}
     onCaptureClick={openCapture}
-    onLeaveMessageClick={() => router.push('/')}
+    onShareComplete={() => router.push('/')}
   />
 );
 

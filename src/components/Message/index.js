@@ -8,8 +8,11 @@ import clamp from 'lodash/clamp';
 import { endsWithConsonant, isHangul } from 'hangul-js';
 import Frame from '../Frame';
 import Envelope from './Envelope';
-import LeaveMessageButton from '../LeaveMessageButton';
+import NextButton from '../NextButton';
 import Spinner from '../Spinner';
+import ShareModal from '../ShareModal';
+import openCapture from '../../openCapture';
+import generateKakaoLinkUrl from '../../generateKakaoLinkUrl';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
@@ -68,9 +71,9 @@ const Header = styled.div`
   text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
 `;
 
-const NavBottomRight = styled.div`
+const NavTopRight = styled.div`
   position: absolute;
-  bottom: 0;
+  top: 25px;
   right: 0;
 `;
 
@@ -92,6 +95,7 @@ const createStickers = (stickers) => {
 };
 
 type MessagePropTypes = {
+  id: string,
   currentEntity: string | null,
   data: {
     entity: { uri: string, name: string, image?: string },
@@ -105,11 +109,12 @@ type MessagePropTypes = {
     }[],
   },
   onCaptureClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onLeaveMessageClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onShareComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
 };
 
 type MessageStateTypes = {
   opened: boolean,
+  shareModalOpened: boolean,
 };
 
 class Message extends Component {
@@ -118,6 +123,7 @@ class Message extends Component {
 
     this.state = {
       opened: false,
+      shareModalOpened: false,
     };
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
@@ -252,10 +258,11 @@ class Message extends Component {
 
   render() {
     const {
+      id,
       currentEntity,
       data,
       onCaptureClick,
-      onLeaveMessageClick,
+      onShareComplete,
       children,
       ...other
     } = this.props;
@@ -322,20 +329,63 @@ class Message extends Component {
       );
     }
 
-    const { opened } = this.state;
+    const { opened, shareModalOpened } = this.state;
+
+    if (!opened) {
+      return null;
+    }
 
     return (
       <div {...other}>
-        {opened && (
-          <Header>
-            {authorName}님이 {friendlyCreatedAt}에 보냄
-          </Header>
-        )}
+        <Header>
+          {authorName}님이 {friendlyCreatedAt}에 보냄
+        </Header>
 
-        {opened && (
-          <NavBottomRight>
-            <LeaveMessageButton onClick={onLeaveMessageClick} />
-          </NavBottomRight>
+        <NavTopRight>
+          <NextButton onClick={() => this.setState({ shareModalOpened: true })} />
+        </NavTopRight>
+
+        {shareModalOpened && (
+          <ShareModal
+            onBack={() => this.setState({ shareModalOpened: false })}
+            onComplete={onShareComplete}
+            onCaptureClick={() => {
+              openCapture();
+              this.setState({ shareModalOpened: false });
+            }}
+            onKakaoLinkClick={() => {
+              const kakaoLinkUrl = generateKakaoLinkUrl(id);
+              const imageUrl = `${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}img/img-kakao@3x.png`;
+
+              Kakao.Link.sendDefault({
+                objectType: 'feed',
+                content: {
+                  title: '렛시 스티커 메세지가 도착했어요!',
+                  description: `${authorName}님이 ${name}에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!`,
+                  imageUrl,
+                  link: {
+                    mobileWebUrl: kakaoLinkUrl,
+                    webUrl: kakaoLinkUrl,
+                    androidExecParams: kakaoLinkUrl,
+                    iosExecParams: kakaoLinkUrl,
+                  },
+                },
+                buttons: [{
+                  title: '렛시 브라우저로 보기',
+                  link: {
+                    mobileWebUrl: kakaoLinkUrl,
+                    webUrl: kakaoLinkUrl,
+                    androidExecParams: kakaoLinkUrl,
+                    iosExecParams: kakaoLinkUrl,
+                  },
+                }],
+                fail: (...args) => {
+                  // TODO error
+                  console.log(args);
+                },
+              });
+            }}
+          />
         )}
       </div>
     );
