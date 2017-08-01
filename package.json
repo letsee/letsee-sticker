@@ -65,7 +65,6 @@
     "moment": "^2.18.1",
     "morgan": "^1.8.2",
     "node-sass-middleware": "^0.11.0",
-    "normalize.css": "^7.0.0",
     "polished": "^1.3.0",
     "prop-types": "^15.5.10",
     "qs": "^6.5.0",
