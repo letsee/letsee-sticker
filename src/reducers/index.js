@@ -9,6 +9,7 @@ import helpOpened from './helpOpened';
 import shareModal from './shareModal';
 import { letseeLoaded } from './letsee';
 import messageForm from './messageForm';
+import newsOpened from './newsOpened';
 import selectedSticker from './selectedSticker';
 import stickers from './stickers';
 import transformationGuideOpened from './transformationGuideOpened';
@@ -21,6 +22,7 @@ const reducers = combineReducers({
   shareModal,
   letseeLoaded,
   messageForm,
+  newsOpened,
   selectedSticker,
   stickers,
   transformationGuideOpened,

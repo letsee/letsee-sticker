@@ -53,4 +53,14 @@ const NewsItem = ({
   </Container>
 );
 
+export const Banner = styled(NewsItem)`
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: none;
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+`;
+
 export default NewsItem;

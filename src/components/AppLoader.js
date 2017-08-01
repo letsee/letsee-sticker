@@ -1,8 +1,16 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
+import {
+  firebaseConnect,
+  isLoaded,
+  isEmpty,
+} from 'react-redux-firebase';
 import styled from 'styled-components';
+import values from 'lodash/values';
 import Frame from './Frame';
 import HelpButton from './HelpButton';
+import { Banner } from './NewsList/NewsItem';
 
 const Text = styled.div`
   user-select: none;
@@ -27,9 +35,9 @@ const StyledHelpButton = styled(HelpButton)`
   right: 0;
 `;
 
-const AppLoader = ({ onHelpClick, children, ...other }) => (
+const AppLoader = ({ data, onHelpClick, onBannerClick, children, ...other }) => (
   <div {...other}>
-    <Frame>
+    <Frame vertical={99}>
       <Text>
         <div>스티커 메세지를 남길</div>
         <div>대상을 비춰주세요</div>
@@ -37,7 +45,18 @@ const AppLoader = ({ onHelpClick, children, ...other }) => (
     </Frame>
 
     <StyledHelpButton onTouchEnd={onHelpClick} />
+
+    {isLoaded(data) && !isEmpty(data) && data && (
+      <Banner
+        data={values(data)[0]}
+        onTouchEnd={onBannerClick}
+      />
+    )}
   </div>
 );
 
-export default AppLoader;
+export default firebaseConnect([{
+  path: 'news',
+  storeAs: 'banner',
+  queryParams: ['orderByChild=timestamp', 'limitToLast=1'],
+}])(connect(({ firebase: { data: { banner } } }) => ({ data: banner }))(AppLoader));

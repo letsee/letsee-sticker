@@ -6,6 +6,7 @@ import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
 import ShareModal from '../components/ShareModal';
 import Help from '../components/Help';
+import NewsList from '../components/NewsList';
 import TransformationGuide from '../components/TransformationGuide';
 import {
   initMessageForm,
@@ -19,6 +20,8 @@ import {
   closeShareModal,
   openHelp,
   closeHelp,
+  openNews,
+  closeNews,
   openTransformationGuide,
   closeTransformationGuide,
   transformSticker,
@@ -29,6 +32,7 @@ import generateKakaoLinkUrl from '../generateKakaoLinkUrl';
 type RootPropTypes = {
   transformationGuideOpened: boolean,
   helpOpened: boolean,
+  newsOpened: boolean,
   currentUser: {
     firstname: string,
     lastname: string,
@@ -46,6 +50,7 @@ type RootPropTypes = {
 const Root = ({
   transformationGuideOpened,
   helpOpened,
+  newsOpened,
   shareModal,
   currentUser,
   entities,
@@ -58,6 +63,12 @@ const Root = ({
   if (transformationGuideOpened) {
     return (
       <TransformationGuide onClose={() => dispatch(closeTransformationGuide())} />
+    );
+  }
+
+  if (newsOpened) {
+    return (
+      <NewsList onClose={() => dispatch(closeNews())} />
     );
   }
 
@@ -203,7 +214,10 @@ const Root = ({
   }
 
   return (
-    <AppLoader onHelpClick={() => dispatch(openHelp())} />
+    <AppLoader
+      onHelpClick={() => dispatch(openHelp())}
+      onBannerClick={() => dispatch(openNews())}
+    />
   );
 };
 
@@ -218,6 +232,7 @@ export default connect(
     messageForm,
     shareModal,
     helpOpened,
+    newsOpened,
     transformationGuideOpened,
   }) => ({
     letseeLoaded,
@@ -229,6 +244,7 @@ export default connect(
     messageForm,
     shareModal,
     helpOpened,
+    newsOpened,
     transformationGuideOpened,
   }),
 )(Root);
