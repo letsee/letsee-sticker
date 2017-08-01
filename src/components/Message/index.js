@@ -342,7 +342,7 @@ class Message extends Component {
         </Header>
 
         <NavTopRight>
-          <NextButton onClick={() => this.setState({ shareModalOpened: true })} />
+          <NextButton onTouchEnd={() => this.setState({ shareModalOpened: true })} />
         </NavTopRight>
 
         {shareModalOpened && (

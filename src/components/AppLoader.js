@@ -36,7 +36,7 @@ const AppLoader = ({ onHelpClick, children, ...other }) => (
       </Text>
     </Frame>
 
-    <StyledHelpButton onClick={onHelpClick} />
+    <StyledHelpButton onTouchEnd={onHelpClick} />
   </div>
 );
 

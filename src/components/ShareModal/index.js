@@ -110,11 +110,11 @@ const ShareModal = ({
   <Container {...other}>
     <Nav>
       <NavLeft>
-        <BackButton onClick={onBack} />
+        <BackButton onTouchEnd={onBack} />
       </NavLeft>
 
       <NavRight>
-        <CompleteButton onClick={onComplete} />
+        <CompleteButton onTouchEnd={onComplete} />
       </NavRight>
     </Nav>
 
@@ -126,7 +126,7 @@ const ShareModal = ({
 
         <KakaoButton
           type="button"
-          onClick={onKakaoLinkClick}
+          onTouchEnd={onKakaoLinkClick}
         >
           <ButtonImage
             src={kakaoLogo}
@@ -145,7 +145,7 @@ const ShareModal = ({
 
         <CaptureButton
           type="button"
-          onClick={onCaptureClick}
+          onTouchEnd={onCaptureClick}
         >
           <ButtonImage
             src={captureLogo}

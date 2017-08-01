@@ -144,7 +144,6 @@ type MessageFormPropTypes = {
   onEmojiInput?: string => mixed, // eslint-disable-line react/require-default-props
   onTransformationComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onCaptureClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onNext?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
@@ -568,7 +567,6 @@ class MessageForm extends Component {
       onClose,
       onNext,
       nextDisabled,
-      onCaptureClick,
       onTextInput,
       onEmojiInput,
       onTransformationComplete,
@@ -605,14 +603,14 @@ class MessageForm extends Component {
       <div {...other}>
         {mode === 'default' && [
           <NavTopLeft key={0}>
-            <CloseButton onClick={onClose} />
+            <CloseButton onTouchEnd={onClose} />
           </NavTopLeft>,
 
           entityTracked && (
             <NavTopRight key={1}>
               <div style={{ position: 'relative' }}>
                 <NextButton
-                  onClick={onNext}
+                  onTouchEnd={onNext}
                   disabled={nextDisabled}
                   hidden={submitting}
                 />
@@ -629,7 +627,7 @@ class MessageForm extends Component {
           entityTracked && (
             <NavBottomRight key={3}>
               <AddEmojiButton
-                onClick={() => this.setState({ mode: 'emoji' }, () => {
+                onTouchEnd={() => this.setState({ mode: 'emoji' }, () => {
                   const e = letsee.getEntity(entity.uri);
                   e.removeRenderable(this.messageObject);
                 })}
@@ -637,7 +635,7 @@ class MessageForm extends Component {
               />
 
               <StyledAddTextButton
-                onClick={() => this.setState({ mode: 'text' })}
+                onTouchEnd={() => this.setState({ mode: 'text' })}
                 small
               />
             </NavBottomRight>

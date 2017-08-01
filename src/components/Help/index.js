@@ -177,7 +177,7 @@ const Help = ({
       </Page>
     </StyledCarousel>
 
-    <StyledCloseButton onClick={onCloseClick} />
+    <StyledCloseButton onTouchEnd={onCloseClick} />
   </Container>
 );
 

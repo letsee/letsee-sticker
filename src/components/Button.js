@@ -10,10 +10,7 @@ const Button = styled.button`
   padding: 0;
   border: 0;
   user-select: none;
-
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 `;
 
 export const ImageButton = Button.extend`

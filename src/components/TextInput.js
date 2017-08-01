@@ -273,7 +273,7 @@ class TextInput extends Component {
         </TextareaContainer>
 
         <NavTopRight>
-          <CompleteButton onClick={() => onComplete && onComplete(value.trim())} />
+          <CompleteButton onTouchEnd={() => onComplete && onComplete(value.trim())} />
         </NavTopRight>
       </div>
     );

@@ -199,7 +199,7 @@ class TransformationGuide extends Component {
           ))}
         </Gestures>
 
-        <StyledCloseButton onClick={onClose} />
+        <StyledCloseButton onTouchEnd={onClose} />
       </Container>
     );
   }

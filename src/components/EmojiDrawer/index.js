@@ -75,7 +75,7 @@ const enableManager = (enable: boolean) => {
 
 type EmojiDrawerPropTypes = {
   onClick?: string => mixed, // eslint-disable-line react/require-default-props
-  onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
 };
 
 class EmojiDrawer extends Component {
@@ -93,7 +93,7 @@ class EmojiDrawer extends Component {
     enableManager(false);
 
     // TODO choose between click and touch?
-    window.addEventListener('click', this.handleWindowClick);
+    // window.addEventListener('click', this.handleWindowClick);
     window.addEventListener('touchend', this.handleWindowClick);
     window.addEventListener('resize', this.handleWindowResize);
   }
@@ -102,7 +102,7 @@ class EmojiDrawer extends Component {
     enableManager(true);
 
     // TODO choose between click and touch?
-    window.removeEventListener('click', this.handleWindowClick);
+    // window.removeEventListener('click', this.handleWindowClick);
     window.removeEventListener('touchend', this.handleWindowClick);
     window.removeEventListener('resize', this.handleWindowResize);
   }
@@ -113,11 +113,10 @@ class EmojiDrawer extends Component {
     this.setState({ height: document.documentElement.clientHeight - 150 });
   };
 
-  handleWindowClick = (e: MouseEvent | TouchEvent) => {
+  handleWindowClick = (e: TouchEvent) => {
     let target = e.target;
 
     while (target !== document.body) {
-
       if (target === this.drawer || target === null) {
         return;
       }
@@ -148,7 +147,7 @@ class EmojiDrawer extends Component {
               {row.map(emoji => (
                 <Emoji
                   key={emoji}
-                  onClick={() => onClick && onClick(emoji)}
+                  onTouchEnd={() => onClick && onClick(emoji)}
                 >
                   {emoji}
                 </Emoji>

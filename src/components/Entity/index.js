@@ -44,7 +44,6 @@ type EntityPropTypes = {
     },
   },
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onCaptureClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
 };
 
 class Entity extends Component {
@@ -149,7 +148,6 @@ class Entity extends Component {
   render() {
     const {
       data: { name },
-      onCaptureClick,
       onNewClick,
       children,
       ...other
@@ -159,7 +157,7 @@ class Entity extends Component {
       <div {...other}>
         <StyledImageButton
           type="button"
-          onClick={onNewClick}
+          onTouchEnd={onNewClick}
         >
           <img
             alt={`${name}에 스티커 메세지를 남겨보세요`}

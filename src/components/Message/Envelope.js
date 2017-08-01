@@ -40,7 +40,7 @@ const EnvelopeButton = ImageButton.extend`
 type EnvelopePropTypes = {
   size: number,
   data: { firstname: string, lastname: string },
-  onClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
 };
 
 const concatFirstAndLastNames = (firstname: string, lastname: string) => `${firstname} ${lastname}`.trim();
@@ -63,7 +63,7 @@ const Envelope = ({
       </div>
     </From>
 
-    <EnvelopeButton onClick={onClick} size={size}>
+    <EnvelopeButton onTouchEnd={onClick} size={size}>
       <img
         alt={`${concatFirstAndLastNames(firstname, lastname)}님의 스티커 메세지`}
         src={envelopeIcon}

@@ -39,9 +39,9 @@ const NavBottomRight = styled.div`
 `;
 
 type TransformationPropTypes = {
-  onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onTipClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onComplete?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onDelete?: TouchEventHandler, // eslint-disable-line react/require-default-props
 };
 
 const Transformation = ({
@@ -57,15 +57,15 @@ const Transformation = ({
     </NavTopCenter>
 
     <NavTopRight>
-      <CompleteButton onClick={onComplete} />
+      <CompleteButton onTouchEnd={onComplete} />
     </NavTopRight>
 
     <NavBottomLeft>
-      <TipButton onClick={onTipClick} />
+      <TipButton onTouchEnd={onTipClick} />
     </NavBottomLeft>
 
     <NavBottomRight>
-      <TrashButton onClick={onDelete} />
+      <TrashButton onTouchEnd={onDelete} />
     </NavBottomRight>
   </div>
 );
