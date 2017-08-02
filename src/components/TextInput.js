@@ -136,7 +136,7 @@ class TextInput extends Component {
         >
           <StaticTextarea
             innerRef={(textarea) => { this.textarea = textarea; }}
-            placeholder="메세지를 입력해주세요"
+            placeholder="메세지 입력"
             value={value}
             onChange={this.handleChange}
             onFocus={!isIOS ? () => {
