@@ -1,0 +1,23 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb",
+    "plugin:flowtype/recommended"
+  ],
+  "rules": {
+    "react/jsx-filename-extension": "off"
+  },
+  "plugins": [
+    "flowtype",
+    "react",
+    "jsx-a11y",
+    "import"
+  ],
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "letsee": true,
+    "DOMRenderable": true
+  }
+}
