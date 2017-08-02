@@ -2,8 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import CompleteButton from './CompleteButton';
-
-const isIOS = typeof window !== 'undefined' && window !== null && /iPad|iPhone|iPod/.test(window.navigator.userAgent);
+import { enableManager } from '../manager';
 
 const NavTopRight = styled.div`
   position: absolute;
@@ -85,11 +84,13 @@ class TextInput extends Component {
   };
 
   componentDidMount() {
+    enableManager(false);
     this.resizeTextarea();
+    this.setFocus();
+  }
 
-    if (!isIOS) {
-      this.setFocus();
-    }
+  componentWillUnmount() {
+    enableManager(true);
   }
 
   setFocus() {
@@ -133,7 +134,7 @@ class TextInput extends Component {
     return (
       <div {...other}>
         <TextareaContainer
-          focus={!isIOS && focus}
+          focus={focus}
           height={height}
         >
           <StaticTextarea
@@ -141,10 +142,10 @@ class TextInput extends Component {
             placeholder="메세지 입력"
             value={value}
             onChange={this.handleChange}
-            onFocus={!isIOS ? () => {
+            onFocus={() => {
               this.setState({ focus: true });
-            } : null}
-            onBlur={!isIOS ? () => this.setState({ focus: false }) : null}
+            }}
+            onBlur={() => this.setState({ focus: false })}
           />
         </TextareaContainer>
 
