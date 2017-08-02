@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { renderToString } from 'react-dom/server';
 import { isLoaded, isEmpty } from 'react-redux-firebase';
 import styled from 'styled-components';
-import moment from 'moment';
 import clamp from 'lodash/clamp';
 import { endsWithConsonant, isHangul } from 'hangul-js';
 import Frame from '../Frame';
@@ -55,20 +54,6 @@ const FromText = styled.div`
   letter-spacing: -0.4px;
   color: #fff;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
-`;
-
-const Header = styled.div`
-  position: absolute;
-  top: 25px;
-  left: 0;
-  right: 0;
-  user-select: none;
-  padding: 16px 0;
-  font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 15px;
-  text-align: center;
-  color: #fff;
-  text-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
 `;
 
 const NavTopRight = styled.div`
@@ -282,7 +267,7 @@ class Message extends Component {
       );
     }
 
-    const { entity: { name, uri, image }, author: { firstname, lastname }, createdAt } = data;
+    const { entity: { name, uri, image }, author: { firstname, lastname } } = data;
     const authorName = `${firstname} ${lastname}`.trim();
     const { shareModalOpened } = this.state;
 
@@ -380,14 +365,8 @@ class Message extends Component {
       return null;
     }
 
-    const friendlyCreatedAt = moment(createdAt, 'YYYYMMDDHHmmssZZ').format('YYYY년 M월 D일');
-
     return (
       <div {...other}>
-        <Header>
-          {authorName}님이 {friendlyCreatedAt}에 보냄
-        </Header>
-
         <NavTopRight>
           <NextButton onTouchEnd={() => this.setState({ shareModalOpened: true })} />
         </NavTopRight>
