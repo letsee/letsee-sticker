@@ -288,7 +288,9 @@ class MessageForm extends Component {
       });
 
       addTextButton.addEventListener('click', () => {
-        this.setState({ mode: 'text' });
+        this.setState({ mode: 'text' }, () => {
+          entity.removeRenderable(this.messageObject);
+        });
       });
 
       const buttonsAR = new DOMRenderable(buttonsElem);
@@ -637,7 +639,10 @@ class MessageForm extends Component {
               />
 
               <StyledAddTextButton
-                onTouchEnd={() => this.setState({ mode: 'text' })}
+                onTouchEnd={() => this.setState({ mode: 'text' }, () => {
+                  const e = letsee.getEntity(entity.uri);
+                  e.removeRenderable(this.messageObject);
+                })}
                 small
               />
             </NavBottomRight>
