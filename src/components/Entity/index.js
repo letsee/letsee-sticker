@@ -32,6 +32,7 @@ const MessageText = styled.div`
   letter-spacing: ${props => -props.size * 0.06 * 0.8 / 25}px;
   text-align: center;
   color: #fff;
+  text-shadow: 0 0 ${props => props.size * 0.06 * 12 / 25}px rgba(0, 0, 0, 0.5);
 `;
 
 type EntityPropTypes = {
