@@ -12,6 +12,7 @@ import sortBy from 'lodash/sortBy';
 import NewsItem from './NewsItem';
 import Button from '../Button';
 import CloseButton from '../CloseButton';
+import { enableManager } from '../../manager';
 
 const Container = styled.div`
   position: absolute;
@@ -67,6 +68,8 @@ const List = styled.ul`
   list-style: none;
   overflow-x: hidden;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 
   > li {
     padding: 0 5px;
@@ -107,10 +110,12 @@ class NewsList extends Component {
   };
 
   componentDidMount() {
+    enableManager(false);
     window.addEventListener('resize', this.handleWindowResize);
   }
 
   componentWillUnmount() {
+    enableManager(true);
     window.removeEventListener('resize', this.handleWindowResize);
     this.setState({ formOpen: false });
   }
