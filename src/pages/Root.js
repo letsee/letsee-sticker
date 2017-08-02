@@ -154,14 +154,13 @@ const Root = ({
               const kakaoLinkUrl = generateKakaoLinkUrl(messageId);
               const authorName = `${currentUser.firstname} ${currentUser.lastname}`.trim();
               const entityName = messageEntity.name;
-              const imageUrl = `${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}img/img-kakao@3x.png`;
 
               Kakao.Link.sendDefault({
                 objectType: 'feed',
                 content: {
                   title: '렛시 스티커 메세지가 도착했어요!',
                   description: `${authorName}님이 ${entityName}에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!`,
-                  imageUrl,
+                  imageUrl: process.env.KAKAO_IMAGE_URL,
                   link: {
                     mobileWebUrl: kakaoLinkUrl,
                     webUrl: kakaoLinkUrl,
