@@ -34,6 +34,7 @@ body {
   user-select: none;
   position: relative;
   white-space: nowrap;
+  opacity: 0.9;
 }
 
 :local .text {
@@ -52,5 +53,4 @@ body {
   composes: sticker;
   font-size: 94px;
   letter-spacing: 3px;
-  opacity: 0.9;
 }
