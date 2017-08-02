@@ -23,6 +23,10 @@ import {
 } from '../constants';
 import styles from './App.scss';
 
+const xAxis = new Vector3(1, 0, 0);
+const yAxis = new Vector3(0, 1, 0);
+const zAxis = new Vector3(0, 0, 1);
+
 const transitionDuration = 200;
 
 const transitionStyles = {
@@ -367,7 +371,7 @@ class MessageForm extends Component {
         }
 
         obj.position.set(position.x, position.y, position.z);
-        obj.rotation.set(rotation.x, rotation.y, rotation.z);
+        obj.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
         obj.scale.setScalar(scale * realToClamped);
       }
     }
@@ -405,12 +409,11 @@ class MessageForm extends Component {
           this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
         }
       } else if (pointers.length === 3 && !this.press) {
-        const { x, y } = selectedSticker.rotation;
-        const { rotation } = this.selectedStickerObject;
-        rotation.x = x + deltaY * Math.PI / 180;
-        rotation.y = y + deltaX * Math.PI / 180;
-        this.selectedStickerObject.quaternion.setFromEuler(rotation);
-        // BUG rotation around y axis
+        const { x, y, z } = selectedSticker.rotation;
+        const q = new Quaternion().setFromEuler(new Euler(x, y, z));
+        q.multiply(new Quaternion().setFromAxisAngle(xAxis, deltaY * Math.PI / 180));
+        q.multiply(new Quaternion().setFromAxisAngle(yAxis, deltaX * Math.PI / 180));
+        this.selectedStickerObject.quaternion.copy(q);
       }
     }
   };
@@ -486,11 +489,10 @@ class MessageForm extends Component {
       this.selectedStickerObject.uuid === selectedSticker.id &&
       !this.press
     ) {
-      const { z } = selectedSticker.rotation;
-      const deltaRotationZ = Math.PI / 180 * (this.rotateStart - e.rotation);
-      const { rotation } = this.selectedStickerObject;
-      rotation.z = z + deltaRotationZ;
-      this.selectedStickerObject.quaternion.setFromEuler(rotation);
+      const { x, y, z } = selectedSticker.rotation;
+      const q = new Quaternion().setFromEuler(new Euler(x, y, z));
+      q.multiply(new Quaternion().setFromAxisAngle(zAxis, (this.rotateStart - e.rotation) * Math.PI / 180));
+      this.selectedStickerObject.quaternion.copy(q);
     }
   };
 

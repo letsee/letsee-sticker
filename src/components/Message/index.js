@@ -86,7 +86,7 @@ const createStickers = (stickers) => {
     stickerElem.innerHTML = text.replace(/[\n\r]/g, '<br />');
     const stickerRenderable = new DOMRenderable(stickerElem);
     stickerRenderable.position.set(position.x, position.y, position.z);
-    stickerRenderable.rotation.set(rotation.x, rotation.y, rotation.z);
+    stickerRenderable.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
     stickerRenderable.scale.setScalar(scale);
     stickersObj.add(stickerRenderable);
   }
@@ -198,7 +198,7 @@ class Message extends Component {
         stickerElem.innerHTML = text.replace(/[\n\r]/g, '<br />');
         const stickerRenderable = new DOMRenderable(stickerElem);
         stickerRenderable.position.set(position.x, position.y, position.z);
-        stickerRenderable.rotation.set(rotation.x, rotation.y, rotation.z);
+        stickerRenderable.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
         stickerRenderable.scale.setScalar(scale * realToClamped);
         this.messageObject.add(stickerRenderable);
       }
@@ -241,7 +241,7 @@ class Message extends Component {
             stickerElem.innerHTML = text.replace(/[\n\r]/g, '<br />');
             const stickerRenderable = new DOMRenderable(stickerElem);
             stickerRenderable.position.set(position.x, position.y, position.z);
-            stickerRenderable.rotation.set(rotation.x, rotation.y, rotation.z);
+            stickerRenderable.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
             stickerRenderable.scale.setScalar(scale * realToClamped);
             this.messageObject.add(stickerRenderable);
           }
