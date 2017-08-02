@@ -15,9 +15,11 @@ const TextareaContainer = styled.div`
   position: absolute;
   left: 0;
   right: 0;
-  top: ${props => (props.focus ? 33 : 50)}%;
-  transform: ${props => (props.focus ? 'none' : 'translateY(-50%)')};
-  height: ${props => props.height}px;
+  top: 81px;
+  bottom: ${props => (props.focus ? '50%' : '0')};
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 `;
 
 const Textarea = styled.textarea`

@@ -194,8 +194,6 @@ class MessageForm extends Component {
   componentWillReceiveProps(nextProps: MessageFormPropTypes) {
     if (nextProps.entityTracked) {
       this.renderAR(nextProps);
-    } else if (nextProps.selectedSticker) {
-      nextProps.onTransformationComplete && nextProps.onTransformationComplete();
     }
   }
 
