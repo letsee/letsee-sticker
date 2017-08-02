@@ -612,7 +612,7 @@ class MessageForm extends Component {
             <NavTopRight key={1}>
               <div style={{ position: 'relative' }}>
                 <NextButton
-                  onTouchEnd={onNext}
+                  onTouchEnd={nextDisabled ? null : onNext}
                   disabled={nextDisabled}
                   hidden={submitting}
                 />
