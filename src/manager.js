@@ -19,4 +19,11 @@ manager.add(Pan);
 manager.add(Rotate);
 manager.add(Pinch);
 
+export const enableManager = (enable: boolean) => {
+  manager.get('pan').set({ enable });
+  manager.get('pinch').set({ enable });
+  manager.get('rotate').set({ enable });
+  manager.get('press').set({ enable });
+};
+
 export default manager;

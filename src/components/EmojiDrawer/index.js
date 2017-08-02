@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Waypoint from 'react-waypoint';
 import chunk from 'lodash/chunk';
 import { getNEmojis, emojiListLength } from '../../emojiList';
-import manager from '../../manager';
+import { enableManager } from '../../manager';
 
 const PER_PAGE = 200;
 
@@ -65,13 +65,6 @@ const Emoji = styled.div`
   cursor: pointer;
   vertical-align: middle;
 `;
-
-const enableManager = (enable: boolean) => {
-  manager.get('pan').set({ enable });
-  manager.get('pinch').set({ enable });
-  manager.get('rotate').set({ enable });
-  manager.get('press').set({ enable });
-};
 
 type EmojiDrawerPropTypes = {
   onClick?: string => mixed, // eslint-disable-line react/require-default-props
