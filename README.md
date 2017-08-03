@@ -2,8 +2,15 @@ Letsee Sticker Web App
 ----
 
 # Build
+```
+yarn install
+yarn run build
+```
 
 # Run
+```
+NODE_ENV=production PORT=[someport] yarn start
+```
 
 ## Docker
 
