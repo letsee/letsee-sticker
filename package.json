@@ -8,10 +8,9 @@
   "scripts": {
     "start": "node server.bundle.js",
     "start:dev": "NODE_ENV=development DEBUG=letsee-sticker:* node server.bundle.js",
-    "dev": "NODE_ENV=development PUBLIC_PATH=/ webpack-dev-server",
-    "build:dev": "PUBLIC_PATH=/ NODE_ENV=development webpack",
-    "build:staging": "PUBLIC_PATH=/stickers/ NODE_ENV=staging webpack",
-    "build:prod": "PUBLIC_PATH=/stickers/ NODE_ENV=production webpack",
+    "dev": "webpack-dev-server",
+    "build": "yarn run build:client && yarn run build:server",
+    "build:client": "webpack",
     "build:server": "webpack --config webpack.server.config.js",
     "lint": "eslint src",
     "flow": "flow"
@@ -26,7 +25,9 @@
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.16",
     "css-loader": "^0.28.4",
+    "dotenv": "^4.0.0",
     "dotenv-webpack": "^1.5.3",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.2",

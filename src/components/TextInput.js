@@ -41,16 +41,13 @@ const Textarea = styled.textarea`
   text-align: center;
   color: #fff;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
 
   &::placeholder {
     opacity: 0.5;
     color: #fff;
   }
-`;
-
-const StaticTextarea = Textarea.extend`
-  width: 100%;
-  height: 100%;
 `;
 
 type TextInputPropTypes = {
@@ -86,17 +83,14 @@ class TextInput extends Component {
   componentDidMount() {
     enableManager(false);
     this.resizeTextarea();
-    this.setFocus();
+
+    setTimeout(() => {
+      this.textarea.focus();
+    }, 200);
   }
 
   componentWillUnmount() {
     enableManager(true);
-  }
-
-  setFocus() {
-    setTimeout(() => {
-      this.textarea.focus();
-    }, 100);
   }
 
   textarea: HTMLTextAreaElement;
@@ -137,14 +131,12 @@ class TextInput extends Component {
           focus={focus}
           height={height}
         >
-          <StaticTextarea
+          <Textarea
             innerRef={(textarea) => { this.textarea = textarea; }}
             placeholder="메세지 입력"
             value={value}
             onChange={this.handleChange}
-            onFocus={() => {
-              this.setState({ focus: true });
-            }}
+            onFocus={() => this.setState({ focus: true })}
             onBlur={() => this.setState({ focus: false })}
           />
         </TextareaContainer>
