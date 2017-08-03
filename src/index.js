@@ -37,15 +37,15 @@ match({ history, routes }, (err, redirect, renderProps) => {
   handleWindowResize();
 
   window.addEventListener('letsee.load', () => {
-    if (typeof window._app !== 'undefined' && window._app !== null && window._app.getUser) {
-      window._app.getUser();
-    }
-
     store.dispatch(letseeLoad());
 
     letsee.addEventListener('userchange', (e) => {
       store.dispatch(setCurrentUser(e.user));
     });
+
+    if (typeof window._app !== 'undefined' && window._app !== null && window._app.getUser) {
+      window._app.getUser();
+    }
 
     letsee.addEventListener('trackstart', (e) => {
       const {
