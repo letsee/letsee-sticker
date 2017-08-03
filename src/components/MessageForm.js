@@ -23,9 +23,15 @@ import {
 } from '../constants';
 import styles from './App.scss';
 
-const xAxis = new Vector3(1, 0, 0);
-const yAxis = new Vector3(0, 1, 0);
-const zAxis = new Vector3(0, 0, 1);
+let xAxis;
+let yAxis;
+let zAxis;
+
+if (typeof letsee !== 'undefined' && letsee !== null) {
+  xAxis = new Vector3(1, 0, 0);
+  yAxis = new Vector3(0, 1, 0);
+  zAxis = new Vector3(0, 0, 1);
+}
 
 const transitionDuration = 200;
 

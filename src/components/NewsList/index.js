@@ -76,15 +76,22 @@ const List = styled.ul`
   }
 `;
 
-const Form = styled.iframe`
+const FormWrapper = styled.div`
   position: absolute;
   top: 78px;
   bottom: 0;
   left: 0;
   right: 0;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+`;
+
+const Form = styled.iframe`
+  display: block;
   border: 0;
   width: 100%;
-  height: ${props => props.height}px;
+  height: 100%;
 `;
 
 type NewsListPropTypes = {
@@ -101,30 +108,22 @@ type NewsListPropTypes = {
 class NewsList extends Component {
   state = {
     formOpen: false,
-    formHeight: document.documentElement.clientHeight - 78,
   };
 
   state: {
     formOpen: boolean,
-    formHeight: number,
   };
 
   componentDidMount() {
     enableManager(false);
-    window.addEventListener('resize', this.handleWindowResize);
   }
 
   componentWillUnmount() {
     enableManager(true);
-    window.removeEventListener('resize', this.handleWindowResize);
     this.setState({ formOpen: false });
   }
 
   props: NewsListPropTypes;
-
-  handleWindowResize = () => {
-    this.setState({ formHeight: document.documentElement.clientHeight - 78 });
-  };
 
   render() {
     const { data, onClose } = this.props;
@@ -150,7 +149,7 @@ class NewsList extends Component {
       );
     }
 
-    const { formOpen, formHeight } = this.state;
+    const { formOpen } = this.state;
 
     return (
       <Container>
@@ -167,10 +166,9 @@ class NewsList extends Component {
         </Nav>
 
         {formOpen ? (
-          <Form
-            src="https://docs.google.com/forms/d/e/1FAIpQLScP5WEQGFF_NQpL-M-LV63y-vvkzpFrckOE9IlKiYQ-mGfItw/viewform"
-            height={formHeight}
-          />
+          <FormWrapper>
+            <Form src={process.env.NEWS_FORM_URL} />
+          </FormWrapper>
         ) : (
           <List>
             {sortBy(keys(data), id => -data[id].timestamp).map((id: string) => {
