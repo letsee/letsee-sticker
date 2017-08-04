@@ -2,10 +2,6 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-import backIcon from './btn-back.png';
-import backIcon2x from './btn-back@2x.png';
-import backIcon3x from './btn-back@3x.png';
-
 const BackButton = ({
   children,
   ...other
@@ -16,8 +12,11 @@ const BackButton = ({
   >
     <img
       alt="Back"
-      src={backIcon}
-      srcSet={`${backIcon2x} 2x, ${backIcon3x} 3x`}
+      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1501839365/assets/btn-back_3x.png"
+      srcSet="
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1501839365/assets/btn-back_3x.png 2x,
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1501839365/assets/btn-back_3x.png 3x
+      "
     />
   </ImageButton>
 );
