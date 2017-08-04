@@ -7,7 +7,7 @@ const Container = styled.div`
   zoom: 1;
   overflow: hidden;
   padding: 12px;
-  box-shadow: inset 0 -0.5px 0 0 #e9e9e9;
+  border-bottom: 0.5px solid #e9e9e9;
 `;
 
 const ImageContainer = styled.div`

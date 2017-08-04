@@ -12,7 +12,16 @@ import sortBy from 'lodash/sortBy';
 import NewsItem from './NewsItem';
 import Button from '../Button';
 import CloseButton from '../CloseButton';
+import Spinner from '../Spinner';
 import { enableManager } from '../../manager';
+
+import errorImage from './icn-entity-error.png';
+import errorImage2x from './icn-entity-error@2x.png';
+import errorImage3x from './icn-entity-error@3x.png';
+
+import emptyImage from './icn-noentity.png';
+import emptyImage2x from './icn-noentity@2x.png';
+import emptyImage3x from './icn-noentity@3x.png';
 
 const Container = styled.div`
   position: absolute;
@@ -55,6 +64,27 @@ const NavRight = Button.extend`
   letter-spacing: -0.8px;
   text-align: center;
   color: #00b1c7;
+`;
+
+const ResultContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const ResultMessageImage = styled.img`
+  display: block;
+  margin: 0 auto 12px auto;
+  object-fit: contain;
+`;
+
+const ResultMessageText = styled.div`
+  text-align: center;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 15px;
+  letter-spacing: -0.2px;
+  color: #8d8d8d;
 `;
 
 const List = styled.ul`
@@ -102,7 +132,7 @@ type NewsListPropTypes = {
       image: string,
     },
   },
-  onClose?: TouchEventHandler,
+  onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
 };
 
 class NewsList extends Component {
@@ -125,30 +155,72 @@ class NewsList extends Component {
 
   props: NewsListPropTypes;
 
-  render() {
-    const { data, onClose } = this.props;
+  renderResult() {
+    const { formOpen } = this.state;
 
-    if (!isLoaded(data)) {
-      // TODO
+    if (formOpen) {
       return (
-        <h1>LOADING</h1>
+        <FormWrapper>
+          <Form src={process.env.NEWS_FORM_URL} />
+        </FormWrapper>
       );
     }
 
-    if (!data) {
-      // TODO
+    const { data } = this.props;
+
+    if (!isLoaded(data)) {
       return (
-        <h1>ERROR</h1>
+        <ResultContainer>
+          <Spinner gray />
+        </ResultContainer>
       );
     }
 
     if (isEmpty(data)) {
-      // TODO
       return (
-        <h1>EMPTY</h1>
+        <ResultContainer>
+          <ResultMessageImage
+            src={emptyImage}
+            srcSet={`${emptyImage2x} 2x, ${emptyImage3x} 3x`}
+            alt="목록이 없습니다"
+          />
+
+          <ResultMessageText>목록이 없습니다</ResultMessageText>
+        </ResultContainer>
       );
     }
 
+    if (!data) {
+      return (
+        <ResultContainer>
+          <ResultMessageImage
+            src={errorImage}
+            srcSet={`${errorImage2x} 2x, ${errorImage3x} 3x`}
+            alt="로딩에 실패했습니다"
+          />
+
+          <ResultMessageText>로딩에 실패했습니다</ResultMessageText>
+        </ResultContainer>
+      );
+    }
+
+    return (
+      <List>
+        {sortBy(keys(data), id => -data[id].timestamp).map((id: string) => {
+          const item = data[id];
+
+          return (
+            <li key={id}>
+              <NewsItem data={item} />
+            </li>
+          );
+        })}
+      </List>
+    );
+  }
+
+  render() {
+    const { onClose } = this.props;
     const { formOpen } = this.state;
 
     return (
@@ -165,23 +237,7 @@ class NewsList extends Component {
           )}
         </Nav>
 
-        {formOpen ? (
-          <FormWrapper>
-            <Form src={process.env.NEWS_FORM_URL} />
-          </FormWrapper>
-        ) : (
-          <List>
-            {sortBy(keys(data), id => -data[id].timestamp).map((id: string) => {
-              const item = data[id];
-
-              return (
-                <li key={id}>
-                  <NewsItem data={item} />
-                </li>
-              );
-            })}
-          </List>
-        )}
+        {this.renderResult()}
       </Container>
     );
   }
