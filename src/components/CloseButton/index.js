@@ -2,14 +2,6 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-import closeIcon from './btn-close.png';
-import closeIcon2x from './btn-close@2x.png';
-import closeIcon3x from './btn-close@3x.png';
-
-import grayCloseIcon from './btn-close-g.png';
-import grayCloseIcon2x from './btn-close-g@2x.png';
-import grayCloseIcon3x from './btn-close-g@3x.png';
-
 const CloseButton = ({
   gray,
   children,
@@ -22,14 +14,20 @@ const CloseButton = ({
     {gray ? (
       <img
         alt="Close"
-        src={grayCloseIcon}
-        srcSet={`${grayCloseIcon2x} 2x, ${grayCloseIcon3x} 3x`}
+        src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1501839104/assets/btn-close-g_3x.png"
+        srcSet="
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1501839104/assets/btn-close-g_3x.png 2x,
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1501839104/assets/btn-close-g_3x.png 3x
+        "
       />
     ) : (
       <img
         alt="Close"
-        src={closeIcon}
-        srcSet={`${closeIcon2x} 2x, ${closeIcon3x} 3x`}
+        src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1501837227/assets/btn-close_3x.png"
+        srcSet="
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1501837227/assets/btn-close_3x.png 2x,
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1501837227/assets/btn-close_3x.png 3x
+        "
       />
     )}
   </ImageButton>
