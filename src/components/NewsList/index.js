@@ -23,6 +23,10 @@ import emptyImage from './icn-noentity.png';
 import emptyImage2x from './icn-noentity@2x.png';
 import emptyImage3x from './icn-noentity@3x.png';
 
+import exampleImage from './img-sample.jpg';
+import exampleImage2x from './img-sample@2x.jpg';
+import exampleImage3x from './img-sample@3x.jpg';
+
 const Container = styled.div`
   position: absolute;
   top: 0;
@@ -106,7 +110,7 @@ const List = styled.ul`
   }
 `;
 
-const FormWrapper = styled.div`
+const RequestContainer = styled.div`
   position: absolute;
   top: 78px;
   bottom: 0;
@@ -117,11 +121,48 @@ const FormWrapper = styled.div`
   scroll-behavior: smooth;
 `;
 
-const Form = styled.iframe`
+const Request = styled.div`
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #000;
+  padding: 30px 20px;
+  min-height: 101%;
+`;
+
+const Contact = styled.a`
   display: block;
-  border: 0;
-  width: 100%;
-  height: 100%;
+  font-family: SFUIDisplay, sans-serif;
+  font-size: 18px;
+  line-height: 1.11;
+  color: #00b1c7;
+  margin-top: 16px;
+  text-decoration: none;
+
+  &:hover, &:active {
+    text-decoration: underline;
+  }
+`;
+
+const RequestInstruction = styled.div`
+  margin-top: 23px;
+  box-shadow: inset 0 1px 0 0 #e9e9e9;
+  padding-top: 17px;
+  font-size: 15px;
+  line-height: 1.33;
+`;
+
+const RequestImageExample = styled.div`
+  margin-top: 25px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.54;
+  color: #9b9b9b;
+`;
+
+const RequestImageExampleImage = styled.img`
+  display: block;
+  margin: 0 auto 19px auto;
 `;
 
 type NewsListPropTypes = {
@@ -137,11 +178,11 @@ type NewsListPropTypes = {
 
 class NewsList extends Component {
   state = {
-    formOpen: false,
+    requestOpen: false,
   };
 
   state: {
-    formOpen: boolean,
+    requestOpen: boolean,
   };
 
   componentDidMount() {
@@ -150,19 +191,38 @@ class NewsList extends Component {
 
   componentWillUnmount() {
     enableManager(true);
-    this.setState({ formOpen: false });
+    this.setState({ requestOpen: false });
   }
 
   props: NewsListPropTypes;
 
   renderResult() {
-    const { formOpen } = this.state;
+    const { requestOpen } = this.state;
 
-    if (formOpen) {
+    if (requestOpen) {
       return (
-        <FormWrapper>
-          <Form src={process.env.NEWS_FORM_URL} />
-        </FormWrapper>
+        <RequestContainer>
+          <Request>
+            <div>인식을 원하는 대상이 있다면 다음이 내용을 아래 이메일로 보내주세요. 빠르게 등록해 드리겠습니다!</div>
+
+            <Contact href="mailto:contact@letsee.io">contact@letsee.io</Contact>
+
+            <RequestInstruction>
+              <div>1. 인식 대상의 여백없는 정면 이미지</div>
+              <div>2. 인식 대상의 이름 (예: 빼빼로, 삼성역 EXO 광고)</div>
+
+              <RequestImageExample>
+                <RequestImageExampleImage
+                  src={exampleImage}
+                  srcSet={`${exampleImage2x} 2x, ${exampleImage3x} 3x`}
+                  alt="인식용 이미지 예시"
+                />
+
+                <div>*인식용 이미지 예시</div>
+              </RequestImageExample>
+            </RequestInstruction>
+          </Request>
+        </RequestContainer>
       );
     }
 
@@ -221,17 +281,17 @@ class NewsList extends Component {
 
   render() {
     const { onClose } = this.props;
-    const { formOpen } = this.state;
+    const { requestOpen } = this.state;
 
     return (
       <Container>
         <Nav>
-          {formOpen ? '인식 대상 등록 요청' : '인식 대상 목록'}
+          {requestOpen ? '인식 대상 등록 요청' : '인식 대상 목록'}
 
           <StyledCloseButton gray onTouchEnd={onClose} />
 
-          {!formOpen && (
-            <NavRight onTouchEnd={() => this.setState({ formOpen: true })}>
+          {!requestOpen && (
+            <NavRight onTouchEnd={() => this.setState({ requestOpen: true })}>
               등록 요청
             </NavRight>
           )}
