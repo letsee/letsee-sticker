@@ -2,10 +2,6 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-import leaveMessageIcon from './btn-gocreate.png';
-import leaveMessageIcon2x from './btn-gocreate@2x.png';
-import leaveMessageIcon3x from './btn-gocreate@3x.png';
-
 const LeaveMessageButton = ({
   children,
   ...other
@@ -16,8 +12,11 @@ const LeaveMessageButton = ({
   >
     <img
       alt="스티커 남기기"
-      src={leaveMessageIcon}
-      srcSet={`${leaveMessageIcon2x} 2x, ${leaveMessageIcon3x} 3x`}
+      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1501871467/assets/btn-gocreate_3x.png"
+      srcSet="
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1501871467/assets/btn-gocreate_3x.png 2x,
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1501871467/assets/btn-gocreate_3x.png 3x
+      "
     />
   </ImageButton>
 );
