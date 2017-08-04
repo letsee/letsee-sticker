@@ -12,7 +12,20 @@ import sortBy from 'lodash/sortBy';
 import NewsItem from './NewsItem';
 import Button from '../Button';
 import CloseButton from '../CloseButton';
+import Spinner from '../Spinner';
 import { enableManager } from '../../manager';
+
+import errorImage from './icn-entity-error.png';
+import errorImage2x from './icn-entity-error@2x.png';
+import errorImage3x from './icn-entity-error@3x.png';
+
+import emptyImage from './icn-noentity.png';
+import emptyImage2x from './icn-noentity@2x.png';
+import emptyImage3x from './icn-noentity@3x.png';
+
+import exampleImage from './img-sample.jpg';
+import exampleImage2x from './img-sample@2x.jpg';
+import exampleImage3x from './img-sample@3x.jpg';
 
 const Container = styled.div`
   position: absolute;
@@ -57,6 +70,27 @@ const NavRight = Button.extend`
   color: #00b1c7;
 `;
 
+const ResultContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const ResultMessageImage = styled.img`
+  display: block;
+  margin: 0 auto 12px auto;
+  object-fit: contain;
+`;
+
+const ResultMessageText = styled.div`
+  text-align: center;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 15px;
+  letter-spacing: -0.2px;
+  color: #8d8d8d;
+`;
+
 const List = styled.ul`
   position: absolute;
   top: 78px;
@@ -76,15 +110,55 @@ const List = styled.ul`
   }
 `;
 
-const Form = styled.iframe`
+const RequestContainer = styled.div`
   position: absolute;
   top: 78px;
   bottom: 0;
   left: 0;
   right: 0;
-  border: 0;
-  width: 100%;
-  height: ${props => props.height}px;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+`;
+
+const Request = styled.div`
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #000;
+  padding: 30px 20px;
+  min-height: 101%;
+`;
+
+const Contact = styled.div`
+  font-family: SFUIDisplay, sans-serif;
+  font-size: 18px;
+  line-height: 1.11;
+  color: #00b1c7;
+  margin-top: 16px;
+  text-decoration: none;
+  user-select: text;
+`;
+
+const RequestInstruction = styled.div`
+  margin-top: 23px;
+  box-shadow: inset 0 1px 0 0 #e9e9e9;
+  padding-top: 17px;
+  font-size: 15px;
+  line-height: 1.33;
+`;
+
+const RequestImageExample = styled.div`
+  margin-top: 25px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.54;
+  color: #9b9b9b;
+`;
+
+const RequestImageExampleImage = styled.img`
+  display: block;
+  margin: 0 auto 19px auto;
 `;
 
 type NewsListPropTypes = {
@@ -95,95 +169,133 @@ type NewsListPropTypes = {
       image: string,
     },
   },
-  onClose?: TouchEventHandler,
+  onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
 };
 
 class NewsList extends Component {
   state = {
-    formOpen: false,
-    formHeight: document.documentElement.clientHeight - 78,
+    requestOpen: false,
   };
 
   state: {
-    formOpen: boolean,
-    formHeight: number,
+    requestOpen: boolean,
   };
 
   componentDidMount() {
     enableManager(false);
-    window.addEventListener('resize', this.handleWindowResize);
   }
 
   componentWillUnmount() {
     enableManager(true);
-    window.removeEventListener('resize', this.handleWindowResize);
-    this.setState({ formOpen: false });
+    this.setState({ requestOpen: false });
   }
 
   props: NewsListPropTypes;
 
-  handleWindowResize = () => {
-    this.setState({ formHeight: document.documentElement.clientHeight - 78 });
-  };
+  renderResult() {
+    const { requestOpen } = this.state;
 
-  render() {
-    const { data, onClose } = this.props;
-
-    if (!isLoaded(data)) {
-      // TODO
+    if (requestOpen) {
       return (
-        <h1>LOADING</h1>
+        <RequestContainer>
+          <Request>
+            <div>인식을 원하는 대상이 있다면 다음의 내용을 아래 이메일로 보내주세요. 빠르게 등록해 드리겠습니다!</div>
+
+            <Contact>
+              contact@letsee.io
+            </Contact>
+
+            <RequestInstruction>
+              <div>1. 인식 대상의 여백없는 정면 이미지</div>
+              <div>2. 인식 대상의 이름 (예: 빼빼로, 삼성역 EXO 광고)</div>
+
+              <RequestImageExample>
+                <RequestImageExampleImage
+                  src={exampleImage}
+                  srcSet={`${exampleImage2x} 2x, ${exampleImage3x} 3x`}
+                  alt="인식용 이미지 예시"
+                />
+
+                <div>*인식용 이미지 예시</div>
+              </RequestImageExample>
+            </RequestInstruction>
+          </Request>
+        </RequestContainer>
       );
     }
 
-    if (!data) {
-      // TODO
+    const { data } = this.props;
+
+    if (!isLoaded(data)) {
       return (
-        <h1>ERROR</h1>
+        <ResultContainer>
+          <Spinner gray />
+        </ResultContainer>
       );
     }
 
     if (isEmpty(data)) {
-      // TODO
       return (
-        <h1>EMPTY</h1>
+        <ResultContainer>
+          <ResultMessageImage
+            src={emptyImage}
+            srcSet={`${emptyImage2x} 2x, ${emptyImage3x} 3x`}
+            alt="목록이 없습니다"
+          />
+
+          <ResultMessageText>목록이 없습니다</ResultMessageText>
+        </ResultContainer>
       );
     }
 
-    const { formOpen, formHeight } = this.state;
+    if (!data) {
+      return (
+        <ResultContainer>
+          <ResultMessageImage
+            src={errorImage}
+            srcSet={`${errorImage2x} 2x, ${errorImage3x} 3x`}
+            alt="로딩에 실패했습니다"
+          />
+
+          <ResultMessageText>로딩에 실패했습니다</ResultMessageText>
+        </ResultContainer>
+      );
+    }
+
+    return (
+      <List>
+        {sortBy(keys(data), id => -data[id].timestamp).map((id: string) => {
+          const item = data[id];
+
+          return (
+            <li key={id}>
+              <NewsItem data={item} />
+            </li>
+          );
+        })}
+      </List>
+    );
+  }
+
+  render() {
+    const { onClose } = this.props;
+    const { requestOpen } = this.state;
 
     return (
       <Container>
         <Nav>
-          {formOpen ? '인식 대상 등록 요청' : '인식 대상 목록'}
+          {requestOpen ? '인식 대상 등록 요청' : '인식 대상 목록'}
 
           <StyledCloseButton gray onTouchEnd={onClose} />
 
-          {!formOpen && (
-            <NavRight onTouchEnd={() => this.setState({ formOpen: true })}>
+          {!requestOpen && (
+            <NavRight onTouchEnd={() => this.setState({ requestOpen: true })}>
               등록 요청
             </NavRight>
           )}
         </Nav>
 
-        {formOpen ? (
-          <Form
-            src="https://docs.google.com/forms/d/e/1FAIpQLScP5WEQGFF_NQpL-M-LV63y-vvkzpFrckOE9IlKiYQ-mGfItw/viewform"
-            height={formHeight}
-          />
-        ) : (
-          <List>
-            {sortBy(keys(data), id => -data[id].timestamp).map((id: string) => {
-              const item = data[id];
-
-              return (
-                <li key={id}>
-                  <NewsItem data={item} />
-                </li>
-              );
-            })}
-          </List>
-        )}
+        {this.renderResult()}
       </Container>
     );
   }

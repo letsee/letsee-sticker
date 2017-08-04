@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 # RUN yarn add webpack dotenv-webpack html-webpack-plugin extract-text-webpack-plugin babel-loader
 # RUN yarn install
 
-RUN yarn run build:staging
+RUN yarn run build
 
 EXPOSE 3000
 CMD [ "yarn", "start" ]

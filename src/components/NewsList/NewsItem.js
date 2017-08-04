@@ -7,7 +7,7 @@ const Container = styled.div`
   zoom: 1;
   overflow: hidden;
   padding: 12px;
-  box-shadow: inset 0 -0.5px 0 0 #e9e9e9;
+  border-bottom: 0.5px solid #e9e9e9;
 `;
 
 const ImageContainer = styled.div`
@@ -56,11 +56,12 @@ const NewsItem = ({
 export const Banner = styled(NewsItem)`
   background-color: #fff;
   border-radius: 6px;
-  box-shadow: none;
+  border-bottom: 0;
   position: absolute;
   left: 5px;
   right: 5px;
   bottom: 5px;
+  cursor: pointer;
 `;
 
 export default NewsItem;
