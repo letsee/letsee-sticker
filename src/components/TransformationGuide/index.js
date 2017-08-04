@@ -4,26 +4,6 @@ import styled from 'styled-components';
 import chunk from 'lodash/chunk';
 import CloseButton from '../CloseButton';
 
-import translate from './icn-gesture-1.png';
-import translate2x from './icn-gesture-1@2x.png';
-import translate3x from './icn-gesture-1@3x.png';
-
-import translateZ from './icn-gesture-2.png';
-import translateZ2x from './icn-gesture-2@2x.png';
-import translateZ3x from './icn-gesture-2@3x.png';
-
-import rotateZ from './icn-gesture-3.png';
-import rotateZ2x from './icn-gesture-3@2x.png';
-import rotateZ3x from './icn-gesture-3@3x.png';
-
-import rotate from './icn-gesture-4.png';
-import rotate2x from './icn-gesture-4@2x.png';
-import rotate3x from './icn-gesture-4@3x.png';
-
-import scale from './icn-gesture-5.png';
-import scale2x from './icn-gesture-5@2x.png';
-import scale3x from './icn-gesture-5@3x.png';
-
 const MIN_HEIGHT = 568;
 
 const Container = styled.div`
@@ -113,32 +93,47 @@ const GestureImage = styled.img`
 const gestures = [{
   name: '가로/세로 이동',
   image: {
-    src: translate,
-    srcSet: `${translate2x} 2x, ${translate3x} 3x`,
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-1_3x.png',
+    srcSet: `
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-1_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-1_3x.png 3x
+    `,
   },
 }, {
   name: '깊이 이동',
   image: {
-    src: translateZ,
-    srcSet: `${translateZ2x} 2x, ${translateZ3x} 3x`,
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-2_3x.png',
+    srcSet: `
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-2_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-2_3x.png 3x
+    `,
   },
 }, {
   name: '회전',
   image: {
-    src: rotateZ,
-    srcSet: `${rotateZ2x} 2x, ${rotateZ3x} 3x`,
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-3_3x.png',
+    srcSet: `
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-3_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-3_3x.png 3x
+    `,
   },
 }, {
   name: '3D 회전',
   image: {
-    src: rotate,
-    srcSet: `${rotate2x} 2x, ${rotate3x} 3x`,
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-4_3x.png',
+    srcSet: `
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-4_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-4_3x.png 3x
+    `,
   },
 }, {
   name: '확대/축소',
   image: {
-    src: scale,
-    srcSet: `${scale2x} 2x, ${scale3x} 3x`,
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-5_3x.png',
+    srcSet: `
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-5_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-5_3x.png 3x
+    `,
   },
 }];
 
