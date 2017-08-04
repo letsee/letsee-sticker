@@ -5,14 +5,6 @@ import Button from '../Button';
 import BackButton from '../BackButton';
 import CompleteButton from '../CompleteButton';
 
-import kakaoLogo from './icn-kakao.png';
-import kakaoLogo2x from './icn-kakao@2x.png';
-import kakaoLogo3x from './icn-kakao@3x.png';
-
-import captureLogo from './btn-capture.png';
-import captureLogo2x from './btn-capture@2x.png';
-import captureLogo3x from './btn-capture@3x.png';
-
 const Container = styled.div`
   position: absolute;
   top: 0;
@@ -129,8 +121,11 @@ const ShareModal = ({
           onTouchEnd={onKakaoLinkClick}
         >
           <ButtonImage
-            src={kakaoLogo}
-            srcSet={`${kakaoLogo2x} 2x, ${kakaoLogo3x} 3x`}
+            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_32,q_auto/v1501870260/assets/icn-kakao_3x.png"
+            srcSet="
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_64,q_auto/v1501870260/assets/icn-kakao_3x.png 2x,
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_96,q_auto/v1501870260/assets/icn-kakao_3x.png 3x
+            "
             alt="카카오톡으로 링크 보내기"
           />
 
@@ -148,8 +143,11 @@ const ShareModal = ({
           onTouchEnd={onCaptureClick}
         >
           <ButtonImage
-            src={captureLogo}
-            srcSet={`${captureLogo2x} 2x, ${captureLogo3x} 3x`}
+            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_32,q_auto/v1501870262/assets/btn-capture_3x.png"
+            srcSet="
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_64,q_auto/v1501870262/assets/btn-capture_3x.png 2x,
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_96,q_auto/v1501870262/assets/btn-capture_3x.png 3x
+            "
             alt="영상을 캡쳐해 공유하기"
           />
 
