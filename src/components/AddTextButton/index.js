@@ -2,10 +2,6 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-import textSmallIcon from './btn-add-txt.png';
-import textSmallIcon2x from './btn-add-txt@2x.png';
-import textSmallIcon3x from './btn-add-txt@3x.png';
-
 import textIcon from './icn-ar-text.png';
 import textIcon2x from './icn-ar-text@2x.png';
 import textIcon3x from './icn-ar-text@3x.png';
@@ -26,8 +22,11 @@ const AddTextButton = ({
     {small ? (
       <img
         alt="Add Text"
-        src={textSmallIcon}
-        srcSet={`${textSmallIcon2x} 2x, ${textSmallIcon3x} 3x`}
+        src="http://res.cloudinary.com/df9jsefb9/image/upload/s--o8d5-adI--/c_scale,h_54,q_auto/v1502250493/assets/btn-add-txt_3x.png"
+        srcSet="
+          http://res.cloudinary.com/df9jsefb9/image/upload/s--o8d5-adI--/c_scale,h_108,q_auto/v1502250493/assets/btn-add-txt_3x.png 2x,
+          http://res.cloudinary.com/df9jsefb9/image/upload/s--o8d5-adI--/c_scale,h_162,q_auto/v1502250493/assets/btn-add-txt_3x.png 3x
+        "
       />
     ) : (
       <img
