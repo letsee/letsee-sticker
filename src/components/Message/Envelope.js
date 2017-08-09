@@ -27,10 +27,6 @@ const Open = styled.div`
 
 const EnvelopeButton = ImageButton.extend`
   margin: 0 auto;
-
-  img {
-    width: ${props => props.size * 0.38}px;
-  }
 `;
 
 type EnvelopePropTypes = {
@@ -47,33 +43,39 @@ const Envelope = ({
   onClick,
   children,
   ...other
-}: EnvelopePropTypes) => (
-  <Container {...other}>
-    <From size={size}>
-      <div>
-        {concatFirstAndLastNames(firstname, lastname)}님의
-      </div>
+}: EnvelopePropTypes) => {
+  const imageSize = size * 0.38;
+  const nearest = Math.ceil(imageSize / 100) * 100;
 
-      <div>
-        스티커 메세지
-      </div>
-    </From>
+  return (
+    <Container {...other}>
+      <From size={size}>
+        <div>
+          {concatFirstAndLastNames(firstname, lastname)}님의
+        </div>
 
-    <EnvelopeButton onTouchEnd={onClick} size={size}>
-      <img
-        alt={`${concatFirstAndLastNames(firstname, lastname)}님의 스티커 메세지`}
-        src="https://res.cloudinary.com/df9jsefb9/image/upload/s--Hz_zpxe6--/c_scale,h_165,q_auto/v1502250029/assets/icn-open-messege_3x_emf5fq.png"
-        srcSet="
-          https://res.cloudinary.com/df9jsefb9/image/upload/s--Hz_zpxe6--/c_scale,h_330,q_auto/v1502250029/assets/icn-open-messege_3x_emf5fq.png 2x,
-          https://res.cloudinary.com/df9jsefb9/image/upload/s--Hz_zpxe6--/c_scale,h_495,q_auto/v1502250029/assets/icn-open-messege_3x_emf5fq.png 3x
-        "
-      />
-    </EnvelopeButton>
+        <div>
+          스티커 메세지
+        </div>
+      </From>
 
-    <Open size={size}>
-      열어 볼까요?
-    </Open>
-  </Container>
-);
+      <EnvelopeButton onTouchEnd={onClick} size={size}>
+        <img
+          alt={`${concatFirstAndLastNames(firstname, lastname)}님의 스티커 메세지`}
+          width={imageSize}
+          src={`https://res.cloudinary.com/df9jsefb9/image/upload/s--Hz_zpxe6--/c_scale,w_${nearest},q_auto/v1502250029/assets/icn-open-messege_3x_emf5fq.png`}
+          srcSet={`
+            https://res.cloudinary.com/df9jsefb9/image/upload/s--Hz_zpxe6--/c_scale,w_${nearest * 2},q_auto/v1502250029/assets/icn-open-messege_3x_emf5fq.png 2x,
+            https://res.cloudinary.com/df9jsefb9/image/upload/s--Hz_zpxe6--/c_scale,w_${nearest * 3},q_auto/v1502250029/assets/icn-open-messege_3x_emf5fq.png 3x
+          `}
+        />
+      </EnvelopeButton>
+
+      <Open size={size}>
+        열어 볼까요?
+      </Open>
+    </Container>
+  );
+};
 
 export default Envelope;
