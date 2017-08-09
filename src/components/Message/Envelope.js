@@ -3,10 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { ImageButton } from '../Button';
 
-import envelopeIcon from './icn-open-messege.png';
-import envelopeIcon2x from './icn-open-messege@2x.png';
-import envelopeIcon3x from './icn-open-messege@3x.png';
-
 const Container = styled.div`
   font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
   font-weight: 800;
@@ -66,8 +62,11 @@ const Envelope = ({
     <EnvelopeButton onTouchEnd={onClick} size={size}>
       <img
         alt={`${concatFirstAndLastNames(firstname, lastname)}님의 스티커 메세지`}
-        src={envelopeIcon}
-        srcSet={`${envelopeIcon2x} 2x, ${envelopeIcon3x} 3x`}
+        src="https://res.cloudinary.com/df9jsefb9/image/upload/s--Hz_zpxe6--/c_scale,h_165,q_auto/v1502250029/assets/icn-open-messege_3x_emf5fq.png"
+        srcSet="
+          https://res.cloudinary.com/df9jsefb9/image/upload/s--Hz_zpxe6--/c_scale,h_330,q_auto/v1502250029/assets/icn-open-messege_3x_emf5fq.png 2x,
+          https://res.cloudinary.com/df9jsefb9/image/upload/s--Hz_zpxe6--/c_scale,h_495,q_auto/v1502250029/assets/icn-open-messege_3x_emf5fq.png 3x
+        "
       />
     </EnvelopeButton>
 
