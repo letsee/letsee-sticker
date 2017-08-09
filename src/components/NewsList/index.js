@@ -110,14 +110,12 @@ const Request = styled.div`
   min-height: 101%;
 `;
 
-const Contact = styled.div`
+const Contact = styled.a`
   font-family: SFUIDisplay, sans-serif;
   font-size: 18px;
   line-height: 1.11;
   color: #00b1c7;
-  margin-top: 16px;
   text-decoration: none;
-  user-select: text;
 `;
 
 const RequestInstruction = styled.div`
@@ -179,11 +177,15 @@ class NewsList extends Component {
       return (
         <BodyContainer>
           <Request>
-            <div>인식을 원하는 대상이 있다면 다음의 내용을 아래 이메일로 보내주세요. 빠르게 등록해 드리겠습니다!</div>
+            <div>
+              인식을 원하는 대상이 있다면 다음의 내용을 아래 이메일로 보내주세요. 빠르게 등록해 드리겠습니다!
+            </div>
 
-            <Contact>
-              contact@letsee.io
-            </Contact>
+            <div style={{ marginTop: '16px' }}>
+              <Contact href="mailto:contact@letsee.io">
+                contact@letsee.io
+              </Contact>
+            </div>
 
             <RequestInstruction>
               <div>1. 인식 대상의 여백없는 정면 이미지</div>
