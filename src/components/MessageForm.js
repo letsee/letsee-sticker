@@ -410,9 +410,16 @@ class MessageForm extends Component {
           this.translateZ.position.copy(this.selectedStickerObject.position);
           this.translateZ.scale.copy(this.selectedStickerObject.scale);
         } else {
-          const { x, y } = selectedSticker.position;
-          this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
-          this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
+          const { x, y, z } = selectedSticker.position;
+          const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
+          const translateX = new Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
+          const translateY = new Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
+
+          this.selectedStickerObject.position.set(x, y, z).add(translateX).add(translateY).set(
+            clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
+            clamp(this.selectedStickerObject.position.y, -1.5 * height, 1.5 * height),
+            z,
+          );
         }
       } else if (pointers.length === 3 && !this.press) {
         const { x, y, z } = selectedSticker.rotation;
@@ -455,11 +462,19 @@ class MessageForm extends Component {
       const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
       const realToClamped = realDiagonal / diagonal;
 
-      const { x, y } = selectedSticker.position;
+      const { x, y, z } = selectedSticker.position;
       const { clientWidth, clientHeight } = document.documentElement;
       const ratio = realDiagonal / Math.sqrt((clientWidth * clientWidth) + (clientHeight * clientHeight)) * 2;
-      this.selectedStickerObject.position.x = clamp(x + deltaX * ratio, -1.5 * width, 1.5 * width);
-      this.selectedStickerObject.position.y = clamp(y - deltaY * ratio, -1.5 * height, 1.5 * height);
+      const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
+      const translateX = new Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
+      const translateY = new Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
+
+      this.selectedStickerObject.position.set(x, y, z).add(translateX).add(translateY).set(
+        clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
+        clamp(this.selectedStickerObject.position.y, -1.5 * height, 1.5 * height),
+        z,
+      );
+
       this.selectedStickerObject.scale.setScalar(selectedSticker.scale * scale * realToClamped);
     }
   };
