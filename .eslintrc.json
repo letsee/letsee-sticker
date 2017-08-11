@@ -18,6 +18,9 @@
   },
   "globals": {
     "letsee": true,
-    "DOMRenderable": true
+    "DOMRenderable": true,
+    "Vector3": true,
+    "Quaternion": true,
+    "Euler": true
   }
 }
