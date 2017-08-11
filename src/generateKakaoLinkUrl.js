@@ -6,7 +6,7 @@ const GOOGLE = 'https://vm82m.app.goo.gl/';
 
 const generateKakaoLinkUrl = (messageId: string): string => {
   const browserParams = {
-    url: `${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH}${messageId}`,
+    url: `${window.location.protocol}//${window.location.host}${process.env.PUBLIC_PATH || '/'}${messageId}`,
   };
 
   const link = `${LETSEE_BROWSER_LOAD_URL}?url=${browserParams.url}`;
