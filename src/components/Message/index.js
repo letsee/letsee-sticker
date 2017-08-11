@@ -135,8 +135,7 @@ class Message extends Component {
       const entity = letsee.getEntity(this.props.data.entity.uri);
 
       if (entity) {
-        entity.object.remove(this.messageObject);
-        entity.removeRenderables();
+        entity.removeRenderable(this.messageObject);
       }
     }
   }

@@ -2,10 +2,6 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-import nextIcon from './btn-next.png';
-import nextIcon2x from './btn-next@2x.png';
-import nextIcon3x from './btn-next@3x.png';
-
 const StyledImageButton = ImageButton.extend`
   visibility: ${props => (props.hidden ? 'hidden' : 'visible')};
 
@@ -24,8 +20,11 @@ const NextButton = ({
   >
     <img
       alt="Next"
-      src={nextIcon}
-      srcSet={`${nextIcon2x} 2x, ${nextIcon3x} 3x`}
+      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1501839661/assets/btn-next_3x.png"
+      srcSet="
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1501839661/assets/btn-next_3x.png 2x,
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1501839661/assets/btn-next_3x.png 3x
+      "
     />
   </StyledImageButton>
 );

@@ -2,10 +2,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import zImage from './idc-zpos.png';
-import zImage2x from './idc-zpos@2x.png';
-import zImage3x from './idc-zpos@3x.png';
-
 const TranslateZImage = styled.img`
   display: block;
   user-select: none;
@@ -19,8 +15,11 @@ const TranslateZImage = styled.img`
 
 const TranslateZ = props => (
   <TranslateZImage
-    src={zImage}
-    srcSet={`${zImage2x} 2x, ${zImage3x} 3x`}
+    src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_126,q_auto/v1502251629/assets/idc-zpos_3x.png"
+    srcSet="
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_252,q_auto/v1502251629/assets/idc-zpos_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_378,q_auto/v1502251629/assets/idc-zpos_3x.png 3x
+    "
     {...props}
   />
 );
