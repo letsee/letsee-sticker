@@ -3,6 +3,7 @@ import React from 'react';
 import Button from './Button';
 
 const TextButton = Button.extend`
+  box-sizing: border-box;
   padding: 17px 12px;
   font-family: AppleSDGothicNeo, sans-serif;
   font-size: 18px;
