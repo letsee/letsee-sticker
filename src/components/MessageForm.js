@@ -23,16 +23,6 @@ import {
 } from '../constants';
 import styles from './App.scss';
 
-let xAxis;
-let yAxis;
-let zAxis;
-
-if (typeof letsee !== 'undefined' && letsee !== null) {
-  xAxis = new Vector3(1, 0, 0);
-  yAxis = new Vector3(0, 1, 0);
-  zAxis = new Vector3(0, 0, 1);
-}
-
 const transitionDuration = 200;
 
 const transitionStyles = {
@@ -424,8 +414,11 @@ class MessageForm extends Component {
       } else if (pointers.length === 3 && !this.press) {
         const { x, y, z } = selectedSticker.rotation;
         const q = new Quaternion().setFromEuler(new Euler(x, y, z));
-        q.multiply(new Quaternion().setFromAxisAngle(xAxis, deltaY * Math.PI / 180));
-        q.multiply(new Quaternion().setFromAxisAngle(yAxis, deltaX * Math.PI / 180));
+        const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
+        const rotateX = new Vector3(0, -1, 0).applyQuaternion(conjugate).normalize();
+        const rotateY = new Vector3(-1, 0, 0).applyQuaternion(conjugate).normalize();
+        q.multiply(new Quaternion().setFromAxisAngle(rotateX, deltaY * Math.PI / 180));
+        q.multiply(new Quaternion().setFromAxisAngle(rotateY, deltaX * Math.PI / 180));
         this.selectedStickerObject.quaternion.copy(q);
       }
     }
@@ -511,8 +504,10 @@ class MessageForm extends Component {
       !this.press
     ) {
       const { x, y, z } = selectedSticker.rotation;
+      const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
+      const rotateAxis = new Vector3(0, 0, -1).applyQuaternion(conjugate).normalize();
       const q = new Quaternion().setFromEuler(new Euler(x, y, z));
-      q.multiply(new Quaternion().setFromAxisAngle(zAxis, (this.rotateStart - e.rotation) * Math.PI / 180));
+      q.multiply(new Quaternion().setFromAxisAngle(rotateAxis, (this.rotateStart - e.rotation) * Math.PI / 180));
       this.selectedStickerObject.quaternion.copy(q);
     }
   };
