@@ -3,14 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 
-import spin from './idc-loading-t.png';
-import spin2x from './idc-loading-t@2x.png';
-import spin3x from './idc-loading-t@3x.png';
-
-import graySpin from './idc-loading-t-g.png';
-import graySpin2x from './idc-loading-t-g@2x.png';
-import graySpin3x from './idc-loading-t-g@3x.png';
-
 const spinAnimation = keyframes`
   to {
     transform: rotate(360deg);
@@ -31,8 +23,11 @@ type SpinnerPropTypes = {
 const Spinner = ({ gray, ...other }: SpinnerPropTypes) => (
   <SpinnerImage
     alt="Loading.."
-    src={gray ? graySpin : spin}
-    srcSet={`${gray ? graySpin2x : spin2x} 2x, ${gray ? graySpin3x : spin3x} 3x`}
+    src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_28,q_auto/v1501869525/assets/idc-loading-t${gray ? '-g' : ''}_3x.png`}
+    srcSet={`
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_56,q_auto/v1501869525/assets/idc-loading-t${gray ? '-g' : ''}_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_84,q_auto/v1501869525/assets/idc-loading-t${gray ? '-g' : ''}_3x.png 3x
+    `}
     {...other}
   />
 );

@@ -6,14 +6,6 @@ import 'react-responsive-carousel/lib/styles/main.css';
 import 'react-responsive-carousel/lib/styles/carousel.css';
 import CloseButton from '../CloseButton';
 
-import detectFrontImage from './icn-detect-help-1.png';
-import detectFrontImage2x from './icn-detect-help-1@2x.png';
-import detectFrontImage3x from './icn-detect-help-1@3x.png';
-
-import registerImage from './icn-detect-help-2.png';
-import registerImage2x from './icn-detect-help-2@2x.png';
-import registerImage3x from './icn-detect-help-2@3x.png';
-
 const settings = {
   showArrows: false,
   showStatus: false,
@@ -143,8 +135,11 @@ const Help = ({
     <StyledCarousel {...settings}>
       <Page>
         <Image
-          src={detectFrontImage}
-          srcSet={`${detectFrontImage2x} 2x, ${detectFrontImage3x} 3x`}
+          src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_90/v1501835747/assets/icn-detect-help-1_3x.png"
+          srcSet="
+            https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501835747/assets/icn-detect-help-1_3x.png 2x,
+            https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_270/v1501835747/assets/icn-detect-help-1_3x.png 3x
+          "
           alt="인식 대상의 정면을 비추세요"
         />
 
@@ -167,8 +162,11 @@ const Help = ({
 
       <Page>
         <Image
-          src={registerImage}
-          srcSet={`${registerImage2x} 2x, ${registerImage3x} 3x`}
+          src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_90/v1501835802/assets/icn-detect-help-2_3x.png"
+          srcSet="
+            https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501835802/assets/icn-detect-help-2_3x.png 2x,
+            https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_270/v1501835802/assets/icn-detect-help-2_3x.png 3x
+          "
           alt="인식이 되지 않나요?"
         />
 

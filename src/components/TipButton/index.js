@@ -2,10 +2,6 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-import tipIcon from './btn-tip.png';
-import tipIcon2x from './btn-tip@2x.png';
-import tipIcon3x from './btn-tip@3x.png';
-
 const TipButton = ({
   children,
   ...other
@@ -16,8 +12,11 @@ const TipButton = ({
   >
     <img
       alt="Tip"
-      src={tipIcon}
-      srcSet={`${tipIcon2x} 2x, ${tipIcon3x} 3x`}
+      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1501870588/assets/btn-tip_3x.png"
+      srcSet="
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1501870588/assets/btn-tip_3x.png 2x,
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1501870588/assets/btn-tip_3x.png 3x
+      "
     />
   </ImageButton>
 );

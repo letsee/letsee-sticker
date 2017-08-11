@@ -15,18 +15,6 @@ import CloseButton from '../CloseButton';
 import Spinner from '../Spinner';
 import { enableManager } from '../../manager';
 
-import errorImage from './icn-entity-error.png';
-import errorImage2x from './icn-entity-error@2x.png';
-import errorImage3x from './icn-entity-error@3x.png';
-
-import emptyImage from './icn-noentity.png';
-import emptyImage2x from './icn-noentity@2x.png';
-import emptyImage3x from './icn-noentity@3x.png';
-
-import exampleImage from './img-sample.jpg';
-import exampleImage2x from './img-sample@2x.jpg';
-import exampleImage3x from './img-sample@3x.jpg';
-
 const Container = styled.div`
   position: absolute;
   top: 0;
@@ -92,25 +80,17 @@ const ResultMessageText = styled.div`
 `;
 
 const List = styled.ul`
-  position: absolute;
-  top: 78px;
-  bottom: 0;
-  left: 0;
-  right: 0;
   margin: 0;
   padding: 0;
   list-style: none;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
+  min-height: 101%;
 
   > li {
     padding: 0 5px;
   }
 `;
 
-const RequestContainer = styled.div`
+const BodyContainer = styled.div`
   position: absolute;
   top: 78px;
   bottom: 0;
@@ -130,14 +110,12 @@ const Request = styled.div`
   min-height: 101%;
 `;
 
-const Contact = styled.div`
+const Contact = styled.a`
   font-family: SFUIDisplay, sans-serif;
   font-size: 18px;
   line-height: 1.11;
   color: #00b1c7;
-  margin-top: 16px;
   text-decoration: none;
-  user-select: text;
 `;
 
 const RequestInstruction = styled.div`
@@ -197,13 +175,17 @@ class NewsList extends Component {
 
     if (requestOpen) {
       return (
-        <RequestContainer>
+        <BodyContainer>
           <Request>
-            <div>인식을 원하는 대상이 있다면 다음의 내용을 아래 이메일로 보내주세요. 빠르게 등록해 드리겠습니다!</div>
+            <div>
+              인식을 원하는 대상이 있다면 다음의 내용을 아래 이메일로 보내주세요. 빠르게 등록해 드리겠습니다!
+            </div>
 
-            <Contact>
-              contact@letsee.io
-            </Contact>
+            <div style={{ marginTop: '16px' }}>
+              <Contact href="mailto:contact@letsee.io">
+                contact@letsee.io
+              </Contact>
+            </div>
 
             <RequestInstruction>
               <div>1. 인식 대상의 여백없는 정면 이미지</div>
@@ -211,8 +193,11 @@ class NewsList extends Component {
 
               <RequestImageExample>
                 <RequestImageExampleImage
-                  src={exampleImage}
-                  srcSet={`${exampleImage2x} 2x, ${exampleImage3x} 3x`}
+                  src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,f_auto,q_auto,w_145/v1501870826/assets/img-sample_3x.png"
+                  srcSet="
+                    https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,f_auto,q_auto,w_290/v1501870826/assets/img-sample_3x.png 2x,
+                    https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,f_auto,q_auto,w_435/v1501870826/assets/img-sample_3x.png 3x
+                  "
                   alt="인식용 이미지 예시"
                 />
 
@@ -220,7 +205,7 @@ class NewsList extends Component {
               </RequestImageExample>
             </RequestInstruction>
           </Request>
-        </RequestContainer>
+        </BodyContainer>
       );
     }
 
@@ -238,8 +223,11 @@ class NewsList extends Component {
       return (
         <ResultContainer>
           <ResultMessageImage
-            src={emptyImage}
-            srcSet={`${emptyImage2x} 2x, ${emptyImage3x} 3x`}
+            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501870821/assets/icn-noentity_3x.png"
+            srcSet="
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_120,q_auto/v1501870821/assets/icn-noentity_3x.png 2x,
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_180,q_auto/v1501870821/assets/icn-noentity_3x.png 3x
+            "
             alt="목록이 없습니다"
           />
 
@@ -252,8 +240,11 @@ class NewsList extends Component {
       return (
         <ResultContainer>
           <ResultMessageImage
-            src={errorImage}
-            srcSet={`${errorImage2x} 2x, ${errorImage3x} 3x`}
+            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501870815/assets/icn-entity-error_3x.png"
+            srcSet="
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_120,q_auto/v1501870815/assets/icn-entity-error_3x.png 2x,
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_180,q_auto/v1501870815/assets/icn-entity-error_3x.png 3x
+            "
             alt="로딩에 실패했습니다"
           />
 
@@ -263,17 +254,19 @@ class NewsList extends Component {
     }
 
     return (
-      <List>
-        {sortBy(keys(data), id => -data[id].timestamp).map((id: string) => {
-          const item = data[id];
+      <BodyContainer>
+        <List>
+          {sortBy(keys(data), id => -data[id].timestamp).map((id: string) => {
+            const item = data[id];
 
-          return (
-            <li key={id}>
-              <NewsItem data={item} />
-            </li>
-          );
-        })}
-      </List>
+            return (
+              <li key={id}>
+                <NewsItem data={item} />
+              </li>
+            );
+          })}
+        </List>
+      </BodyContainer>
     );
   }
 

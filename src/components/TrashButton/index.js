@@ -2,10 +2,6 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-import trashIcon from './btn-trash.png';
-import trashIcon2x from './btn-trash@2x.png';
-import trashIcon3x from './btn-trash@3x.png';
-
 const TrashButton = ({
   children,
   ...other
@@ -15,9 +11,12 @@ const TrashButton = ({
     {...other}
   >
     <img
-      alt="Next"
-      src={trashIcon}
-      srcSet={`${trashIcon2x} 2x, ${trashIcon3x} 3x`}
+      alt="Delete"
+      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1501870694/assets/btn-trash_3x.png"
+      srcSet="
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1501870694/assets/btn-trash_3x.png 2x,
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1501870694/assets/btn-trash_3x.png 3x
+      "
     />
   </ImageButton>
 );

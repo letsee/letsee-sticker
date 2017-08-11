@@ -2,10 +2,6 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-import helpIcon from './btn-help.png';
-import helpIcon2x from './btn-help@2x.png';
-import helpIcon3x from './btn-help@3x.png';
-
 const HelpButton = ({
   children,
   ...other
@@ -16,8 +12,11 @@ const HelpButton = ({
   >
     <img
       alt="Help"
-      src={helpIcon}
-      srcSet={`${helpIcon2x} 2x, ${helpIcon3x} 3x`}
+      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_54/v1501836872/assets/btn-help_3x.png"
+      srcSet="
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_108/v1501836872/assets/btn-help_3x.png 2x,
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_162/v1501836872/assets/btn-help_3x.png 3x
+      "
     />
   </ImageButton>
 );
