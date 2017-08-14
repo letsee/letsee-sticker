@@ -25,4 +25,8 @@ const Message = ({
   />
 );
 
-export default firebaseConnect(({ params: { id } }) => ([{ path: `messages/${id}`, storeAs: 'message' }]))(connect(({ firebase: { data: { message } }, currentEntity }) => ({ data: message, currentEntity }))(Message));
+export default firebaseConnect(
+  ({ params: { id } }) => ([{ path: `messages/${id}`, storeAs: 'message' }]),
+)(connect(
+  ({ firebase: { data: { message } }, currentEntity }) => ({ data: message, currentEntity }),
+)(Message));
