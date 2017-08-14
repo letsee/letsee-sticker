@@ -14,6 +14,5 @@ export default {
     allIds: [],
   },
   shareModal: null,
-  helpOpened: false,
   transformationGuideOpened: false,
 };

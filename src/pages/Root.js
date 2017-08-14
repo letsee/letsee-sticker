@@ -6,7 +6,6 @@ import AppLoader from '../components/AppLoader';
 import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
 import ShareModal from '../components/ShareModal';
-import Help from '../components/Help';
 import TransformationGuide from '../components/TransformationGuide';
 import {
   initMessageForm,
@@ -18,8 +17,6 @@ import {
   deleteSticker,
   addSticker,
   closeShareModal,
-  openHelp,
-  closeHelp,
   openTransformationGuide,
   closeTransformationGuide,
   transformSticker,
@@ -46,7 +43,6 @@ type RootPropTypes = {
 
 const Root = ({
   transformationGuideOpened,
-  helpOpened,
   shareModal,
   currentUser,
   entities,
@@ -60,12 +56,6 @@ const Root = ({
   if (transformationGuideOpened) {
     return (
       <TransformationGuide onClose={() => dispatch(closeTransformationGuide())} />
-    );
-  }
-
-  if (helpOpened) {
-    return (
-      <Help onCloseClick={() => dispatch(closeHelp())} />
     );
   }
 
@@ -205,7 +195,7 @@ const Root = ({
 
   return (
     <AppLoader
-      onHelpClick={() => dispatch(openHelp())}
+      onHelpClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}help`)}
       onBannerClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}news`)}
     />
   );
@@ -221,7 +211,6 @@ export default withRouter(connect(
     selectedSticker,
     messageForm,
     shareModal,
-    helpOpened,
     transformationGuideOpened,
   }) => ({
     letseeLoaded,
@@ -232,7 +221,6 @@ export default withRouter(connect(
     selectedSticker,
     messageForm,
     shareModal,
-    helpOpened,
     transformationGuideOpened,
   }),
 )(Root));
