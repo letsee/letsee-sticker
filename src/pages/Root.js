@@ -25,8 +25,8 @@ import openCapture from '../openCapture';
 import generateKakaoLinkUrl from '../generateKakaoLinkUrl';
 
 type RootPropTypes = {
+  loadingEntity: boolean,
   transformationGuideOpened: boolean,
-  helpOpened: boolean,
   currentUser: {
     firstname: string,
     lastname: string,
@@ -42,6 +42,7 @@ type RootPropTypes = {
 };
 
 const Root = ({
+  loadingEntity,
   transformationGuideOpened,
   shareModal,
   currentUser,
@@ -193,7 +194,7 @@ const Root = ({
     );
   }
 
-  return (
+  return loadingEntity ? null : (
     <AppLoader
       onHelpClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}help`)}
       onBannerClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}news`)}
@@ -204,6 +205,7 @@ const Root = ({
 export default withRouter(connect(
   ({
     letseeLoaded,
+    loadingEntity,
     currentEntity,
     currentUser,
     stickers,
@@ -214,6 +216,7 @@ export default withRouter(connect(
     transformationGuideOpened,
   }) => ({
     letseeLoaded,
+    loadingEntity,
     currentEntity,
     currentUser,
     stickers,

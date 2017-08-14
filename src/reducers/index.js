@@ -6,7 +6,7 @@ import currentEntity from './currentEntity';
 import currentUser from './currentUser';
 import entities from './entities';
 import shareModal from './shareModal';
-import { letseeLoaded } from './letsee';
+import { letseeLoaded, loadingEntity } from './letsee';
 import messageForm from './messageForm';
 import selectedSticker from './selectedSticker';
 import stickers from './stickers';
@@ -18,6 +18,7 @@ const reducers = combineReducers({
   entities,
   shareModal,
   letseeLoaded,
+  loadingEntity,
   messageForm,
   selectedSticker,
   stickers,

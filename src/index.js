@@ -15,6 +15,8 @@ import sagas from './sagas';
 import routes from './routes';
 import {
   letseeLoad,
+  startLoading,
+  stopLoading,
   setCurrentUser,
   addEntity,
   startTrackEntity,
@@ -46,6 +48,23 @@ match({ history, routes }, (err, redirect, renderProps) => {
     if (typeof window._app !== 'undefined' && window._app !== null && window._app.getUser) {
       window._app.getUser();
     }
+
+    const loadingRenderable = letsee.loading;
+
+    loadingRenderable.start = (e) => {
+      const w = e.pixelSize.width;
+      const h = e.pixelSize.height;
+      const d = Math.sqrt((w * w) + (h * h));
+      const s = d / 350;
+      loadingRenderable.scale.setScalar(s);
+      loadingRenderable.circleAnim.resume();
+      store.dispatch(startLoading());
+    };
+
+    loadingRenderable.stop = () => {
+      loadingRenderable.circleAnim.pause();
+      store.dispatch(stopLoading());
+    };
 
     letsee.addEventListener('trackstart', (e) => {
       const {

@@ -1,6 +1,7 @@
 // @flow
 export default {
   letseeLoaded: false,
+  loadingEntity: false,
   currentEntity: null,
   currentUser: null,
   entities: {
