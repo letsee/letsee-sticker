@@ -15,6 +15,5 @@ export default {
   },
   shareModal: null,
   helpOpened: false,
-  newsOpened: false,
   transformationGuideOpened: false,
 };
