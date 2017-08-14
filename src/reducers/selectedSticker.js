@@ -1,5 +1,6 @@
 // @flow
 import {
+  ADD_STICKER,
   SELECT_STICKER,
   DESELECT_STICKER,
   DELETE_STICKER,
@@ -7,6 +8,12 @@ import {
 
 const selectedSticker = (state: string | null = null, action) => {
   switch (action.type) {
+    case ADD_STICKER:
+      if (action.payload.selected) {
+        return action.payload.id;
+      }
+
+      return state;
     case SELECT_STICKER:
       if (state === null) {
         return action.payload.id;

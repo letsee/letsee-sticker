@@ -9,7 +9,6 @@ import ShareModal from '../components/ShareModal';
 import TransformationGuide from '../components/TransformationGuide';
 import {
   initMessageForm,
-  clearMessageForm,
   destroyMessageForm,
   submitMessageForm,
   selectSticker,
@@ -61,12 +60,13 @@ const Root = ({
   }
 
   if (messageForm !== null) {
-    const entityTracked = currentEntity !== null && messageForm.uri === currentEntity;
-    const messageEntity = entities.byUri[messageForm.uri];
+    const { uri, submitting } = messageForm;
+    const entityTracked = currentEntity !== null && uri === currentEntity;
+    const messageEntity = entities.byUri[uri];
     const selectedStickerData = stickers.byId[selectedSticker];
     const stickersById = stickers.allIds
       .map(id => stickers.byId[id])
-      .filter(sticker => sticker && sticker.entityUri === messageForm.uri);
+      .filter(sticker => sticker && sticker.entityUri === uri);
 
     return (
       <div>
@@ -75,12 +75,9 @@ const Root = ({
           stickers={stickersById}
           selectedSticker={selectedStickerData}
           entityTracked={entityTracked}
-          submitting={messageForm.submitting}
-          onClose={() => {
-            dispatch(destroyMessageForm(messageForm.uri));
-            dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
-          }}
-          nextDisabled={stickersById.length === 0 || messageForm.submitting}
+          submitting={submitting}
+          onClose={() => dispatch(destroyMessageForm(uri, stickersById.map(sticker => sticker.id)))}
+          nextDisabled={stickersById.length === 0 || submitting}
           onNext={() => {
             if (currentUser === null) {
               if (window._app && window._app.openLogin) {
@@ -91,7 +88,7 @@ const Root = ({
                 }
               }
             } else {
-              dispatch(submitMessageForm(messageForm.uri));
+              dispatch(submitMessageForm(uri));
             }
           }}
           onStickerClick={(id) => {
@@ -100,20 +97,8 @@ const Root = ({
             }
           }}
           onStickerTransform={(id, trans) => dispatch(transformSticker(id, trans))}
-          onTextInput={(value) => {
-            const action = dispatch(addSticker(messageForm.uri, value, 'text'));
-
-            if (entityTracked) {
-              dispatch(selectSticker(action.payload.id));
-            }
-          }}
-          onEmojiInput={(value) => {
-            const action = dispatch(addSticker(messageForm.uri, value, 'emoji'));
-
-            if (entityTracked) {
-              dispatch(selectSticker(action.payload.id));
-            }
-          }}
+          onTextInput={value => dispatch(addSticker(uri, value, 'text', entityTracked))}
+          onEmojiInput={value => dispatch(addSticker(uri, value, 'emoji', entityTracked))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
           onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}
           onTipClick={() => dispatch(openTransformationGuide())}
@@ -124,8 +109,7 @@ const Root = ({
             onBack={() => dispatch(closeShareModal())}
             onComplete={() => {
               dispatch(closeShareModal());
-              dispatch(destroyMessageForm(messageForm.uri));
-              dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
+              dispatch(destroyMessageForm(uri, stickersById.map(sticker => sticker.id)));
             }}
             onCaptureClick={() => {
               openCapture();

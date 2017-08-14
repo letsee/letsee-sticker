@@ -8,7 +8,7 @@ import {
   ROTATE_STICKER,
   SCALE_STICKER,
   TRANSFORM_STICKER,
-  CLEAR_MESSAGE_FORM,
+  DESTROY_MESSAGE_FORM,
 } from '../actions';
 
 const sticker = (state = null, action) => {
@@ -67,7 +67,7 @@ const byId = (state = {}, action) => {
         ...state,
         [action.payload.id]: sticker(state[action.payload.id], action),
       };
-    case CLEAR_MESSAGE_FORM:
+    case DESTROY_MESSAGE_FORM:
       return {
         ...state,
         ...zipObject(action.payload.stickerIds, action.payload.stickerIds.map(() => null)),
@@ -94,7 +94,7 @@ const allIds = (state = [], action) => {
         ...state.slice(0, index),
         ...state.slice(index + 1),
       ];
-    case CLEAR_MESSAGE_FORM:
+    case DESTROY_MESSAGE_FORM:
       stickerIds = action.payload.stickerIds;
       return state.filter(id => stickerIds.indexOf(id) < 0);
     default:

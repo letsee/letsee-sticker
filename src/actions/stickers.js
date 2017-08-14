@@ -8,13 +8,14 @@ export const ROTATE_STICKER: 'ROTATE_STICKER' = 'ROTATE_STICKER';
 export const SCALE_STICKER: 'SCALE_STICKER' = 'SCALE_STICKER';
 export const TRANSFORM_STICKER: 'TRANSFORM_STICKER' = 'TRANSFORM_STICKER';
 
-export const addSticker = (entityUri: string, text: string, type: 'emoji' | 'text') => ({
+export const addSticker = (entityUri: string, text: string, type: 'emoji' | 'text', selected: boolean = false) => ({
   type: ADD_STICKER,
   payload: {
     id: uuidv4(),
     entityUri,
     text,
     type,
+    selected,
   },
 });
 
