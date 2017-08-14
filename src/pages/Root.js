@@ -123,9 +123,9 @@ const Root = ({
           <ShareModal
             onBack={() => dispatch(closeShareModal())}
             onComplete={() => {
+              dispatch(closeShareModal());
               dispatch(destroyMessageForm(messageForm.uri));
               dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
-              dispatch(closeShareModal());
             }}
             onCaptureClick={() => {
               openCapture();
