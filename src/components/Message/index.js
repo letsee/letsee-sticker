@@ -66,12 +66,12 @@ const createStickers = (stickers) => {
   const stickersObj = new Object3D();
 
   for (let i = 0; i < stickers.length; i += 1) {
-    const { position, rotation, scale, text } = stickers[i];
+    const { position, quaternion, scale, text } = stickers[i];
     const stickerElem = document.createElement('div'); // TODO styling
     stickerElem.innerHTML = text.replace(/[\n\r]/g, '<br />');
     const stickerRenderable = new DOMRenderable(stickerElem);
     stickerRenderable.position.set(position.x, position.y, position.z);
-    stickerRenderable.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
+    stickerRenderable.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
     stickerRenderable.scale.setScalar(scale);
     stickersObj.add(stickerRenderable);
   }
@@ -86,12 +86,17 @@ type MessagePropTypes = {
     entity: { uri: string, name: string, image?: string },
     author: { firstname: string, lastname: string },
     createdAt: string,
-    stickers: {
+    stickers: ({
       position: { x: number, y: number, z: number },
       rotation: { x: number, y: number, z: number },
       scale: number,
       text: string,
-    }[],
+    } | {
+      position: { x: number, y: number, z: number },
+      quaternion: { x: number, y: number, z: number, w: number },
+      scale: number,
+      text: string,
+    })[],
   },
   onCaptureClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onShareComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
@@ -164,7 +169,7 @@ class Message extends Component {
 
     if (this.state.opened) {
       for (let i = 0; i < stickers.length; i += 1) {
-        const { position, rotation, scale, text, type } = stickers[i];
+        const { position, rotation, quaternion, scale, text, type } = stickers[i];
         const stickerElem = document.createElement('div');
         stickerElem.className = styles[type];
 
@@ -182,7 +187,13 @@ class Message extends Component {
         stickerElem.innerHTML = text.replace(/[\n\r]/g, '<br />');
         const stickerRenderable = new DOMRenderable(stickerElem);
         stickerRenderable.position.set(position.x, position.y, position.z);
-        stickerRenderable.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
+
+        if (quaternion) {
+          stickerRenderable.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+        } else {
+          stickerRenderable.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
+        }
+
         stickerRenderable.scale.setScalar(scale * realToClamped);
         this.messageObject.add(stickerRenderable);
       }
@@ -207,7 +218,7 @@ class Message extends Component {
           this.messageObject.remove(envelopeRenderable);
 
           for (let i = 0; i < stickers.length; i += 1) {
-            const { position, rotation, scale, text, type } = stickers[i];
+            const { position, rotation, quaternion, scale, text, type } = stickers[i];
             const stickerElem = document.createElement('div');
             stickerElem.className = styles[type];
 
@@ -225,7 +236,13 @@ class Message extends Component {
             stickerElem.innerHTML = text.replace(/[\n\r]/g, '<br />');
             const stickerRenderable = new DOMRenderable(stickerElem);
             stickerRenderable.position.set(position.x, position.y, position.z);
-            stickerRenderable.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
+
+            if (quaternion) {
+              stickerRenderable.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+            } else {
+              stickerRenderable.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
+            }
+
             stickerRenderable.scale.setScalar(scale * realToClamped);
             this.messageObject.add(stickerRenderable);
           }

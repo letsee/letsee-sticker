@@ -129,10 +129,11 @@ type MessageFormPropTypes = {
       y: number,
       z: number,
     },
-    rotation: {
+    quaternion: {
       x: number,
       y: number,
       z: number,
+      w: number,
     },
     scale: number,
   } | null,
@@ -303,7 +304,7 @@ class MessageForm extends Component {
       this.messageObject.add(buttonsAR);
     } else {
       for (let i = 0; i < stickers.length; i += 1) {
-        const { id, type, text, position, rotation, scale } = stickers[i];
+        const { id, type, text, position, quaternion, scale } = stickers[i];
         const selected = selectedSticker && selectedSticker.id === id;
         const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
         const objById = getObjectById(this.messageObject, id);
@@ -367,7 +368,7 @@ class MessageForm extends Component {
         }
 
         obj.position.set(position.x, position.y, position.z);
-        obj.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
+        obj.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
         obj.scale.setScalar(scale * realToClamped);
       }
     }
@@ -412,8 +413,8 @@ class MessageForm extends Component {
           );
         }
       } else if (pointers.length === 3 && !this.press) {
-        const { x, y, z } = selectedSticker.rotation;
-        const q = new Quaternion().setFromEuler(new Euler(x, y, z));
+        const { x, y, z, w } = selectedSticker.quaternion;
+        const q = new Quaternion(x, y, z, w);
         const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
         const rotateX = new Vector3(0, -1, 0).applyQuaternion(conjugate).normalize();
         const rotateY = new Vector3(-1, 0, 0).applyQuaternion(conjugate).normalize();
@@ -503,10 +504,10 @@ class MessageForm extends Component {
       this.selectedStickerObject.uuid === selectedSticker.id &&
       !this.press
     ) {
-      const { x, y, z } = selectedSticker.rotation;
+      const { x, y, z, w } = selectedSticker.quaternion;
       const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
       const rotateAxis = new Vector3(0, 0, -1).applyQuaternion(conjugate).normalize();
-      const q = new Quaternion().setFromEuler(new Euler(x, y, z));
+      const q = new Quaternion(x, y, z, w);
       q.multiply(new Quaternion().setFromAxisAngle(rotateAxis, (this.rotateStart - e.rotation) * Math.PI / 180));
       this.selectedStickerObject.quaternion.copy(q);
     }
@@ -551,7 +552,7 @@ class MessageForm extends Component {
 
   handleTransform() {
     const { width, height } = this.props.entity.size;
-    const { position, rotation, scale } = this.selectedStickerObject;
+    const { position, quaternion, scale } = this.selectedStickerObject;
 
     const realDiagonal = Math.sqrt((width * width) + (height * height));
     const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
@@ -563,10 +564,11 @@ class MessageForm extends Component {
         y: position.y,
         z: position.z,
       },
-      rotation: {
-        x: rotation.x,
-        y: rotation.y,
-        z: rotation.z,
+      quaternion: {
+        x: quaternion.x,
+        y: quaternion.y,
+        z: quaternion.z,
+        w: quaternion.w,
       },
       scale: scale.x / realToClamped,
     });

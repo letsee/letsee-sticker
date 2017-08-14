@@ -4,9 +4,6 @@ import zipObject from 'lodash/zipObject';
 import {
   ADD_STICKER,
   DELETE_STICKER,
-  TRANSLATE_STICKER,
-  ROTATE_STICKER,
-  SCALE_STICKER,
   TRANSFORM_STICKER,
   DESTROY_MESSAGE_FORM,
 } from '../actions';
@@ -14,33 +11,25 @@ import {
 const sticker = (state = null, action) => {
   switch (action.type) {
     case ADD_STICKER:
+      const { selected, ...other } = action.payload;
+
       return {
-        ...action.payload,
+        ...other,
         position: {
           x: 0,
           y: 0,
           z: 0,
         },
-        rotation: {
+        quaternion: {
           x: 0,
           y: 0,
           z: 0,
+          w: 1,
         },
         scale: 1,
       };
     case DELETE_STICKER:
       return null;
-    case TRANSLATE_STICKER:
-    case ROTATE_STICKER:
-    case SCALE_STICKER:
-      if (state !== null) {
-        return {
-          ...state,
-          ...action.payload,
-        };
-      }
-
-      return state;
     case TRANSFORM_STICKER:
       if (state !== null) {
         return {
@@ -59,9 +48,6 @@ const byId = (state = {}, action) => {
   switch (action.type) {
     case ADD_STICKER:
     case DELETE_STICKER:
-    case TRANSLATE_STICKER:
-    case ROTATE_STICKER:
-    case SCALE_STICKER:
     case TRANSFORM_STICKER:
       return {
         ...state,
