@@ -1,7 +1,11 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { firebaseConnect } from 'react-redux-firebase';
+import {
+  firebaseConnect,
+  isLoaded,
+  isEmpty,
+} from 'react-redux-firebase';
 import NewsList from '../components/NewsList';
 
 const News = ({
@@ -9,6 +13,8 @@ const News = ({
   router,
 }) => (
   <NewsList
+    loading={!isLoaded(data)}
+    empty={isEmpty(data)}
     data={data}
     onClose={() => router.push(process.env.PUBLIC_PATH || '/')}
   />

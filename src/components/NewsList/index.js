@@ -1,10 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import {
-  isLoaded,
-  isEmpty,
-} from 'react-redux-firebase';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import NewsItem from './NewsItem';
@@ -138,6 +134,8 @@ const RequestImageExampleImage = styled.img`
 `;
 
 type NewsListPropTypes = {
+  loading: boolean,
+  empty: boolean,
   data: {
     [id: string]: {
       timestamp: number,
@@ -207,9 +205,7 @@ class NewsList extends Component {
       );
     }
 
-    const { data } = this.props;
-
-    if (!isLoaded(data)) {
+    if (this.props.loading) {
       return (
         <ResultContainer>
           <Spinner gray />
@@ -217,7 +213,7 @@ class NewsList extends Component {
       );
     }
 
-    if (isEmpty(data)) {
+    if (this.props.empty) {
       return (
         <ResultContainer>
           <ResultMessageImage
@@ -233,6 +229,8 @@ class NewsList extends Component {
         </ResultContainer>
       );
     }
+
+    const { data } = this.props;
 
     if (!data) {
       return (
