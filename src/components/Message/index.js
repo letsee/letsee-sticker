@@ -74,15 +74,17 @@ type MessagePropTypes = {
       rotation: { x: number, y: number, z: number },
       scale: number,
       text: string,
+      type: 'emoji' | 'text',
     } | {
       position: { x: number, y: number, z: number },
       quaternion: { x: number, y: number, z: number, w: number },
       scale: number,
       text: string,
+      type: 'emoji' | 'text',
     })[],
   },
-  onCaptureClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onShareComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onShareComplete?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 type MessageStateTypes = {
@@ -245,7 +247,6 @@ class Message extends Component {
       id,
       currentEntity,
       data,
-      onCaptureClick,
       onShareComplete,
       children,
       ...other

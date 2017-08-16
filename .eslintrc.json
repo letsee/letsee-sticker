@@ -23,6 +23,7 @@
     "Vector3": true,
     "Quaternion": true,
     "Euler": true,
-    "Object3D": true
+    "Object3D": true,
+    "Kakao": true
   }
 }
