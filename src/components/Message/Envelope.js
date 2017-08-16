@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { ImageButton } from '../Button';
 
@@ -76,6 +77,15 @@ const Envelope = ({
       </Open>
     </Container>
   );
+};
+
+Envelope.propTypes = {
+  size: PropTypes.number.isRequired,
+  data: PropTypes.shape({
+    firstname: PropTypes.string.isRequired,
+    lastname: PropTypes.string.isRequired,
+  }).isRequired,
+  onClick: PropTypes.func, // eslint-disable-line react/require-default-props
 };
 
 export default Envelope;

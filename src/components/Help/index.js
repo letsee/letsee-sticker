@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/main.css';
@@ -126,11 +127,15 @@ const StyledCloseButton = styled(CloseButton)`
   transform: translateX(-50%);
 `;
 
+type HelpPropTypes = {
+  onCloseClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+};
+
 const Help = ({
   onCloseClick,
   children,
   ...other
-}) => (
+}: HelpPropTypes) => (
   <Container {...other}>
     <StyledCarousel {...settings}>
       <Page>
@@ -201,5 +206,9 @@ const Help = ({
     <StyledCloseButton onTouchEnd={onCloseClick} />
   </Container>
 );
+
+Help.propTypes = {
+  onCloseClick: PropTypes.func, // eslint-disable-line react/require-default-props
+};
 
 export default Help;

@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import chunk from 'lodash/chunk';
 import CloseButton from '../CloseButton';
@@ -156,6 +157,10 @@ class TransformationGuide extends Component {
     window.removeEventListener('resize', this.handleWindowResize);
   }
 
+  props: {
+    onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  };
+
   handleWindowResize = () => {
     this.setState({ perRow: calculatePerRow() });
   };
@@ -199,5 +204,9 @@ class TransformationGuide extends Component {
     );
   }
 }
+
+TransformationGuide.propTypes = {
+  onClose: PropTypes.func, // eslint-disable-line react/require-default-props
+};
 
 export default TransformationGuide;

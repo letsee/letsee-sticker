@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CompleteButton from '../CompleteButton';
 import TrashButton from '../TrashButton';
@@ -69,5 +70,11 @@ const Transformation = ({
     </NavBottomRight>
   </div>
 );
+
+Transformation.propTypes = {
+  onTipClick: PropTypes.func, // eslint-disable-line react/require-default-props
+  onComplete: PropTypes.func, // eslint-disable-line react/require-default-props
+  onDelete: PropTypes.func, // eslint-disable-line react/require-default-props
+};
 
 export default Transformation;

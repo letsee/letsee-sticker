@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const FrameImage = styled.img`
@@ -88,6 +89,12 @@ Frame.defaultProps = {
   white: false,
   vertical: 99,
   horizontal: 45,
+};
+
+Frame.propTypes = {
+  white: PropTypes.bool,
+  vertical: PropTypes.number,
+  horizontal: PropTypes.number,
 };
 
 export default Frame;

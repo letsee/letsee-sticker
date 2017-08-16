@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CompleteButton from './CompleteButton';
 import { enableManager } from '../manager';
@@ -148,5 +149,18 @@ class TextInput extends Component {
     );
   }
 }
+
+TextInput.propTypes = {
+  entity: PropTypes.shape({
+    uri: PropTypes.string.isRequired,
+    size: PropTypes.shape({
+      width: PropTypes.number.isRequired,
+      height: PropTypes.number.isRequired,
+      depth: PropTypes.number.isRequired,
+    }).isRequired,
+  }).isRequired,
+  entityTracked: PropTypes.bool.isRequired,
+  onComplete: PropTypes.func, // eslint-disable-line react/require-default-props
+};
 
 export default TextInput;

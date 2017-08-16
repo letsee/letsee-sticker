@@ -143,11 +143,11 @@ type MessageFormPropTypes = {
   onStickerClick?: string => mixed, // eslint-disable-line react/require-default-props
   onTextInput?: string => mixed, // eslint-disable-line react/require-default-props
   onEmojiInput?: string => mixed, // eslint-disable-line react/require-default-props
-  onTransformationComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onNext?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onTransformationComplete?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onDelete?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onNext?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onTipClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
 };
 
 class MessageForm extends Component {

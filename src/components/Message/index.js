@@ -62,23 +62,6 @@ const NavTopRight = styled.div`
   right: 0;
 `;
 
-const createStickers = (stickers) => {
-  const stickersObj = new Object3D();
-
-  for (let i = 0; i < stickers.length; i += 1) {
-    const { position, quaternion, scale, text } = stickers[i];
-    const stickerElem = document.createElement('div'); // TODO styling
-    stickerElem.innerHTML = text.replace(/[\n\r]/g, '<br />');
-    const stickerRenderable = new DOMRenderable(stickerElem);
-    stickerRenderable.position.set(position.x, position.y, position.z);
-    stickerRenderable.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-    stickerRenderable.scale.setScalar(scale);
-    stickersObj.add(stickerRenderable);
-  }
-
-  return stickersObj;
-};
-
 type MessagePropTypes = {
   id: string,
   currentEntity: string | null,

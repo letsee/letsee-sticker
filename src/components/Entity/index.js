@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import clamp from 'lodash/clamp';
 import { ImageButton } from '../Button';
 import {
@@ -44,6 +45,7 @@ type EntityPropTypes = {
     uri: string,
     name: string,
     size: {
+      width: number,
       height: number,
       depth: number,
     },
@@ -106,7 +108,7 @@ class Entity extends Component {
 
       const buttonSize = diagonal * 0.33;
       const nearest = Math.ceil(buttonSize / 100) * 100;
-      const y = (buttonSize + height / realToClamped) / 2 + diagonal * 0.04;
+      const y = ((buttonSize + (height / realToClamped)) / 2) + (diagonal * 0.04);
 
       render(
         <ARContainer>
@@ -170,5 +172,18 @@ class Entity extends Component {
     );
   }
 }
+
+Entity.propTypes = {
+  data: PropTypes.shape({
+    uri: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    size: PropTypes.shape({
+      width: PropTypes.number.isRequired,
+      height: PropTypes.number.isRequired,
+      depth: PropTypes.number.isRequired,
+    }).isRequired,
+  }).isRequired,
+  onNewClick: PropTypes.func,
+};
 
 export default Entity;

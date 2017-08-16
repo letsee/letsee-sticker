@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Button from '../Button';
 import BackButton from '../BackButton';
@@ -91,6 +92,13 @@ const ButtonText = styled.span`
   vertical-align: middle;
 `;
 
+type ShareModalPropTypes = {
+  onCaptureClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onBack?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onComplete?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onKakaoLinkClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+};
+
 const ShareModal = ({
   onCaptureClick,
   onBack,
@@ -98,7 +106,7 @@ const ShareModal = ({
   onKakaoLinkClick,
   children,
   ...other
-}) => (
+}: ShareModalPropTypes) => (
   <Container {...other}>
     <Nav>
       <NavLeft>
@@ -157,5 +165,12 @@ const ShareModal = ({
     </Body>
   </Container>
 );
+
+ShareModal.propTypes = {
+  onCaptureClick: PropTypes.func, // eslint-disable-line react/require-default-props
+  onBack: PropTypes.func, // eslint-disable-line react/require-default-props
+  onComplete: PropTypes.func, // eslint-disable-line react/require-default-props
+  onKakaoLinkClick: PropTypes.func, // eslint-disable-line react/require-default-props
+};
 
 export default ShareModal;

@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Waypoint from 'react-waypoint';
 import chunk from 'lodash/chunk';
@@ -85,8 +86,6 @@ class EmojiDrawer extends Component {
   componentDidMount() {
     enableManager(false);
 
-    // TODO choose between click and touch?
-    // window.addEventListener('click', this.handleWindowClick);
     window.addEventListener('touchend', this.handleWindowClick);
     window.addEventListener('resize', this.handleWindowResize);
   }
@@ -94,8 +93,6 @@ class EmojiDrawer extends Component {
   componentWillUnmount() {
     enableManager(true);
 
-    // TODO choose between click and touch?
-    // window.removeEventListener('click', this.handleWindowClick);
     window.removeEventListener('touchend', this.handleWindowClick);
     window.removeEventListener('resize', this.handleWindowResize);
   }
@@ -165,5 +162,10 @@ class EmojiDrawer extends Component {
     );
   }
 }
+
+EmojiDrawer.propTypes = {
+  onClick: PropTypes.func, // eslint-disable-line react/require-default-props
+  onClose: PropTypes.func, // eslint-disable-line react/require-default-props
+};
 
 export default EmojiDrawer;

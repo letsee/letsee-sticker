@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ImageButton } from '../Button';
 
 type AddEmojiButtonPropTypes = {
-  small: boolean,
+  small?: boolean,
 };
 
 const AddEmojiButton = ({
@@ -39,6 +40,10 @@ const AddEmojiButton = ({
 
 AddEmojiButton.defaultProps = {
   small: false,
+};
+
+AddEmojiButton.propTypes = {
+  small: PropTypes.bool,
 };
 
 export default AddEmojiButton;

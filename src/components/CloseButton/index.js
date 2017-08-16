@@ -1,12 +1,17 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ImageButton } from '../Button';
+
+type CloseButtonPropTypes = {
+  gray?: boolean,
+};
 
 const CloseButton = ({
   gray,
   children,
   ...other
-}) => (
+}: CloseButtonPropTypes) => (
   <ImageButton
     type="button"
     {...other}
@@ -35,6 +40,10 @@ const CloseButton = ({
 
 CloseButton.defaultProps = {
   gray: false,
+};
+
+CloseButton.propTypes = {
+  gray: PropTypes.bool,
 };
 
 export default CloseButton;

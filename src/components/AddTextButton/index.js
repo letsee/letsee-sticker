@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ImageButton } from '../Button';
 
 type AddTextButtonPropTypes = {
-  small: boolean,
+  small?: boolean,
 };
 
 const AddTextButton = ({
@@ -39,6 +40,10 @@ const AddTextButton = ({
 
 AddTextButton.defaultProps = {
   small: false,
+};
+
+AddTextButton.propTypes = {
+  small: PropTypes.bool,
 };
 
 export default AddTextButton;
