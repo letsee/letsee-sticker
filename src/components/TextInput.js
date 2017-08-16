@@ -62,6 +62,7 @@ type TextInputPropTypes = {
   },
   entityTracked: boolean,
   onComplete?: string => mixed, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 class TextInput extends Component {

@@ -485,7 +485,7 @@ class MessageForm extends Component {
   };
 
   handleRotateStart = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -497,7 +497,7 @@ class MessageForm extends Component {
   }
 
   handleRotateMove = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -524,8 +524,8 @@ class MessageForm extends Component {
     }
   };
 
-  handlePressUp = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+  handlePressUp = () => {
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -536,8 +536,8 @@ class MessageForm extends Component {
     }
   };
 
-  handlePress = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+  handlePress = () => {
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -681,8 +681,8 @@ class MessageForm extends Component {
               this.setState({ mode: 'default' }, () => {
                 if (value.length === 0) {
                   this.renderAR(this.props);
-                } else {
-                  onTextInput && onTextInput(value);
+                } else if (onTextInput) {
+                  onTextInput(value);
                 }
               });
             }}
@@ -705,7 +705,9 @@ class MessageForm extends Component {
               }}
               onClick={(emoji) => {
                 this.setState({ mode: 'default' }, () => {
-                  onEmojiInput && onEmojiInput(emoji);
+                  if (onEmojiInput) {
+                    onEmojiInput(emoji);
+                  }
                 });
               }}
               onClose={() => {

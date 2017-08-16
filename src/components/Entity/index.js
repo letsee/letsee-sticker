@@ -51,6 +51,7 @@ type EntityPropTypes = {
     },
   },
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 class Entity extends Component {
@@ -183,7 +184,7 @@ Entity.propTypes = {
       depth: PropTypes.number.isRequired,
     }).isRequired,
   }).isRequired,
-  onNewClick: PropTypes.func,
+  onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
 };
 
 export default Entity;

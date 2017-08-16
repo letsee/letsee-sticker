@@ -15,7 +15,7 @@ const TextButton = Button.extend`
 `;
 
 const CompleteButton = ({
-  children,
+  children, // eslint-disable-line react/prop-types
   ...other
 }) => (
   <TextButton

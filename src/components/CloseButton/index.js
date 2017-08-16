@@ -5,6 +5,7 @@ import { ImageButton } from '../Button';
 
 type CloseButtonPropTypes = {
   gray?: boolean,
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const CloseButton = ({

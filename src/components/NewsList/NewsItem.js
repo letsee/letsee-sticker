@@ -43,6 +43,7 @@ type NewsItemPropTypes = {
     description: string,
     timestamp: number,
   },
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const NewsItem = ({

@@ -159,6 +159,7 @@ class TransformationGuide extends Component {
 
   props: {
     onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
+    children?: any, // eslint-disable-line react/require-default-props
   };
 
   handleWindowResize = () => {

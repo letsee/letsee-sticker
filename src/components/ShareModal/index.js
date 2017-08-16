@@ -97,6 +97,7 @@ type ShareModalPropTypes = {
   onBack?: TouchEventHandler, // eslint-disable-line react/require-default-props
   onComplete?: TouchEventHandler, // eslint-disable-line react/require-default-props
   onKakaoLinkClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const ShareModal = ({

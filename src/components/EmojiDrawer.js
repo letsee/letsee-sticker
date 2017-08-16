@@ -70,6 +70,7 @@ const Emoji = styled.div`
 type EmojiDrawerPropTypes = {
   onClick?: string => mixed, // eslint-disable-line react/require-default-props
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 class EmojiDrawer extends Component {
@@ -114,7 +115,9 @@ class EmojiDrawer extends Component {
       target = target.parentNode;
     }
 
-    this.props.onClose && this.props.onClose(e);
+    if (this.props.onClose) {
+      this.props.onClose(e);
+    }
   };
 
   drawer: HTMLDivElement;

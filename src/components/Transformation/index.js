@@ -43,6 +43,7 @@ type TransformationPropTypes = {
   onTipClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
   onComplete?: TouchEventHandler, // eslint-disable-line react/require-default-props
   onDelete?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const Transformation = ({

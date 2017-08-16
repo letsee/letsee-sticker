@@ -129,6 +129,7 @@ const StyledCloseButton = styled(CloseButton)`
 
 type HelpPropTypes = {
   onCloseClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const Help = ({

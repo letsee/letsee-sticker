@@ -5,6 +5,7 @@ import { ImageButton } from '../Button';
 
 type AddTextButtonPropTypes = {
   small?: boolean,
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const AddTextButton = ({

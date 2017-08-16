@@ -35,6 +35,19 @@ const StyledHelpButton = styled(HelpButton)`
   right: 0;
 `;
 
+type AppLoaderPropTypes = {
+  data?: { // eslint-disable-line react/require-default-props
+    [key: string]: {
+      image: string,
+      description: string,
+      timestamp: number,
+    },
+  },
+  onHelpClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onBannerClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
 const AppLoader = ({
   firebase,
   dispatch,
@@ -43,7 +56,7 @@ const AppLoader = ({
   onBannerClick,
   children,
   ...other
-}) => (
+}: AppLoaderPropTypes) => (
   <div {...other}>
     <Frame>
       <Text>

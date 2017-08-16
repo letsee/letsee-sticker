@@ -34,6 +34,7 @@ type EnvelopePropTypes = {
   size: number,
   data: { firstname: string, lastname: string },
   onClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const concatFirstAndLastNames = (firstname: string, lastname: string) => `${firstname} ${lastname}`.trim();

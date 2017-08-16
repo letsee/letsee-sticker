@@ -11,7 +11,7 @@ const StyledImageButton = ImageButton.extend`
 `;
 
 const NextButton = ({
-  children,
+  children, // eslint-disable-line react/prop-types
   ...other
 }) => (
   <StyledImageButton
