@@ -148,6 +148,20 @@ type MessageFormPropTypes = {
   onNext?: TouchEventHandler, // eslint-disable-line react/require-default-props
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
   onTipClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onStickerTransform: (string, {
+    position: {
+      x: number,
+      y: number,
+      z: number,
+    },
+    quaternion: {
+      x: number,
+      y: number,
+      z: number,
+      w: number,
+    },
+    scale: number,
+  }) => mixed,
 };
 
 class MessageForm extends Component {
