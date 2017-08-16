@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import Waypoint from 'react-waypoint';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import NewsItem from './NewsItem';
@@ -84,6 +85,10 @@ const List = styled.ul`
   }
 `;
 
+const ListSpinner = styled(Spinner)`
+  margin: 20px auto;
+`;
+
 const BodyContainer = styled.div`
   position: absolute;
   top: 78px;
@@ -136,6 +141,8 @@ const RequestImageExampleImage = styled.img`
 type NewsListPropTypes = {
   loading: boolean,
   empty: boolean,
+  error: boolean,
+  hasNextPage: boolean,
   data: {
     [id: string]: {
       timestamp: number,
@@ -205,10 +212,27 @@ class NewsList extends Component {
       );
     }
 
-    if (this.props.loading) {
+    if (this.props.loading && this.props.empty) {
       return (
         <ResultContainer>
           <Spinner gray />
+        </ResultContainer>
+      );
+    }
+
+    if (this.props.error && this.props.empty) {
+      return (
+        <ResultContainer>
+          <ResultMessageImage
+            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501870815/assets/icn-entity-error_3x.png"
+            srcSet="
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_120,q_auto/v1501870815/assets/icn-entity-error_3x.png 2x,
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_180,q_auto/v1501870815/assets/icn-entity-error_3x.png 3x
+            "
+            alt="로딩에 실패했습니다"
+          />
+
+          <ResultMessageText>로딩에 실패했습니다</ResultMessageText>
         </ResultContainer>
       );
     }
@@ -230,27 +254,12 @@ class NewsList extends Component {
       );
     }
 
-    const { data } = this.props;
-
-    if (!data) {
-      return (
-        <ResultContainer>
-          <ResultMessageImage
-            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501870815/assets/icn-entity-error_3x.png"
-            srcSet="
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_120,q_auto/v1501870815/assets/icn-entity-error_3x.png 2x,
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_180,q_auto/v1501870815/assets/icn-entity-error_3x.png 3x
-            "
-            alt="로딩에 실패했습니다"
-          />
-
-          <ResultMessageText>로딩에 실패했습니다</ResultMessageText>
-        </ResultContainer>
-      );
-    }
+    const { data, loading, onWaypointEnter, hasNextPage } = this.props;
 
     return (
-      <BodyContainer>
+      <BodyContainer
+        innerRef={(container) => { this.listContainer = container; }}
+      >
         <List>
           {sortBy(keys(data), id => -data[id].timestamp).map((id: string) => {
             const item = data[id];
@@ -261,6 +270,23 @@ class NewsList extends Component {
               </li>
             );
           })}
+
+          {loading && (
+            <li>
+              <ListSpinner gray />
+            </li>
+          )}
+
+          {!loading && hasNextPage && (
+            <li>
+              <Waypoint
+                onEnter={onWaypointEnter}
+                fireOnRapidScroll
+                bottomOffset="-400px"
+                scrollableAncestor={this.listContainer}
+              />
+            </li>
+          )}
         </List>
       </BodyContainer>
     );
