@@ -87,15 +87,19 @@ class EmojiDrawer extends Component {
   componentDidMount() {
     enableManager(false);
 
-    window.addEventListener('touchend', this.handleWindowClick);
-    window.addEventListener('resize', this.handleWindowResize);
+    if (typeof window !== 'undefined' && window !== null) {
+      window.addEventListener('touchend', this.handleWindowClick);
+      window.addEventListener('resize', this.handleWindowResize);
+    }
   }
 
   componentWillUnmount() {
     enableManager(true);
 
-    window.removeEventListener('touchend', this.handleWindowClick);
-    window.removeEventListener('resize', this.handleWindowResize);
+    if (typeof window !== 'undefined' && window !== null) {
+      window.removeEventListener('touchend', this.handleWindowClick);
+      window.removeEventListener('resize', this.handleWindowResize);
+    }
   }
 
   props: EmojiDrawerPropTypes;

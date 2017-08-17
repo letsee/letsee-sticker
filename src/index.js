@@ -45,7 +45,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
       store.dispatch(setCurrentUser(e.user));
     });
 
-    if (typeof window._app !== 'undefined' && window._app !== null && window._app.getUser) {
+    if (window._app && window._app.getUser) {
       window._app.getUser();
     }
 

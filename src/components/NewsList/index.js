@@ -86,7 +86,7 @@ const List = styled.ul`
 `;
 
 const ListSpinner = styled(Spinner)`
-  margin: 20px auto;
+  margin: 26px auto;
 `;
 
 const BodyContainer = styled.div`

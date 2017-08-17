@@ -150,11 +150,15 @@ class TransformationGuide extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener('resize', this.handleWindowResize);
+    if (typeof window !== 'undefined' && window !== null) {
+      window.addEventListener('resize', this.handleWindowResize);
+    }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleWindowResize);
+    if (typeof window !== 'undefined' && window !== null) {
+      window.removeEventListener('resize', this.handleWindowResize);
+    }
   }
 
   props: {

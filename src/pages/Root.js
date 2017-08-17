@@ -21,6 +21,7 @@ import {
   transformSticker,
 } from '../actions';
 import openCapture from '../openCapture';
+import openLogin from '../openLogin';
 import generateKakaoLinkUrl from '../generateKakaoLinkUrl';
 
 type RootPropTypes = {
@@ -80,13 +81,7 @@ const Root = ({
           nextDisabled={stickersById.length === 0 || submitting}
           onNext={() => {
             if (currentUser === null) {
-              if (window._app && window._app.openLogin) {
-                const logIn = confirm('로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?');
-
-                if (logIn) {
-                  window._app.openLogin();
-                }
-              }
+              openLogin();
             } else {
               dispatch(submitMessageForm(uri));
             }
@@ -160,13 +155,7 @@ const Root = ({
         data={currentEntityData}
         onNewClick={() => {
           if (currentUser === null) {
-            if (window._app && window._app.openLogin) {
-              const logIn = confirm('로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?');
-
-              if (logIn) {
-                window._app.openLogin();
-              }
-            }
+            openLogin();
           } else {
             dispatch(initMessageForm(currentEntity));
           }
