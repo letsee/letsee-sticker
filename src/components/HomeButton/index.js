@@ -12,6 +12,7 @@ const HomeButton = ({
   ...other
 }) => (
   <StyledImageButtonLink
+    href={process.env.LETSEE_SEARCH_URL || 'https://apps.letsee.io'}
     {...other}
   >
     <img

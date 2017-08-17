@@ -301,7 +301,7 @@ class NewsList extends Component {
         <Nav>
           {requestOpen ? '인식 대상 등록 요청' : '인식 대상 목록'}
 
-          <StyledCloseButton gray onTouchEnd={onClose} />
+          <StyledCloseButton gray onClick={onClose} />
 
           {!requestOpen && (
             <NavRight onTouchEnd={() => this.setState({ requestOpen: true })}>

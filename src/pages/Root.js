@@ -164,10 +164,11 @@ const Root = ({
     );
   }
 
-  return loadingEntity ? null : (
+  return (
     <AppLoader
+      loadingEntity={loadingEntity}
       onHelpClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}help`)}
-      onBannerClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}news`)}
+      onNewsClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}news`)}
     />
   );
 };
