@@ -1,9 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54">
     <defs>
-        <filter id="a" width="142.9%" height="142.9%" x="-21.4%" y="-21.4%" filterUnits="objectBoundingBox">
-            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
-            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="3"/>
-            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+        <filter id="a" width="140.9%" height="142.3%" x="-20.5%" y="-21.2%" filterUnits="objectBoundingBox">
+            <feMorphology in="SourceAlpha" operator="dilate" radius=".5" result="shadowSpreadOuter1"/>
+            <feOffset in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.399145154 0"/>
             <feMerge>
                 <feMergeNode in="shadowMatrixOuter1"/>
                 <feMergeNode in="SourceGraphic"/>
@@ -12,12 +13,9 @@
     </defs>
     <g fill="none" fill-rule="evenodd">
         <path d="M0 0h54v54H0z"/>
-        <g filter="url(#a)" opacity=".9" transform="translate(6 6)">
-            <circle cx="21" cy="21" r="20" stroke="#FFF" stroke-width="2"/>
-            <g fill="#FFF">
-                <path d="M19.25 13.125h3.5v17.5h-3.5z"/>
-                <path d="M13.125 13.125h15.75v3.5h-15.75z"/>
-            </g>
+        <g fill="#FFF" filter="url(#a)" opacity=".95" transform="translate(16 16)">
+            <rect width="4.813" height="26" x="8.422" rx="2"/>
+            <path d="M0 0h21.656v4.667H0z"/>
         </g>
     </g>
 </svg>
