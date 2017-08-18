@@ -45,10 +45,10 @@ const RedCircle = Circle.extend`
 const Text = styled.div`
   text-align: center;
   user-select: none;
-  margin-top: 23px;
-  opacity: 0.8;
-  font-size: 15px;
-  font-weight: 800;
+  margin-top: 10px;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 17px;
+  letter-spacing: -0.3px;
   color: #fff;
 `;
 
@@ -65,7 +65,7 @@ const EntityLoader = ({ children, ...other }: PropTypes) => (
     </Circles>
 
     <Text>
-      로딩중..
+      로딩중
     </Text>
   </div>
 );

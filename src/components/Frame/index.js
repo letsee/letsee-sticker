@@ -43,40 +43,40 @@ const Frame = ({ vertical, horizontal, white, children, ...other }: FramePropTyp
       <FrameLeftTop
         top={vertical}
         left={horizontal}
-        src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1501840168/assets/frame-${colorPrefix}-lt_3x.png`}
+        src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503046704/assets/frame-${colorPrefix}-lt_3x.png`}
         srcSet={`
-          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1501840168/assets/frame-${colorPrefix}-lt_3x.png 2x,
-          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501840168/assets/frame-${colorPrefix}-lt_3x.png 3x
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503046704/assets/frame-${colorPrefix}-lt_3x.png 2x,
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503046704/assets/frame-${colorPrefix}-lt_3x.png 3x
         `}
       />
 
       <FrameRightTop
         top={vertical}
         right={horizontal}
-        src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1501840168/assets/frame-${colorPrefix}-rt_3x.png`}
+        src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503046704/assets/frame-${colorPrefix}-rt_3x.png`}
         srcSet={`
-          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1501840168/assets/frame-${colorPrefix}-rt_3x.png 2x,
-          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501840168/assets/frame-${colorPrefix}-rt_3x.png 3x
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503046704/assets/frame-${colorPrefix}-rt_3x.png 2x,
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503046704/assets/frame-${colorPrefix}-rt_3x.png 3x
         `}
       />
 
       <FrameLeftBottom
         bottom={vertical}
         left={horizontal}
-        src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1501840168/assets/frame-${colorPrefix}-lb_3x.png`}
+        src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503046704/assets/frame-${colorPrefix}-lb_3x.png`}
         srcSet={`
-          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1501840168/assets/frame-${colorPrefix}-lb_3x.png 2x,
-          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501840168/assets/frame-${colorPrefix}-lb_3x.png 3x
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503046704/assets/frame-${colorPrefix}-lb_3x.png 2x,
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503046704/assets/frame-${colorPrefix}-lb_3x.png 3x
         `}
       />
 
       <FrameRightBottom
         bottom={vertical}
         right={horizontal}
-        src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1501840168/assets/frame-${colorPrefix}-rb_3x.png`}
+        src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503046704/assets/frame-${colorPrefix}-rb_3x.png`}
         srcSet={`
-          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1501840168/assets/frame-${colorPrefix}-rb_3x.png 2x,
-          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501840168/assets/frame-${colorPrefix}-rb_3x.png 3x
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503046704/assets/frame-${colorPrefix}-rb_3x.png 2x,
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503046704/assets/frame-${colorPrefix}-rb_3x.png 3x
         `}
       />
 
