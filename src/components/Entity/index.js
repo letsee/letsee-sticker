@@ -5,23 +5,42 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import clamp from 'lodash/clamp';
 import { ImageButton } from '../Button';
+import Frame from '../Frame';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
 } from '../../constants';
+
+const Title = styled.div`
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 16px 0;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: -0.3px;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+`;
 
 const ARContainer = styled.div`
   position: relative;
 `;
 
 const StyledImageButton = ImageButton.extend`
-  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 `;
 
-const StyledImageButtonRight = StyledImageButton.extend`
+const StyledImageButtonRight = ImageButton.extend`
   position: absolute;
-  right: 2px;
-  bottom: 79px;
+  right: 0;
+  bottom: 109px;
 `;
 
 const MessageText = styled.div`
@@ -30,14 +49,24 @@ const MessageText = styled.div`
   left: 50%;
   bottom: ${props => props.height}px;
   transform: translateX(-50%);
-  opacity: 0.8;
+  opacity: 0.9;
   font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
   font-size: ${props => props.size * 0.06}px;
   font-weight: 800;
-  letter-spacing: ${props => -props.size * 0.06 * 0.8 / 25}px;
+  letter-spacing: ${props => -props.size * 0.06 * 0.5 / 23}px;
   text-align: center;
   color: #fff;
-  text-shadow: 0 0 ${props => props.size * 0.06 * 12 / 25}px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 ${props => props.size * 0.06 * 12 / 23}px rgba(0, 0, 0, 0.5);
+`;
+
+const FrameAR = styled(Frame)`
+  position: relative;
+  width: ${props => props.width}px;
+  height: ${props => props.height}px;
+
+  > img {
+    width: ${props => Math.sqrt(((props.width * props.width) + (props.height * props.height)) / 2) * 0.06}px;
+  }
 `;
 
 type EntityPropTypes = {
@@ -83,7 +112,7 @@ class Entity extends Component {
 
   renderAR({ data, onNewClick }: EntityPropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const { name, uri, size: { width, height, depth } } = data;
+      const { uri, size: { width, height, depth } } = data;
       const entity = letsee.getEntity(uri);
 
       if (this.object.parent !== entity.object) {
@@ -109,7 +138,7 @@ class Entity extends Component {
 
       const buttonSize = diagonal * 0.33;
       const nearest = Math.ceil(buttonSize / 100) * 100;
-      const y = ((buttonSize + (height / realToClamped)) / 2) + (diagonal * 0.04);
+      const y = (height / realToClamped) + (diagonal * 0.04);
 
       render(
         <ARContainer>
@@ -117,29 +146,31 @@ class Entity extends Component {
             size={diagonal}
             height={y}
           >
-            <div>
-              {name}에
-            </div>
-
-            <div>
-              스티커 메세지를 남겨보세요
-            </div>
+            스티커를 남겨보세요!
           </MessageText>
 
-          <StyledImageButton
-            type="button"
-            onClick={onNewClick}
+          <FrameAR
+            width={width / realToClamped}
+            height={height / realToClamped}
+            vertical={0}
+            horizontal={0}
+            white
           >
-            <img
-              src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
-              srcSet={`
-                https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
-                https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
-              `}
-              alt={`${name}에 스티커 메세지를 남겨보세요`}
-              height={buttonSize}
-            />
-          </StyledImageButton>
+            <StyledImageButton
+              type="button"
+              onClick={onNewClick}
+            >
+              <img
+                src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
+                srcSet={`
+                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
+                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
+                `}
+                alt="스티커를 남겨보세요!"
+                height={buttonSize}
+              />
+            </StyledImageButton>
+          </FrameAR>
         </ARContainer>,
         this.object.element,
       );
@@ -156,16 +187,20 @@ class Entity extends Component {
 
     return (
       <div {...other}>
+        <Title>
+          {name}
+        </Title>
+
         <StyledImageButtonRight
           type="button"
-          onTouchEnd={onNewClick}
+          onClick={onNewClick}
         >
           <img
-            alt={`${name}에 스티커 메세지를 남겨보세요`}
-            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1501868965/assets/btn-create_3x.png"
+            alt="스티커를 남겨보세요!"
+            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503047417/assets/btn-create_3x.png"
             srcSet="
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1501868965/assets/btn-create_3x.png 2x,
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1501868965/assets/btn-create_3x.png 3x
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503047417/assets/btn-create_3x.png 2x,
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503047417/assets/btn-create_3x.png 3x
             "
           />
         </StyledImageButtonRight>
