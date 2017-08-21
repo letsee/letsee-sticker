@@ -20,10 +20,10 @@ const AddEmojiButton = ({
     {small ? (
       <img
         alt="Add Emoji"
-        src="https://res.cloudinary.com/df9jsefb9/image/upload/s--Nic5mPel--/c_scale,w_54,q_auto/v1502250483/assets/btn-add-emoji_3x.png"
+        src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1503278075/assets/btn-add-emoji_3x.png"
         srcSet="
-          https://res.cloudinary.com/df9jsefb9/image/upload/s--Nic5mPel--/c_scale,w_108,q_auto/v1502250483/assets/btn-add-emoji_3x.png 2x,
-          https://res.cloudinary.com/df9jsefb9/image/upload/s--Nic5mPel--/c_scale,w_162,q_auto/v1502250483/assets/btn-add-emoji_3x.png 3x
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1503278075/assets/btn-add-emoji_3x.png 2x,
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1503278075/assets/btn-add-emoji_3x.png 3x
         "
       />
     ) : (
