@@ -3,6 +3,7 @@ import uuidv4 from 'uuid/v4';
 
 export const ADD_STICKER: 'ADD_STICKER' = 'ADD_STICKER';
 export const DELETE_STICKER: 'DELETE_STICKER' = 'DELETE_STICKER';
+export const RESET_STICKER: 'RESET_STICKER' = 'RESET_STICKER';
 export const TRANSFORM_STICKER: 'TRANSFORM_STICKER' = 'TRANSFORM_STICKER';
 
 export const addSticker = (entityUri: string, text: string, type: 'emoji' | 'text', selected: boolean = false) => ({
@@ -18,6 +19,13 @@ export const addSticker = (entityUri: string, text: string, type: 'emoji' | 'tex
 
 export const deleteSticker = (id: string) => ({
   type: DELETE_STICKER,
+  payload: {
+    id,
+  },
+});
+
+export const resetSticker = (id: string) => ({
+  type: RESET_STICKER,
   payload: {
     id,
   },
