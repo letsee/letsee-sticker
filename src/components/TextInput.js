@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Button from './Button';
 import { enableManager } from '../manager';
 
-const InputButton = styled.button`
+const InputButton = Button.extend`
   position: absolute;
   top: 25px;
   right: 0;
@@ -150,7 +151,9 @@ class TextInput extends Component {
           />
         </TextareaContainer>
 
-        <InputButton onTouchEnd={() => onComplete && onComplete(value.trim())} />
+        <InputButton onTouchEnd={() => onComplete && onComplete(value.trim())}>
+          입력
+        </InputButton>
       </div>
     );
   }
