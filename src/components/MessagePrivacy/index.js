@@ -34,18 +34,20 @@ const Title = styled.div`
   padding-top: 24px;
 `;
 
-const PrivacyRadio = styled.label`
+const PrivacyRadio = Button.extend`
   font-family: AppleSDGothicNeo, sans-serif;
   font-size: 15px;
   font-weight: bold;
   text-align: center;
-  color: ${props => (props.checked ? '#000' : 'rgba(0, 0, 0, 0.4)')}
-  margin-top: 11px;
+  color: ${props => (props.checked ? '#000' : 'rgba(0, 0, 0, 0.4)')};
+  margin: 11px auto 0 auto;
+  vertical-align: middle;
 `;
 
-const RadioButton = ImageButton.extend`
+const PrivacyRadioImage = styled.img`
   display: inline-block;
   margin-right: 5px;
+  vertical-align: middle;
 `;
 
 const SubmitButton = Button.extend`
@@ -141,30 +143,31 @@ class MessagePrivacy extends Component {
           </Title>
 
           <PrivacyRadio
+            type="button"
             checked={pub}
-            onClick={() => this.setState(prevState => ({ public: !prevState.public }))}
+            onClick={() => {
+              this.setState(prevState => ({ public: !prevState.public }));
+            }}
           >
-            <RadioButton type="button">
-              {pub ? (
-                <img
-                  alt="전체 공개"
-                  src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503285514/assets/check-all_3x.png"
-                  srcSet="
-                    https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503285514/assets/check-all_3x.png 2x,
-                    https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503285514/assets/check-all_3x.png 3x
-                  "
-                />
-              ) : (
-                <img
-                  alt="전체 공개"
-                  src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503285514/assets/check-noall_3x.png"
-                  srcSet="
-                    https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503285514/assets/check-noall_3x.png 2x,
-                    https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503285514/assets/check-noall_3x.png 3x
-                  "
-                />
-              )}
-            </RadioButton>
+            {pub ? (
+              <PrivacyRadioImage
+                alt="전체 공개"
+                src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503285514/assets/check-all_3x.png"
+                srcSet="
+                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503285514/assets/check-all_3x.png 2x,
+                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503285514/assets/check-all_3x.png 3x
+                "
+              />
+            ) : (
+              <PrivacyRadioImage
+                alt="전체 공개"
+                src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503285514/assets/check-noall_3x.png"
+                srcSet="
+                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503285514/assets/check-noall_3x.png 2x,
+                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503285514/assets/check-noall_3x.png 3x
+                "
+              />
+            )}
 
             전체 공개
           </PrivacyRadio>

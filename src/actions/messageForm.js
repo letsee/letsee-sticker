@@ -1,6 +1,7 @@
 // @flow
 export const INIT_MESSAGE_FORM: 'INIT_MESSAGE_FORM' = 'INIT_MESSAGE_FORM';
 export const DESTROY_MESSAGE_FORM: 'DESTROY_MESSAGE_FORM' = 'DESTROY_MESSAGE_FORM';
+export const SET_MESSAGE_PRIVACY: 'SET_MESSAGE_PRIVACY' = 'SET_MESSAGE_PRIVACY';
 export const SUBMIT_MESSAGE_FORM: 'SUBMIT_MESSAGE_FORM' = 'SUBMIT_MESSAGE_FORM';
 export const SUBMIT_MESSAGE_FORM_SUCCESS: 'SUBMIT_MESSAGE_FORM_SUCCESS' = 'SUBMIT_MESSAGE_FORM_SUCCESS';
 export const SUBMIT_MESSAGE_FORM_ERROR: 'SUBMIT_MESSAGE_FORM_ERROR' = 'SUBMIT_MESSAGE_FORM_ERROR';
@@ -17,6 +18,14 @@ export const destroyMessageForm = (uri: string, stickerIds: string[]) => ({
   payload: {
     uri,
     stickerIds,
+  },
+});
+
+export const setMessagePrivacy = (uri: string, isPublic: boolean) => ({
+  type: SET_MESSAGE_PRIVACY,
+  payload: {
+    uri,
+    public: isPublic,
   },
 });
 
