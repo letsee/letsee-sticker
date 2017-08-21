@@ -4,13 +4,14 @@ import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 import Transition from 'react-transition-group/Transition';
 import clamp from 'lodash/clamp';
-import { endsWithConsonant, isHangul } from 'hangul-js';
 import AddEmojiButton from './AddEmojiButton';
 import AddTextButton from './AddTextButton';
 import CloseButton from './CloseButton';
-import NextButton from './NextButton';
+import CompleteButton from './CompleteButton';
+import HelpButton from './HelpButton';
 import EmojiDrawer from './EmojiDrawer';
 import Frame from './Frame';
+import TargetGuide from './TargetGuide';
 import TextInput from './TextInput';
 import Transformation from './Transformation';
 import Spinner from './Spinner';
@@ -37,6 +38,21 @@ const NavTopLeft = styled.div`
   position: absolute;
   top: 25px;
   left: 0;
+`;
+
+const NavTopCenter = styled.div`
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  padding: 18px 0;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: -0.3px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 `;
 
 const NavTopRight = styled.div`
@@ -96,20 +112,39 @@ const StyledAddTextButton = styled(AddTextButton)`
   margin-top: 6px;
 `;
 
-const FrameText = styled.div`
-  user-select: none;
-  text-align: center;
+const TrackMessage = styled.div`
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  font-family: AppleSDGothicNeo, sans-serif;
+  user-select: none;
+`;
+
+const TrackMessageImage = styled.img`
+  display: block;
+  margin: 0 auto 16px auto;
   opacity: 0.8;
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.8px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  object-fit: contain;
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+`;
+
+const TrackMessageText = styled.div`
+  text-align: center;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 14px;
+  letter-spacing: -0.3px;
   color: #fff;
+`;
+
+const StyledHelpButton = styled(HelpButton)`
+  position: absolute;
+  bottom: 96px;
+  right: 24px;
 `;
 
 type MessageFormPropTypes = {
@@ -143,11 +178,13 @@ type MessageFormPropTypes = {
   onStickerClick?: string => mixed, // eslint-disable-line react/require-default-props
   onTextInput?: string => mixed, // eslint-disable-line react/require-default-props
   onEmojiInput?: string => mixed, // eslint-disable-line react/require-default-props
-  onTransformationComplete?: TouchEventHandler, // eslint-disable-line react/require-default-props
-  onDelete?: TouchEventHandler, // eslint-disable-line react/require-default-props
-  onNext?: TouchEventHandler, // eslint-disable-line react/require-default-props
-  onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
-  onTipClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onTransformationComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onReset?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onHelpClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onStickerTransform: (string, {
     position: {
       x: number,
@@ -599,12 +636,14 @@ class MessageForm extends Component {
       onStickerClick,
       entityTracked,
       onClose,
-      onNext,
+      onComplete,
       nextDisabled,
       onTextInput,
       onEmojiInput,
       onTransformationComplete,
       onDelete,
+      onReset,
+      onHelpClick,
       onTipClick,
       onStickerTransform,
       ...other
@@ -620,71 +659,99 @@ class MessageForm extends Component {
             onComplete={onTransformationComplete}
             onTipClick={onTipClick}
             onDelete={onDelete}
+            onReset={onReset}
           />
         </div>
       );
     }
 
-    const trimmedName = entity.name.trim();
-    const lastChar = trimmedName.slice(-1);
-    let suffix = '을(를)';
+    if (!entityTracked) {
+      return (
+        <div {...other}>
+          <NavTopCenter>
+            스티커 만드는 중
+          </NavTopCenter>
 
-    if (isHangul(lastChar)) {
-      suffix = endsWithConsonant(trimmedName) ? '을' : '를';
+          <NavTopLeft>
+            <CloseButton onClick={onClose} />
+          </NavTopLeft>
+
+          <NavTopRight>
+            <div style={{ position: 'relative' }}>
+              <CompleteButton
+                onClick={nextDisabled ? null : onComplete}
+                disabled={nextDisabled}
+                hidden={submitting}
+              />
+
+              {submitting && (
+                <SpinnerContainer>
+                  <Spinner />
+                </SpinnerContainer>
+              )}
+            </div>
+          </NavTopRight>
+
+          <TargetGuide>
+            <TrackMessage>
+              {entity.image && (
+                <TrackMessageImage
+                  src={entity.image}
+                  alt={`${entity.name}의 정면을 비춰주세요`}
+                />
+              )}
+
+              <TrackMessageText>
+                {entity.name}의 정면을 비춰주세요
+              </TrackMessageText>
+            </TrackMessage>
+
+            <StyledHelpButton onClick={onHelpClick} />
+          </TargetGuide>
+        </div>
+      );
     }
 
     return (
       <div {...other}>
         {mode === 'default' && [
           <NavTopLeft key={0}>
-            <CloseButton onTouchEnd={onClose} />
+            <CloseButton onClick={onClose} />
           </NavTopLeft>,
 
-          entityTracked && (
-            <NavTopRight key={1}>
-              <div style={{ position: 'relative' }}>
-                <NextButton
-                  onTouchEnd={nextDisabled ? null : onNext}
-                  disabled={nextDisabled}
-                  hidden={submitting}
-                />
-
-                {submitting && (
-                  <SpinnerContainer>
-                    <Spinner />
-                  </SpinnerContainer>
-                )}
-              </div>
-            </NavTopRight>
-          ),
-
-          entityTracked && (
-            <NavBottomRight key={3}>
-              <AddEmojiButton
-                onTouchEnd={() => this.setState({ mode: 'emoji' }, () => {
-                  const e = letsee.getEntity(entity.uri);
-                  e.removeRenderable(this.messageObject);
-                })}
-                small
+          <NavTopRight key={1}>
+            <div style={{ position: 'relative' }}>
+              <CompleteButton
+                onClick={nextDisabled ? null : onComplete}
+                disabled={nextDisabled}
+                hidden={submitting}
               />
 
-              <StyledAddTextButton
-                onTouchEnd={() => this.setState({ mode: 'text' }, () => {
-                  const e = letsee.getEntity(entity.uri);
-                  e.removeRenderable(this.messageObject);
-                })}
-                small
-              />
-            </NavBottomRight>
-          ),
-          !entityTracked && (
-            <Frame key={4}>
-              <FrameText>
-                <div>{entity.name}{suffix}</div>
-                <div>비춰주세요</div>
-              </FrameText>
-            </Frame>
-          ),
+              {submitting && (
+                <SpinnerContainer>
+                  <Spinner />
+                </SpinnerContainer>
+              )}
+            </div>
+          </NavTopRight>,
+
+          <NavBottomRight key={3}>
+            <AddEmojiButton
+              onTouchEnd={() => this.setState({ mode: 'emoji' }, () => {
+                const e = letsee.getEntity(entity.uri);
+                e.removeRenderable(this.messageObject);
+              })}
+              small
+            />
+
+            <StyledAddTextButton
+              onTouchEnd={() => this.setState({ mode: 'text' }, () => {
+                const e = letsee.getEntity(entity.uri);
+                e.removeRenderable(this.messageObject);
+              })}
+              small
+            />
+          </NavBottomRight>,
         ]}
 
         {mode === 'text' && (

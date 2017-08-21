@@ -5,21 +5,7 @@ import styled from 'styled-components';
 import CompleteButton from '../CompleteButton';
 import TrashButton from '../TrashButton';
 import TipButton from '../TipButton';
-
-const NavTopCenter = styled.div`
-  position: absolute;
-  top: 25px;
-  left: 0;
-  right: 0;
-  user-select: none;
-  padding: 17px 0;
-  font-family: AppleSDGothicNeo, sans-serif;
-  letter-spacing: 0.4px;
-  color: #fff;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
-  font-size: 18px;
-  text-align: center;
-`;
+import ResetButton from '../ResetButton';
 
 const NavTopRight = styled.div`
   position: absolute;
@@ -27,22 +13,27 @@ const NavTopRight = styled.div`
   right: 0;
 `;
 
-const NavBottomLeft = styled.div`
+const StyledTipButton = styled(TipButton)`
   position: absolute;
   bottom: 0;
   left: 10px;
 `;
 
-const NavBottomRight = styled.div`
+const StickerActions = styled.div`
   position: absolute;
-  bottom: 80px;
-  right: 10px;
+  bottom: 139px;
+  right: 4px;
+`;
+
+const StyledResetButton = styled(ResetButton)`
+  margin-bottom: 6px;
 `;
 
 type TransformationPropTypes = {
-  onTipClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
-  onComplete?: TouchEventHandler, // eslint-disable-line react/require-default-props
-  onDelete?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onReset?: MouseEventHandler, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };
 
@@ -50,25 +41,21 @@ const Transformation = ({
   onTipClick,
   onComplete,
   onDelete,
+  onReset,
   children,
   ...other
 }: TransformationPropTypes) => (
   <div {...other}>
-    <NavTopCenter>
-      위치/크기 조정
-    </NavTopCenter>
-
     <NavTopRight>
-      <CompleteButton onTouchEnd={onComplete} />
+      <CompleteButton onClick={onComplete} />
     </NavTopRight>
 
-    <NavBottomLeft>
-      <TipButton onTouchEnd={onTipClick} />
-    </NavBottomLeft>
+    <StyledTipButton onClick={onTipClick} />
 
-    <NavBottomRight>
-      <TrashButton onTouchEnd={onDelete} />
-    </NavBottomRight>
+    <StickerActions>
+      <StyledResetButton onClick={onReset} />
+      <TrashButton onClick={onDelete} />
+    </StickerActions>
   </div>
 );
 

@@ -138,7 +138,7 @@ const gestures = [{
   },
 }];
 
-const calculatePerRow = () => (document.documentElement.clientHeight < MIN_HEIGHT ? 3 : 2);
+const calculatePerRow = () => (typeof window !== 'undefined' && window !== null && document.documentElement.clientHeight >= MIN_HEIGHT ? 2 : 3);
 
 class TransformationGuide extends Component {
   state = {
