@@ -37,27 +37,8 @@ class News extends Component {
     this.setState({ loading: true }, () => {
       const ref = this.props.firebase.database().ref('news').orderByChild('timestamp');
 
-      ref.on('child_removed', (oldChildSnapshopt) => {
-        this.setState((prevState) => {
-          const {
-            [oldChildSnapshopt.key]: old,
-            ...data
-          } = prevState.data;
-
-          return { data };
-        });
-      });
-
-      ref.on('child_changed', (childSnapshot) => {
-        if (this.state.data[childSnapshot.key]) {
-          this.setState(prevState => ({
-            data: {
-              ...prevState.data,
-              [childSnapshot.key]: childSnapshot.val(),
-            },
-          }));
-        }
-      });
+      ref.on('child_removed', this.handleChildRemoved);
+      ref.on('child_changed', this.handleChildChanged);
 
       ref.limitToLast(PER_PAGE + 1).once('value', (snapshot) => {
         const data = snapshot.val();
