@@ -37,6 +37,7 @@ type RootPropTypes = {
   selectedSticker: string | null,
   messageForm: {
     uri: string,
+    public: boolean,
     submitting: boolean,
   } | null,
   shareModal: { entityUri: string, path: [string, string] } | null,

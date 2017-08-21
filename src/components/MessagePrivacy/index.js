@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CloseButton from '../CloseButton';
-import Button, { ImageButton } from '../Button';
+import Spinner from '../Spinner';
+import Button from '../Button';
 
 const Container = styled.div`
   position: absolute;
@@ -51,6 +52,7 @@ const PrivacyRadioImage = styled.img`
 `;
 
 const SubmitButton = Button.extend`
+  position: relative;
   margin: 17px auto 0 auto;
   border-radius: 31px;
   background-color: #00b1c7;
@@ -67,30 +69,36 @@ const StyledCloseButton = styled(CloseButton)`
   margin: 25px auto 0 auto;
 `;
 
+const SpinnerContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
 type MessagePrivacyPropTypes = {
+  error: boolean,
+  submitting: boolean,
+  public: boolean,
   entity: {
     name: string,
   },
-  onSubmit?: boolean => mixed, // eslint-disable-line react/require-default-props
+  onPublicChange?: boolean => mixed, // eslint-disable-line react/require-default-props
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onSubmit?: MouseEventHandler, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };
 
 class MessagePrivacy extends Component {
   static propTypes = {
+    error: PropTypes.bool.isRequired,
+    submitting: PropTypes.bool.isRequired,
     entity: PropTypes.shape({
       name: PropTypes.string.isRequired,
     }).isRequired,
-    onSubmit: PropTypes.func, // eslint-disable-line react/require-default-props
+    onPublicChange: PropTypes.func, // eslint-disable-line react/require-default-props
     onClose: PropTypes.func, // eslint-disable-line react/require-default-props
-  };
-
-  state = {
-    public: true,
-  };
-
-  state: {
-    public: boolean,
+    onSubmit: PropTypes.func, // eslint-disable-line react/require-default-props
   };
 
   componentDidMount() {
@@ -109,24 +117,29 @@ class MessagePrivacy extends Component {
   body: HTMLDivElement;
 
   handleWindowClick = (e: TouchEvent) => {
-    let target = e.target;
+    if (!this.props.submitting) {
+      let target = e.target;
 
-    while (target !== document.body) {
-      if (target === this.body || target === null) {
-        return;
+      while (target !== document.body) {
+        if (target === this.body || target === null) {
+          return;
+        }
+
+        target = target.parentNode;
       }
 
-      target = target.parentNode;
-    }
-
-    if (this.props.onClose) {
-      this.props.onClose(e);
+      if (this.props.onClose) {
+        this.props.onClose(e);
+      }
     }
   };
 
   render() {
-    const { public: pub } = this.state;
     const {
+      public: isPublic,
+      submitting,
+      error,
+      onPublicChange,
       entity,
       onClose,
       onSubmit,
@@ -137,19 +150,24 @@ class MessagePrivacy extends Component {
     return (
       <Container {...other}>
         <Body innerRef={(body) => { this.body = body; }}>
-          <Title>
-            <div>멋진 스티커군요!</div>
-            <div>이 스티커를 {entity.name}에 남길까요?</div>
-          </Title>
+          {error ? (
+            <Title>
+              <div>문제가 발생했어요.</div>
+              <div>다시 시도할까요?</div>
+            </Title>
+          ) : (
+            <Title>
+              <div>멋진 스티커군요!</div>
+              <div>이 스티커를 {entity.name}에 남길까요?</div>
+            </Title>
+          )}
 
           <PrivacyRadio
             type="button"
-            checked={pub}
-            onClick={() => {
-              this.setState(prevState => ({ public: !prevState.public }));
-            }}
+            checked={isPublic}
+            onClick={() => onPublicChange && onPublicChange(!this.props.public)}
           >
-            {pub ? (
+            {isPublic ? (
               <PrivacyRadioImage
                 alt="전체 공개"
                 src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503285514/assets/check-all_3x.png"
@@ -174,14 +192,20 @@ class MessagePrivacy extends Component {
 
           <SubmitButton
             type="button"
-            onClick={() => onSubmit && onSubmit(this.state.public)}
+            onClick={submitting ? null : onSubmit}
           >
-            남기기
+            <span style={{ visibility: submitting ? 'hidden' : 'visible' }}>남기기</span>
+
+            {submitting && (
+              <SpinnerContainer>
+                <Spinner />
+              </SpinnerContainer>
+            )}
           </SubmitButton>
 
           <StyledCloseButton
             color="black"
-            onClick={onClose}
+            onClick={submitting ? null : onClose}
           />
         </Body>
       </Container>

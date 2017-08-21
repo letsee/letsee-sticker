@@ -12,6 +12,7 @@ type MessageFormType = {
   uri: string,
   public: boolean,
   path: string[],
+  error: boolean,
   submitting: boolean,
   submitted: boolean,
 } | null;
@@ -22,6 +23,7 @@ const messageForm = (state: MessageFormType = null, action) => {
       if (state === null) {
         return {
           ...action.payload,
+          error: false,
           public: true,
           path: [],
           submitting: false,
@@ -59,6 +61,7 @@ const messageForm = (state: MessageFormType = null, action) => {
       if (state !== null && state.uri === action.payload.uri) {
         return {
           ...state,
+          error: false,
           path: action.payload.path,
           submitting: false,
           submitted: true,
@@ -70,6 +73,7 @@ const messageForm = (state: MessageFormType = null, action) => {
       if (state !== null && state.uri === action.payload.uri) {
         return {
           ...state,
+          error: true,
           submitting: false,
           submitted: false,
         };

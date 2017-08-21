@@ -15,8 +15,8 @@ import Frame from './Frame';
 import TargetGuide from './TargetGuide';
 import TextInput from './TextInput';
 import Transformation from './Transformation';
-import Spinner from './Spinner';
 import TranslateZ from './Transformation/TranslateZ';
+import MessagePrivacy from './MessagePrivacy';
 import manager from '../manager';
 import getObjectById from '../getObjectById';
 import {
@@ -60,13 +60,6 @@ const NavTopRight = styled.div`
   position: absolute;
   top: 25px;
   right: 0;
-`;
-
-const SpinnerContainer = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 `;
 
 const NavBottomRight = styled.div`
@@ -179,16 +172,19 @@ type MessageFormPropTypes = {
     },
     scale: number,
   } | null,
+  public: boolean,
+  error: boolean,
   entityTracked: boolean,
   nextDisabled: boolean,
   submitting: boolean,
+  onPublicChange?: boolean => mixed,  // eslint-disable-line react/require-default-props
   onStickerClick?: string => mixed, // eslint-disable-line react/require-default-props
   onTextInput?: string => mixed, // eslint-disable-line react/require-default-props
   onEmojiInput?: string => mixed, // eslint-disable-line react/require-default-props
   onTransformationComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onReset?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onSubmit?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onHelpClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
@@ -214,6 +210,7 @@ class MessageForm extends Component {
 
     this.state = {
       mode: 'default',
+      messagePrivacyOpen: false,
     };
 
     this.messageObject = new Object3D();
@@ -228,6 +225,7 @@ class MessageForm extends Component {
 
   state: {
     mode: 'default' | 'text' | 'emoji',
+    messagePrivacyOpen: boolean,
   };
 
   componentWillMount() {
@@ -633,17 +631,20 @@ class MessageForm extends Component {
   }
 
   render() {
-    const { mode } = this.state;
+    const { mode, messagePrivacyOpen } = this.state;
 
     const {
+      public: isPublic,
       submitting,
+      error,
       selectedSticker,
       entity,
       stickers,
       onStickerClick,
       entityTracked,
+      onPublicChange,
       onClose,
-      onComplete,
+      onSubmit,
       nextDisabled,
       onTextInput,
       onEmojiInput,
@@ -701,22 +702,45 @@ class MessageForm extends Component {
           </NavTopLeft>
 
           <NavTopRight>
-            <div style={{ position: 'relative' }}>
-              <CompleteButton
-                onClick={nextDisabled ? null : onComplete}
-                disabled={nextDisabled}
-                hidden={submitting}
-              />
-
-              {submitting && (
-                <SpinnerContainer>
-                  <Spinner />
-                </SpinnerContainer>
-              )}
-            </div>
+            <CompleteButton
+              onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
+              disabled={nextDisabled}
+            />
           </NavTopRight>
 
           <StyledTipButton onClick={onTipClick} />
+
+          {messagePrivacyOpen && (
+            <MessagePrivacy
+              error={error}
+              submitting={submitting}
+              entity={entity}
+              public={isPublic}
+              onPublicChange={onPublicChange}
+              onSubmit={onSubmit}
+              onClose={() => this.setState({ messagePrivacyOpen: false })}
+            />
+          )}
+        </div>
+      );
+    }
+
+    if (mode === 'text') {
+      return (
+        <div {...other}>
+          <TextInput
+            entity={entity}
+            entityTracked={entityTracked}
+            onComplete={(value) => {
+              this.setState({ mode: 'default' }, () => {
+                if (value.length === 0) {
+                  this.renderAR(this.props);
+                } else if (onTextInput) {
+                  onTextInput(value);
+                }
+              });
+            }}
+          />
         </div>
       );
     }
@@ -729,19 +753,10 @@ class MessageForm extends Component {
           </NavTopLeft>,
 
           <NavTopRight key={1}>
-            <div style={{ position: 'relative' }}>
-              <CompleteButton
-                onClick={nextDisabled ? null : onComplete}
-                disabled={nextDisabled}
-                hidden={submitting}
-              />
-
-              {submitting && (
-                <SpinnerContainer>
-                  <Spinner />
-                </SpinnerContainer>
-              )}
-            </div>
+            <CompleteButton
+              onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
+              disabled={nextDisabled}
+            />
           </NavTopRight>,
 
           <NavBottomRight key={3}>
@@ -766,23 +781,19 @@ class MessageForm extends Component {
             key={4}
             onClick={onTipClick}
           />,
-        ]}
 
-        {mode === 'text' && (
-          <TextInput
-            entity={entity}
-            entityTracked={entityTracked}
-            onComplete={(value) => {
-              this.setState({ mode: 'default' }, () => {
-                if (value.length === 0) {
-                  this.renderAR(this.props);
-                } else if (onTextInput) {
-                  onTextInput(value);
-                }
-              });
-            }}
-          />
-        )}
+          messagePrivacyOpen && (
+            <MessagePrivacy
+              key={5}
+              submitting={submitting}
+              entity={entity}
+              public={isPublic}
+              onPublicChange={onPublicChange}
+              onSubmit={onSubmit}
+              onClose={() => this.setState({ messagePrivacyOpen: false })}
+            />
+          ),
+        ]}
 
         <Transition
           in={mode === 'emoji'}

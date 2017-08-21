@@ -7,7 +7,7 @@ import {
   SUBMIT_MESSAGE_FORM,
   submitMessageFormSuccess,
   submitMessageFormError,
-  openShareModal,
+  destroyMessageForm,
 } from '../actions';
 
 const getStickersByEntity = (stickers, uri: string) => stickers.allIds
@@ -21,36 +21,44 @@ function* submitMessageForm(getFirebase) {
     const submitAction = yield take(SUBMIT_MESSAGE_FORM);
 
     try {
-      const currentUser = yield select(state => state.currentUser);
-      const stickers = yield select(state => state.stickers);
-      const { uri, name, image } = yield select(state => state.entities.byUri[submitAction.payload.uri]);
-      const stickersById = getStickersByEntity(stickers, uri).map(({ id, entityUri, ...other }) => other);
+      const messageForm = yield select(state => state.messageForm);
 
-      const message = {
-        author: {
-          uid: currentUser.uid,
-          firstname: currentUser.firstname,
-          lastname: currentUser.lastname,
-        },
-        entity: { uri, name, image },
-        stickers: stickersById,
-        createdAt: moment().format('YYYYMMDDHHmmssZZ'),
-      };
+      if (messageForm.uri === submitAction.payload.uri) {
+        const currentUser = yield select(state => state.currentUser);
+        const stickers = yield select(state => state.stickers);
 
-      const { firebase, timeout, destroy } = yield race({
-        firebase: call(persistToFirebase, getFirebase, message),
-        timeout: call(delay, 3000), // TODO timeout?
-        destroy: take(DESTROY_MESSAGE_FORM),
-      });
+        const { uri, name, image } = yield select(state => state.entities.byUri[submitAction.payload.uri]);
+        const stickersById = getStickersByEntity(stickers, uri).map(({ id, entityUri, ...other }) => other);
 
-      if (destroy || timeout) {
-        // TODO error
-        yield put(submitMessageFormError(destroy.payload.uri, new Error('form destroyed')));
-      }
+        const message = {
+          author: {
+            uid: currentUser.uid,
+            firstname: currentUser.firstname,
+            lastname: currentUser.lastname,
+          },
+          entity: { uri, name, image },
+          stickers: stickersById,
+          public: messageForm.public,
+          createdAt: moment().format('YYYYMMDDHHmmssZZ'),
+        };
 
-      if (firebase) {
-        yield put(submitMessageFormSuccess(submitAction.payload.uri, firebase.path.o));
-        yield put(openShareModal(submitAction.payload.uri, firebase.path.o));
+        const { firebase, timeout, destroy } = yield race({
+          firebase: call(persistToFirebase, getFirebase, message),
+          timeout: call(delay, 3000), // TODO timeout?
+          destroy: take(DESTROY_MESSAGE_FORM),
+        });
+
+        if (destroy || timeout) {
+          // TODO error
+          yield put(submitMessageFormError(destroy.payload.uri, new Error('form destroyed')));
+        }
+
+        if (firebase) {
+          yield put(submitMessageFormSuccess(submitAction.payload.uri, firebase.path.o));
+          yield put(destroyMessageForm(submitAction.payload.uri, getStickersByEntity(stickers, uri).map(sticker => sticker.id)));
+        }
+      } else {
+        yield put(submitMessageFormError(submitAction.payload.uri, new Error('form not valid')));
       }
     } catch (e) {
       // TODO error
