@@ -9,6 +9,7 @@ import AddTextButton from './AddTextButton';
 import CloseButton from './CloseButton';
 import CompleteButton from './CompleteButton';
 import HelpButton from './HelpButton';
+import TipButton from './TipButton';
 import EmojiDrawer from './EmojiDrawer';
 import Frame from './Frame';
 import TargetGuide from './TargetGuide';
@@ -70,8 +71,8 @@ const SpinnerContainer = styled.div`
 
 const NavBottomRight = styled.div`
   position: absolute;
-  bottom: 80px;
-  right: 10px;
+  bottom: 139px;
+  right: 4px;
 `;
 
 const AddTextButtonAR = styled(AddTextButton)`
@@ -145,6 +146,12 @@ const StyledHelpButton = styled(HelpButton)`
   position: absolute;
   bottom: 96px;
   right: 24px;
+`;
+
+const StyledTipButton = styled(TipButton)`
+  position: absolute;
+  bottom: 3px;
+  right: 11px;
 `;
 
 type MessageFormPropTypes = {
@@ -672,6 +679,23 @@ class MessageForm extends Component {
             스티커 만드는 중
           </NavTopCenter>
 
+          <TargetGuide>
+            <TrackMessage>
+              {entity.image && (
+                <TrackMessageImage
+                  src={entity.image}
+                  alt={`${entity.name}의 정면을 비춰주세요`}
+                />
+              )}
+
+              <TrackMessageText>
+                {entity.name}의 정면을 비춰주세요
+              </TrackMessageText>
+            </TrackMessage>
+
+            <StyledHelpButton onClick={onHelpClick} />
+          </TargetGuide>
+
           <NavTopLeft>
             <CloseButton onClick={onClose} />
           </NavTopLeft>
@@ -692,22 +716,7 @@ class MessageForm extends Component {
             </div>
           </NavTopRight>
 
-          <TargetGuide>
-            <TrackMessage>
-              {entity.image && (
-                <TrackMessageImage
-                  src={entity.image}
-                  alt={`${entity.name}의 정면을 비춰주세요`}
-                />
-              )}
-
-              <TrackMessageText>
-                {entity.name}의 정면을 비춰주세요
-              </TrackMessageText>
-            </TrackMessage>
-
-            <StyledHelpButton onClick={onHelpClick} />
-          </TargetGuide>
+          <StyledTipButton onClick={onTipClick} />
         </div>
       );
     }
@@ -752,6 +761,11 @@ class MessageForm extends Component {
               small
             />
           </NavBottomRight>,
+
+          <StyledTipButton
+            key={4}
+            onClick={onTipClick}
+          />,
         ]}
 
         {mode === 'text' && (

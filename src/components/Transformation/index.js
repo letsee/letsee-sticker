@@ -15,8 +15,8 @@ const NavTopRight = styled.div`
 
 const StyledTipButton = styled(TipButton)`
   position: absolute;
-  bottom: 0;
-  left: 10px;
+  bottom: 3px;
+  right: 11px;
 `;
 
 const StickerActions = styled.div`
@@ -56,6 +56,8 @@ const Transformation = ({
       <StyledResetButton onClick={onReset} />
       <TrashButton onClick={onDelete} />
     </StickerActions>
+
+    {children}
   </div>
 );
 

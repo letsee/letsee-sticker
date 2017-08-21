@@ -2,13 +2,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import CompleteButton from './CompleteButton';
 import { enableManager } from '../manager';
 
-const NavTopRight = styled.div`
+const InputButton = styled.button`
   position: absolute;
   top: 25px;
   right: 0;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  padding: 17px 16.5px
 `;
 
 const TextareaContainer = styled.div`
@@ -143,9 +150,7 @@ class TextInput extends Component {
           />
         </TextareaContainer>
 
-        <NavTopRight>
-          <CompleteButton onTouchEnd={() => onComplete && onComplete(value.trim())} />
-        </NavTopRight>
+        <InputButton onTouchEnd={() => onComplete && onComplete(value.trim())} />
       </div>
     );
   }
