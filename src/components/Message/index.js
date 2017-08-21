@@ -1,13 +1,15 @@
 // @flow
 import React, { Component } from 'react';
 import { renderToString } from 'react-dom/server';
-import { isLoaded, isEmpty } from 'react-redux-firebase';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
-import { endsWithConsonant, isHangul } from 'hangul-js';
-import Frame from '../Frame';
+import Button from '../Button';
+import TargetGuide from '../TargetGuide';
+import HelpButton from '../HelpButton';
+import CloseButton from '../CloseButton';
+import ShareButton from '../ShareButton';
 import Envelope from './Envelope';
-import NextButton from '../NextButton';
+import MessageMeta from '../MessageMeta';
 import Spinner from '../Spinner';
 import ShareModal from '../ShareModal';
 import openCapture from '../../openCapture';
@@ -25,41 +27,92 @@ const SpinnerContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const FrameText = styled.div`
-  user-select: none;
-  text-align: center;
+const TrackMessage = styled.div`
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  font-family: AppleSDGothicNeo, sans-serif;
-  opacity: 0.8;
-  font-size: 20px;
-  font-weight: bold;
-  letter-spacing: -0.8px;
-  color: #fff;
-  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  user-select: none;
 `;
 
-const FromText = styled.div`
-  user-select: none;
+const TrackMessageImage = styled.img`
+  display: block;
+  margin: 0 auto 16px auto;
+  opacity: 0.8;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+  object-fit: contain;
+`;
+
+const TrackMessageText = styled.div`
   text-align: center;
-  position: absolute;
-  left: 45px;
-  right: 45px;
-  bottom: 29px;
   font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 16px;
-  letter-spacing: -0.4px;
+  font-size: 14px;
+  letter-spacing: -0.3px;
   color: #fff;
-  text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+`;
+
+const Title = styled.div`
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  user-select: none;
+  padding: 17px 0;
+  text-align: center;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+`;
+
+const StyledHelpButton = styled(HelpButton)`
+  position: absolute;
+  right: 24px;
+  bottom: 96px;
+`;
+
+const NavTopLeft = styled.div`
+  position: absolute;
+  top: 25px;
+  left: 0;
 `;
 
 const NavTopRight = styled.div`
   position: absolute;
   top: 25px;
   right: 0;
+`;
+
+const BottomLeft = styled.div`
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+`;
+
+const BottomRight = styled.div`
+  position: absolute;
+  right: 11px;
+  bottom: 3px;
+`;
+
+const CloseTextButton = Button.extend`
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  text-align: center;
+  padding: 17px 16px;
 `;
 
 type MessagePropTypes = {
@@ -83,7 +136,11 @@ type MessagePropTypes = {
       type: 'emoji' | 'text',
     })[],
   },
-  onShareComplete?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  loading: boolean,
+  empty: boolean,
+  loadingEntity: boolean,
+  onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onHelpClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };
 
@@ -110,8 +167,8 @@ class Message extends Component {
 
   componentWillReceiveProps(nextProps: MessagePropTypes) {
     if (
-      isLoaded(nextProps.data) &&
-      !isEmpty(nextProps.data) &&
+      !nextProps.loading &&
+      !nextProps.empty &&
       nextProps.data &&
       nextProps.currentEntity !== null &&
       nextProps.currentEntity === nextProps.data.entity.uri
@@ -247,12 +304,16 @@ class Message extends Component {
       id,
       currentEntity,
       data,
-      onShareComplete,
+      onClose,
+      onHelpClick,
+      loading,
+      empty,
+      loadingEntity,
       children,
       ...other
     } = this.props;
 
-    if (!isLoaded(data)) {
+    if (loading) {
       return (
         <SpinnerContainer>
           <Spinner />
@@ -260,22 +321,22 @@ class Message extends Component {
       );
     }
 
-    if (isEmpty(data) || !data) {
+    if (empty || !data) {
       // TODO
       return (
         <h1>404</h1>
       );
     }
 
-    const { entity: { name, uri, image }, author: { firstname, lastname } } = data;
+    const { entity: { name, uri, image }, author, createdAt } = data;
+    const { firstname, lastname } = author;
     const authorName = `${firstname} ${lastname}`.trim();
     const { shareModalOpened } = this.state;
 
     if (shareModalOpened) {
       return (
         <ShareModal
-          onBack={() => this.setState({ shareModalOpened: false })}
-          onComplete={onShareComplete}
+          onClose={() => this.setState({ shareModalOpened: false })}
           onCaptureClick={() => {
             openCapture();
             this.setState({ shareModalOpened: false });
@@ -316,45 +377,34 @@ class Message extends Component {
     }
 
     const entityTracked = currentEntity !== null && currentEntity === uri;
-    const trimmedName = name.trim();
-    const lastChar = trimmedName.slice(-1);
-    let suffix = '을(를)';
 
-    if (isHangul(lastChar)) {
-      suffix = endsWithConsonant(trimmedName) ? '을' : '를';
+    if (loadingEntity) {
+      return null;
     }
 
     if (!entityTracked) {
       return (
-        <Frame>
-          <FrameText>
-            {/* {image && (
-              <div>
-                <img
-                  src={image}
-                  style={{
-                    display: 'block',
-                    maxWidth: '100%',
-                    maxHeight: '150px',
-                    margin: '0 auto 20px auto',
-                  }}
-                />
-              </div>
-            )} */}
+        <div {...other}>
+          <Title>{authorName}님의 스티커 메세지</Title>
 
-            <div>
-              {name}{suffix}
-            </div>
+          <TargetGuide>
+            <TrackMessage>
+              {image && (
+                <TrackMessageImage src={image} />
+              )}
 
-            <div>
-              비춰주세요
-            </div>
-          </FrameText>
+              <TrackMessageText>
+                {name}의 정면을 비춰주세요
+              </TrackMessageText>
+            </TrackMessage>
+          </TargetGuide>
 
-          <FromText>
-            {authorName}님이 보낸 스티커 메세지가 있습니다
-          </FromText>
-        </Frame>
+          <NavTopLeft>
+            <CloseButton onClick={onClose} />
+          </NavTopLeft>
+
+          <StyledHelpButton onTouchEnd={onHelpClick} />
+        </div>
       );
     }
 
@@ -366,8 +416,21 @@ class Message extends Component {
 
     return (
       <div {...other}>
+        <BottomLeft>
+          <MessageMeta
+            author={author}
+            createdAt={createdAt}
+          />
+        </BottomLeft>
+
+        <BottomRight>
+          <ShareButton onClick={() => this.setState({ shareModalOpened: true })} />
+        </BottomRight>
+
         <NavTopRight>
-          <NextButton onTouchEnd={() => this.setState({ shareModalOpened: true })} />
+          <CloseTextButton onClick={onClose}>
+            닫기
+          </CloseTextButton>
         </NavTopRight>
       </div>
     );

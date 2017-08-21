@@ -785,6 +785,7 @@ class MessageForm extends Component {
           messagePrivacyOpen && (
             <MessagePrivacy
               key={5}
+              error={error}
               submitting={submitting}
               entity={entity}
               public={isPublic}

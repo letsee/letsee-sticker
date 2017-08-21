@@ -146,7 +146,7 @@ class ShareModal extends Component {
 
             <Action
               type="button"
-              onClick={onCaptureClick}
+              onClick={onKakaoLinkClick}
             >
               <ActionImage
                 src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1503282193/assets/btn-link-share_3x.png"
