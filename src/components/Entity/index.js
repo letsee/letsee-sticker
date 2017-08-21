@@ -1,10 +1,12 @@
 // @flow
 import React, { Component } from 'react';
 import { render } from 'react-dom';
+import { connect } from 'react-redux';
+import { firebaseConnect } from 'react-redux-firebase';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import clamp from 'lodash/clamp';
-import { ImageButton } from '../Button';
+import Button, { ImageButton } from '../Button';
 import Frame from '../Frame';
 import {
   MAX_DIAGONAL,
@@ -22,6 +24,35 @@ const Title = styled.div`
   font-size: 18px;
   font-weight: bold;
   letter-spacing: -0.3px;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+`;
+
+const MessagesCount = styled.span`
+  vertical-align: middle;
+  margin-left: 5px;
+  font-family: SFUIDisplay, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: -0.3px;
+  color: #000;
+  text-shadow: none;
+  padding: 0 6px;
+  border-radius: 100px;
+  background-color: #fff;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.4);
+`;
+
+const ToggleMessageListButton = Button.extend`
+  position: absolute;
+  top: 25px;
+  right: 0;
+  padding: 16px;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: -0.4px;
+  text-align: center;
   color: #fff;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 `;
@@ -79,13 +110,43 @@ type EntityPropTypes = {
       depth: number,
     },
   },
+  currentUser: { uid: string } | null,
+  myMessagesCount?: number,
+  publicMessagesCount?: number,
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };
 
 class Entity extends Component {
+  static defaultProps = {
+    myMessagesCount: 0,
+    publicMessagesCount: 0,
+  };
+
+  static propTypes = {
+    myMessagesCount: PropTypes.number,
+    publicMessagesCount: PropTypes.number,
+    currentUser: PropTypes.oneOf([null, PropTypes.shape({
+      uid: PropTypes.string.isRequired,
+    })]).isRequired,
+    data: PropTypes.shape({
+      uri: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      size: PropTypes.shape({
+        width: PropTypes.number.isRequired,
+        height: PropTypes.number.isRequired,
+        depth: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
+    onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
+  };
+
   constructor(props: EntityPropTypes) {
     super(props);
+
+    this.state = {
+      public: true,
+    };
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const container = document.createElement('div');
@@ -93,11 +154,17 @@ class Entity extends Component {
     }
   }
 
+  state: { public: boolean };
+
   componentDidMount() {
     this.renderAR(this.props);
   }
 
   componentWillReceiveProps(nextProps: EntityPropTypes) {
+    if (nextProps.currentUser === null && this.props.currentUser !== null) {
+      this.setState({ public: true });
+    }
+
     this.renderAR(nextProps);
   }
 
@@ -178,18 +245,39 @@ class Entity extends Component {
   }
 
   render() {
+    const { public: isPublic } = this.state;
     const {
-      data: { name },
+      currentUser,
+      myMessagesCount,
+      publicMessagesCount,
+      data,
       onNewClick,
+      firebase,
+      dispatch,
       children,
       ...other
     } = this.props;
 
+    const messagesCount = (isPublic || currentUser === null ? publicMessagesCount : myMessagesCount) || 0;
+
     return (
       <div {...other}>
         <Title>
-          {name}
+          {data.name}
+
+          <MessagesCount>
+            {messagesCount}
+          </MessagesCount>
         </Title>
+
+        {currentUser !== null && (
+          <ToggleMessageListButton
+            type="button"
+            onClick={() => this.setState(prevState => ({ public: !prevState.public }))}
+          >
+            {isPublic ? 'MY' : 'ALL'}
+          </ToggleMessageListButton>
+        )}
 
         <StyledImageButtonRight
           type="button"
@@ -209,17 +297,16 @@ class Entity extends Component {
   }
 }
 
-Entity.propTypes = {
-  data: PropTypes.shape({
-    uri: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    size: PropTypes.shape({
-      width: PropTypes.number.isRequired,
-      height: PropTypes.number.isRequired,
-      depth: PropTypes.number.isRequired,
-    }).isRequired,
-  }).isRequired,
-  onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
-};
-
-export default Entity;
+export default firebaseConnect(
+  ({ currentUser }) => (currentUser === null ? [
+    { path: 'messagesCount/public', storeAs: 'publicMessagesCount' },
+  ] : [
+    { path: 'messagesCount/public', storeAs: 'publicMessagesCount' },
+    { path: `messagesCount/${currentUser.uid}`, storeAs: 'myMessagesCount' },
+  ]),
+)(connect(
+  ({ firebase: { data: { publicMessagesCount, myMessagesCount } } }) => ({
+    publicMessagesCount,
+    myMessagesCount,
+  }),
+)(Entity));

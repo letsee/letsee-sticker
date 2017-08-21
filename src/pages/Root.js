@@ -81,9 +81,12 @@ const Root = ({
           selectedSticker={selectedStickerData}
           entityTracked={entityTracked}
           submitting={submitting}
+          error={error}
+          public={isPublic}
+          onPublicChange={newPublic => dispatch(setMessagePrivacy(uri, newPublic))}
           onClose={() => dispatch(destroyMessageForm(uri, stickersById.map(sticker => sticker.id)))}
           nextDisabled={stickersById.length === 0 || submitting}
-          onComplete={() => {
+          onSubmit={() => {
             if (currentUser === null) {
               openLogin();
             } else {

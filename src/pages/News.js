@@ -89,6 +89,34 @@ class News extends Component {
     });
   }
 
+  componentWillUnmount() {
+    const ref = this.props.firebase.database().ref('news').orderByChild('timestamp');
+    ref.off('child_removed', this.handleChildRemoved);
+    ref.off('child_changed', this.handleChildChanged);
+  }
+
+  handleChildRemoved = (oldChildSnapshopt) => {
+    this.setState((prevState) => {
+      const {
+        [oldChildSnapshopt.key]: old,
+        ...data
+      } = prevState.data;
+
+      return { data };
+    });
+  };
+
+  handleChildChanged = (childSnapshot) => {
+    if (this.state.data[childSnapshot.key]) {
+      this.setState(prevState => ({
+        data: {
+          ...prevState.data,
+          [childSnapshot.key]: childSnapshot.val(),
+        },
+      }));
+    }
+  };
+
   fetchData() {
     if (this.state.hasNextPage) {
       this.setState({ loading: true }, () => {
