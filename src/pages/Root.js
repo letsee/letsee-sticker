@@ -10,6 +10,7 @@ import TransformationGuide from '../components/TransformationGuide';
 import {
   initMessageForm,
   destroyMessageForm,
+  setMessagePrivacy,
   submitMessageForm,
   selectSticker,
   deselectSticker,
@@ -39,6 +40,7 @@ type RootPropTypes = {
     uri: string,
     public: boolean,
     submitting: boolean,
+    error: boolean,
   } | null,
   shareModal: { entityUri: string, path: [string, string] } | null,
 };
@@ -63,7 +65,7 @@ const Root = ({
   }
 
   if (messageForm !== null) {
-    const { uri, submitting } = messageForm;
+    const { uri, error, submitting, public: isPublic } = messageForm;
     const entityTracked = currentEntity !== null && uri === currentEntity;
     const messageEntity = entities.byUri[uri];
     const selectedStickerData = stickers.byId[selectedSticker];
