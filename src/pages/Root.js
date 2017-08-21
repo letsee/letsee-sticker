@@ -13,6 +13,7 @@ import {
   submitMessageForm,
   selectSticker,
   deselectSticker,
+  resetSticker,
   deleteSticker,
   addSticker,
   closeShareModal,
@@ -79,7 +80,7 @@ const Root = ({
           submitting={submitting}
           onClose={() => dispatch(destroyMessageForm(uri, stickersById.map(sticker => sticker.id)))}
           nextDisabled={stickersById.length === 0 || submitting}
-          onNext={() => {
+          onComplete={() => {
             if (currentUser === null) {
               openLogin();
             } else {
@@ -95,8 +96,10 @@ const Root = ({
           onTextInput={value => dispatch(addSticker(uri, value, 'text', entityTracked))}
           onEmojiInput={value => dispatch(addSticker(uri, value, 'emoji', entityTracked))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
+          onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}
           onTipClick={() => dispatch(openTransformationGuide())}
+          onHelpClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}help`)}
         />
 
         {shareModal !== null && (
