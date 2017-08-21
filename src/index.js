@@ -10,6 +10,8 @@ import { Provider } from 'react-redux';
 import { getFirebase } from 'react-redux-firebase';
 import { match, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
+import styled from 'styled-components';
+import clamp from 'lodash/clamp';
 import store, { runSaga } from './store';
 import sagas from './sagas';
 import routes from './routes';
@@ -22,6 +24,9 @@ import {
   startTrackEntity,
   endTrackEntity,
 } from './actions';
+import Frame from './components/Frame';
+import EntityLoader from './components/EntityLoader';
+import { MIN_DIAGONAL, MAX_DIAGONAL } from './constants';
 
 runSaga(sagas, getFirebase);
 const history = syncHistoryWithStore(browserHistory, store);
@@ -49,22 +54,57 @@ match({ history, routes }, (err, redirect, renderProps) => {
       window._app.getUser();
     }
 
-    const loadingRenderable = letsee.loading;
+    const loading = document.createElement('div');
+    const loadingRenderable = new DOMRenderable(loading);
 
-    loadingRenderable.start = (e) => {
-      const w = e.pixelSize.width;
-      const h = e.pixelSize.height;
-      const d = Math.sqrt((w * w) + (h * h));
-      const s = d / 350;
-      loadingRenderable.scale.setScalar(s);
-      loadingRenderable.circleAnim.resume();
+    const FrameAR = styled(Frame)`
+      position: relative;
+      width: ${props => props.width}px;
+      height: ${props => props.height}px;
+
+      img {
+        width: ${props => Math.sqrt(((props.width * props.width) + (props.height * props.height)) / 2) * 0.06}px;
+      }
+    `;
+
+    const StyledEntityLoader = styled(EntityLoader)`
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    `;
+
+    letsee.setLoadingRenderable(loadingRenderable, (e) => {
+      const { width, height, depth } = e.pixelSize;
+      const realDiagonal = Math.sqrt((width * width) + (height * height));
+      const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
+      const realToClamped = realDiagonal / diagonal;
+
+      render(
+        <FrameAR
+          width={width / realToClamped}
+          height={height / realToClamped}
+          vertical={0}
+          horizontal={0}
+          white
+        >
+          <StyledEntityLoader size={diagonal} />
+        </FrameAR>,
+        loading,
+      );
+
+      if (realDiagonal !== diagonal) {
+        loadingRenderable.scale.setScalar(realToClamped);
+      }
+
+      if (typeof depth !== 'undefined' && depth !== null) {
+        loadingRenderable.position.setZ(depth / 2);
+      }
+
       store.dispatch(startLoading());
-    };
-
-    loadingRenderable.stop = () => {
-      loadingRenderable.circleAnim.pause();
+    }, () => {
       store.dispatch(stopLoading());
-    };
+    });
 
     letsee.addEventListener('trackstart', (e) => {
       const {
