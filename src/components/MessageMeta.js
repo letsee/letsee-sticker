@@ -24,7 +24,7 @@ type MessageMetaPropTypes = {
     lastname: string,
   },
   timestamp: number,
-  children?: any,
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const MessageMeta = ({

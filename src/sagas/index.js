@@ -1,7 +1,6 @@
 // @flow
 import { delay } from 'redux-saga';
 import { take, fork, all, put, select, race, call } from 'redux-saga/effects';
-import moment from 'moment';
 import {
   DESTROY_MESSAGE_FORM,
   SUBMIT_MESSAGE_FORM,
@@ -15,6 +14,8 @@ const getStickersByEntity = (stickers, uri: string) => stickers.allIds
   .filter(sticker => sticker && sticker.entityUri === uri);
 
 const persistToFirebase = (getFirebase, message) => getFirebase().push('/messages', message);
+
+const persistAuthorToFirebase = (getFirebase, uid: string, author) => getFirebase().set(`/authors/${uid}`, author);
 
 function* submitMessageForm(getFirebase) {
   while (true) {
@@ -31,15 +32,11 @@ function* submitMessageForm(getFirebase) {
         const stickersById = getStickersByEntity(stickers, uri).map(({ id, entityUri, ...other }) => other);
 
         const message = {
-          author: {
-            uid: currentUser.uid,
-            firstname: currentUser.firstname,
-            lastname: currentUser.lastname,
-          },
+          author: currentUser.uid,
           entity: { uri, name, image },
           stickers: stickersById,
           public: messageForm.public,
-          createdAt: moment().format('YYYYMMDDHHmmssZZ'),
+          timestamp: Date.now(),
         };
 
         const { firebase, timeout, destroy } = yield race({
@@ -54,6 +51,12 @@ function* submitMessageForm(getFirebase) {
         }
 
         if (firebase) {
+          yield call(persistAuthorToFirebase, getFirebase, currentUser.uid, {
+            uid: currentUser.uid,
+            firstname: currentUser.firstname,
+            lastname: currentUser.lastname,
+          });
+
           yield put(submitMessageFormSuccess(submitAction.payload.uri, firebase.path.o));
           yield put(destroyMessageForm(submitAction.payload.uri, getStickersByEntity(stickers, uri).map(sticker => sticker.id)));
         }
