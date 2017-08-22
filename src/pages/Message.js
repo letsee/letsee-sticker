@@ -5,6 +5,7 @@ import {
   firebaseConnect,
   isLoaded,
   isEmpty,
+  populate,
 } from 'react-redux-firebase';
 import MessageComponent from '../components/Message';
 
@@ -33,15 +34,19 @@ const Message = ({
   />
 );
 
+const populates = [
+  { child: 'author', root: 'authors' },
+];
+
 export default firebaseConnect(
-  ({ params: { id } }) => ([{ path: `messages/${id}`, storeAs: 'message' }]),
+  ({ params: { id } }) => ([{ path: `messages/${id}`, storeAs: 'message', populates }]),
 )(connect(
   ({
-    firebase: { data: { message } },
+    firebase,
     currentEntity,
     loadingEntity,
   }) => ({
-    data: message,
+    data: populate(firebase, 'message', populates),
     currentEntity,
     loadingEntity,
   }),
