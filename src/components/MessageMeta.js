@@ -23,7 +23,7 @@ type MessageMetaPropTypes = {
     firstname: string,
     lastname: string,
   },
-  createdAt: string,
+  timestamp: number,
   children?: any,
 };
 
@@ -32,13 +32,13 @@ const MessageMeta = ({
     firstname,
     lastname,
   },
-  createdAt,
+  timestamp,
   children,
   ...other
 }: MessageMetaPropTypes) => (
   <div {...other}>
     <AuthorName>{`${firstname} ${lastname}`.trim()}</AuthorName>
-    <Timestamp>{moment(createdAt, 'YYYYMMDDHHmmssZZ').format('YYYY년 M년 D일')}</Timestamp>
+    <Timestamp>{moment(timestamp).format('YYYY년 M년 D일')}</Timestamp>
   </div>
 );
 

@@ -121,7 +121,7 @@ type MessagePropTypes = {
   data: {
     entity: { uri: string, name: string, image?: string },
     author: { firstname: string, lastname: string },
-    createdAt: string,
+    timestamp: number,
     stickers: ({
       position: { x: number, y: number, z: number },
       rotation: { x: number, y: number, z: number },
@@ -328,7 +328,7 @@ class Message extends Component {
       );
     }
 
-    const { entity: { name, uri, image }, author, createdAt } = data;
+    const { entity: { name, uri, image }, author, timestamp } = data;
     const { firstname, lastname } = author;
     const authorName = `${firstname} ${lastname}`.trim();
     const { shareModalOpened } = this.state;
@@ -419,7 +419,7 @@ class Message extends Component {
         <BottomLeft>
           <MessageMeta
             author={author}
-            createdAt={createdAt}
+            timestamp={timestamp}
           />
         </BottomLeft>
 
