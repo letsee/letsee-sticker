@@ -24,6 +24,7 @@ import {
   MIN_DIAGONAL,
 } from '../constants';
 import styles from './App.scss';
+import type { StickerPosition, StickerQuaternion } from '../types';
 
 const transitionDuration = 200;
 
@@ -159,17 +160,8 @@ type MessageFormPropTypes = {
   },
   selectedSticker: {
     id: string,
-    position: {
-      x: number,
-      y: number,
-      z: number,
-    },
-    quaternion: {
-      x: number,
-      y: number,
-      z: number,
-      w: number,
-    },
+    position: StickerPosition,
+    quaternion: StickerQuaternion,
     scale: number,
   } | null,
   public: boolean,
@@ -189,17 +181,8 @@ type MessageFormPropTypes = {
   onHelpClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onStickerTransform: (string, {
-    position: {
-      x: number,
-      y: number,
-      z: number,
-    },
-    quaternion: {
-      x: number,
-      y: number,
-      z: number,
-      w: number,
-    },
+    position: StickerPosition,
+    quaternion: StickerQuaternion,
     scale: number,
   }) => mixed,
 };
