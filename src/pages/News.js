@@ -5,6 +5,7 @@ import size from 'lodash/size';
 import sortBy from 'lodash/sortBy';
 import keys from 'lodash/keys';
 import NewsList from '../components/NewsList';
+import type { News as NewsType } from '../types';
 
 const PER_PAGE = 10;
 
@@ -23,13 +24,7 @@ class News extends Component {
     startCursor: number | null,
     endCursor: number | null,
     hasNextPage: boolean,
-    data: {
-      [key: string]: {
-        description: string,
-        image: string,
-        timestamp: number,
-      },
-    },
+    data: { [key: string]: NewsType },
     error: boolean,
   };
 

@@ -5,14 +5,15 @@ import {
   firebaseConnect,
   isLoaded,
   isEmpty,
-  populate,
 } from 'react-redux-firebase';
 import MessageComponent from '../components/Message';
+import type { Message as MessageType } from '../types';
 
-type MessageType = {
+type MessagePropTypes = {
   params: { id: string },
   currentEntity: string | null,
   loadingEntity: boolean,
+  data: MessageType,
 };
 
 const Message = ({
@@ -21,7 +22,7 @@ const Message = ({
   data,
   currentEntity,
   loadingEntity,
-}: MessageType) => (
+}: MessagePropTypes) => (
   <MessageComponent
     id={id}
     data={data}
@@ -34,19 +35,15 @@ const Message = ({
   />
 );
 
-const populates = [
-  { child: 'author', root: 'authors' },
-];
-
 export default firebaseConnect(
-  ({ params: { id } }) => ([{ path: `messages/${id}`, storeAs: 'message', populates }]),
+  ({ params: { id } }) => ([{ path: `messages/${id}`, storeAs: 'message' }]),
 )(connect(
   ({
-    firebase,
+    firebase: { data: { message } },
     currentEntity,
     loadingEntity,
   }) => ({
-    data: populate(firebase, 'message', populates),
+    data: message,
     currentEntity,
     loadingEntity,
   }),

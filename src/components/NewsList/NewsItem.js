@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
+import type { News } from '../../types';
 
 const Container = styled.div`
   zoom: 1;
@@ -38,11 +39,7 @@ const Message = styled.div`
 `;
 
 type NewsItemPropTypes = {
-  data: {
-    image: string,
-    description: string,
-    timestamp: number,
-  },
+  data: News,
   children?: any, // eslint-disable-line react/require-default-props
 };
 

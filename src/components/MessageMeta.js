@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
+import type { MessageAuthor } from '../types';
 
 const AuthorName = styled.div`
   font-family: AppleSDGothicNeo, sans-serif;
@@ -19,10 +20,7 @@ const Timestamp = styled.div`
 `;
 
 type MessageMetaPropTypes = {
-  author: {
-    firstname: string,
-    lastname: string,
-  },
+  author: MessageAuthor,
   timestamp: number,
   children?: any, // eslint-disable-line react/require-default-props
 };

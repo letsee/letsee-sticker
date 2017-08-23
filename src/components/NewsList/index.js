@@ -9,6 +9,7 @@ import Button from '../Button';
 import CloseButton from '../CloseButton';
 import Spinner from '../Spinner';
 import { enableManager } from '../../manager';
+import type { News } from '../../types';
 
 const Container = styled.div`
   position: absolute;
@@ -143,13 +144,7 @@ type NewsListPropTypes = {
   empty: boolean,
   error: boolean,
   hasNextPage: boolean,
-  data: {
-    [id: string]: {
-      timestamp: number,
-      description: string,
-      image: string,
-    },
-  },
+  data: { [id: string]: News },
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
 };
 
@@ -172,6 +167,7 @@ class NewsList extends Component {
   }
 
   props: NewsListPropTypes;
+  listContainer: HTMLDivElement;
 
   renderResult() {
     const { requestOpen } = this.state;

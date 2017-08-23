@@ -19,6 +19,7 @@ import {
   MIN_DIAGONAL,
 } from '../../constants';
 import styles from '../App.scss';
+import type { Message as MessageType } from '../../types';
 
 const SpinnerContainer = styled.div`
   position: absolute;
@@ -118,24 +119,7 @@ const CloseTextButton = Button.extend`
 type MessagePropTypes = {
   id: string,
   currentEntity: string | null,
-  data: {
-    entity: { uri: string, name: string, image?: string },
-    author: { firstname: string, lastname: string },
-    timestamp: number,
-    stickers: ({
-      position: { x: number, y: number, z: number },
-      rotation: { x: number, y: number, z: number },
-      scale: number,
-      text: string,
-      type: 'emoji' | 'text',
-    } | {
-      position: { x: number, y: number, z: number },
-      quaternion: { x: number, y: number, z: number, w: number },
-      scale: number,
-      text: string,
-      type: 'emoji' | 'text',
-    })[],
-  },
+  data: MessageType,
   loading: boolean,
   empty: boolean,
   loadingEntity: boolean,

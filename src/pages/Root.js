@@ -25,15 +25,12 @@ import {
 import openCapture from '../openCapture';
 import openLogin from '../openLogin';
 import generateKakaoLinkUrl from '../generateKakaoLinkUrl';
+import type { MessageAuthor } from '../types';
 
 type RootPropTypes = {
   loadingEntity: boolean,
   transformationGuideOpened: boolean,
-  currentUser: {
-    firstname: string,
-    lastname: string,
-    uid: string,
-  } | null,
+  currentUser: MessageAuthor | null,
   currentEntity: string | null,
   selectedSticker: string | null,
   messageForm: {
