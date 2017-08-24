@@ -42,6 +42,15 @@ export type Message = {
   timestamp: number;
 };
 
+export type MessageWithId = {
+  id: string,
+  author: MessageAuthor,
+  entity: MessageEntity,
+  public: boolean,
+  stickers: Sticker[],
+  timestamp: number;
+};
+
 export type News = {
   description: string,
   image: string,

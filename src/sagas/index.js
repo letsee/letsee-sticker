@@ -8,12 +8,14 @@ import {
   submitMessageFormError,
   destroyMessageForm,
 } from '../actions';
+import { entityUriToId } from '../entityUriHelper';
+import type { Message } from '../types';
 
 const getStickersByEntity = (stickers, uri: string) => stickers.allIds
   .map(id => stickers.byId[id])
   .filter(sticker => sticker && sticker.entityUri === uri);
 
-const persistToFirebase = (getFirebase, message) => getFirebase().push('/messages', message);
+const persistToFirebase = (getFirebase, message: Message) => getFirebase().push('/messages', message);
 
 function* submitMessageForm(getFirebase) {
   while (true) {
@@ -23,17 +25,16 @@ function* submitMessageForm(getFirebase) {
       const messageForm = yield select(state => state.messageForm);
 
       if (messageForm.uri === submitAction.payload.uri) {
-        const currentUser = yield select(state => state.currentUser);
+        const { uid, firstname, lastname } = yield select(state => state.currentUser);
         const stickers = yield select(state => state.stickers);
-
         const { uri, name, image } = yield select(state => state.entities.byUri[submitAction.payload.uri]);
         const stickersById = getStickersByEntity(stickers, uri).map(({ id, entityUri, ...other }) => other);
 
         const message = {
           author: {
-            uid: currentUser.uid,
-            firstname: currentUser.firstname,
-            lastname: currentUser.lastname,
+            uid,
+            firstname,
+            lastname,
           },
           entity: { uri, name, image },
           stickers: stickersById,
@@ -53,6 +54,14 @@ function* submitMessageForm(getFirebase) {
         }
 
         if (firebase) {
+          const messageId = firebase.key;
+          const entityId = entityUriToId(uri);
+          yield getFirebase().set(`/entityMessages/${entityId}/authorMessages/${uid}/${messageId}`, message);
+
+          if (message.public) {
+            yield getFirebase().set(`/entityMessages/${entityId}/publicMessages/${messageId}`, message);
+          }
+
           yield put(submitMessageFormSuccess(submitAction.payload.uri, firebase.path.o));
           yield put(destroyMessageForm(submitAction.payload.uri, getStickersByEntity(stickers, uri).map(sticker => sticker.id)));
         }

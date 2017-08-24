@@ -13,7 +13,7 @@ import MessageMeta from '../MessageMeta';
 import Spinner from '../Spinner';
 import ShareModal from '../ShareModal';
 import openCapture from '../../openCapture';
-import generateKakaoLinkUrl from '../../generateKakaoLinkUrl';
+import openKakaoLink from '../../openKakaoLink';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
@@ -93,13 +93,13 @@ const NavTopRight = styled.div`
   right: 0;
 `;
 
-const BottomLeft = styled.div`
+const StyledMessageMeta = styled(MessageMeta)`
   position: absolute;
   left: 16px;
   bottom: 14px;
 `;
 
-const BottomRight = styled.div`
+const StyledShareButton = styled(ShareButton)`
   position: absolute;
   right: 11px;
   bottom: 3px;
@@ -326,30 +326,7 @@ class Message extends Component {
             this.setState({ shareModalOpened: false });
           }}
           onKakaoLinkClick={() => {
-            const kakaoLinkUrl = generateKakaoLinkUrl(id);
-
-            Kakao.Link.sendDefault({
-              objectType: 'feed',
-              content: {
-                title: '렛시 스티커 메세지가 도착했어요!',
-                description: `${authorName}님이 ${name}에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!`,
-                imageUrl: process.env.KAKAO_IMAGE_URL,
-                link: {
-                  mobileWebUrl: kakaoLinkUrl,
-                  webUrl: kakaoLinkUrl,
-                  androidExecParams: kakaoLinkUrl,
-                  iosExecParams: kakaoLinkUrl,
-                },
-              },
-              buttons: [{
-                title: '렛시 브라우저로 보기',
-                link: {
-                  mobileWebUrl: kakaoLinkUrl,
-                  webUrl: kakaoLinkUrl,
-                  androidExecParams: kakaoLinkUrl,
-                  iosExecParams: kakaoLinkUrl,
-                },
-              }],
+            openKakaoLink(id, authorName, name, {
               fail: (...args) => {
                 // TODO error
                 console.log(args);
@@ -400,16 +377,12 @@ class Message extends Component {
 
     return (
       <div {...other}>
-        <BottomLeft>
-          <MessageMeta
-            author={author}
-            timestamp={timestamp}
-          />
-        </BottomLeft>
+        <StyledMessageMeta
+          author={author}
+          timestamp={timestamp}
+        />
 
-        <BottomRight>
-          <ShareButton onClick={() => this.setState({ shareModalOpened: true })} />
-        </BottomRight>
+        <StyledShareButton onClick={() => this.setState({ shareModalOpened: true })} />
 
         <NavTopRight>
           <CloseTextButton onClick={onClose}>
