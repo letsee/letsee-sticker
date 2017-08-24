@@ -87,7 +87,7 @@ class ShareModal extends Component {
     }
   }
 
-  commponentWillUnmount() {
+  componentWillUnmount() {
     if (typeof window !== 'undefined' && window !== null) {
       window.removeEventListener('touchend', this.handleWindowClick);
     }
