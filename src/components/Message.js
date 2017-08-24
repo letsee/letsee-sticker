@@ -2,17 +2,17 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
-import ShareButton from '../ShareButton';
-import MessageMeta from '../MessageMeta';
-import ShareModal from '../ShareModal';
-import openCapture from '../../openCapture';
-import openKakaoLink from '../../openKakaoLink';
+import ShareButton from './ShareButton';
+import MessageMeta from './MessageMeta';
+import ShareModal from './ShareModal';
+import openCapture from '../openCapture';
+import openKakaoLink from '../openKakaoLink';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
-} from '../../constants';
-import styles from '../App.scss';
-import type { Message as MessageType } from '../../types';
+} from '../constants';
+import styles from './App.scss';
+import type { Message as MessageType } from '../types';
 
 const StyledMessageMeta = styled(MessageMeta)`
   position: absolute;
