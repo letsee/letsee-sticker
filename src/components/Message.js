@@ -31,7 +31,6 @@ type MessagePropTypes = {
   currentEntity: string | null,
   data: MessageType,
   loadingEntity: boolean,
-  onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };
 
@@ -140,7 +139,6 @@ class Message extends Component {
       id,
       currentEntity,
       data,
-      onClose,
       loadingEntity,
       children,
       ...other

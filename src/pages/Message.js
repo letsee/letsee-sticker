@@ -263,7 +263,6 @@ class Message extends Component {
             data={data}
             currentEntity={currentEntity}
             loadingEntity={loadingEntity}
-            onClose={() => router.push(process.env.PUBLIC_PATH || '/')}
           />
         )}
 
