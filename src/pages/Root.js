@@ -5,7 +5,6 @@ import withRouter from 'react-router/lib/withRouter';
 import AppLoader from '../components/AppLoader';
 import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
-import ShareModal from '../components/ShareModal';
 import TransformationGuide from '../components/TransformationGuide';
 import {
   initMessageForm,
@@ -17,14 +16,11 @@ import {
   resetSticker,
   deleteSticker,
   addSticker,
-  closeShareModal,
   openTransformationGuide,
   closeTransformationGuide,
   transformSticker,
 } from '../actions';
-import openCapture from '../openCapture';
 import openLogin from '../openLogin';
-import generateKakaoLinkUrl from '../generateKakaoLinkUrl';
 import type { MessageAuthor } from '../types';
 
 type RootPropTypes = {
@@ -39,13 +35,11 @@ type RootPropTypes = {
     submitting: boolean,
     error: boolean,
   } | null,
-  shareModal: { entityUri: string, path: [string, string] } | null,
 };
 
 const Root = ({
   loadingEntity,
   transformationGuideOpened,
-  shareModal,
   currentUser,
   entities,
   currentEntity,
@@ -104,51 +98,6 @@ const Root = ({
           onTipClick={() => dispatch(openTransformationGuide())}
           onHelpClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}help`)}
         />
-
-        {shareModal !== null && (
-          <ShareModal
-            onBack={() => dispatch(closeShareModal())}
-            onComplete={() => dispatch(destroyMessageForm(uri, stickersById.map(sticker => sticker.id)))}
-            onCaptureClick={() => {
-              openCapture();
-              dispatch(closeShareModal());
-            }}
-            onKakaoLinkClick={() => {
-              const messageId = shareModal.path[1];
-              const kakaoLinkUrl = generateKakaoLinkUrl(messageId);
-              const authorName = `${currentUser.firstname} ${currentUser.lastname}`.trim();
-              const entityName = messageEntity.name;
-
-              Kakao.Link.sendDefault({
-                objectType: 'feed',
-                content: {
-                  title: '렛시 스티커 메세지가 도착했어요!',
-                  description: `${authorName}님이 ${entityName}에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!`,
-                  imageUrl: process.env.KAKAO_IMAGE_URL,
-                  link: {
-                    mobileWebUrl: kakaoLinkUrl,
-                    webUrl: kakaoLinkUrl,
-                    androidExecParams: kakaoLinkUrl,
-                    iosExecParams: kakaoLinkUrl,
-                  },
-                },
-                buttons: [{
-                  title: '렛시 브라우저로 보기',
-                  link: {
-                    mobileWebUrl: kakaoLinkUrl,
-                    webUrl: kakaoLinkUrl,
-                    androidExecParams: kakaoLinkUrl,
-                    iosExecParams: kakaoLinkUrl,
-                  },
-                }],
-                fail: (...args) => {
-                  // TODO error
-                  console.log(args);
-                },
-              });
-            }}
-          />
-        )}
       </div>
     );
   }
@@ -157,16 +106,19 @@ const Root = ({
     const currentEntityData = entities.byUri[currentEntity];
 
     return (
-      <Entity
-        data={currentEntityData}
-        onNewClick={() => {
-          if (currentUser === null) {
-            openLogin();
-          } else {
-            dispatch(initMessageForm(currentEntity));
-          }
-        }}
-      />
+      <div>
+        <Entity
+          data={currentEntityData}
+          currentUser={currentUser}
+          onNewClick={() => {
+            if (currentUser === null) {
+              openLogin();
+            } else {
+              dispatch(initMessageForm(currentEntity));
+            }
+          }}
+        />
+      </div>
     );
   }
 
@@ -189,7 +141,6 @@ export default withRouter(connect(
     entities,
     selectedSticker,
     messageForm,
-    shareModal,
     transformationGuideOpened,
   }) => ({
     letseeLoaded,
@@ -200,7 +151,6 @@ export default withRouter(connect(
     entities,
     selectedSticker,
     messageForm,
-    shareModal,
     transformationGuideOpened,
   }),
 )(Root));

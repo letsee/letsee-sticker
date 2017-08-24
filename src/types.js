@@ -1,4 +1,10 @@
 // @flow
+export type ShareModal = {
+  messageId: string,
+  authorName: string,
+  entityName: string,
+};
+
 export type StickerPosition = {
   x: number,
   y: number,
