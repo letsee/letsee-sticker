@@ -15,7 +15,7 @@ import Button from '../components/Button';
 import TargetGuide from '../components/TargetGuide';
 import HelpButton from '../components/HelpButton';
 import CloseButton from '../components/CloseButton';
-import Envelope from '../components/Message/Envelope';
+import Envelope from '../components/Envelope';
 import {
   MIN_DIAGONAL,
   MAX_DIAGONAL,
