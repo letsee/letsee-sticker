@@ -7,6 +7,8 @@ import {
   submitMessageFormSuccess,
   submitMessageFormError,
   destroyMessageForm,
+  setPublic,
+  setCurrentCursor,
 } from '../actions';
 // import { entityUriToId } from '../entityUriHelper';
 import type { Message } from '../types';
@@ -102,6 +104,8 @@ function* submitMessageForm(getFirebase) {
         if (firebase) {
           yield put(submitMessageFormSuccess(messageRef.key));
           yield put(destroyMessageForm());
+          yield put(setPublic(false));
+          yield put(setCurrentCursor(messageRef.key));
         } else {
           // TODO error
           yield put(submitMessageFormError(new Error('form destroyed')));
