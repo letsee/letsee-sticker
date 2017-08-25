@@ -13,6 +13,7 @@ export const INIT_MESSAGE_FORM: 'INIT_MESSAGE_FORM' = 'INIT_MESSAGE_FORM';
 export const INIT_EDIT_MESSAGE_FORM: 'INIT_EDIT_MESSAGE_FORM' = 'INIT_EDIT_MESSAGE_FORM';
 export const DESTROY_MESSAGE_FORM: 'DESTROY_MESSAGE_FORM' = 'DESTROY_MESSAGE_FORM';
 export const SET_MESSAGE_PRIVACY: 'SET_MESSAGE_PRIVACY' = 'SET_MESSAGE_PRIVACY';
+export const SET_MESSAGE_FORM_ID: 'SET_MESSAGE_FORM_ID' = 'SET_MESSAGE_FORM_ID';
 export const SUBMIT_MESSAGE_FORM: 'SUBMIT_MESSAGE_FORM' = 'SUBMIT_MESSAGE_FORM';
 export const SUBMIT_MESSAGE_FORM_SUCCESS: 'SUBMIT_MESSAGE_FORM_SUCCESS' = 'SUBMIT_MESSAGE_FORM_SUCCESS';
 export const SUBMIT_MESSAGE_FORM_ERROR: 'SUBMIT_MESSAGE_FORM_ERROR' = 'SUBMIT_MESSAGE_FORM_ERROR';
@@ -42,6 +43,13 @@ export const setMessagePrivacy = (isPublic: boolean) => ({
 export const submitMessageForm = (messageForm: MessageForm) => ({
   type: SUBMIT_MESSAGE_FORM,
   payload: messageForm,
+});
+
+export const setMessageFormId = (id: string) => ({
+  type: SET_MESSAGE_FORM_ID,
+  payload: {
+    id,
+  },
 });
 
 export const submitMessageFormSuccess = (id: string) => ({

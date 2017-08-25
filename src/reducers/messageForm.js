@@ -4,6 +4,7 @@ import {
   INIT_EDIT_MESSAGE_FORM,
   DESTROY_MESSAGE_FORM,
   SET_MESSAGE_PRIVACY,
+  SET_MESSAGE_FORM_ID,
   SUBMIT_MESSAGE_FORM,
   SUBMIT_MESSAGE_FORM_SUCCESS,
   SUBMIT_MESSAGE_FORM_ERROR,
@@ -123,6 +124,15 @@ const messageForm = (state: MessageForm | null = null, action): MessageForm | nu
         return {
           ...state,
           public: action.payload.public,
+        };
+      }
+
+      return state;
+    case SET_MESSAGE_FORM_ID:
+      if (state !== null) {
+        return {
+          ...state,
+          id: action.payload.id,
         };
       }
 
