@@ -26,7 +26,13 @@ import {
   closeHelp,
 } from '../actions';
 import openLogin from '../openLogin';
-import type { MessageAuthor, MessageForm as MessageFormType, MessageFormEntity, MessageWithId } from '../types';
+import type {
+  MessageAuthor,
+  MessageForm as MessageFormType,
+  MessageFormEntity,
+  MessageWithId,
+  MessagesList,
+} from '../types';
 
 type RootPropTypes = {
   helpOpened: boolean,
@@ -36,6 +42,7 @@ type RootPropTypes = {
   currentEntity: string | null,
   selectedSticker: string | null,
   messageForm: MessageFormType | null,
+  messagesList: MessagesList | null,
   entities: {
     byUri: { [uri: string]: MessageFormEntity },
   },
@@ -50,6 +57,7 @@ const Root = ({
   currentEntity,
   selectedSticker,
   messageForm,
+  messagesList,
   router,
   dispatch,
 }: RootPropTypes) => {
@@ -103,12 +111,13 @@ const Root = ({
     );
   }
 
-  if (currentEntity !== null) {
-    const currentEntityData = entities.byUri[currentEntity];
+  if (messagesList !== null) {
+    const currentEntityData = entities.byUri[messagesList.entityUri];
 
     return (
       <div>
         <Entity
+          messagesList={messagesList}
           data={currentEntityData}
           currentUser={currentUser}
           onNewClick={() => {
@@ -175,6 +184,7 @@ export default withRouter(connect(
     messageForm,
     transformationGuideOpened,
     helpOpened,
+    messagesList,
   }) => ({
     letseeLoaded,
     loadingEntity,
@@ -185,5 +195,6 @@ export default withRouter(connect(
     messageForm,
     transformationGuideOpened,
     helpOpened,
+    messagesList,
   }),
 )(Root));

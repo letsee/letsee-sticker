@@ -9,6 +9,7 @@ import helpOpened from './helpOpened';
 import shareModal from './shareModal';
 import { letseeLoaded, loadingEntity } from './letsee';
 import messageForm from './messageForm';
+import messagesList from './messagesList';
 import selectedSticker from './selectedSticker';
 import transformationGuideOpened from './transformationGuideOpened';
 
@@ -21,6 +22,7 @@ const reducers = combineReducers({
   letseeLoaded,
   loadingEntity,
   messageForm,
+  messagesList,
   selectedSticker,
   transformationGuideOpened,
   firebase: firebaseStateReducer,

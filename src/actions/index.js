@@ -6,5 +6,6 @@ export * from './helpOpened';
 export * from './shareModal';
 export * from './letsee';
 export * from './messageForm';
+export * from './messagesList';
 export * from './selectedSticker';
 export * from './transformationGuideOpened';

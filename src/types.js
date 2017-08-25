@@ -97,3 +97,13 @@ export type MessageForm = {
   submitted: boolean,
   error: boolean,
 };
+
+export type MessagesList = {
+  entityUri: string,
+  public: boolean,
+  empty: boolean,
+  count: number,
+  first: string | null,
+  last: string | null,
+  current: string | null,
+};

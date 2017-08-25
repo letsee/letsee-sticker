@@ -9,6 +9,7 @@ export default {
     allUris: [],
   },
   messageForm: null,
+  messagesList: null,
   selectedSticker: null,
   shareModal: null,
   transformationGuideOpened: false,
