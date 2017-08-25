@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
+import type { News } from '../../types';
 
 const Container = styled.div`
   zoom: 1;
@@ -36,11 +38,16 @@ const Message = styled.div`
   word-wrap: break-word;
 `;
 
+type NewsItemPropTypes = {
+  data: News,
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
 const NewsItem = ({
   data: { image, description, timestamp },
   children,
   ...other
-}) => (
+}: NewsItemPropTypes) => (
   <Container {...other}>
     <ImageContainer>
       <Image src={image} />
@@ -52,6 +59,14 @@ const NewsItem = ({
     </Message>
   </Container>
 );
+
+NewsItem.propTypes = {
+  data: PropTypes.shape({
+    image: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    timestamp: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export const Banner = styled(NewsItem)`
   background-color: #fff;

@@ -11,6 +11,10 @@ const Press = new Hammer.Press({
   threshold: 15,
 });
 
+const Swipe = new Hammer.Swipe({
+  direction: Hammer.DIRECTION_HORIZONTAL,
+});
+
 Rotate.recognizeWith([Pan]);
 Pinch.recognizeWith([Rotate, Pan]);
 
@@ -18,8 +22,11 @@ manager.add(Press);
 manager.add(Pan);
 manager.add(Rotate);
 manager.add(Pinch);
+manager.add(Swipe);
 
-export const enableManager = (enable: boolean) => {
+manager.get('swipe').set({ enable: false });
+
+export const enableManager = (enable: boolean = false) => {
   manager.get('pan').set({ enable });
   manager.get('pinch').set({ enable });
   manager.get('rotate').set({ enable });

@@ -66,7 +66,7 @@ app.use((err, req, res, next) => {
  * Normalize a port into a number, string, or false.
  */
 
-const normalizePort = (val) => {
+const normalizePort = (val: string | number): string | number | boolean => {
   const parsed = parseInt(val, 10);
 
   if (isNaN(parsed)) {

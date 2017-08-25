@@ -1,42 +1,64 @@
 // @flow
 import React, { Component } from 'react';
-import { render } from 'react-dom';
+import { connect } from 'react-redux';
+import { firebaseConnect } from 'react-redux-firebase';
 import styled from 'styled-components';
-import clamp from 'lodash/clamp';
-import { ImageButton } from '../Button';
-import {
-  MAX_DIAGONAL,
-  MIN_DIAGONAL,
-} from '../../constants';
+import PropTypes from 'prop-types';
+import MessageList from './MessageList';
+import Swipe from './Swipe';
+import Button from '../Button';
+import { entityUriToId } from '../../entityUriHelper';
+import type { MessageAuthor } from '../../types';
 
-const ARContainer = styled.div`
-  position: relative;
-`;
-
-const StyledImageButton = ImageButton.extend`
-  margin: 0 auto;
-`;
-
-const StyledImageButtonRight = StyledImageButton.extend`
+const StyledSwipe = styled(Swipe)`
   position: absolute;
-  right: 2px;
-  bottom: 79px;
-`;
-
-const MessageText = styled.div`
-  position: absolute;
-  white-space: nowrap;
+  bottom: 105px;
   left: 50%;
-  bottom: ${props => props.height}px;
   transform: translateX(-50%);
-  opacity: 0.8;
-  font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
-  font-size: ${props => props.size * 0.06}px;
-  font-weight: 800;
-  letter-spacing: ${props => -props.size * 0.06 * 0.8 / 25}px;
+`;
+
+const Title = styled.div`
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 16px 0;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: -0.3px;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+`;
+
+const MessagesCount = styled.span`
+  vertical-align: middle;
+  margin-left: 5px;
+  font-family: SFUIDisplay, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: -0.3px;
+  color: #000;
+  text-shadow: none;
+  padding: 0 6px;
+  border-radius: 100px;
+  background-color: #fff;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.4);
+`;
+
+const ToggleMessageListButton = Button.extend`
+  position: absolute;
+  top: 25px;
+  right: 0;
+  padding: 16px;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: -0.4px;
   text-align: center;
   color: #fff;
-  text-shadow: 0 0 ${props => props.size * 0.06 * 12 / 25}px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 `;
 
 type EntityPropTypes = {
@@ -44,131 +66,140 @@ type EntityPropTypes = {
     uri: string,
     name: string,
     size: {
+      width: number,
       height: number,
       depth: number,
     },
   },
+  currentUser: MessageAuthor | null,
+  myMessagesCount?: number,
+  publicMessagesCount?: number,
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 class Entity extends Component {
-  constructor(props: EntityPropTypes) {
-    super(props);
+  static defaultProps = {
+    myMessagesCount: 0,
+    publicMessagesCount: 0,
+  };
 
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      const container = document.createElement('div');
-      this.object = new DOMRenderable(container);
-    }
-  }
+  static propTypes = {
+    myMessagesCount: PropTypes.number,
+    publicMessagesCount: PropTypes.number,
+    currentUser: PropTypes.shape({ // eslint-disable-line react/require-default-props
+      uid: PropTypes.string.isRequired,
+    }),
+    data: PropTypes.shape({
+      uri: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      size: PropTypes.shape({
+        width: PropTypes.number.isRequired,
+        height: PropTypes.number.isRequired,
+        depth: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
+    onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
+  };
 
-  componentDidMount() {
-    this.renderAR(this.props);
-  }
+
+  state = {
+    public: true,
+    showedSwipe: false,
+    swipeShown: false,
+  };
+
+  state: {
+    public: boolean,
+    showedSwipe: boolean,
+    swipeShown: boolean,
+  };
 
   componentWillReceiveProps(nextProps: EntityPropTypes) {
-    this.renderAR(nextProps);
-  }
+    if (nextProps.currentUser === null && this.props.currentUser !== null) {
+      this.setState({ public: true });
+    }
 
-  componentWillUnmount() {
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntity(this.props.data.uri);
-      entity.removeRenderable(this.object);
+    const messagesCount = (this.state.public || nextProps.currentUser === null ? nextProps.publicMessagesCount : nextProps.myMessagesCount) || 0;
+
+    if (!this.state.showedSwipe && messagesCount > 1) {
+      this.setState({
+        showedSwipe: true,
+        swipeShown: true,
+      });
     }
   }
 
   props: EntityPropTypes;
 
-  renderAR({ data, onNewClick }: EntityPropTypes) {
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      const { name, uri, size: { width, height, depth } } = data;
-      const entity = letsee.getEntity(uri);
-
-      if (this.object.parent !== entity.object) {
-        entity.addRenderable(this.object);
-      }
-
-      let realDiagonal = MAX_DIAGONAL;
-
-      if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
-        realDiagonal = Math.sqrt((width * width) + (height * height));
-      }
-
-      const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
-      const realToClamped = realDiagonal / diagonal;
-
-      if (realDiagonal !== diagonal) {
-        this.object.scale.setScalar(realToClamped);
-      }
-
-      if (depth !== null && typeof depth !== 'undefined') {
-        this.object.position.setZ(depth / 2);
-      }
-
-      const buttonSize = diagonal * 0.33;
-      const nearest = Math.ceil(buttonSize / 100) * 100;
-      const y = (buttonSize + height / realToClamped) / 2 + diagonal * 0.04;
-
-      render(
-        <ARContainer>
-          <MessageText
-            size={diagonal}
-            height={y}
-          >
-            <div>
-              {name}에
-            </div>
-
-            <div>
-              스티커 메세지를 남겨보세요
-            </div>
-          </MessageText>
-
-          <StyledImageButton
-            type="button"
-            onClick={onNewClick}
-          >
-            <img
-              src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
-              srcSet={`
-                https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
-                https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
-              `}
-              alt={`${name}에 스티커 메세지를 남겨보세요`}
-              height={buttonSize}
-            />
-          </StyledImageButton>
-        </ARContainer>,
-        this.object.element,
-      );
-    }
-  }
-
   render() {
+    const { public: isPublic, swipeShown } = this.state;
     const {
-      data: { name },
+      currentUser,
+      myMessagesCount,
+      publicMessagesCount,
+      data,
       onNewClick,
+      firebase,
+      dispatch,
       children,
       ...other
     } = this.props;
 
+    const messagesCount = (isPublic || currentUser === null ? publicMessagesCount : myMessagesCount) || 0;
+
     return (
       <div {...other}>
-        <StyledImageButtonRight
-          type="button"
-          onTouchEnd={onNewClick}
-        >
-          <img
-            alt={`${name}에 스티커 메세지를 남겨보세요`}
-            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1501868965/assets/btn-create_3x.png"
-            srcSet="
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1501868965/assets/btn-create_3x.png 2x,
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1501868965/assets/btn-create_3x.png 3x
-            "
-          />
-        </StyledImageButtonRight>
+        <Title>
+          {data.name}
+
+          <MessagesCount>
+            {messagesCount}
+          </MessagesCount>
+        </Title>
+
+        {currentUser !== null && (
+          <ToggleMessageListButton
+            type="button"
+            onClick={() => this.setState(prevState => ({ public: !prevState.public }))}
+          >
+            {isPublic ? 'MY' : 'ALL'}
+          </ToggleMessageListButton>
+        )}
+
+        {swipeShown && (
+          <StyledSwipe />
+        )}
+
+        <MessageList
+          currentUser={currentUser}
+          userId={isPublic || currentUser === null ? null : currentUser.uid}
+          entity={data}
+          empty={messagesCount === 0}
+          onNewClick={onNewClick}
+        />
       </div>
     );
   }
 }
 
-export default Entity;
+export default firebaseConnect(
+  ({ currentUser, data }) => (currentUser === null ? [
+    { path: `messagesCount/${entityUriToId(data.uri)}/publicMessages`, storeAs: 'publicMessagesCount' },
+  ] : [
+    { path: `messagesCount/${entityUriToId(data.uri)}/publicMessages`, storeAs: 'publicMessagesCount' },
+    { path: `messagesCount/${entityUriToId(data.uri)}/authorMessages/${currentUser.uid}`, storeAs: 'myMessagesCount' },
+  ]),
+)(connect(
+  ({
+    firebase: {
+      data: {
+        publicMessagesCount,
+        myMessagesCount,
+      },
+    },
+  }) => ({
+    publicMessagesCount,
+    myMessagesCount,
+  }),
+)(Entity));

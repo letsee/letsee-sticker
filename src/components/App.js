@@ -10,7 +10,7 @@ const Main = styled.div`
   background-color: transparent;
 `;
 
-const App = ({ children }) => (
+const App = ({ children }) => ( // eslint-disable-line react/prop-types
   <Main>
     <Helmet>
       <title>Sticker</title>

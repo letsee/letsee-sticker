@@ -3,7 +3,7 @@ import React from 'react';
 import { ImageButton } from '../Button';
 
 const BackButton = ({
-  children,
+  children, // eslint-disable-line react/prop-types
   ...other
 }) => (
   <ImageButton

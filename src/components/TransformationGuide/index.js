@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import chunk from 'lodash/chunk';
 import CloseButton from '../CloseButton';
@@ -137,7 +138,7 @@ const gestures = [{
   },
 }];
 
-const calculatePerRow = () => (document.documentElement.clientHeight < MIN_HEIGHT ? 3 : 2);
+const calculatePerRow = () => (typeof window !== 'undefined' && window !== null && document.documentElement.clientHeight >= MIN_HEIGHT ? 2 : 3);
 
 class TransformationGuide extends Component {
   state = {
@@ -149,12 +150,21 @@ class TransformationGuide extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener('resize', this.handleWindowResize);
+    if (typeof window !== 'undefined' && window !== null) {
+      window.addEventListener('resize', this.handleWindowResize);
+    }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleWindowResize);
+    if (typeof window !== 'undefined' && window !== null) {
+      window.removeEventListener('resize', this.handleWindowResize);
+    }
   }
+
+  props: {
+    onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
+    children?: any, // eslint-disable-line react/require-default-props
+  };
 
   handleWindowResize = () => {
     this.setState({ perRow: calculatePerRow() });
@@ -199,5 +209,9 @@ class TransformationGuide extends Component {
     );
   }
 }
+
+TransformationGuide.propTypes = {
+  onClose: PropTypes.func, // eslint-disable-line react/require-default-props
+};
 
 export default TransformationGuide;

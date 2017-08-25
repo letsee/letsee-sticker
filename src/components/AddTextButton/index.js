@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ImageButton } from '../Button';
 
 type AddTextButtonPropTypes = {
-  small: boolean,
+  small?: boolean,
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const AddTextButton = ({
@@ -18,10 +20,10 @@ const AddTextButton = ({
     {small ? (
       <img
         alt="Add Text"
-        src="http://res.cloudinary.com/df9jsefb9/image/upload/s--o8d5-adI--/c_scale,w_54,q_auto/v1502250493/assets/btn-add-txt_3x.png"
+        src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1503050254/assets/btn-add-txt_3x.png"
         srcSet="
-          http://res.cloudinary.com/df9jsefb9/image/upload/s--o8d5-adI--/c_scale,w_108,q_auto/v1502250493/assets/btn-add-txt_3x.png 2x,
-          http://res.cloudinary.com/df9jsefb9/image/upload/s--o8d5-adI--/c_scale,w_162,q_auto/v1502250493/assets/btn-add-txt_3x.png 3x
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1503050254/assets/btn-add-txt_3x.png 2x,
+          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1503050254/assets/btn-add-txt_3x.png 3x
         "
       />
     ) : (
@@ -39,6 +41,10 @@ const AddTextButton = ({
 
 AddTextButton.defaultProps = {
   small: false,
+};
+
+AddTextButton.propTypes = {
+  small: PropTypes.bool,
 };
 
 export default AddTextButton;

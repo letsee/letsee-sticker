@@ -4,17 +4,19 @@ import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 import Transition from 'react-transition-group/Transition';
 import clamp from 'lodash/clamp';
-import { endsWithConsonant, isHangul } from 'hangul-js';
 import AddEmojiButton from './AddEmojiButton';
 import AddTextButton from './AddTextButton';
 import CloseButton from './CloseButton';
-import NextButton from './NextButton';
+import CompleteButton from './CompleteButton';
+import HelpButton from './HelpButton';
+import TipButton from './TipButton';
 import EmojiDrawer from './EmojiDrawer';
 import Frame from './Frame';
+import TargetGuide from './TargetGuide';
 import TextInput from './TextInput';
 import Transformation from './Transformation';
-import Spinner from './Spinner';
 import TranslateZ from './Transformation/TranslateZ';
+import MessagePrivacy from './MessagePrivacy';
 import manager from '../manager';
 import getObjectById from '../getObjectById';
 import {
@@ -22,6 +24,7 @@ import {
   MIN_DIAGONAL,
 } from '../constants';
 import styles from './App.scss';
+import type { StickerPosition, StickerQuaternion } from '../types';
 
 const transitionDuration = 200;
 
@@ -39,23 +42,31 @@ const NavTopLeft = styled.div`
   left: 0;
 `;
 
+const NavTopCenter = styled.div`
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  padding: 18px 0;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: -0.3px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+`;
+
 const NavTopRight = styled.div`
   position: absolute;
   top: 25px;
   right: 0;
 `;
 
-const SpinnerContainer = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
 const NavBottomRight = styled.div`
   position: absolute;
-  bottom: 80px;
-  right: 10px;
+  bottom: 139px;
+  right: 4px;
 `;
 
 const AddTextButtonAR = styled(AddTextButton)`
@@ -96,20 +107,45 @@ const StyledAddTextButton = styled(AddTextButton)`
   margin-top: 6px;
 `;
 
-const FrameText = styled.div`
-  user-select: none;
-  text-align: center;
+const TrackMessage = styled.div`
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  font-family: AppleSDGothicNeo, sans-serif;
+  user-select: none;
+`;
+
+const TrackMessageImage = styled.img`
+  display: block;
+  margin: 0 auto 16px auto;
   opacity: 0.8;
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.8px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  object-fit: contain;
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+`;
+
+const TrackMessageText = styled.div`
+  text-align: center;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 14px;
+  letter-spacing: -0.3px;
   color: #fff;
+`;
+
+const StyledHelpButton = styled(HelpButton)`
+  position: absolute;
+  bottom: 96px;
+  right: 24px;
+`;
+
+const StyledTipButton = styled(TipButton)`
+  position: absolute;
+  bottom: 3px;
+  right: 11px;
 `;
 
 type MessageFormPropTypes = {
@@ -124,29 +160,31 @@ type MessageFormPropTypes = {
   },
   selectedSticker: {
     id: string,
-    position: {
-      x: number,
-      y: number,
-      z: number,
-    },
-    rotation: {
-      x: number,
-      y: number,
-      z: number,
-    },
+    position: StickerPosition,
+    quaternion: StickerQuaternion,
     scale: number,
   } | null,
+  public: boolean,
+  error: boolean,
   entityTracked: boolean,
   nextDisabled: boolean,
   submitting: boolean,
+  onPublicChange?: boolean => mixed,  // eslint-disable-line react/require-default-props
   onStickerClick?: string => mixed, // eslint-disable-line react/require-default-props
   onTextInput?: string => mixed, // eslint-disable-line react/require-default-props
   onEmojiInput?: string => mixed, // eslint-disable-line react/require-default-props
   onTransformationComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onNext?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onReset?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onSubmit?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onHelpClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onTipClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onStickerTransform: (string, {
+    position: StickerPosition,
+    quaternion: StickerQuaternion,
+    scale: number,
+  }) => mixed,
 };
 
 class MessageForm extends Component {
@@ -155,6 +193,7 @@ class MessageForm extends Component {
 
     this.state = {
       mode: 'default',
+      messagePrivacyOpen: false,
     };
 
     this.messageObject = new Object3D();
@@ -169,6 +208,7 @@ class MessageForm extends Component {
 
   state: {
     mode: 'default' | 'text' | 'emoji',
+    messagePrivacyOpen: boolean,
   };
 
   componentWillMount() {
@@ -303,7 +343,7 @@ class MessageForm extends Component {
       this.messageObject.add(buttonsAR);
     } else {
       for (let i = 0; i < stickers.length; i += 1) {
-        const { id, type, text, position, rotation, scale } = stickers[i];
+        const { id, type, text, position, quaternion, scale } = stickers[i];
         const selected = selectedSticker && selectedSticker.id === id;
         const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
         const objById = getObjectById(this.messageObject, id);
@@ -367,7 +407,7 @@ class MessageForm extends Component {
         }
 
         obj.position.set(position.x, position.y, position.z);
-        obj.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
+        obj.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
         obj.scale.setScalar(scale * realToClamped);
       }
     }
@@ -412,8 +452,8 @@ class MessageForm extends Component {
           );
         }
       } else if (pointers.length === 3 && !this.press) {
-        const { x, y, z } = selectedSticker.rotation;
-        const q = new Quaternion().setFromEuler(new Euler(x, y, z));
+        const { x, y, z, w } = selectedSticker.quaternion;
+        const q = new Quaternion(x, y, z, w);
         const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
         const rotateX = new Vector3(0, -1, 0).applyQuaternion(conjugate).normalize();
         const rotateY = new Vector3(-1, 0, 0).applyQuaternion(conjugate).normalize();
@@ -484,7 +524,7 @@ class MessageForm extends Component {
   };
 
   handleRotateStart = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -496,17 +536,17 @@ class MessageForm extends Component {
   }
 
   handleRotateMove = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
       this.selectedStickerObject.uuid === selectedSticker.id &&
       !this.press
     ) {
-      const { x, y, z } = selectedSticker.rotation;
+      const { x, y, z, w } = selectedSticker.quaternion;
       const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
       const rotateAxis = new Vector3(0, 0, -1).applyQuaternion(conjugate).normalize();
-      const q = new Quaternion().setFromEuler(new Euler(x, y, z));
+      const q = new Quaternion(x, y, z, w);
       q.multiply(new Quaternion().setFromAxisAngle(rotateAxis, (this.rotateStart - e.rotation) * Math.PI / 180));
       this.selectedStickerObject.quaternion.copy(q);
     }
@@ -523,8 +563,8 @@ class MessageForm extends Component {
     }
   };
 
-  handlePressUp = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+  handlePressUp = () => {
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -535,8 +575,8 @@ class MessageForm extends Component {
     }
   };
 
-  handlePress = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+  handlePress = () => {
+    const { entityTracked, selectedSticker, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -551,7 +591,7 @@ class MessageForm extends Component {
 
   handleTransform() {
     const { width, height } = this.props.entity.size;
-    const { position, rotation, scale } = this.selectedStickerObject;
+    const { position, quaternion, scale } = this.selectedStickerObject;
 
     const realDiagonal = Math.sqrt((width * width) + (height * height));
     const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
@@ -563,32 +603,38 @@ class MessageForm extends Component {
         y: position.y,
         z: position.z,
       },
-      rotation: {
-        x: rotation.x,
-        y: rotation.y,
-        z: rotation.z,
+      quaternion: {
+        x: quaternion.x,
+        y: quaternion.y,
+        z: quaternion.z,
+        w: quaternion.w,
       },
       scale: scale.x / realToClamped,
     });
   }
 
   render() {
-    const { mode } = this.state;
+    const { mode, messagePrivacyOpen } = this.state;
 
     const {
+      public: isPublic,
       submitting,
+      error,
       selectedSticker,
       entity,
       stickers,
       onStickerClick,
       entityTracked,
+      onPublicChange,
       onClose,
-      onNext,
+      onSubmit,
       nextDisabled,
       onTextInput,
       onEmojiInput,
       onTransformationComplete,
       onDelete,
+      onReset,
+      onHelpClick,
       onTipClick,
       onStickerTransform,
       ...other
@@ -604,74 +650,67 @@ class MessageForm extends Component {
             onComplete={onTransformationComplete}
             onTipClick={onTipClick}
             onDelete={onDelete}
+            onReset={onReset}
           />
         </div>
       );
     }
 
-    const trimmedName = entity.name.trim();
-    const lastChar = trimmedName.slice(-1);
-    let suffix = '을(를)';
+    if (!entityTracked) {
+      return (
+        <div {...other}>
+          <NavTopCenter>
+            스티커 만드는 중
+          </NavTopCenter>
 
-    if (isHangul(lastChar)) {
-      suffix = endsWithConsonant(trimmedName) ? '을' : '를';
+          <TargetGuide>
+            <TrackMessage>
+              {entity.image && (
+                <TrackMessageImage
+                  src={entity.image}
+                  alt={`${entity.name}의 정면을 비춰주세요`}
+                />
+              )}
+
+              <TrackMessageText>
+                {entity.name}의 정면을 비춰주세요
+              </TrackMessageText>
+            </TrackMessage>
+
+            <StyledHelpButton onClick={onHelpClick} />
+          </TargetGuide>
+
+          <NavTopLeft>
+            <CloseButton onClick={onClose} />
+          </NavTopLeft>
+
+          <NavTopRight>
+            <CompleteButton
+              onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
+              disabled={nextDisabled}
+            />
+          </NavTopRight>
+
+          <StyledTipButton onClick={onTipClick} />
+
+          {messagePrivacyOpen && (
+            <MessagePrivacy
+              error={error}
+              submitting={submitting}
+              entity={entity}
+              public={isPublic}
+              onPublicChange={onPublicChange}
+              onSubmit={onSubmit}
+              onClose={() => this.setState({ messagePrivacyOpen: false })}
+            />
+          )}
+        </div>
+      );
     }
 
-    return (
-      <div {...other}>
-        {mode === 'default' && [
-          <NavTopLeft key={0}>
-            <CloseButton onTouchEnd={onClose} />
-          </NavTopLeft>,
-
-          entityTracked && (
-            <NavTopRight key={1}>
-              <div style={{ position: 'relative' }}>
-                <NextButton
-                  onTouchEnd={nextDisabled ? null : onNext}
-                  disabled={nextDisabled}
-                  hidden={submitting}
-                />
-
-                {submitting && (
-                  <SpinnerContainer>
-                    <Spinner />
-                  </SpinnerContainer>
-                )}
-              </div>
-            </NavTopRight>
-          ),
-
-          entityTracked && (
-            <NavBottomRight key={3}>
-              <AddEmojiButton
-                onTouchEnd={() => this.setState({ mode: 'emoji' }, () => {
-                  const e = letsee.getEntity(entity.uri);
-                  e.removeRenderable(this.messageObject);
-                })}
-                small
-              />
-
-              <StyledAddTextButton
-                onTouchEnd={() => this.setState({ mode: 'text' }, () => {
-                  const e = letsee.getEntity(entity.uri);
-                  e.removeRenderable(this.messageObject);
-                })}
-                small
-              />
-            </NavBottomRight>
-          ),
-          !entityTracked && (
-            <Frame key={4}>
-              <FrameText>
-                <div>{entity.name}{suffix}</div>
-                <div>비춰주세요</div>
-              </FrameText>
-            </Frame>
-          ),
-        ]}
-
-        {mode === 'text' && (
+    if (mode === 'text') {
+      return (
+        <div {...other}>
           <TextInput
             entity={entity}
             entityTracked={entityTracked}
@@ -679,13 +718,66 @@ class MessageForm extends Component {
               this.setState({ mode: 'default' }, () => {
                 if (value.length === 0) {
                   this.renderAR(this.props);
-                } else {
-                  onTextInput && onTextInput(value);
+                } else if (onTextInput) {
+                  onTextInput(value);
                 }
               });
             }}
           />
-        )}
+        </div>
+      );
+    }
+
+    return (
+      <div {...other}>
+        {mode === 'default' && [
+          <NavTopLeft key={0}>
+            <CloseButton onClick={onClose} />
+          </NavTopLeft>,
+
+          <NavTopRight key={1}>
+            <CompleteButton
+              onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
+              disabled={nextDisabled}
+            />
+          </NavTopRight>,
+
+          <NavBottomRight key={3}>
+            <AddEmojiButton
+              onTouchEnd={() => this.setState({ mode: 'emoji' }, () => {
+                const e = letsee.getEntity(entity.uri);
+                e.removeRenderable(this.messageObject);
+              })}
+              small
+            />
+
+            <StyledAddTextButton
+              onTouchEnd={() => this.setState({ mode: 'text' }, () => {
+                const e = letsee.getEntity(entity.uri);
+                e.removeRenderable(this.messageObject);
+              })}
+              small
+            />
+          </NavBottomRight>,
+
+          <StyledTipButton
+            key={4}
+            onClick={onTipClick}
+          />,
+
+          messagePrivacyOpen && (
+            <MessagePrivacy
+              key={5}
+              error={error}
+              submitting={submitting}
+              entity={entity}
+              public={isPublic}
+              onPublicChange={onPublicChange}
+              onSubmit={onSubmit}
+              onClose={() => this.setState({ messagePrivacyOpen: false })}
+            />
+          ),
+        ]}
 
         <Transition
           in={mode === 'emoji'}
@@ -703,7 +795,9 @@ class MessageForm extends Component {
               }}
               onClick={(emoji) => {
                 this.setState({ mode: 'default' }, () => {
-                  onEmojiInput && onEmojiInput(emoji);
+                  if (onEmojiInput) {
+                    onEmojiInput(emoji);
+                  }
                 });
               }}
               onClose={() => {

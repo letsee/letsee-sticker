@@ -1,70 +1,110 @@
 // @flow
 import React from 'react';
-import { connect } from 'react-redux';
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-} from 'react-redux-firebase';
 import styled from 'styled-components';
-import values from 'lodash/values';
-import Frame from './Frame';
+import TargetGuide from './TargetGuide';
+import HomeButton from './HomeButton';
+import NewsButton from './NewsButton';
 import HelpButton from './HelpButton';
-import { Banner } from './NewsList/NewsItem';
 
-const Text = styled.div`
-  user-select: none;
-  text-align: center;
+const TrackMessage = styled.div`
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  font-family: AppleSDGothicNeo, sans-serif;
-  opacity: 0.8;
-  font-size: 20px;
-  font-weight: bold;
-  letter-spacing: -0.8px;
-  color: #fff;
-  text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  user-select: none;
 `;
 
-const StyledHelpButton = styled(HelpButton)`
+const TrackMessageImage = styled.img`
+  display: block;
+  margin: 0 auto 16px auto;
+  opacity: 0.8;
+`;
+
+const TrackMessageText = styled.div`
+  text-align: center;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 14px;
+  letter-spacing: -0.3px;
+  color: #fff;
+`;
+
+const Title = styled.div`
+  position: absolute;
+  top: 25px;
+  left: 0;
+  right: 0;
+  user-select: none;
+  padding: 17px 0;
+  text-align: center;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+`;
+
+const StyledHomeButton = styled(HomeButton)`
+  position: absolute;
+  top: 25px;
+  left: 0;
+`;
+
+const StyledNewsButton = styled(NewsButton)`
   position: absolute;
   top: 25px;
   right: 0;
 `;
 
+const StyledHelpButton = styled(HelpButton)`
+  position: absolute;
+  bottom: 96px;
+  right: 24px;
+`;
+
+type AppLoaderPropTypes = {
+  loadingEntity: boolean,
+  onHelpClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  onNewsClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
 const AppLoader = ({
-  firebase,
-  dispatch,
-  data,
+  loadingEntity,
   onHelpClick,
-  onBannerClick,
+  onNewsClick,
   children,
   ...other
-}) => (
+}: AppLoaderPropTypes) => (
   <div {...other}>
-    <Frame>
-      <Text>
-        <div>스티커 메세지를 남길</div>
-        <div>대상을 비춰주세요</div>
-      </Text>
-    </Frame>
-
-    <StyledHelpButton onTouchEnd={onHelpClick} />
-
-    {isLoaded(data) && !isEmpty(data) && data && (
-      <Banner
-        data={values(data)[0]}
-        onTouchEnd={onBannerClick}
-      />
+    {!loadingEntity && (
+      <Title>대상 인식하기</Title>
     )}
+
+    {!loadingEntity && (
+      <TargetGuide>
+        <TrackMessage>
+          <TrackMessageImage
+            alt="인식 대상의 정면을 비춰주세요"
+            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_100,q_auto/v1501834819/assets/icon_sticker.png"
+            srcSet="
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_200,q_auto/v1501834819/assets/icon_sticker.png 2x,
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_300,q_auto/v1501834819/assets/icon_sticker.png 3x
+            "
+          />
+
+          <TrackMessageText>인식 대상의 정면을 비춰주세요</TrackMessageText>
+        </TrackMessage>
+
+        <StyledHelpButton onTouchEnd={onHelpClick} />
+      </TargetGuide>
+    )}
+
+    <StyledHomeButton />
+
+    <StyledNewsButton onTouchEnd={onNewsClick} />
   </div>
 );
 
-export default firebaseConnect([{
-  path: 'news',
-  storeAs: 'banner',
-  queryParams: ['orderByChild=timestamp', 'limitToLast=1'],
-}])(connect(({ firebase: { data: { banner } } }) => ({ data: banner }))(AppLoader));
+export default AppLoader;

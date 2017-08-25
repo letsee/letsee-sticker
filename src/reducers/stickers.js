@@ -4,43 +4,49 @@ import zipObject from 'lodash/zipObject';
 import {
   ADD_STICKER,
   DELETE_STICKER,
-  TRANSLATE_STICKER,
-  ROTATE_STICKER,
-  SCALE_STICKER,
+  RESET_STICKER,
   TRANSFORM_STICKER,
-  CLEAR_MESSAGE_FORM,
+  DESTROY_MESSAGE_FORM,
 } from '../actions';
 
 const sticker = (state = null, action) => {
   switch (action.type) {
     case ADD_STICKER:
+      const { selected, ...other } = action.payload;
+
       return {
-        ...action.payload,
+        ...other,
         position: {
           x: 0,
           y: 0,
           z: 0,
         },
-        rotation: {
+        quaternion: {
           x: 0,
           y: 0,
           z: 0,
+          w: 1,
         },
         scale: 1,
       };
     case DELETE_STICKER:
       return null;
-    case TRANSLATE_STICKER:
-    case ROTATE_STICKER:
-    case SCALE_STICKER:
-      if (state !== null) {
-        return {
-          ...state,
-          ...action.payload,
-        };
-      }
-
-      return state;
+    case RESET_STICKER:
+      return {
+        ...state,
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        quaternion: {
+          x: 0,
+          y: 0,
+          z: 0,
+          w: 1,
+        },
+        scale: 1,
+      };
     case TRANSFORM_STICKER:
       if (state !== null) {
         return {
@@ -59,15 +65,13 @@ const byId = (state = {}, action) => {
   switch (action.type) {
     case ADD_STICKER:
     case DELETE_STICKER:
-    case TRANSLATE_STICKER:
-    case ROTATE_STICKER:
-    case SCALE_STICKER:
+    case RESET_STICKER:
     case TRANSFORM_STICKER:
       return {
         ...state,
         [action.payload.id]: sticker(state[action.payload.id], action),
       };
-    case CLEAR_MESSAGE_FORM:
+    case DESTROY_MESSAGE_FORM:
       return {
         ...state,
         ...zipObject(action.payload.stickerIds, action.payload.stickerIds.map(() => null)),
@@ -94,7 +98,7 @@ const allIds = (state = [], action) => {
         ...state.slice(0, index),
         ...state.slice(index + 1),
       ];
-    case CLEAR_MESSAGE_FORM:
+    case DESTROY_MESSAGE_FORM:
       stickerIds = action.payload.stickerIds;
       return state.filter(id => stickerIds.indexOf(id) < 0);
     default:

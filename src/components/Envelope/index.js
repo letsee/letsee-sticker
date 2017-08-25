@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { ImageButton } from '../Button';
+import type { MessageAuthor } from '../../types';
 
 const Container = styled.div`
   font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
@@ -31,8 +33,9 @@ const EnvelopeButton = ImageButton.extend`
 
 type EnvelopePropTypes = {
   size: number,
-  data: { firstname: string, lastname: string },
+  data: MessageAuthor,
   onClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 const concatFirstAndLastNames = (firstname: string, lastname: string) => `${firstname} ${lastname}`.trim();
@@ -76,6 +79,15 @@ const Envelope = ({
       </Open>
     </Container>
   );
+};
+
+Envelope.propTypes = {
+  size: PropTypes.number.isRequired,
+  data: PropTypes.shape({
+    firstname: PropTypes.string.isRequired,
+    lastname: PropTypes.string.isRequired,
+  }).isRequired,
+  onClick: PropTypes.func, // eslint-disable-line react/require-default-props
 };
 
 export default Envelope;

@@ -4,18 +4,23 @@ import Button from './Button';
 
 const TextButton = Button.extend`
   box-sizing: border-box;
-  padding: 17px 12px;
+  padding: 17px 16.5px;
   font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: bold;
   letter-spacing: 0.4px;
   text-align: center;
   color: #fff;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  visibility: ${props => (props.hidden ? 'hidden' : 'visible')};
+
+  &:disabled {
+    opacity: 0.4;
+  }
 `;
 
 const CompleteButton = ({
-  children,
+  children, // eslint-disable-line react/prop-types
   ...other
 }) => (
   <TextButton

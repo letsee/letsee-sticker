@@ -1,22 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="42" height="42" viewBox="0 0 42 42">
     <defs>
-        <filter id="a" width="139.1%" height="169.2%" x="-19.6%" y="-34.6%" filterUnits="objectBoundingBox">
-            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
-            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="3"/>
-            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
-            <feMerge>
-                <feMergeNode in="shadowMatrixOuter1"/>
-                <feMergeNode in="SourceGraphic"/>
-            </feMerge>
+        <path id="b" d="M5 21c0 8.832 7.152 16 15.984 16C29.832 37 37 29.832 37 21S29.832 5 20.984 5C12.152 5 5 12.168 5 21zm16 5.415l-4.361 2.767a1.1 1.1 0 0 1-1.664-1.166l1.175-5.31-3.968-3.615a1.1 1.1 0 0 1 .643-1.909l5.18-.465 1.975-4.913a1.1 1.1 0 0 1 2.041-.001l1.973 4.898 5.181.465a1.1 1.1 0 0 1 .643 1.909L25.85 22.69l1.176 5.327a1.1 1.1 0 0 1-1.663 1.166L21 26.415z"/>
+        <filter id="a" width="118.8%" height="118.8%" x="-9.4%" y="-9.4%" filterUnits="objectBoundingBox">
+            <feMorphology in="SourceAlpha" operator="dilate" radius=".5" result="shadowSpreadOuter1"/>
+            <feOffset in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation=".5"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.145380435 0"/>
         </filter>
     </defs>
     <g fill="none" fill-rule="evenodd">
-        <path d="M0 0h54v54H0z"/>
-        <g filter="url(#a)" opacity=".9" transform="translate(4 14)">
-            <rect width="45" height="25" x=".5" y=".5" stroke="#FFF" rx="12.5"/>
-            <text fill="#FFF" font-family="AppleSDGothicNeo-Bold, Apple SD Gothic Neo" font-size="16" font-weight="bold" letter-spacing=".372">
-                <tspan x="10.77" y="19">TIP</tspan>
-            </text>
+        <path d="M0 0h42v42H0z"/>
+        <g opacity=".95">
+            <use fill="#000" filter="url(#a)" xlink:href="#b"/>
+            <use fill="#FFF" xlink:href="#b"/>
         </g>
     </g>
 </svg>

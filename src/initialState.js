@@ -1,6 +1,7 @@
 // @flow
 export default {
   letseeLoaded: false,
+  loadingEntity: false,
   currentEntity: null,
   currentUser: null,
   entities: {
@@ -14,7 +15,6 @@ export default {
     allIds: [],
   },
   shareModal: null,
-  helpOpened: false,
-  newsOpened: false,
   transformationGuideOpened: false,
+  helpOpened: false,
 };

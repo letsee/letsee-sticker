@@ -7,9 +7,8 @@ import currentUser from './currentUser';
 import entities from './entities';
 import helpOpened from './helpOpened';
 import shareModal from './shareModal';
-import { letseeLoaded } from './letsee';
+import { letseeLoaded, loadingEntity } from './letsee';
 import messageForm from './messageForm';
-import newsOpened from './newsOpened';
 import selectedSticker from './selectedSticker';
 import stickers from './stickers';
 import transformationGuideOpened from './transformationGuideOpened';
@@ -21,8 +20,8 @@ const reducers = combineReducers({
   helpOpened,
   shareModal,
   letseeLoaded,
+  loadingEntity,
   messageForm,
-  newsOpened,
   selectedSticker,
   stickers,
   transformationGuideOpened,

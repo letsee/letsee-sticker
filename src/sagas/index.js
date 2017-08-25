@@ -1,56 +1,72 @@
 // @flow
 import { delay } from 'redux-saga';
 import { take, fork, all, put, select, race, call } from 'redux-saga/effects';
-import moment from 'moment';
 import {
   DESTROY_MESSAGE_FORM,
   SUBMIT_MESSAGE_FORM,
   submitMessageFormSuccess,
   submitMessageFormError,
-  openShareModal,
+  destroyMessageForm,
 } from '../actions';
+import { entityUriToId } from '../entityUriHelper';
+import type { Message } from '../types';
 
 const getStickersByEntity = (stickers, uri: string) => stickers.allIds
   .map(id => stickers.byId[id])
   .filter(sticker => sticker && sticker.entityUri === uri);
 
-const persistToFirebase = (getFirebase, message) => getFirebase().push('/messages', message);
+const persistToFirebase = (getFirebase, message: Message) => getFirebase().push('/messages', message);
 
 function* submitMessageForm(getFirebase) {
   while (true) {
     const submitAction = yield take(SUBMIT_MESSAGE_FORM);
 
     try {
-      const currentUser = yield select(state => state.currentUser);
-      const stickers = yield select(state => state.stickers);
-      const { uri, name, image } = yield select(state => state.entities.byUri[submitAction.payload.uri]);
-      const stickersById = getStickersByEntity(stickers, uri).map(({ id, entityUri, ...other }) => other);
+      const messageForm = yield select(state => state.messageForm);
 
-      const message = {
-        author: {
-          uid: currentUser.uid,
-          firstname: currentUser.firstname,
-          lastname: currentUser.lastname,
-        },
-        entity: { uri, name, image },
-        stickers: stickersById,
-        createdAt: moment().format('YYYYMMDDHHmmssZZ'),
-      };
+      if (messageForm.uri === submitAction.payload.uri) {
+        const { uid, firstname, lastname } = yield select(state => state.currentUser);
+        const stickers = yield select(state => state.stickers);
+        const { uri, name, image } = yield select(state => state.entities.byUri[submitAction.payload.uri]);
+        const stickersById = getStickersByEntity(stickers, uri).map(({ id, entityUri, ...other }) => other);
 
-      const { firebase, timeout, destroy } = yield race({
-        firebase: call(persistToFirebase, getFirebase, message),
-        timeout: call(delay, 3000), // TODO timeout?
-        destroy: take(DESTROY_MESSAGE_FORM),
-      });
+        const message = {
+          author: {
+            uid,
+            firstname,
+            lastname,
+          },
+          entity: { uri, name, image },
+          stickers: stickersById,
+          public: messageForm.public,
+          timestamp: Date.now(),
+        };
 
-      if (destroy || timeout) {
-        // TODO error
-        yield put(submitMessageFormError(destroy.payload.uri, new Error('form destroyed')));
-      }
+        const { firebase, timeout, destroy } = yield race({
+          firebase: call(persistToFirebase, getFirebase, message),
+          timeout: call(delay, 3000), // TODO timeout?
+          destroy: take(DESTROY_MESSAGE_FORM),
+        });
 
-      if (firebase) {
-        yield put(submitMessageFormSuccess(submitAction.payload.uri, firebase.path.o));
-        yield put(openShareModal(submitAction.payload.uri, firebase.path.o));
+        if (destroy || timeout) {
+          // TODO error
+          yield put(submitMessageFormError(destroy.payload.uri, new Error('form destroyed')));
+        }
+
+        if (firebase) {
+          const messageId = firebase.key;
+          const entityId = entityUriToId(uri);
+          yield getFirebase().set(`/entityMessages/${entityId}/authorMessages/${uid}/${messageId}`, message);
+
+          if (message.public) {
+            yield getFirebase().set(`/entityMessages/${entityId}/publicMessages/${messageId}`, message);
+          }
+
+          yield put(submitMessageFormSuccess(submitAction.payload.uri, firebase.path.o));
+          yield put(destroyMessageForm(submitAction.payload.uri, getStickersByEntity(stickers, uri).map(sticker => sticker.id)));
+        }
+      } else {
+        yield put(submitMessageFormError(submitAction.payload.uri, new Error('form not valid')));
       }
     } catch (e) {
       // TODO error
