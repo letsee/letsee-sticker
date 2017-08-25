@@ -5,6 +5,7 @@ import { firebaseStateReducer } from 'react-redux-firebase';
 import currentEntity from './currentEntity';
 import currentUser from './currentUser';
 import entities from './entities';
+import helpOpened from './helpOpened';
 import shareModal from './shareModal';
 import { letseeLoaded, loadingEntity } from './letsee';
 import messageForm from './messageForm';
@@ -16,6 +17,7 @@ const reducers = combineReducers({
   currentEntity,
   currentUser,
   entities,
+  helpOpened,
   shareModal,
   letseeLoaded,
   loadingEntity,

@@ -16,6 +16,11 @@ import TargetGuide from '../components/TargetGuide';
 import HelpButton from '../components/HelpButton';
 import CloseButton from '../components/CloseButton';
 import Envelope from '../components/Envelope';
+import Help from '../components/Help';
+import {
+  openHelp,
+  closeHelp,
+} from '../actions';
 import {
   MIN_DIAGONAL,
   MAX_DIAGONAL,
@@ -107,6 +112,7 @@ type MessagePropTypes = {
   currentEntity: string | null,
   loadingEntity: boolean,
   data: MessageType,
+  helpOpened: boolean,
 };
 
 class Message extends Component {
@@ -202,8 +208,10 @@ class Message extends Component {
       params: { id },
       router,
       data,
+      helpOpened,
       currentEntity,
       loadingEntity,
+      dispatch,
     } = this.props;
 
     const loading = !isLoaded(data);
@@ -222,6 +230,12 @@ class Message extends Component {
       // TODO
       return (
         <h1>404</h1>
+      );
+    }
+
+    if (helpOpened) {
+      return (
+        <Help onCloseClick={() => dispatch(closeHelp())} />
       );
     }
 
@@ -253,7 +267,7 @@ class Message extends Component {
               <CloseButton onClick={() => router.push(process.env.PUBLIC_PATH || '/')} />
             </NavTopLeft>
 
-            <StyledHelpButton onTouchEnd={() => router.push(`${process.env.PUBLIC_PATH || '/'}help`)} />
+            <StyledHelpButton onTouchEnd={() => dispatch(openHelp())} />
           </div>
         )}
 
@@ -283,9 +297,11 @@ export default firebaseConnect(
     firebase: { data: { message } },
     currentEntity,
     loadingEntity,
+    helpOpened,
   }) => ({
     data: message,
     currentEntity,
     loadingEntity,
+    helpOpened,
   }),
 )(Message));

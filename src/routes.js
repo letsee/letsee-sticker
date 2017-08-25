@@ -32,17 +32,6 @@ const routes = {
       },
     },
     {
-      path: 'help',
-      getComponent: (nextState, callback) => {
-        import('./pages/Help').then((module) => {
-          callback(null, module.default);
-        }).catch((error) => {
-          // TODO error
-          console.log(error);
-        });
-      },
-    },
-    {
       path: ':id',
       getComponent: (nextState, callback) => {
         import('./pages/Message').then((module) => {

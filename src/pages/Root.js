@@ -6,6 +6,7 @@ import AppLoader from '../components/AppLoader';
 import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
 import TransformationGuide from '../components/TransformationGuide';
+import Help from '../components/Help';
 import {
   initMessageForm,
   destroyMessageForm,
@@ -19,11 +20,14 @@ import {
   openTransformationGuide,
   closeTransformationGuide,
   transformSticker,
+  openHelp,
+  closeHelp,
 } from '../actions';
 import openLogin from '../openLogin';
 import type { MessageAuthor } from '../types';
 
 type RootPropTypes = {
+  helpOpened: boolean,
   loadingEntity: boolean,
   transformationGuideOpened: boolean,
   currentUser: MessageAuthor | null,
@@ -38,6 +42,7 @@ type RootPropTypes = {
 };
 
 const Root = ({
+  helpOpened,
   loadingEntity,
   transformationGuideOpened,
   currentUser,
@@ -52,6 +57,12 @@ const Root = ({
   if (transformationGuideOpened) {
     return (
       <TransformationGuide onClose={() => dispatch(closeTransformationGuide())} />
+    );
+  }
+
+  if (helpOpened) {
+    return (
+      <Help onCloseClick={() => dispatch(closeHelp())} />
     );
   }
 
@@ -96,7 +107,7 @@ const Root = ({
           onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}
           onTipClick={() => dispatch(openTransformationGuide())}
-          onHelpClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}help`)}
+          onHelpClick={() => dispatch(openHelp())}
         />
       </div>
     );
@@ -125,7 +136,7 @@ const Root = ({
   return (
     <AppLoader
       loadingEntity={loadingEntity}
-      onHelpClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}help`)}
+      onHelpClick={() => dispatch(openHelp())}
       onNewsClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}news`)}
     />
   );
@@ -142,6 +153,7 @@ export default withRouter(connect(
     selectedSticker,
     messageForm,
     transformationGuideOpened,
+    helpOpened,
   }) => ({
     letseeLoaded,
     loadingEntity,
@@ -152,5 +164,6 @@ export default withRouter(connect(
     selectedSticker,
     messageForm,
     transformationGuideOpened,
+    helpOpened,
   }),
 )(Root));

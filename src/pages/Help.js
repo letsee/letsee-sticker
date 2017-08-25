@@ -5,7 +5,7 @@ import HelpComponent from '../components/Help';
 const Help = ({
   router,
 }) => (
-  <HelpComponent onCloseClick={() => router.push(process.env.PUBLIC_PATH || '/')} />
+  <HelpComponent onCloseClick={() => router.goBack()} />
 );
 
 export default Help;
