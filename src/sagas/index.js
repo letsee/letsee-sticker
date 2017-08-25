@@ -79,7 +79,7 @@ function* submitMessageForm(getFirebase) {
         entity,
         public: isPublic,
         stickers: stickersById,
-        timestamp: timestamp || Date.now(),
+        timestamp: timestamp || getFirebase().database.ServerValue.TIMESTAMP,
       };
 
       const currentUser = yield select(state => state.currentUser);

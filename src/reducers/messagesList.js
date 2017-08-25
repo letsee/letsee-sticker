@@ -71,7 +71,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
       if (state !== null) {
         return {
           ...state,
-          empty: action.payload === 0 ? true : state.empty,
+          empty: action.payload === 0,
           count: action.payload,
         };
       }
@@ -81,7 +81,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
       if (state !== null) {
         return {
           ...state,
-          empty: action.payload === null ? true : state.empty,
+          empty: action.payload === null,
           first: action.payload,
         };
       }
@@ -91,8 +91,9 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
       if (state !== null) {
         return {
           ...state,
-          empty: action.payload === null ? true : state.empty,
+          empty: action.payload === null,
           last: action.payload,
+          current: state.current === null ? action.payload : state.current,
         };
       }
 

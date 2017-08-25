@@ -82,22 +82,18 @@ const FrameAR = styled(Frame)`
   }
 `;
 
-const subscribeToCurrent = (firebase, data: MessagesList, handleMessageChange) => {
-  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, data.userId)).orderByKey();
+const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
+  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
 
-  if (data.current === null) {
-    ref.limitToLast(1).on('value', handleMessageChange);
-  } else {
+  if (data.current !== null) {
     ref.equalTo(data.current).on('value', handleMessageChange);
   }
 };
 
-const unsubscribeFromCurrent = (firebase, data: MessagesList, handleMessageChange) => {
-  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, data.userId)).orderByKey();
+const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
+  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
 
-  if (data.current === null) {
-    ref.limitToLast(1).off('value', handleMessageChange);
-  } else {
+  if (data.current !== null) {
     ref.equalTo(data.current).off('value', handleMessageChange);
   }
 };
@@ -106,20 +102,21 @@ type MessageListPropTypes = {
   data: MessagesList,
   currentUser: MessageAuthor | null,
   entity: MessageFormEntity,
+  onMessageDelete?: void => mixed, // eslint-disable-line react/require-default-props
   onPrev?: void => mixed, // eslint-disable-line react/require-default-props
   onNext?: void => mixed, // eslint-disable-line react/require-default-props
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
 };
 
-class MessageList extends Component {
+class MessageList extends Component<MessageListPropTypes, {
+  data: MessageWithId | null,
+  error: boolean,
+}> {
   constructor(props: MessageListPropTypes) {
     super(props);
 
     this.state = {
-      loading: true,
-      first: null,
-      last: null,
       data: null,
       error: false,
     };
@@ -130,17 +127,10 @@ class MessageList extends Component {
     }
   }
 
-  state: {
-    loading: boolean,
-    first: MessageWithId | null,
-    last: MessageWithId | null,
-    data: MessageWithId | null,
-    error: boolean,
-  };
-
   componentWillMount() {
-    const { firebase, data } = this.props;
-    subscribeToCurrent(firebase, data, this.handleMessageChange);
+    const { firebase, data, currentUser } = this.props;
+    const userId = currentUser !== null && !data.public ? currentUser.uid : null;
+    subscribeToCurrent(firebase, data, userId, this.handleMessageChange);
   }
 
   componentDidMount() {
@@ -153,16 +143,19 @@ class MessageList extends Component {
 
   componentWillReceiveProps(nextProps: MessageListPropTypes) {
     if (this.props.data.current !== nextProps.data.current) {
-      unsubscribeFromCurrent(this.props.firebase, this.props.data, this.handleMessageChange);
-      subscribeToCurrent(nextProps.firebase, nextProps.data, this.handleMessageChange);
+      const prevUserId = this.props.currentUser !== null && !this.props.data.public ? this.props.currentUser.uid : null;
+      const userId = nextProps.currentUser !== null && !nextProps.data.public ? nextProps.currentUser.uid : null;
+      unsubscribeFromCurrent(this.props.firebase, this.props.data, prevUserId, this.handleMessageChange);
+      subscribeToCurrent(nextProps.firebase, nextProps.data, userId, this.handleMessageChange);
     }
 
     this.renderAR(nextProps);
   }
 
   componentWillUnmount() {
-    const { firebase, data, entity: { uri } } = this.props;
-    unsubscribeFromCurrent(firebase, data, this.handleMessageChange);
+    const { firebase, data, currentUser } = this.props;
+    const userId = currentUser !== null && !data.public ? currentUser.uid : null;
+    unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange);
 
     manager.off('swipeleft', this.prev);
     manager.off('swiperight', this.next);
@@ -170,7 +163,7 @@ class MessageList extends Component {
     enableManager(true);
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntity(uri);
+      const entity = letsee.getEntity(data.entityUri);
       entity.removeRenderable(this.object);
     }
   }
@@ -182,10 +175,10 @@ class MessageList extends Component {
     const data = selectLatestMessage(messagesObject);
 
     if (data === null) {
-      this.props.dispatch(); // TODO
+      this.props.onMessageDelete && this.props.onMessageDelete();
+    } else {
+      this.setState({ data });
     }
-
-    this.setState({ data, loading: data === null });
   };
 
   prev = () => {
@@ -272,22 +265,28 @@ class MessageList extends Component {
   }
 
   render() {
-    const { loading, data } = this.state;
+    const { data, error } = this.state;
     const {
       data: messagesList,
       currentUser,
       entity,
+      onMessageDelete,
       onEditClick,
       onNewClick,
+      onPrev,
+      onNext,
       firebase,
-      dispatch,
       ...other
     } = this.props;
+
+    const { entityUri, empty, current } = messagesList;
+    const dataExists = !empty && current !== null && !error;
+    console.log(current, data);
 
     return (
       <div {...other}>
         <Actions>
-          {!loading && data !== null && currentUser !== null && data.author.uid === currentUser.uid && (
+          {data !== null && dataExists && currentUser !== null && data.author.uid === currentUser.uid && (
             <ImageButton
               type="button"
               onClick={() => onEditClick && onEditClick(data)}
@@ -318,12 +317,12 @@ class MessageList extends Component {
           </ImageButton>
         </Actions>
 
-        {data !== null && (
+        {dataExists && data !== null && (
           <Message
             id={data.id}
             data={data}
-            currentEntity={entity.uri}
-            loadingEntity={loading}
+            currentEntity={entityUri}
+            loadingEntity={false}
           />
         )}
       </div>

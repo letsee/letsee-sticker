@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
-// import MessageList from './MessageList';
+import MessageList from './MessageList';
 import Swipe from './Swipe';
 import Button from '../Button';
 import {
@@ -79,7 +79,10 @@ type EntityPropTypes = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-class Entity extends Component {
+class Entity extends Component<EntityPropTypes, {
+  showedSwipe: boolean,
+  swipeShown: boolean,
+}> {
   static propTypes = {
     currentUser: PropTypes.shape({ // eslint-disable-line react/require-default-props
       uid: PropTypes.string.isRequired,
@@ -101,39 +104,41 @@ class Entity extends Component {
     swipeShown: false,
   };
 
-  state: {
-    showedSwipe: boolean,
-    swipeShown: boolean,
-  };
-
   componentWillMount() {
-    const { firebase, messagesList } = this.props;
-    const countref = firebase.database().ref(getMessagesCountPath(messagesList.entityUri, messagesList.userId));
-    const listRef = firebase.database().ref(getMessagesListPath(messagesList.entityUri, messagesList.userId)).orderByKey();
+    const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
+    const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
+    const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
+    const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
     countref.on('value', this.handleMessagesCountChange);
     listRef.limitToLast(1).on('value', this.handleLastMessageChange);
     listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
   }
 
-  componentWillReceiveProps({ messagesList, firebase, dispatch }: EntityPropTypes) {
+  componentWillReceiveProps({
+    messagesList: { entityUri, count, public: isPublic },
+    firebase, dispatch, currentUser,
+  }: EntityPropTypes) {
+    const prevEntityUri = this.props.messagesList.entityUri;
+    const prevUserId = this.props.currentUser !== null && !this.props.messagesList.public ? this.props.currentUser.uid : null;
+    const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
+
     if (
-      messagesList.userId !== this.props.messagesList.userId ||
-      messagesList.entityUri !== this.props.messagesList.entityUri
+      entityUri !== prevEntityUri ||
+      prevUserId !== userId
     ) {
-      const prevCountref = this.props.firebase.database().ref(getMessagesCountPath(this.props.messagesList.entityUri, this.props.messagesList.userId));
-      const prevListRef = this.props.firebase.database().ref(getMessagesListPath(this.props.messagesList.entityUri, this.props.messagesList.userId)).orderByKey();
+      const prevFirebase = this.props.firebase.database();
+      const prevCountref = prevFirebase.ref(getMessagesCountPath(prevEntityUri, prevUserId));
+      const prevListRef = prevFirebase.ref(getMessagesListPath(prevEntityUri, prevUserId)).orderByKey();
       prevCountref.off('value', this.handleMessagesCountChange);
       prevListRef.limitToLast(1).off('value', this.handleLastMessageChange);
       prevListRef.limitToFirst(1).off('value', this.handleFirstMessageChange);
 
-      const countref = firebase.database().ref(getMessagesCountPath(messagesList.entityUri, messagesList.userId));
-      const listRef = firebase.database().ref(getMessagesListPath(messagesList.entityUri, messagesList.userId)).orderByKey();
+      const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
+      const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
       countref.on('value', this.handleMessagesCountChange);
       listRef.limitToLast(1).on('value', this.handleLastMessageChange);
       listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
-    }
-
-    if (!this.state.showedSwipe && messagesList.count > 1) {
+    } else if (!this.state.showedSwipe && count > 1) {
       this.setState({
         showedSwipe: true,
         swipeShown: true,
@@ -142,9 +147,10 @@ class Entity extends Component {
   }
 
   componentWillUnmount() {
-    const { firebase, messagesList } = this.props;
-    const countref = firebase.database().ref(getMessagesCountPath(messagesList.entityUri, messagesList.userId));
-    const listRef = firebase.database().ref(getMessagesListPath(messagesList.entityUri, messagesList.userId)).orderByKey();
+    const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
+    const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
+    const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
+    const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
     countref.off('value', this.handleMessagesCountChange);
     listRef.limitToLast(1).off('value', this.handleLastMessageChange);
     listRef.limitToFirst(1).off('value', this.handleFirstMessageChange);
@@ -153,11 +159,11 @@ class Entity extends Component {
   props: EntityPropTypes;
 
   handlePrev() {
-    const { firebase, messagesList } = this.props;
-    const { first, current, entityUri, userId } = messagesList;
+    const { firebase, messagesList, currentUser } = this.props;
+    const { first, current, entityUri, public: isPublic } = messagesList;
 
     if (first !== current) {
-      const path = getMessagesListPath(entityUri, userId);
+      const path = getMessagesListPath(entityUri, (currentUser !== null && !isPublic) ? currentUser.uid : null);
       const ref = firebase.database().ref(path).orderByKey();
       const filteredRef = current === null ? ref.limitToLast(1) : ref.endAt(current).limitToLast(2);
 
@@ -170,11 +176,11 @@ class Entity extends Component {
   }
 
   handleNext() {
-    const { firebase, messagesList } = this.props;
-    const { last, current, entityUri, userId } = messagesList;
+    const { firebase, messagesList, currentUser } = this.props;
+    const { last, current, entityUri, public: isPublic } = messagesList;
 
     if (last !== current) {
-      const path = getMessagesListPath(entityUri, userId);
+      const path = getMessagesListPath(entityUri, (currentUser !== null && !isPublic) ? currentUser.uid : null);
       const ref = firebase.database().ref(path).orderByKey();
       const filteredRef = current === null ? ref.limitToLast(1) : ref.startAt(current).limitToFirst(2);
 
@@ -216,7 +222,7 @@ class Entity extends Component {
       ...other
     } = this.props;
 
-    console.log(messagesList);
+    const canBecomePrivate = messagesList.public && currentUser !== null;
 
     return (
       <div {...other}>
@@ -231,9 +237,9 @@ class Entity extends Component {
         {currentUser !== null && (
           <ToggleMessageListButton
             type="button"
-            onClick={() => dispatch(setPublic(!(messagesList.public && currentUser !== null)))}
+            onClick={() => dispatch(setPublic(!canBecomePrivate))}
           >
-            {messagesList.public && currentUser !== null ? 'MY' : 'ALL'}
+            {canBecomePrivate ? 'MY' : 'ALL'}
           </ToggleMessageListButton>
         )}
 
@@ -241,7 +247,7 @@ class Entity extends Component {
           <StyledSwipe />
         )}
 
-        {/* <MessageList
+        <MessageList
           data={messagesList}
           currentUser={currentUser}
           entity={data}
@@ -249,7 +255,8 @@ class Entity extends Component {
           onEditClick={onEditClick}
           onPrev={() => this.handlePrev()}
           onNext={() => this.handleNext()}
-        /> */}
+          onMessageDelete={() => dispatch(setCurrentCursor(null))}
+        />
       </div>
     );
   }
