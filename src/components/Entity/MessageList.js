@@ -394,15 +394,6 @@ class MessageList extends Component {
 
     return (
       <div {...other}>
-        {data !== null && (
-          <Message
-            id={data.id}
-            data={data}
-            currentEntity={entity.uri}
-            loadingEntity={loading}
-          />
-        )}
-
         <Actions>
           {/* {!loading && data !== null && currentUser !== null && data.author.uid === currentUser.uid && (
             <ImageButton
@@ -434,6 +425,15 @@ class MessageList extends Component {
             />
           </ImageButton>
         </Actions>
+
+        {data !== null && (
+          <Message
+            id={data.id}
+            data={data}
+            currentEntity={entity.uri}
+            loadingEntity={loading}
+          />
+        )}
       </div>
     );
   }
