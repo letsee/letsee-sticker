@@ -1,17 +1,21 @@
 // @flow
 import React, { Component } from 'react';
-import { render } from 'react-dom';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import clamp from 'lodash/clamp';
-import Button, { ImageButton } from '../Button';
-import Frame from '../Frame';
-import {
-  MAX_DIAGONAL,
-  MIN_DIAGONAL,
-} from '../../constants';
+import MessageList from './MessageList';
+import Swipe from './Swipe';
+import Button from '../Button';
+import { entityUriToId } from '../../entityUriHelper';
+import type { MessageAuthor } from '../../types';
+
+const StyledSwipe = styled(Swipe)`
+  position: absolute;
+  bottom: 105px;
+  left: 50%;
+  transform: translateX(-50%);
+`;
 
 const Title = styled.div`
   position: absolute;
@@ -57,49 +61,6 @@ const ToggleMessageListButton = Button.extend`
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 `;
 
-const ARContainer = styled.div`
-  position: relative;
-`;
-
-const StyledImageButton = ImageButton.extend`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-`;
-
-const StyledImageButtonRight = ImageButton.extend`
-  position: absolute;
-  right: 0;
-  bottom: 109px;
-`;
-
-const MessageText = styled.div`
-  position: absolute;
-  white-space: nowrap;
-  left: 50%;
-  bottom: ${props => props.height}px;
-  transform: translateX(-50%);
-  opacity: 0.9;
-  font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
-  font-size: ${props => props.size * 0.06}px;
-  font-weight: 800;
-  letter-spacing: ${props => -props.size * 0.06 * 0.5 / 23}px;
-  text-align: center;
-  color: #fff;
-  text-shadow: 0 0 ${props => props.size * 0.06 * 12 / 23}px rgba(0, 0, 0, 0.5);
-`;
-
-const FrameAR = styled(Frame)`
-  position: relative;
-  width: ${props => props.width}px;
-  height: ${props => props.height}px;
-
-  > img {
-    width: ${props => Math.sqrt(((props.width * props.width) + (props.height * props.height)) / 2) * 0.06}px;
-  }
-`;
-
 type EntityPropTypes = {
   data: {
     uri: string,
@@ -110,7 +71,7 @@ type EntityPropTypes = {
       depth: number,
     },
   },
-  currentUser: { uid: string } | null,
+  currentUser: MessageAuthor | null,
   myMessagesCount?: number,
   publicMessagesCount?: number,
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
@@ -126,9 +87,9 @@ class Entity extends Component {
   static propTypes = {
     myMessagesCount: PropTypes.number,
     publicMessagesCount: PropTypes.number,
-    currentUser: PropTypes.oneOf([null, PropTypes.shape({
+    currentUser: PropTypes.shape({ // eslint-disable-line react/require-default-props
       uid: PropTypes.string.isRequired,
-    })]).isRequired,
+    }),
     data: PropTypes.shape({
       uri: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
@@ -141,111 +102,38 @@ class Entity extends Component {
     onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
   };
 
-  constructor(props: EntityPropTypes) {
-    super(props);
 
-    this.state = {
-      public: true,
-    };
+  state = {
+    public: true,
+    showedSwipe: false,
+    swipeShown: false,
+  };
 
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      const container = document.createElement('div');
-      this.object = new DOMRenderable(container);
-    }
-  }
-
-  state: { public: boolean };
-
-  componentDidMount() {
-    this.renderAR(this.props);
-  }
+  state: {
+    public: boolean,
+    showedSwipe: boolean,
+    swipeShown: boolean,
+  };
 
   componentWillReceiveProps(nextProps: EntityPropTypes) {
     if (nextProps.currentUser === null && this.props.currentUser !== null) {
       this.setState({ public: true });
     }
 
-    this.renderAR(nextProps);
-  }
+    const messagesCount = (this.state.public || nextProps.currentUser === null ? nextProps.publicMessagesCount : nextProps.myMessagesCount) || 0;
 
-  componentWillUnmount() {
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntity(this.props.data.uri);
-      entity.removeRenderable(this.object);
+    if (!this.state.showedSwipe && messagesCount > 1) {
+      this.setState({
+        showedSwipe: true,
+        swipeShown: true,
+      });
     }
   }
 
   props: EntityPropTypes;
 
-  renderAR({ data, onNewClick }: EntityPropTypes) {
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      const { uri, size: { width, height, depth } } = data;
-      const entity = letsee.getEntity(uri);
-
-      if (this.object.parent !== entity.object) {
-        entity.addRenderable(this.object);
-      }
-
-      let realDiagonal = MAX_DIAGONAL;
-
-      if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
-        realDiagonal = Math.sqrt((width * width) + (height * height));
-      }
-
-      const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
-      const realToClamped = realDiagonal / diagonal;
-
-      if (realDiagonal !== diagonal) {
-        this.object.scale.setScalar(realToClamped);
-      }
-
-      if (depth !== null && typeof depth !== 'undefined') {
-        this.object.position.setZ(depth / 2);
-      }
-
-      const buttonSize = diagonal * 0.33;
-      const nearest = Math.ceil(buttonSize / 100) * 100;
-      const y = (height / realToClamped) + (diagonal * 0.04);
-
-      render(
-        <ARContainer>
-          <MessageText
-            size={diagonal}
-            height={y}
-          >
-            스티커를 남겨보세요!
-          </MessageText>
-
-          <FrameAR
-            width={width / realToClamped}
-            height={height / realToClamped}
-            vertical={0}
-            horizontal={0}
-            white
-          >
-            <StyledImageButton
-              type="button"
-              onClick={onNewClick}
-            >
-              <img
-                src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
-                srcSet={`
-                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
-                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
-                `}
-                alt="스티커를 남겨보세요!"
-                height={buttonSize}
-              />
-            </StyledImageButton>
-          </FrameAR>
-        </ARContainer>,
-        this.object.element,
-      );
-    }
-  }
-
   render() {
-    const { public: isPublic } = this.state;
+    const { public: isPublic, swipeShown } = this.state;
     const {
       currentUser,
       myMessagesCount,
@@ -279,33 +167,38 @@ class Entity extends Component {
           </ToggleMessageListButton>
         )}
 
-        <StyledImageButtonRight
-          type="button"
-          onClick={onNewClick}
-        >
-          <img
-            alt="스티커를 남겨보세요!"
-            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503047417/assets/btn-create_3x.png"
-            srcSet="
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503047417/assets/btn-create_3x.png 2x,
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503047417/assets/btn-create_3x.png 3x
-            "
-          />
-        </StyledImageButtonRight>
+        {swipeShown && (
+          <StyledSwipe />
+        )}
+
+        <MessageList
+          currentUser={currentUser}
+          userId={isPublic || currentUser === null ? null : currentUser.uid}
+          entity={data}
+          empty={messagesCount === 0}
+          onNewClick={onNewClick}
+        />
       </div>
     );
   }
 }
 
 export default firebaseConnect(
-  ({ currentUser }) => (currentUser === null ? [
-    { path: 'messagesCount/public', storeAs: 'publicMessagesCount' },
+  ({ currentUser, data }) => (currentUser === null ? [
+    { path: `messagesCount/${entityUriToId(data.uri)}/publicMessages`, storeAs: 'publicMessagesCount' },
   ] : [
-    { path: 'messagesCount/public', storeAs: 'publicMessagesCount' },
-    { path: `messagesCount/${currentUser.uid}`, storeAs: 'myMessagesCount' },
+    { path: `messagesCount/${entityUriToId(data.uri)}/publicMessages`, storeAs: 'publicMessagesCount' },
+    { path: `messagesCount/${entityUriToId(data.uri)}/authorMessages/${currentUser.uid}`, storeAs: 'myMessagesCount' },
   ]),
 )(connect(
-  ({ firebase: { data: { publicMessagesCount, myMessagesCount } } }) => ({
+  ({
+    firebase: {
+      data: {
+        publicMessagesCount,
+        myMessagesCount,
+      },
+    },
+  }) => ({
     publicMessagesCount,
     myMessagesCount,
   }),
