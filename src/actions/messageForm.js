@@ -10,6 +10,7 @@ import type {
 } from '../types';
 
 export const INIT_MESSAGE_FORM: 'INIT_MESSAGE_FORM' = 'INIT_MESSAGE_FORM';
+export const INIT_EDIT_MESSAGE_FORM: 'INIT_EDIT_MESSAGE_FORM' = 'INIT_EDIT_MESSAGE_FORM';
 export const DESTROY_MESSAGE_FORM: 'DESTROY_MESSAGE_FORM' = 'DESTROY_MESSAGE_FORM';
 export const SET_MESSAGE_PRIVACY: 'SET_MESSAGE_PRIVACY' = 'SET_MESSAGE_PRIVACY';
 export const SUBMIT_MESSAGE_FORM: 'SUBMIT_MESSAGE_FORM' = 'SUBMIT_MESSAGE_FORM';
@@ -22,6 +23,11 @@ export const initMessageForm = (entity: MessageFormEntity, author: MessageAuthor
     entity,
     author,
   },
+});
+
+export const initEditMessageForm = (messageForm: MessageForm) => ({
+  type: INIT_EDIT_MESSAGE_FORM,
+  payload: messageForm,
 });
 
 export const destroyMessageForm = () => ({ type: DESTROY_MESSAGE_FORM });

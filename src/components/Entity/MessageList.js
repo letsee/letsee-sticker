@@ -106,7 +106,7 @@ type MessageListPropTypes = {
   },
   empty: boolean,
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onEditClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
 };
 
 class MessageList extends Component {
@@ -395,10 +395,10 @@ class MessageList extends Component {
     return (
       <div {...other}>
         <Actions>
-          {/* {!loading && data !== null && currentUser !== null && data.author.uid === currentUser.uid && (
+          {!loading && data !== null && currentUser !== null && data.author.uid === currentUser.uid && (
             <ImageButton
               type="button"
-              onClick={onEditClick}
+              onClick={() => onEditClick && onEditClick(data)}
             >
               <img
                 alt={`${data.author.firstname} ${data.author.lastname}`.trim()}
@@ -409,7 +409,7 @@ class MessageList extends Component {
                 "
               />
             </ImageButton>
-          )} */}
+          )}
 
           <ImageButton
             type="button"

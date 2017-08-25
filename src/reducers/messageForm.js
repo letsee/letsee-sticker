@@ -1,6 +1,7 @@
 // @flow
 import {
   INIT_MESSAGE_FORM,
+  INIT_EDIT_MESSAGE_FORM,
   DESTROY_MESSAGE_FORM,
   SET_MESSAGE_PRIVACY,
   SUBMIT_MESSAGE_FORM,
@@ -113,6 +114,8 @@ const messageForm = (state: MessageForm | null = null, action): MessageForm | nu
       }
 
       return state;
+    case INIT_EDIT_MESSAGE_FORM:
+      return action.payload;
     case DESTROY_MESSAGE_FORM:
       return null;
     case SET_MESSAGE_PRIVACY:

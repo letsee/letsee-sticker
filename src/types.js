@@ -90,6 +90,7 @@ export type MessageForm = {
     byId: { [id: string]: MessageFormSticker },
     allIds: string[],
   },
+  timestamp?: number,
   author: MessageAuthor,
   public: boolean,
   submitting: boolean,

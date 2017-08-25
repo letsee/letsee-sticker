@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import withRouter from 'react-router/lib/withRouter';
+import uuidv4 from 'uuid/v4';
 import AppLoader from '../components/AppLoader';
 import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
@@ -9,6 +10,7 @@ import TransformationGuide from '../components/TransformationGuide';
 import Help from '../components/Help';
 import {
   initMessageForm,
+  initEditMessageForm,
   destroyMessageForm,
   setMessagePrivacy,
   submitMessageForm,
@@ -24,7 +26,7 @@ import {
   closeHelp,
 } from '../actions';
 import openLogin from '../openLogin';
-import type { MessageAuthor, MessageForm as MessageFormType } from '../types';
+import type { MessageAuthor, MessageForm as MessageFormType, MessageFormEntity, MessageWithId } from '../types';
 
 type RootPropTypes = {
   helpOpened: boolean,
@@ -34,6 +36,9 @@ type RootPropTypes = {
   currentEntity: string | null,
   selectedSticker: string | null,
   messageForm: MessageFormType | null,
+  entities: {
+    byUri: { [uri: string]: MessageFormEntity },
+  },
 };
 
 const Root = ({
@@ -76,7 +81,7 @@ const Root = ({
           onSubmit={() => {
             if (currentUser === null) {
               openLogin();
-            } else {
+            } else if (messageForm !== null) {
               dispatch(submitMessageForm(messageForm));
             }
           }}
@@ -111,6 +116,38 @@ const Root = ({
               openLogin();
             } else {
               dispatch(initMessageForm(currentEntityData, currentUser));
+            }
+          }}
+          onEditClick={(message: MessageWithId) => {
+            if (currentUser !== null && message.author.uid === currentUser.uid) {
+              const { author, entity, stickers, ...other } = message;
+
+              const stickersWithId = stickers.map(sticker => ({
+                ...sticker,
+                id: uuidv4(),
+              }));
+
+              const stickersById = stickersWithId.reduce((byId, sticker) => ({
+                ...byId,
+                [sticker.id]: sticker,
+              }), {});
+
+              const stickerIds = stickersWithId.map(sticker => sticker.id);
+
+              const messageFormData = {
+                ...other,
+                author: currentUser,
+                entity: entities.byUri[entity.uri],
+                stickers: {
+                  byId: stickersById,
+                  allIds: stickerIds,
+                },
+                error: false,
+                submitting: false,
+                submitted: false,
+              };
+
+              dispatch(initEditMessageForm(messageFormData));
             }
           }}
         />

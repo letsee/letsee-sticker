@@ -8,7 +8,7 @@ import MessageList from './MessageList';
 import Swipe from './Swipe';
 import Button from '../Button';
 import { entityUriToId } from '../../entityUriHelper';
-import type { MessageAuthor } from '../../types';
+import type { MessageAuthor, MessageFormEntity, MessageWithId } from '../../types';
 
 const StyledSwipe = styled(Swipe)`
   position: absolute;
@@ -62,19 +62,12 @@ const ToggleMessageListButton = Button.extend`
 `;
 
 type EntityPropTypes = {
-  data: {
-    uri: string,
-    name: string,
-    size: {
-      width: number,
-      height: number,
-      depth: number,
-    },
-  },
+  data: MessageFormEntity,
   currentUser: MessageAuthor | null,
   myMessagesCount?: number,
   publicMessagesCount?: number,
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };
 
@@ -140,6 +133,7 @@ class Entity extends Component {
       publicMessagesCount,
       data,
       onNewClick,
+      onEditClick,
       firebase,
       dispatch,
       children,
@@ -177,6 +171,7 @@ class Entity extends Component {
           entity={data}
           empty={messagesCount === 0}
           onNewClick={onNewClick}
+          onEditClick={onEditClick}
         />
       </div>
     );
