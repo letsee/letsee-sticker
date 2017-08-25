@@ -62,3 +62,37 @@ export type News = {
   image: string,
   timestamp: number,
 };
+
+export type MessageFormEntity = {
+  uri: string,
+  name: string,
+  image: string,
+  size: {
+    width: number,
+    height: number,
+    depth: number,
+  },
+};
+
+export type MessageFormSticker = {
+  id: string,
+  position: StickerPosition,
+  quaternion: StickerQuaternion,
+  scale: number,
+  text: string,
+  type: StickerType,
+};
+
+export type MessageForm = {
+  id: string | null,
+  entity: MessageFormEntity,
+  stickers: {
+    byId: { [id: string]: MessageFormSticker },
+    allIds: string[],
+  },
+  author: MessageAuthor,
+  public: boolean,
+  submitting: boolean,
+  submitted: boolean,
+  error: boolean,
+};

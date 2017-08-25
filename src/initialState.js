@@ -10,10 +10,6 @@ export default {
   },
   messageForm: null,
   selectedSticker: null,
-  stickers: {
-    byId: {},
-    allIds: [],
-  },
   shareModal: null,
   transformationGuideOpened: false,
   helpOpened: false,

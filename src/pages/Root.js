@@ -24,7 +24,7 @@ import {
   closeHelp,
 } from '../actions';
 import openLogin from '../openLogin';
-import type { MessageAuthor } from '../types';
+import type { MessageAuthor, MessageForm as MessageFormType } from '../types';
 
 type RootPropTypes = {
   helpOpened: boolean,
@@ -33,12 +33,7 @@ type RootPropTypes = {
   currentUser: MessageAuthor | null,
   currentEntity: string | null,
   selectedSticker: string | null,
-  messageForm: {
-    uri: string,
-    public: boolean,
-    submitting: boolean,
-    error: boolean,
-  } | null,
+  messageForm: MessageFormType | null,
 };
 
 const Root = ({
@@ -49,7 +44,6 @@ const Root = ({
   entities,
   currentEntity,
   selectedSticker,
-  stickers,
   messageForm,
   router,
   dispatch,
@@ -67,32 +61,23 @@ const Root = ({
   }
 
   if (messageForm !== null) {
-    const { uri, error, submitting, public: isPublic } = messageForm;
-    const entityTracked = currentEntity !== null && uri === currentEntity;
-    const messageEntity = entities.byUri[uri];
-    const selectedStickerData = stickers.byId[selectedSticker];
-    const stickersById = stickers.allIds
-      .map(id => stickers.byId[id])
-      .filter(sticker => sticker && sticker.entityUri === uri);
+    const { entity, stickers } = messageForm;
+    const entityTracked = currentEntity !== null && entity.uri === currentEntity;
+    const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
 
     return (
       <div>
         <MessageForm
-          entity={messageEntity}
-          stickers={stickersById}
+          data={messageForm}
           selectedSticker={selectedStickerData}
           entityTracked={entityTracked}
-          submitting={submitting}
-          error={error}
-          public={isPublic}
-          onPublicChange={newPublic => dispatch(setMessagePrivacy(uri, newPublic))}
-          onClose={() => dispatch(destroyMessageForm(uri, stickersById.map(sticker => sticker.id)))}
-          nextDisabled={stickersById.length === 0 || submitting}
+          onPublicChange={newPublic => dispatch(setMessagePrivacy(newPublic))}
+          onClose={() => dispatch(destroyMessageForm())}
           onSubmit={() => {
             if (currentUser === null) {
               openLogin();
             } else {
-              dispatch(submitMessageForm(uri));
+              dispatch(submitMessageForm(messageForm));
             }
           }}
           onStickerClick={(id) => {
@@ -101,8 +86,8 @@ const Root = ({
             }
           }}
           onStickerTransform={(id, trans) => dispatch(transformSticker(id, trans))}
-          onTextInput={value => dispatch(addSticker(uri, value, 'text', entityTracked))}
-          onEmojiInput={value => dispatch(addSticker(uri, value, 'emoji', entityTracked))}
+          onTextInput={value => dispatch(addSticker(value, 'text', entityTracked))}
+          onEmojiInput={value => dispatch(addSticker(value, 'emoji', entityTracked))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
           onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}
@@ -125,7 +110,7 @@ const Root = ({
             if (currentUser === null) {
               openLogin();
             } else {
-              dispatch(initMessageForm(currentEntity));
+              dispatch(initMessageForm(currentEntityData, currentUser));
             }
           }}
         />
@@ -148,7 +133,6 @@ export default withRouter(connect(
     loadingEntity,
     currentEntity,
     currentUser,
-    stickers,
     entities,
     selectedSticker,
     messageForm,
@@ -159,7 +143,6 @@ export default withRouter(connect(
     loadingEntity,
     currentEntity,
     currentUser,
-    stickers,
     entities,
     selectedSticker,
     messageForm,
