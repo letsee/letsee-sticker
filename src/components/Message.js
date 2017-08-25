@@ -152,7 +152,7 @@ class Message extends Component {
 
     return (
       <div {...other}>
-        {entityTracked && (
+        {entityTracked && !loadingEntity && (
           <div>
             <StyledMessageMeta
               author={author}

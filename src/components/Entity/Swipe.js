@@ -1,20 +1,52 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const FadeOutLeft = keyframes`
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+`;
+
+const FadeOut = keyframes`
+  from {
+    opacity: 0.8;
+  }
+
+  to {
+    opacity: 0;
+  }
+`;
 
 const SwipeImage = styled.img`
   display: block;
   margin: 0 auto 2px auto;
+  opacity: 0;
+  animation-delay: 0.5s;
+  animation-duration: 1.5s;
+  animation-timing-function: ease;
+  animation-iteration-count: 2;
+  animation-name: ${FadeOutLeft};
 `;
 
 const SwipeText = styled.div`
-  opacity: 0.8;
+  opacity: 0;
   font-family: AppleSDGothicNeo, sans-serif;
   font-size: 13px;
   font-weight: bold;
   letter-spacing: -0.6px;
   text-align: center;
   color: #fff;
+  animation-delay: 0.5s;
+  animation-duration: 1.5s;
+  animation-timing-function: ease;
+  animation-iteration-count: 2;
+  animation-name: ${FadeOut};
 `;
 
 const Swipe = ({ children, ...other }) => (
