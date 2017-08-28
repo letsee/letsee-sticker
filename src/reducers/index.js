@@ -11,6 +11,7 @@ import { letseeLoaded, loadingEntity } from './letsee';
 import messageForm from './messageForm';
 import messagesList from './messagesList';
 import selectedSticker from './selectedSticker';
+import swipeGuide from './swipeGuide';
 import transformationGuideOpened from './transformationGuideOpened';
 
 const reducers = combineReducers({
@@ -24,6 +25,7 @@ const reducers = combineReducers({
   messageForm,
   messagesList,
   selectedSticker,
+  swipeGuide,
   transformationGuideOpened,
   firebase: firebaseStateReducer,
   routing: routerReducer,

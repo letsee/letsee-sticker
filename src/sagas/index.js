@@ -1,7 +1,17 @@
 // @flow
 import { delay } from 'redux-saga';
-import { take, fork, all, put, select, race, call } from 'redux-saga/effects';
 import {
+  take,
+  fork,
+  all,
+  put,
+  select,
+  race,
+  call,
+  takeLatest,
+} from 'redux-saga/effects';
+import {
+  SHOW_SWIPE_GUIDE,
   DESTROY_MESSAGE_FORM,
   SUBMIT_MESSAGE_FORM,
   submitMessageFormSuccess,
@@ -9,6 +19,7 @@ import {
   destroyMessageForm,
   setPublic,
   setCurrentCursor,
+  hideSwipeGuide,
 } from '../actions';
 import { getMessagesListPath } from '../entityUriHelper';
 import type { Message } from '../types';
@@ -27,29 +38,6 @@ function* persistToFirebase(getFirebase, id: string | null, message: Message) {
   const authorMessagesPath = getMessagesListPath(message.entity.uri, message.author.uid);
   const publicMessagesPath = getMessagesListPath(message.entity.uri, null);
 
-  // const oldSnapshot = yield messageRef.once('value');
-  // const oldMessage = oldSnapshot.val();
-  //
-  // if (
-  //   oldMessage.entity.uri !== message.entity.uri ||
-  //   oldMessage.author.uid !== message.author.uid
-  // ) {
-  //   const oldEntityId = entityUriToId(oldMessage.entity.uri);
-  //   const oldAuthorId = oldMessage.author.uid;
-  //
-  //   yield all([
-  //     firebase.remove(`/entityMessages/${oldEntityId}/authorMessages/${oldAuthorId}/${messageId}`),
-  //     firebase.remove(`/entityMessages/${oldEntityId}/publicMessages/${messageId}`),
-  //   ]);
-  // }
-  //
-  // const messages = yield all([
-  //   firebase.set(`/messages/${messageId}`, message),
-  //   firebase.set(`/entityMessages/${entityId}/authorMessages/${authorId}/${messageId}`, message),
-  //   firebase.set(`/entityMessages/${entityId}/`),
-  // ]);
-  //
-  // return messages;
   let messageSet = false;
 
   while (!messageSet) {
@@ -138,9 +126,20 @@ function* submitMessageForm(getFirebase) {
   }
 }
 
+function* showSwipeGuide() {
+  try {
+    yield call(delay, 3000);
+    yield put(hideSwipeGuide());
+  } catch (e) {
+    // TODO error
+    console.log(e);
+  }
+}
+
 function* sagas(getFirebase) {
   yield all([
     fork(submitMessageForm, getFirebase),
+    takeLatest(SHOW_SWIPE_GUIDE, showSwipeGuide),
   ]);
 }
 
