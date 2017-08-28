@@ -15,8 +15,11 @@ import {
   setLastCursor,
   setCount,
   setPublic,
+  showSwipeGuide,
+  hideSwipeGuide,
 } from '../../actions';
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
+import type { SwipeGuide } from '../../initialState';
 import type { MessageAuthor, MessageFormEntity, MessageWithId, MessagesList } from '../../types';
 
 const StyledSwipe = styled(Swipe)`
@@ -71,6 +74,7 @@ const ToggleMessageListButton = Button.extend`
 `;
 
 type EntityPropTypes = {
+  swipeGuide: SwipeGuide,
   messagesList: MessagesList,
   data: MessageFormEntity,
   currentUser: MessageAuthor | null,
@@ -79,10 +83,7 @@ type EntityPropTypes = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-class Entity extends Component<EntityPropTypes, {
-  showedSwipe: boolean,
-  swipeShown: boolean,
-}> {
+class Entity extends Component {
   static propTypes = {
     currentUser: PropTypes.shape({ // eslint-disable-line react/require-default-props
       uid: PropTypes.string.isRequired,
@@ -99,11 +100,6 @@ class Entity extends Component<EntityPropTypes, {
     onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
   };
 
-  state = {
-    showedSwipe: false,
-    swipeShown: false,
-  };
-
   componentWillMount() {
     const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
     const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
@@ -116,7 +112,7 @@ class Entity extends Component<EntityPropTypes, {
 
   componentWillReceiveProps({
     messagesList: { entityUri, count, public: isPublic },
-    firebase, dispatch, currentUser,
+    firebase, dispatch, currentUser, swipeGuide,
   }: EntityPropTypes) {
     const prevEntityUri = this.props.messagesList.entityUri;
     const prevUserId = this.props.currentUser !== null && !this.props.messagesList.public ? this.props.currentUser.uid : null;
@@ -138,11 +134,8 @@ class Entity extends Component<EntityPropTypes, {
       countref.on('value', this.handleMessagesCountChange);
       listRef.limitToLast(1).on('value', this.handleLastMessageChange);
       listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
-    } else if (!this.state.showedSwipe && count > 1) {
-      this.setState({
-        showedSwipe: true,
-        swipeShown: true,
-      });
+    } else if (!swipeGuide.wasShown && count > 1) {
+      dispatch(showSwipeGuide());
     }
   }
 
@@ -209,8 +202,8 @@ class Entity extends Component<EntityPropTypes, {
   };
 
   render() {
-    const { swipeShown } = this.state;
     const {
+      swipeGuide,
       messagesList,
       currentUser,
       data,
@@ -243,7 +236,7 @@ class Entity extends Component<EntityPropTypes, {
           </ToggleMessageListButton>
         )}
 
-        {swipeShown && (
+        {swipeGuide.isShowing && (
           <StyledSwipe />
         )}
 
@@ -262,4 +255,6 @@ class Entity extends Component<EntityPropTypes, {
   }
 }
 
-export default firebaseConnect()(connect()(Entity));
+export default firebaseConnect()(connect(
+  ({ swipeGuide }) => ({ swipeGuide }),
+)(Entity));
