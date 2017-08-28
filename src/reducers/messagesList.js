@@ -110,6 +110,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
       if (state !== null) {
         return {
           ...state,
+          loading: action.payload === null && state.last === null ? false : state.loading,
           current: action.payload === null ? state.last : action.payload,
           message: null,
         };
