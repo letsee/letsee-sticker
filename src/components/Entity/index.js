@@ -31,8 +31,11 @@ const StyledSwipe = styled(Swipe)`
 const Title = styled.div`
   position: absolute;
   top: 25px;
-  left: 0;
-  right: 0;
+  left: 54px;
+  right: 54px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   padding: 16px 0;
   font-family: AppleSDGothicNeo, sans-serif;
@@ -43,13 +46,18 @@ const Title = styled.div`
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 `;
 
+const EntityName = styled.div`
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+
 const MessagesCount = styled.span`
+  flex-shrink: 0;
   vertical-align: middle;
   margin-left: 5px;
   font-family: SFUIDisplay, sans-serif;
   font-size: 13px;
-  font-weight: bold;
-  letter-spacing: -0.3px;
   color: #000;
   text-shadow: none;
   padding: 0 6px;
@@ -219,7 +227,9 @@ class Entity extends Component {
     return (
       <div {...other}>
         <Title>
-          {data.name}
+          <EntityName>
+            {data.name}
+          </EntityName>
 
           <MessagesCount>
             {messagesList.count}
