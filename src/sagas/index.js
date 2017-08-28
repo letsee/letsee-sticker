@@ -10,15 +10,23 @@ import {
   setPublic,
   setCurrentCursor,
 } from '../actions';
-// import { entityUriToId } from '../entityUriHelper';
+import { getMessagesListPath } from '../entityUriHelper';
 import type { Message } from '../types';
 
-function* persistToFirebase(messageRef, message: Message) {
-  // const firebase = getFirebase();
-  // const messageId = messageRef.key;
-  // const entityId = entityUriToId(message.entity.uri);
-  // const authorId = message.author.uid;
-  //
+function* persistToFirebase(getFirebase, id: string | null, message: Message) {
+  const firebase = getFirebase().database();
+  let messageRef;
+
+  if (id === null) {
+    messageRef = firebase.ref('messages').push();
+  } else {
+    messageRef = firebase.ref(`/messages/${id}`);
+  }
+
+  const messageId = messageRef.key;
+  const authorMessagesPath = getMessagesListPath(message.entity.uri, message.author.uid);
+  const publicMessagesPath = getMessagesListPath(message.entity.uri, null);
+
   // const oldSnapshot = yield messageRef.once('value');
   // const oldMessage = oldSnapshot.val();
   //
@@ -42,7 +50,23 @@ function* persistToFirebase(messageRef, message: Message) {
   // ]);
   //
   // return messages;
-  yield messageRef.set(message);
+  let messageSet = false;
+
+  while (!messageSet) {
+    try {
+      yield messageRef.set(message);
+      messageSet = true;
+    } catch (e) {
+      // TODO retry??
+      console.log(e);
+    }
+  }
+
+  yield all([
+    firebase.ref(`${authorMessagesPath}/${messageId}`).set(message),
+    firebase.ref(`${publicMessagesPath}/${messageId}`).set(message.public ? message : null),
+  ]);
+
   return messageRef;
 }
 
@@ -87,25 +111,17 @@ function* submitMessageForm(getFirebase) {
       const currentUser = yield select(state => state.currentUser);
 
       if (currentUser !== null && author.uid === currentUser.uid) {
-        let messageRef;
-
-        if (id === null) {
-          messageRef = yield getFirebase().database().ref('messages').push();
-        } else {
-          messageRef = getFirebase().database().ref(`/messages/${id}`);
-        }
-
         const { firebase } = yield race({
-          firebase: call(persistToFirebase, messageRef, message),
+          firebase: call(persistToFirebase, getFirebase, id, message),
           timeout: call(delay, 3000), // TODO timeout?
           destroy: take(DESTROY_MESSAGE_FORM),
         });
 
         if (firebase) {
-          yield put(submitMessageFormSuccess(messageRef.key));
+          yield put(submitMessageFormSuccess(firebase.key));
           yield put(destroyMessageForm());
           yield put(setPublic(false));
-          yield put(setCurrentCursor(messageRef.key));
+          yield put(setCurrentCursor(firebase.key));
         } else {
           // TODO error
           yield put(submitMessageFormError(new Error('form destroyed')));

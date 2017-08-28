@@ -281,7 +281,6 @@ class MessageList extends Component<MessageListPropTypes, {
 
     const { entityUri, empty, current } = messagesList;
     const dataExists = !empty && current !== null && !error;
-    console.log(current, data);
 
     return (
       <div {...other}>
