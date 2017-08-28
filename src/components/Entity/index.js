@@ -15,6 +15,9 @@ import {
   setLastCursor,
   setCount,
   setPublic,
+  setCurrentMessage,
+  fetchPrev,
+  fetchNext,
   showSwipeGuide,
 } from '../../actions';
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
@@ -159,10 +162,11 @@ class Entity extends Component {
   props: EntityPropTypes;
 
   handlePrev() {
-    const { firebase, messagesList, currentUser } = this.props;
-    const { first, current, entityUri, public: isPublic } = messagesList;
+    const { firebase, messagesList, currentUser, dispatch } = this.props;
+    const { first, current, entityUri, public: isPublic, loading } = messagesList;
 
-    if (first !== current) {
+    if (first !== current && !loading) {
+      dispatch(fetchPrev());
       const path = getMessagesListPath(entityUri, (currentUser !== null && !isPublic) ? currentUser.uid : null);
       const ref = firebase.database().ref(path).orderByKey();
       const filteredRef = current === null ? ref.limitToLast(1) : ref.endAt(current).limitToLast(2);
@@ -176,10 +180,11 @@ class Entity extends Component {
   }
 
   handleNext() {
-    const { firebase, messagesList, currentUser } = this.props;
-    const { last, current, entityUri, public: isPublic } = messagesList;
+    const { firebase, messagesList, currentUser, dispatch } = this.props;
+    const { last, current, entityUri, public: isPublic, loading } = messagesList;
 
-    if (last !== current) {
+    if (last !== current && !loading) {
+      dispatch(fetchNext());
       const path = getMessagesListPath(entityUri, (currentUser !== null && !isPublic) ? currentUser.uid : null);
       const ref = firebase.database().ref(path).orderByKey();
       const filteredRef = current === null ? ref.limitToLast(1) : ref.startAt(current).limitToFirst(2);
@@ -257,6 +262,7 @@ class Entity extends Component {
           onEditClick={onEditClick}
           onPrev={() => this.handlePrev()}
           onNext={() => this.handleNext()}
+          onMessageReceive={message => dispatch(setCurrentMessage(message))}
           onMessageDelete={() => dispatch(setCurrentCursor(null))}
         />
       </div>

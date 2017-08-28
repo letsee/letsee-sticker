@@ -7,7 +7,10 @@ import {
   SET_FIRST_CURSOR,
   SET_LAST_CURSOR,
   SET_CURRENT_CURSOR,
+  SET_CURRENT_MESSAGE,
   SET_CURRENT_USER,
+  FETCH_PREV,
+  FETCH_NEXT,
 } from '../actions';
 import type { MessagesList } from '../types';
 
@@ -25,6 +28,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
           first: null,
           last: null,
           current: null,
+          message: null,
         };
       }
 
@@ -47,6 +51,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
           first: null,
           last: null,
           current: null,
+          message: null,
         };
       }
 
@@ -63,6 +68,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
           first: null,
           last: null,
           current: null,
+          message: null,
         };
       }
 
@@ -102,7 +108,31 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
       if (state !== null) {
         return {
           ...state,
+          loading: true,
           current: action.payload === null ? state.last : action.payload,
+          message: null,
+        };
+      }
+
+      return state;
+    case FETCH_PREV:
+    case FETCH_NEXT:
+      if (state !== null) {
+        return {
+          ...state,
+          loading: true,
+          error: false,
+        };
+      }
+
+      return state;
+    case SET_CURRENT_MESSAGE:
+      if (state !== null) {
+        return {
+          ...state,
+          loading: false,
+          message: action.payload.message,
+          error: false,
         };
       }
 

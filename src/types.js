@@ -106,4 +106,6 @@ export type MessagesList = {
   first: string | null,
   last: string | null,
   current: string | null,
+  message: MessageWithId | null,
+  error: boolean,
 };

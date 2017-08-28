@@ -8,6 +8,7 @@ import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import { ImageButton } from '../Button';
 import Frame from '../Frame';
+import EntityLoader from '../EntityLoader';
 import Message from '../Message';
 import manager, { enableManager } from '../../manager';
 import { getMessagesListPath } from '../../entityUriHelper';
@@ -41,6 +42,13 @@ const selectLatestMessage = (messagesObject: { [id: string]: MessageType }): Mes
 
 const ARContainer = styled.div`
   position: relative;
+`;
+
+const StyledEntityLoader = styled(EntityLoader)`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const StyledImageButton = ImageButton.extend`
@@ -102,6 +110,7 @@ type MessageListPropTypes = {
   data: MessagesList,
   currentUser: MessageAuthor | null,
   entity: MessageFormEntity,
+  onMessageReceive?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
   onMessageDelete?: void => mixed, // eslint-disable-line react/require-default-props
   onPrev?: void => mixed, // eslint-disable-line react/require-default-props
   onNext?: void => mixed, // eslint-disable-line react/require-default-props
@@ -109,27 +118,15 @@ type MessageListPropTypes = {
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
 };
 
-type MessageListStateTypes = {
-  data: MessageWithId | null,
-  error: boolean,
-};
-
 class MessageList extends Component {
   constructor(props: MessageListPropTypes) {
     super(props);
-
-    this.state = {
-      data: null,
-      error: false,
-    };
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const container = document.createElement('div');
       this.object = new DOMRenderable(container);
     }
   }
-
-  state: MessageListStateTypes;
 
   componentWillMount() {
     const { firebase, data, currentUser } = this.props;
@@ -175,13 +172,14 @@ class MessageList extends Component {
   props: MessageListPropTypes;
 
   handleMessageChange = (snapshot) => {
+    const { onMessageDelete, onMessageReceive } = this.props;
     const messagesObject = snapshot.val();
     const data = selectLatestMessage(messagesObject);
 
     if (data === null) {
-      this.props.onMessageDelete && this.props.onMessageDelete();
+      onMessageDelete && onMessageDelete();
     } else {
-      this.setState({ data });
+      onMessageReceive && onMessageReceive(data);
     }
   };
 
@@ -229,14 +227,16 @@ class MessageList extends Component {
 
       render(
         <div>
-          {data.empty && (
+          {(data.loading || data.empty) && (
             <ARContainer>
-              <MessageText
-                size={diagonal}
-                height={y}
-              >
-                스티커를 남겨보세요!
-              </MessageText>
+              {data.empty && (
+                <MessageText
+                  size={diagonal}
+                  height={y}
+                >
+                  스티커를 남겨보세요!
+                </MessageText>
+              )}
 
               <FrameAR
                 width={width / realToClamped}
@@ -245,20 +245,24 @@ class MessageList extends Component {
                 horizontal={0}
                 white
               >
-                <StyledImageButton
-                  type="button"
-                  onClick={onNewClick}
-                >
-                  <img
-                    src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
-                    srcSet={`
-                      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
-                      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
-                    `}
-                    alt="스티커를 남겨보세요!"
-                    height={buttonSize}
-                  />
-                </StyledImageButton>
+                {data.loading ? (
+                  <StyledEntityLoader size={diagonal} />
+                ) : (
+                  <StyledImageButton
+                    type="button"
+                    onClick={onNewClick}
+                  >
+                    <img
+                      src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
+                      srcSet={`
+                        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
+                        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
+                      `}
+                      alt="스티커를 남겨보세요!"
+                      height={buttonSize}
+                    />
+                  </StyledImageButton>
+                )}
               </FrameAR>
             </ARContainer>
           )}
@@ -269,7 +273,6 @@ class MessageList extends Component {
   }
 
   render() {
-    const { data, error } = this.state;
     const {
       data: messagesList,
       currentUser,
@@ -283,19 +286,19 @@ class MessageList extends Component {
       ...other
     } = this.props;
 
-    const { entityUri, empty, current } = messagesList;
-    const dataExists = !empty && current !== null && !error;
+    const { entityUri, empty, current, message, error, loading } = messagesList;
+    const dataExists = !empty && current !== null && !error && !loading;
 
     return (
       <div {...other}>
         <Actions>
-          {data !== null && dataExists && currentUser !== null && data.author.uid === currentUser.uid && (
+          {message !== null && dataExists && currentUser !== null && message.author.uid === currentUser.uid && (
             <ImageButton
               type="button"
-              onClick={() => onEditClick && onEditClick(data)}
+              onClick={() => onEditClick && onEditClick(message)}
             >
               <img
-                alt={`${data.author.firstname} ${data.author.lastname}`.trim()}
+                alt={`${message.author.firstname} ${message.author.lastname}`.trim()}
                 src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503389387/assets/btn-create-copy_3x.png"
                 srcSet="
                   https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503389387/assets/btn-create-copy_3x.png 2x,
@@ -320,10 +323,10 @@ class MessageList extends Component {
           </ImageButton>
         </Actions>
 
-        {dataExists && data !== null && (
+        {dataExists && message !== null && (
           <Message
-            id={data.id}
-            data={data}
+            id={message.id}
+            data={message}
             currentEntity={entityUri}
             loadingEntity={false}
           />
