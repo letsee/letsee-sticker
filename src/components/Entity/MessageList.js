@@ -8,30 +8,21 @@ import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import { ImageButton } from '../Button';
 import Frame from '../Frame';
+import EntityLoader from '../EntityLoader';
 import Message from '../Message';
 import manager, { enableManager } from '../../manager';
-import { entityUriToId } from '../../entityUriHelper';
+import { getMessagesListPath } from '../../entityUriHelper';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
 } from '../../constants';
-import type { Message as MessageType, MessageWithId, MessageAuthor } from '../../types';
-
-const selectEarliestMessage = (messagesObject: { [id: string]: MessageType }): MessageWithId | null => {
-  const messageIds: string[] = sortBy(keys(messagesObject));
-  const lastMessageId: string | null = messageIds[0] || null;
-
-  if (lastMessageId === null) {
-    return null;
-  }
-
-  const messageData = messagesObject[lastMessageId];
-
-  return {
-    id: lastMessageId,
-    ...messageData,
-  };
-};
+import type {
+  Message as MessageType,
+  MessageWithId,
+  MessageAuthor,
+  MessagesList,
+  MessageFormEntity,
+} from '../../types';
 
 const selectLatestMessage = (messagesObject: { [id: string]: MessageType }): MessageWithId | null => {
   const messageIds: string[] = sortBy(keys(messagesObject));
@@ -51,6 +42,13 @@ const selectLatestMessage = (messagesObject: { [id: string]: MessageType }): Mes
 
 const ARContainer = styled.div`
   position: relative;
+`;
+
+const StyledEntityLoader = styled(EntityLoader)`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const StyledImageButton = ImageButton.extend`
@@ -92,34 +90,37 @@ const FrameAR = styled(Frame)`
   }
 `;
 
+const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
+  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
+
+  if (data.current !== null) {
+    ref.equalTo(data.current).on('value', handleMessageChange);
+  }
+};
+
+const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
+  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
+
+  if (data.current !== null) {
+    ref.equalTo(data.current).off('value', handleMessageChange);
+  }
+};
+
 type MessageListPropTypes = {
+  data: MessagesList,
   currentUser: MessageAuthor | null,
-  userId: string | null,
-  entity: {
-    uri: string,
-    name: string,
-    size: {
-      width: number,
-      height: number,
-      depth: number,
-    },
-  },
-  empty: boolean,
+  entity: MessageFormEntity,
+  onMessageReceive?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
+  onMessageDelete?: void => mixed, // eslint-disable-line react/require-default-props
+  onPrev?: void => mixed, // eslint-disable-line react/require-default-props
+  onNext?: void => mixed, // eslint-disable-line react/require-default-props
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onEditClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
 };
 
 class MessageList extends Component {
   constructor(props: MessageListPropTypes) {
     super(props);
-
-    this.state = {
-      loading: true,
-      first: null,
-      last: null,
-      data: null,
-      error: false,
-    };
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const container = document.createElement('div');
@@ -127,22 +128,10 @@ class MessageList extends Component {
     }
   }
 
-  state: {
-    loading: boolean,
-    first: MessageWithId | null,
-    last: MessageWithId | null,
-    data: MessageWithId | null,
-    error: boolean,
-  };
-
   componentWillMount() {
-    const { userId, entity: { uri }, firebase } = this.props;
-    const entityId = entityUriToId(uri);
-    const path = userId === null ? `entityMessages/${entityId}/publicMessages` : `entityMessages/${entityId}/authorMessages/${userId}`;
-    const ref = firebase.database().ref(path).orderByKey();
-    ref.limitToLast(1).on('value', this.handleLastMessageChange);
-    ref.limitToFirst(1).on('value', this.handleFirstMessageChange);
-    ref.on('child_removed', this.handleMessageDelete);
+    const { firebase, data, currentUser } = this.props;
+    const userId = currentUser !== null && !data.public ? currentUser.uid : null;
+    subscribeToCurrent(firebase, data, userId, this.handleMessageChange);
   }
 
   componentDidMount() {
@@ -154,46 +143,20 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps: MessageListPropTypes) {
-    if (
-      this.props.userId !== nextProps.userId ||
-      this.props.entity.uri !== nextProps.entity.uri
-    ) {
-      const { userId, entity: { uri }, firebase } = this.props;
-      const entityId = entityUriToId(uri);
-      const path = userId === null ? `entityMessages/${entityId}/publicMessages` : `entityMessages/${entityId}/authorMessages/${userId}`;
-      const ref = firebase.database().ref(path).orderByKey();
-      ref.limitToLast(1).off('value', this.handleLastMessageChange);
-      ref.limitToFirst(1).off('value', this.handleFirstMessageChange);
-      ref.off('child_removed', this.handleMessageDelete);
-
-      const nextEntityId = entityUriToId(nextProps.entity.uri);
-      const nextPath = nextProps.userId === null ? `entityMessages/${nextEntityId}/publicMessages` : `entityMessages/${nextEntityId}/authorMessages/${nextProps.userId}`;
-      const nextRef = nextProps.firebase.database().ref(nextPath).orderByKey();
-
-      this.setState({
-        loading: true,
-        first: null,
-        last: null,
-        data: null,
-        error: false,
-      }, () => {
-        nextRef.limitToLast(1).on('value', this.handleLastMessageChange);
-        nextRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
-        nextRef.on('child_removed', this.handleMessageDelete);
-      });
+    if (this.props.data.current !== nextProps.data.current) {
+      const prevUserId = this.props.currentUser !== null && !this.props.data.public ? this.props.currentUser.uid : null;
+      const userId = nextProps.currentUser !== null && !nextProps.data.public ? nextProps.currentUser.uid : null;
+      unsubscribeFromCurrent(this.props.firebase, this.props.data, prevUserId, this.handleMessageChange);
+      subscribeToCurrent(nextProps.firebase, nextProps.data, userId, this.handleMessageChange);
     }
 
     this.renderAR(nextProps);
   }
 
   componentWillUnmount() {
-    const { userId, entity: { uri }, firebase } = this.props;
-    const entityId = entityUriToId(uri);
-    const path = userId === null ? `entityMessages/${entityId}/publicMessages` : `entityMessages/${entityId}/authorMessages/${userId}`;
-    const ref = firebase.database().ref(path).orderByKey();
-    ref.limitToLast(1).off('value', this.handleLastMessageChange);
-    ref.limitToFirst(1).off('value', this.handleFirstMessageChange);
-    ref.off('child_removed', this.handleMessageDelete);
+    const { firebase, data, currentUser } = this.props;
+    const userId = currentUser !== null && !data.public ? currentUser.uid : null;
+    unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange);
 
     manager.off('swipeleft', this.prev);
     manager.off('swiperight', this.next);
@@ -201,113 +164,38 @@ class MessageList extends Component {
     enableManager(true);
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntity(this.props.entity.uri);
+      const entity = letsee.getEntity(data.entityUri);
       entity.removeRenderable(this.object);
     }
   }
 
   props: MessageListPropTypes;
 
-  handleMessageDelete = (oldSnapshot) => {
-    const messagesObject = oldSnapshot.val();
-    const messageIds: string[] = keys(messagesObject);
-
-    this.setState((prevState) => {
-      if (prevState.data !== null && messageIds.includes(prevState.data.id)) {
-        if (prevState.last !== null && !messageIds.includes(prevState.last.id)) {
-          return {
-            data: prevState.last,
-          };
-        } else if (prevState.first !== null && !messageIds.includes(prevState.first.id)) {
-          return {
-            data: prevState.first,
-          };
-        }
-
-        return {
-          loading: true,
-          data: null,
-        };
-      }
-
-      return {};
-    });
-  };
-
-  handleLastMessageChange = (snapshot) => {
+  handleMessageChange = (snapshot) => {
+    const { onMessageDelete, onMessageReceive } = this.props;
     const messagesObject = snapshot.val();
-    const lastMessage = selectLatestMessage(messagesObject);
+    const data = selectLatestMessage(messagesObject);
 
-    this.setState(prevState => ({
-      last: lastMessage,
-      data: prevState.data === null && prevState.loading ? lastMessage : prevState.data,
-      loading: false,
-    }));
-  };
-
-  handleFirstMessageChange = (snapshot) => {
-    const messagesObject = snapshot.val();
-    const first = selectEarliestMessage(messagesObject);
-    this.setState({ first });
+    if (data === null) {
+      onMessageDelete && onMessageDelete();
+    } else {
+      onMessageReceive && onMessageReceive(data);
+    }
   };
 
   prev = () => {
-    const { first, data, loading } = this.state;
-
-    if (
-      !loading &&
-      first !== null && data !== null &&
-      first.id !== data.id
-    ) {
-      this.setState({ loading: true }, () => {
-        const { userId, entity: { uri }, firebase } = this.props;
-        const entityId = entityUriToId(uri);
-        const path = userId === null ? `entityMessages/${entityId}/publicMessages` : `entityMessages/${entityId}/authorMessages/${userId}`;
-        const ref = firebase.database().ref(path).orderByKey();
-
-        ref.endAt(data.id).limitToLast(2).once('value', (snapshot) => {
-          const messagesObject = snapshot.val();
-          const message = selectEarliestMessage(messagesObject);
-
-          this.setState({
-            loading: false,
-            data: message,
-            error: false,
-          });
-        });
-      });
+    if (this.props.onPrev) {
+      this.props.onPrev();
     }
   };
 
   next = () => {
-    const { last, data, loading } = this.state;
-
-    if (
-      !loading &&
-      last !== null && data !== null &&
-      last.id !== data.id
-    ) {
-      this.setState({ loading: true }, () => {
-        const { userId, entity: { uri }, firebase } = this.props;
-        const entityId = entityUriToId(uri);
-        const path = userId === null ? `entityMessages/${entityId}/publicMessages` : `entityMessages/${entityId}/authorMessages/${userId}`;
-        const ref = firebase.database().ref(path).orderByKey();
-
-        ref.startAt(data.id).limitToFirst(2).once('value', (snapshot) => {
-          const messagesObject = snapshot.val();
-          const message = selectLatestMessage(messagesObject);
-
-          this.setState({
-            loading: false,
-            data: message,
-            error: false,
-          });
-        });
-      });
+    if (this.props.onNext) {
+      this.props.onNext();
     }
   };
 
-  renderAR({ entity: e, onNewClick, empty }: MessageListPropTypes) {
+  renderAR({ entity: e, onNewClick, data }: MessageListPropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const { uri, size: { width, height, depth } } = e;
       const entity = letsee.getEntity(uri);
@@ -339,14 +227,16 @@ class MessageList extends Component {
 
       render(
         <div>
-          {empty && (
+          {(data.loading || data.empty) && (
             <ARContainer>
-              <MessageText
-                size={diagonal}
-                height={y}
-              >
-                스티커를 남겨보세요!
-              </MessageText>
+              {data.empty && (
+                <MessageText
+                  size={diagonal}
+                  height={y}
+                >
+                  스티커를 남겨보세요!
+                </MessageText>
+              )}
 
               <FrameAR
                 width={width / realToClamped}
@@ -355,20 +245,24 @@ class MessageList extends Component {
                 horizontal={0}
                 white
               >
-                <StyledImageButton
-                  type="button"
-                  onClick={onNewClick}
-                >
-                  <img
-                    src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
-                    srcSet={`
-                      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
-                      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
-                    `}
-                    alt="스티커를 남겨보세요!"
-                    height={buttonSize}
-                  />
-                </StyledImageButton>
+                {data.loading ? (
+                  <StyledEntityLoader size={diagonal} />
+                ) : (
+                  <StyledImageButton
+                    type="button"
+                    onClick={onNewClick}
+                  >
+                    <img
+                      src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
+                      srcSet={`
+                        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
+                        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
+                      `}
+                      alt="스티커를 남겨보세요!"
+                      height={buttonSize}
+                    />
+                  </StyledImageButton>
+                )}
               </FrameAR>
             </ARContainer>
           )}
@@ -379,29 +273,32 @@ class MessageList extends Component {
   }
 
   render() {
-    const { loading, data } = this.state;
     const {
+      data: messagesList,
       currentUser,
-      userId,
-      empty,
       entity,
+      onMessageDelete,
       onEditClick,
       onNewClick,
+      onPrev,
+      onNext,
       firebase,
-      dispatch,
       ...other
     } = this.props;
+
+    const { entityUri, empty, current, message, error, loading } = messagesList;
+    const dataExists = !empty && current !== null && !error && !loading;
 
     return (
       <div {...other}>
         <Actions>
-          {/* {!loading && data !== null && currentUser !== null && data.author.uid === currentUser.uid && (
+          {message !== null && dataExists && currentUser !== null && message.author.uid === currentUser.uid && (
             <ImageButton
               type="button"
-              onClick={onEditClick}
+              onClick={() => onEditClick && onEditClick(message)}
             >
               <img
-                alt={`${data.author.firstname} ${data.author.lastname}`.trim()}
+                alt={`${message.author.firstname} ${message.author.lastname}`.trim()}
                 src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503389387/assets/btn-create-copy_3x.png"
                 srcSet="
                   https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503389387/assets/btn-create-copy_3x.png 2x,
@@ -409,7 +306,7 @@ class MessageList extends Component {
                 "
               />
             </ImageButton>
-          )} */}
+          )}
 
           <ImageButton
             type="button"
@@ -426,12 +323,12 @@ class MessageList extends Component {
           </ImageButton>
         </Actions>
 
-        {data !== null && (
+        {dataExists && message !== null && (
           <Message
-            id={data.id}
-            data={data}
-            currentEntity={entity.uri}
-            loadingEntity={loading}
+            id={message.id}
+            data={message}
+            currentEntity={entityUri}
+            loadingEntity={false}
           />
         )}
       </div>

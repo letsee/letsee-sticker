@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import withRouter from 'react-router/lib/withRouter';
+import uuidv4 from 'uuid/v4';
 import AppLoader from '../components/AppLoader';
 import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
@@ -9,6 +10,7 @@ import TransformationGuide from '../components/TransformationGuide';
 import Help from '../components/Help';
 import {
   initMessageForm,
+  initEditMessageForm,
   destroyMessageForm,
   setMessagePrivacy,
   submitMessageForm,
@@ -24,7 +26,13 @@ import {
   closeHelp,
 } from '../actions';
 import openLogin from '../openLogin';
-import type { MessageAuthor } from '../types';
+import type {
+  MessageAuthor,
+  MessageForm as MessageFormType,
+  MessageFormEntity,
+  MessageWithId,
+  MessagesList,
+} from '../types';
 
 type RootPropTypes = {
   helpOpened: boolean,
@@ -33,12 +41,11 @@ type RootPropTypes = {
   currentUser: MessageAuthor | null,
   currentEntity: string | null,
   selectedSticker: string | null,
-  messageForm: {
-    uri: string,
-    public: boolean,
-    submitting: boolean,
-    error: boolean,
-  } | null,
+  messageForm: MessageFormType | null,
+  messagesList: MessagesList | null,
+  entities: {
+    byUri: { [uri: string]: MessageFormEntity },
+  },
 };
 
 const Root = ({
@@ -49,8 +56,8 @@ const Root = ({
   entities,
   currentEntity,
   selectedSticker,
-  stickers,
   messageForm,
+  messagesList,
   router,
   dispatch,
 }: RootPropTypes) => {
@@ -67,32 +74,23 @@ const Root = ({
   }
 
   if (messageForm !== null) {
-    const { uri, error, submitting, public: isPublic } = messageForm;
-    const entityTracked = currentEntity !== null && uri === currentEntity;
-    const messageEntity = entities.byUri[uri];
-    const selectedStickerData = stickers.byId[selectedSticker];
-    const stickersById = stickers.allIds
-      .map(id => stickers.byId[id])
-      .filter(sticker => sticker && sticker.entityUri === uri);
+    const { entity, stickers } = messageForm;
+    const entityTracked = currentEntity !== null && entity.uri === currentEntity;
+    const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
 
     return (
       <div>
         <MessageForm
-          entity={messageEntity}
-          stickers={stickersById}
+          data={messageForm}
           selectedSticker={selectedStickerData}
           entityTracked={entityTracked}
-          submitting={submitting}
-          error={error}
-          public={isPublic}
-          onPublicChange={newPublic => dispatch(setMessagePrivacy(uri, newPublic))}
-          onClose={() => dispatch(destroyMessageForm(uri, stickersById.map(sticker => sticker.id)))}
-          nextDisabled={stickersById.length === 0 || submitting}
+          onPublicChange={newPublic => dispatch(setMessagePrivacy(newPublic))}
+          onClose={() => dispatch(destroyMessageForm())}
           onSubmit={() => {
             if (currentUser === null) {
               openLogin();
-            } else {
-              dispatch(submitMessageForm(uri));
+            } else if (messageForm !== null) {
+              dispatch(submitMessageForm(messageForm));
             }
           }}
           onStickerClick={(id) => {
@@ -101,8 +99,8 @@ const Root = ({
             }
           }}
           onStickerTransform={(id, trans) => dispatch(transformSticker(id, trans))}
-          onTextInput={value => dispatch(addSticker(uri, value, 'text', entityTracked))}
-          onEmojiInput={value => dispatch(addSticker(uri, value, 'emoji', entityTracked))}
+          onTextInput={value => dispatch(addSticker(value, 'text', entityTracked))}
+          onEmojiInput={value => dispatch(addSticker(value, 'emoji', entityTracked))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
           onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}
@@ -113,19 +111,52 @@ const Root = ({
     );
   }
 
-  if (currentEntity !== null) {
-    const currentEntityData = entities.byUri[currentEntity];
+  if (messagesList !== null) {
+    const currentEntityData = entities.byUri[messagesList.entityUri];
 
     return (
       <div>
         <Entity
+          messagesList={messagesList}
           data={currentEntityData}
           currentUser={currentUser}
           onNewClick={() => {
             if (currentUser === null) {
               openLogin();
             } else {
-              dispatch(initMessageForm(currentEntity));
+              dispatch(initMessageForm(currentEntityData, currentUser));
+            }
+          }}
+          onEditClick={(message: MessageWithId) => {
+            if (currentUser !== null && message.author.uid === currentUser.uid) {
+              const { author, entity, stickers, ...other } = message;
+
+              const stickersWithId = stickers.map(sticker => ({
+                ...sticker,
+                id: uuidv4(),
+              }));
+
+              const stickersById = stickersWithId.reduce((byId, sticker) => ({
+                ...byId,
+                [sticker.id]: sticker,
+              }), {});
+
+              const stickerIds = stickersWithId.map(sticker => sticker.id);
+
+              const messageFormData = {
+                ...other,
+                author: currentUser,
+                entity: entities.byUri[entity.uri],
+                stickers: {
+                  byId: stickersById,
+                  allIds: stickerIds,
+                },
+                error: false,
+                submitting: false,
+                submitted: false,
+              };
+
+              dispatch(initEditMessageForm(messageFormData));
             }
           }}
         />
@@ -148,22 +179,22 @@ export default withRouter(connect(
     loadingEntity,
     currentEntity,
     currentUser,
-    stickers,
     entities,
     selectedSticker,
     messageForm,
     transformationGuideOpened,
     helpOpened,
+    messagesList,
   }) => ({
     letseeLoaded,
     loadingEntity,
     currentEntity,
     currentUser,
-    stickers,
     entities,
     selectedSticker,
     messageForm,
     transformationGuideOpened,
     helpOpened,
+    messagesList,
   }),
 )(Root));

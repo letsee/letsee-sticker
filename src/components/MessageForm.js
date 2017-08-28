@@ -24,7 +24,12 @@ import {
   MIN_DIAGONAL,
 } from '../constants';
 import styles from './App.scss';
-import type { StickerPosition, StickerQuaternion } from '../types';
+import type {
+  MessageForm as MessageFormType,
+  MessageFormSticker,
+  StickerPosition,
+  StickerQuaternion,
+} from '../types';
 
 const transitionDuration = 200;
 
@@ -149,26 +154,9 @@ const StyledTipButton = styled(TipButton)`
 `;
 
 type MessageFormPropTypes = {
-  entity: {
-    uri: string,
-    name: string,
-    size: {
-      width: number,
-      height: number,
-      depth: number,
-    },
-  },
-  selectedSticker: {
-    id: string,
-    position: StickerPosition,
-    quaternion: StickerQuaternion,
-    scale: number,
-  } | null,
-  public: boolean,
-  error: boolean,
+  data: MessageFormType,
+  selectedSticker: MessageFormSticker | null,
   entityTracked: boolean,
-  nextDisabled: boolean,
-  submitting: boolean,
   onPublicChange?: boolean => mixed,  // eslint-disable-line react/require-default-props
   onStickerClick?: string => mixed, // eslint-disable-line react/require-default-props
   onTextInput?: string => mixed, // eslint-disable-line react/require-default-props
@@ -222,7 +210,7 @@ class MessageForm extends Component {
     manager.on('pressup', this.handlePressUp);
     manager.on('press', this.handlePress);
 
-    const entity = letsee.getEntity(this.props.entity.uri);
+    const entity = letsee.getEntity(this.props.data.entity.uri);
     entity.removeRenderables();
     this.renderAR(this.props);
   }
@@ -244,7 +232,7 @@ class MessageForm extends Component {
     manager.off('pressup', this.handlePressUp);
     manager.off('press', this.handlePress);
 
-    const entity = letsee.getEntity(this.props.entity.uri);
+    const entity = letsee.getEntity(this.props.data.entity.uri);
     entity.removeRenderable(this.messageObject);
     this.selectedStickerObject = null;
   }
@@ -252,13 +240,14 @@ class MessageForm extends Component {
   props: MessageFormPropTypes;
   press: boolean;
 
-  renderAR({ entity: { uri, size }, stickers, selectedSticker }: MessageFormPropTypes) {
+  renderAR({ data: { entity: { uri, size }, stickers }, selectedSticker }: MessageFormPropTypes) {
     if (this.state.mode !== 'default') {
       return;
     }
 
     const entity = letsee.getEntity(uri);
     const { width, height, depth } = size;
+    const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
     let realDiagonal = MAX_DIAGONAL;
 
     if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
@@ -278,7 +267,7 @@ class MessageForm extends Component {
       const child = this.messageObject.children[i];
 
       if (child) {
-        const index = stickers.findIndex(sticker => sticker.id === child.uuid);
+        const index = stickersArray.findIndex(sticker => sticker.id === child.uuid);
 
         if (index < 0) {
           this.messageObject.remove(child);
@@ -286,7 +275,7 @@ class MessageForm extends Component {
       }
     }
 
-    if (stickers.length === 0) {
+    if (stickersArray.length === 0) {
       const buttonsTmp = document.createElement('template');
       const framesTmp = document.createElement('template');
 
@@ -342,8 +331,8 @@ class MessageForm extends Component {
       this.messageObject.add(framesAR);
       this.messageObject.add(buttonsAR);
     } else {
-      for (let i = 0; i < stickers.length; i += 1) {
-        const { id, type, text, position, quaternion, scale } = stickers[i];
+      for (let i = 0; i < stickersArray.length; i += 1) {
+        const { id, type, text, position, quaternion, scale } = stickersArray[i];
         const selected = selectedSticker && selectedSticker.id === id;
         const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
         const objById = getObjectById(this.messageObject, id);
@@ -372,9 +361,9 @@ class MessageForm extends Component {
         }
 
         if (selectedSticker && !selected) {
-          element.style.opacity = 0.3;
+          element.style.opacity = '0.3';
         } else {
-          element.style.opacity = 0.9;
+          element.style.opacity = '0.9';
         }
 
         const onClick = () => {
@@ -414,7 +403,7 @@ class MessageForm extends Component {
   }
 
   handlePanMove = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+    const { entityTracked, selectedSticker, data: { entity }, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -425,8 +414,8 @@ class MessageForm extends Component {
       if (pointers.length === 1) {
         const { width, height, depth } = entity.size;
         const { clientWidth, clientHeight } = document.documentElement;
-        const realDiagonal = Math.sqrt((width * width) + (height * height)); // TODO depth??
-        const ratio = realDiagonal / Math.sqrt(clientWidth * clientWidth + clientHeight * clientHeight) * 2;
+        const realDiagonal = Math.sqrt((width * width) + (height * height));
+        const ratio = realDiagonal / Math.sqrt((clientWidth * clientWidth) + (clientHeight * clientHeight)) * 2;
 
         if (this.press) {
           const { z } = selectedSticker.position;
@@ -481,7 +470,7 @@ class MessageForm extends Component {
   };
 
   handlePinchMove = (e) => {
-    const { entityTracked, selectedSticker, entity, onStickerTransform } = this.props;
+    const { entityTracked, selectedSticker, data: { entity }, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -590,7 +579,7 @@ class MessageForm extends Component {
   };
 
   handleTransform() {
-    const { width, height } = this.props.entity.size;
+    const { width, height } = this.props.data.entity.size;
     const { position, quaternion, scale } = this.selectedStickerObject;
 
     const realDiagonal = Math.sqrt((width * width) + (height * height));
@@ -617,18 +606,13 @@ class MessageForm extends Component {
     const { mode, messagePrivacyOpen } = this.state;
 
     const {
-      public: isPublic,
-      submitting,
-      error,
+      data,
       selectedSticker,
-      entity,
-      stickers,
       onStickerClick,
       entityTracked,
       onPublicChange,
       onClose,
       onSubmit,
-      nextDisabled,
       onTextInput,
       onEmojiInput,
       onTransformationComplete,
@@ -639,6 +623,16 @@ class MessageForm extends Component {
       onStickerTransform,
       ...other
     } = this.props;
+
+    const {
+      public: isPublic,
+      submitting,
+      error,
+      entity,
+      stickers,
+    } = data;
+
+    const nextDisabled = stickers.allIds.length === 0 || submitting;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&

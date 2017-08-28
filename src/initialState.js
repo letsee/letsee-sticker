@@ -1,4 +1,14 @@
 // @flow
+export type SwipeGuide = {
+  isShowing: boolean,
+  wasShown: boolean,
+};
+
+export const swipeGuide: SwipeGuide = {
+  isShowing: false,
+  wasShown: false,
+};
+
 export default {
   letseeLoaded: false,
   loadingEntity: false,
@@ -9,12 +19,10 @@ export default {
     allUris: [],
   },
   messageForm: null,
+  messagesList: null,
   selectedSticker: null,
-  stickers: {
-    byId: {},
-    allIds: [],
-  },
   shareModal: null,
+  swipeGuide,
   transformationGuideOpened: false,
   helpOpened: false,
 };
