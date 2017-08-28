@@ -229,7 +229,7 @@ class MessageList extends Component {
         <div>
           {(data.loading || data.empty) && (
             <ARContainer>
-              {data.empty && (
+              {!data.loading && data.empty && (
                 <MessageText
                   size={diagonal}
                   height={y}
