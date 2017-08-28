@@ -109,10 +109,12 @@ type MessageListPropTypes = {
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
 };
 
-class MessageList extends Component<MessageListPropTypes, {
+type MessageListStateTypes = {
   data: MessageWithId | null,
   error: boolean,
-}> {
+};
+
+class MessageList extends Component {
   constructor(props: MessageListPropTypes) {
     super(props);
 
@@ -126,6 +128,8 @@ class MessageList extends Component<MessageListPropTypes, {
       this.object = new DOMRenderable(container);
     }
   }
+
+  state: MessageListStateTypes;
 
   componentWillMount() {
     const { firebase, data, currentUser } = this.props;

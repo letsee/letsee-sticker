@@ -16,7 +16,6 @@ import {
   setCount,
   setPublic,
   showSwipeGuide,
-  hideSwipeGuide,
 } from '../../actions';
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
 import type { SwipeGuide } from '../../initialState';
