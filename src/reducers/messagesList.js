@@ -87,6 +87,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
       if (state !== null) {
         return {
           ...state,
+          loading: action.payload === null ? false : state.loading,
           empty: action.payload === null,
           first: action.payload,
         };
@@ -97,6 +98,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
       if (state !== null) {
         return {
           ...state,
+          loading: action.payload === null ? false : state.loading,
           empty: action.payload === null,
           last: action.payload,
           current: state.current === null ? action.payload : state.current,
@@ -108,7 +110,6 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
       if (state !== null) {
         return {
           ...state,
-          loading: true,
           current: action.payload === null ? state.last : action.payload,
           message: null,
         };
