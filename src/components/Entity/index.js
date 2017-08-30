@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import MessageList from './MessageList';
-import Swipe from './Swipe';
+// import Swipe from './Swipe';
 import ListTypeButton from './ListTypeButton';
 import {
   setCurrentCursor,
@@ -18,28 +18,28 @@ import {
   setCurrentMessage,
   fetchPrev,
   fetchNext,
-  showSwipeGuide,
+  // showSwipeGuide,
 } from '../../actions';
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
 import type { SwipeGuide } from '../../initialState';
 import type { MessageAuthor, MessageFormEntity, MessageWithId, MessagesList } from '../../types';
 
-const StyledSwipe = styled(Swipe)`
-  position: absolute;
-  bottom: 105px;
-  left: 50%;
-  transform: translateX(-50%);
-`;
+// const StyledSwipe = styled(Swipe)`
+//   position: absolute;
+//   bottom: 105px;
+//   left: 50%;
+//   transform: translateX(-50%);
+// `;
 
 const Title = styled.div`
   position: absolute;
   top: 25px;
-  left: 0;
+  left: 16px;
   right: 103px;
   display: flex;
   align-items: center;
   text-align: center;
-  padding: 16px;
+  padding: 19px 0;
   font-family: AppleSDGothicNeo, sans-serif;
   font-size: 18px;
   font-weight: bold;
@@ -59,10 +59,12 @@ const MessagesCount = styled.span`
   vertical-align: middle;
   margin-left: 5px;
   font-family: SFUIDisplay, sans-serif;
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: -0.3px;
   color: #000;
   text-shadow: none;
-  padding: 0 6px;
+  padding: 1px 7px;
   border-radius: 100px;
   background-color: #fff;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.4);
@@ -71,7 +73,7 @@ const MessagesCount = styled.span`
 const StyledListTypeButton = styled(ListTypeButton)`
   position: absolute;
   top: 30px;
-  right: 49px;
+  right: ${props => (props.empty ? 5 : 49)}px;
 `;
 
 type EntityPropTypes = {
@@ -135,8 +137,8 @@ class Entity extends Component {
       countref.on('value', this.handleMessagesCountChange);
       listRef.limitToLast(1).on('value', this.handleLastMessageChange);
       listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
-    } else if (!swipeGuide.wasShown && count > 1) {
-      dispatch(showSwipeGuide());
+    // } else if (!swipeGuide.wasShown && count > 1) {
+    //   dispatch(showSwipeGuide());
     }
   }
 
@@ -234,14 +236,15 @@ class Entity extends Component {
 
         {currentUser !== null && (
           <StyledListTypeButton
+            empty={messagesList.message === null || messagesList.empty}
             public={messagesList.public}
             onClick={() => dispatch(setPublic(!canBecomePrivate))}
           />
         )}
 
-        {swipeGuide.isShowing && (
+        {/* {swipeGuide.isShowing && (
           <StyledSwipe />
-        )}
+        )} */}
 
         <MessageList
           data={messagesList}

@@ -8,8 +8,8 @@ import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import { ImageButton } from '../Button';
 import Frame from '../Frame';
-import EntityLoader from '../EntityLoader';
 import Message from '../Message';
+import Spinner from '../Spinner';
 import PrevButton from './PrevButton';
 import NextButton from './NextButton';
 import manager, { enableManager } from '../../manager';
@@ -44,13 +44,6 @@ const selectLatestMessage = (messagesObject: { [id: string]: MessageType }): Mes
 
 const ARContainer = styled.div`
   position: relative;
-`;
-
-const StyledEntityLoader = styled(EntityLoader)`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
 `;
 
 const StyledImageButton = ImageButton.extend`
@@ -102,6 +95,13 @@ const FrameAR = styled(Frame)`
   > img {
     width: ${props => Math.sqrt(((props.width * props.width) + (props.height * props.height)) / 2) * 0.06}px;
   }
+`;
+
+const SpinnerContainer = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
@@ -241,16 +241,14 @@ class MessageList extends Component {
 
       render(
         <div>
-          {(data.loading || data.empty) && (
+          {!data.loading && data.empty && (
             <ARContainer>
-              {!data.loading && data.empty && (
-                <MessageText
-                  size={diagonal}
-                  height={y}
-                >
-                  스티커를 남겨보세요!
-                </MessageText>
-              )}
+              <MessageText
+                size={diagonal}
+                height={y}
+              >
+                스티커를 남겨보세요!
+              </MessageText>
 
               <FrameAR
                 width={width / realToClamped}
@@ -259,24 +257,20 @@ class MessageList extends Component {
                 horizontal={0}
                 white
               >
-                {data.loading ? (
-                  <StyledEntityLoader size={diagonal} />
-                ) : (
-                  <StyledImageButton
-                    type="button"
-                    onClick={onNewClick}
-                  >
-                    <img
-                      src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
-                      srcSet={`
-                        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
-                        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
-                      `}
-                      alt="스티커를 남겨보세요!"
-                      height={buttonSize}
-                    />
-                  </StyledImageButton>
-                )}
+                <StyledImageButton
+                  type="button"
+                  onClick={onNewClick}
+                >
+                  <img
+                    src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
+                    srcSet={`
+                      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
+                      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
+                    `}
+                    alt="스티커를 남겨보세요!"
+                    height={buttonSize}
+                  />
+                </StyledImageButton>
               </FrameAR>
             </ARContainer>
           )}
@@ -292,6 +286,7 @@ class MessageList extends Component {
       currentUser,
       entity,
       onMessageDelete,
+      onMessageReceive,
       onEditClick,
       onNewClick,
       onPrev,
@@ -301,7 +296,7 @@ class MessageList extends Component {
     } = this.props;
 
     const { entityUri, empty, current, message, error, loading, first, last } = messagesList;
-    const dataExists = !empty && current !== null && !error && !loading;
+    const dataExists = !empty && current !== null && !error;
 
     return (
       <div {...other}>
@@ -309,7 +304,7 @@ class MessageList extends Component {
           {message !== null && dataExists && currentUser !== null && message.author.uid === currentUser.uid && (
             <ImageButton
               type="button"
-              onClick={() => onEditClick && onEditClick(message)}
+              onClick={loading ? null : () => onEditClick && onEditClick(message)}
             >
               <img
                 alt={`${message.author.firstname} ${message.author.lastname}`.trim()}
@@ -338,11 +333,11 @@ class MessageList extends Component {
         </Actions>
 
         {dataExists && message !== null && current !== first && (
-          <StyledPrevButton onClick={() => this.prev()} />
+          <StyledNextButton onClick={loading ? null : () => this.prev()} />
         )}
 
         {dataExists && message !== null && current !== last && (
-          <StyledNextButton onClick={() => this.next()} />
+          <StyledPrevButton onClick={loading ? null : () => this.next()} />
         )}
 
         {dataExists && message !== null && (
@@ -351,7 +346,14 @@ class MessageList extends Component {
             data={message}
             currentEntity={entityUri}
             loadingEntity={false}
+            shareDisabled={loading}
           />
+        )}
+
+        {loading && (
+          <SpinnerContainer>
+            <Spinner />
+          </SpinnerContainer>
         )}
       </div>
     );

@@ -32,10 +32,15 @@ type MessagePropTypes = {
   currentEntity: string | null,
   data: MessageType,
   loadingEntity: boolean,
+  shareDisabled?: boolean,
   children?: any, // eslint-disable-line react/require-default-props
 };
 
 class Message extends Component {
+  static defaultProps = {
+    shareDisabled: false,
+  };
+
   constructor(props: MessagePropTypes) {
     super(props);
 
@@ -138,6 +143,7 @@ class Message extends Component {
   render() {
     const {
       id,
+      shareDisabled,
       currentEntity,
       data,
       loadingEntity,
@@ -160,7 +166,7 @@ class Message extends Component {
               timestamp={timestamp}
             />
 
-            <StyledShareButton onClick={() => this.setState({ shareModalOpened: true })} />
+            <StyledShareButton onClick={shareDisabled ? null : () => this.setState({ shareModalOpened: true })} />
           </div>
         )}
 
