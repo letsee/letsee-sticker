@@ -8,6 +8,7 @@ const AuthorName = styled.div`
   font-family: AppleSDGothicNeo, sans-serif;
   font-size: 16px;
   font-weight: bold;
+  text-align: center;
   color: #fff;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 `;
@@ -15,6 +16,7 @@ const AuthorName = styled.div`
 const Timestamp = styled.div`
   font-family: SFUIDisplay, sans-serif;
   font-size: 12px;
+  text-align: center;
   color: #fff;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 `;

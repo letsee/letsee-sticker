@@ -18,7 +18,7 @@ const TrackMessage = styled.div`
 const TrackMessageImage = styled.img`
   display: block;
   margin: 0 auto 16px auto;
-  opacity: 0.8;
+  opacity: 0.5;
 `;
 
 const TrackMessageText = styled.div`
@@ -58,9 +58,9 @@ const StyledNewsButton = styled(NewsButton)`
 `;
 
 const StyledHelpButton = styled(HelpButton)`
-  position: absolute;
-  bottom: 96px;
-  right: 24px;
+  display: inline-block;
+  margin-left: 3px;
+  vertical-align: middle;
 `;
 
 type AppLoaderPropTypes = {
@@ -94,10 +94,12 @@ const AppLoader = ({
             "
           />
 
-          <TrackMessageText>인식 대상의 정면을 비춰주세요</TrackMessageText>
-        </TrackMessage>
+          <TrackMessageText>
+            인식 대상의 정면을 비춰주세요
 
-        <StyledHelpButton onTouchEnd={onHelpClick} />
+            <StyledHelpButton onTouchEnd={onHelpClick} />
+          </TrackMessageText>
+        </TrackMessage>
       </TargetGuide>
     )}
 

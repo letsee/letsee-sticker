@@ -124,7 +124,7 @@ const TrackMessage = styled.div`
 const TrackMessageImage = styled.img`
   display: block;
   margin: 0 auto 16px auto;
-  opacity: 0.8;
+  opacity: 0.5;
   border: 2px solid #fff;
   border-radius: 50%;
   object-fit: contain;
@@ -142,15 +142,15 @@ const TrackMessageText = styled.div`
 `;
 
 const StyledHelpButton = styled(HelpButton)`
-  position: absolute;
-  bottom: 96px;
-  right: 24px;
+  display: inline-block;
+  margin-left: 2px;
+  vertical-align: middle;
 `;
 
 const StyledTipButton = styled(TipButton)`
   position: absolute;
-  bottom: 3px;
-  right: 11px;
+  bottom: 4px;
+  left: 4px;
 `;
 
 type MessageFormPropTypes = {
@@ -668,10 +668,10 @@ class MessageForm extends Component {
 
               <TrackMessageText>
                 {entity.name}의 정면을 비춰주세요
+
+                <StyledHelpButton onClick={onHelpClick} />
               </TrackMessageText>
             </TrackMessage>
-
-            <StyledHelpButton onClick={onHelpClick} />
           </TargetGuide>
 
           <NavTopLeft>

@@ -16,14 +16,15 @@ import type { Message as MessageType } from '../types';
 
 const StyledMessageMeta = styled(MessageMeta)`
   position: absolute;
-  left: 16px;
+  left: 0;
+  right: 0;
   bottom: 14px;
 `;
 
 const StyledShareButton = styled(ShareButton)`
   position: absolute;
-  right: 11px;
-  bottom: 3px;
+  right: 5px;
+  top: 30px;
 `;
 
 type MessagePropTypes = {
@@ -31,10 +32,15 @@ type MessagePropTypes = {
   currentEntity: string | null,
   data: MessageType,
   loadingEntity: boolean,
+  shareDisabled?: boolean,
   children?: any, // eslint-disable-line react/require-default-props
 };
 
 class Message extends Component {
+  static defaultProps = {
+    shareDisabled: false,
+  };
+
   constructor(props: MessagePropTypes) {
     super(props);
 
@@ -137,6 +143,7 @@ class Message extends Component {
   render() {
     const {
       id,
+      shareDisabled,
       currentEntity,
       data,
       loadingEntity,
@@ -159,7 +166,7 @@ class Message extends Component {
               timestamp={timestamp}
             />
 
-            <StyledShareButton onClick={() => this.setState({ shareModalOpened: true })} />
+            <StyledShareButton onClick={shareDisabled ? null : () => this.setState({ shareModalOpened: true })} />
           </div>
         )}
 

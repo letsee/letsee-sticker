@@ -112,7 +112,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
           ...state,
           loading: action.payload === null && state.last === null ? false : state.loading,
           current: action.payload === null ? state.last : action.payload,
-          message: null,
+          // message: null,
         };
       }
 

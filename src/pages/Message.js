@@ -14,6 +14,7 @@ import Spinner from '../components/Spinner';
 import Button from '../components/Button';
 import TargetGuide from '../components/TargetGuide';
 import HelpButton from '../components/HelpButton';
+import StickerButton from '../components/StickerButton';
 import CloseButton from '../components/CloseButton';
 import Envelope from '../components/Envelope';
 import Help from '../components/Help';
@@ -46,7 +47,7 @@ const TrackMessage = styled.div`
 const TrackMessageImage = styled.img`
   display: block;
   margin: 0 auto 16px auto;
-  opacity: 0.8;
+  opacity: 0.5;
   border-radius: 50%;
   border: 2px solid #fff;
   width: 100px;
@@ -82,12 +83,12 @@ const Title = styled.div`
 `;
 
 const StyledHelpButton = styled(HelpButton)`
-  position: absolute;
-  right: 24px;
-  bottom: 96px;
+  display: inline-block;
+  margin-left: 2px;
+  vertical-align: middle;
 `;
 
-const NavTopLeft = styled.div`
+const StyledStickerButton = styled(StickerButton)`
   position: absolute;
   top: 25px;
   left: 0;
@@ -259,15 +260,11 @@ class Message extends Component {
 
                 <TrackMessageText>
                   {name}의 정면을 비춰주세요
+
+                  <StyledHelpButton onTouchEnd={() => dispatch(openHelp())} />
                 </TrackMessageText>
               </TrackMessage>
             </TargetGuide>
-
-            <NavTopLeft>
-              <CloseButton onClick={() => router.push(process.env.PUBLIC_PATH || '/')} />
-            </NavTopLeft>
-
-            <StyledHelpButton onTouchEnd={() => dispatch(openHelp())} />
           </div>
         )}
 
@@ -280,10 +277,8 @@ class Message extends Component {
           />
         )}
 
-        {!loadingEntity && entityTracked && opened && (
-          <CloseTextButton onClick={() => router.push(process.env.PUBLIC_PATH || '/')}>
-            닫기
-          </CloseTextButton>
+        {!loadingEntity && (!entityTracked || opened) && (
+          <StyledStickerButton onClick={() => router.push(process.env.PUBLIC_PATH || '/')} />
         )}
       </div>
     );
