@@ -8,7 +8,7 @@ import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import MessageList from './MessageList';
 import Swipe from './Swipe';
-import Button from '../Button';
+import ListTypeButton from './ListTypeButton';
 import {
   setCurrentCursor,
   setFirstCursor,
@@ -34,13 +34,12 @@ const StyledSwipe = styled(Swipe)`
 const Title = styled.div`
   position: absolute;
   top: 25px;
-  left: 54px;
-  right: 54px;
+  left: 0;
+  right: 103px;
   display: flex;
-  justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 16px 0;
+  padding: 16px;
   font-family: AppleSDGothicNeo, sans-serif;
   font-size: 18px;
   font-weight: bold;
@@ -69,18 +68,10 @@ const MessagesCount = styled.span`
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.4);
 `;
 
-const ToggleMessageListButton = Button.extend`
+const StyledListTypeButton = styled(ListTypeButton)`
   position: absolute;
-  top: 25px;
-  right: 0;
-  padding: 16px;
-  font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 17px;
-  font-weight: bold;
-  letter-spacing: -0.4px;
-  text-align: center;
-  color: #fff;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  top: 30px;
+  right: 49px;
 `;
 
 type EntityPropTypes = {
@@ -242,12 +233,10 @@ class Entity extends Component {
         </Title>
 
         {currentUser !== null && (
-          <ToggleMessageListButton
-            type="button"
+          <StyledListTypeButton
+            public={messagesList.public}
             onClick={() => dispatch(setPublic(!canBecomePrivate))}
-          >
-            {canBecomePrivate ? 'MY' : 'ALL'}
-          </ToggleMessageListButton>
+          />
         )}
 
         {swipeGuide.isShowing && (

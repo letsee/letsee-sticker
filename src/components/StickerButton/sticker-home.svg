@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54">
+    <defs>
+        <filter id="a" filterUnits="objectBoundingBox">
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <radialGradient id="b" cy="26.346%" r="65.081%" fx="50%" fy="26.346%">
+            <stop offset="0%" stop-color="#FFF8A2"/>
+            <stop offset="100%" stop-color="#FFEB2C"/>
+        </radialGradient>
+        <linearGradient id="c" x1="40.154%" x2="48.956%" y1="40.619%" y2="49.355%">
+            <stop offset="0%" stop-color="#F3E457"/>
+            <stop offset="45.332%" stop-color="#EEDF55"/>
+            <stop offset="100%" stop-color="#DBC714"/>
+        </linearGradient>
+        <radialGradient id="d" cy="79.006%" r="64.682%" fx="50%" fy="79.006%" gradientTransform="matrix(0 -.3 .63366 0 0 .94)">
+            <stop offset="0%" stop-color="#A96C17"/>
+            <stop offset="100%" stop-color="#5A3703"/>
+        </radialGradient>
+        <radialGradient id="e" cy="70.749%" fx="50%" fy="70.749%" gradientTransform="matrix(0 -1 .97677 0 -.191 1.207)">
+            <stop offset="0%" stop-color="#975D0D"/>
+            <stop offset="100%" stop-color="#5A3703"/>
+        </radialGradient>
+        <radialGradient id="f" cy="100%" r="36.68%" fx="50%" fy="100%" gradientTransform="matrix(0 -1 1.9947 0 -1.495 1.5)">
+            <stop offset="0%" stop-color="#B06F14"/>
+            <stop offset="100%" stop-color="#5A3703"/>
+        </radialGradient>
+        <linearGradient id="g" x1="30.02%" x2="51.735%" y1="28.345%" y2="49.41%">
+            <stop offset="0%" stop-color="#F7E74D"/>
+            <stop offset="100%" stop-color="#E4D118"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd" filter="url(#a)" transform="translate(12 12)">
+        <circle cx="15" cy="15" r="15" fill="url(#b)"/>
+        <path fill="url(#c)" d="M30 15L15 30c0-8.284 6.716-15 15-15z" transform="rotate(180 22.5 22.5)"/>
+        <circle cx="15" cy="15" r="15"/>
+        <g transform="translate(5.625 10.547)">
+            <path fill="url(#d)" d="M8.371.053h2.003v6.676H8.371z"/>
+            <circle cx="3.031" cy="1.722" r="1.669" fill="url(#e)"/>
+            <circle cx="15.72" cy="1.701" r="1.669" fill="url(#e)"/>
+            <path fill="url(#f)" fill-rule="nonzero" d="M.437 7.31h17.87a9.35 9.35 0 0 1-17.87 0zm-.41-2.717a9.547 9.547 0 0 1 0-.065v.065zm18.689-.25a9.527 9.527 0 0 1 0 .435v-.434zM2.318 7.31a7.572 7.572 0 0 0 14.109 0H2.318z"/>
+        </g>
+        <path fill="url(#g)" d="M30 15L15 30c0-8.284 6.716-15 15-15z"/>
+    </g>
+</svg>

@@ -15,8 +15,8 @@ const NavTopRight = styled.div`
 
 const StyledTipButton = styled(TipButton)`
   position: absolute;
-  bottom: 3px;
-  right: 11px;
+  bottom: 4px;
+  left: 4px;
 `;
 
 const StickerActions = styled.div`

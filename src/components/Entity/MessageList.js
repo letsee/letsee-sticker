@@ -10,6 +10,8 @@ import { ImageButton } from '../Button';
 import Frame from '../Frame';
 import EntityLoader from '../EntityLoader';
 import Message from '../Message';
+import PrevButton from './PrevButton';
+import NextButton from './NextButton';
 import manager, { enableManager } from '../../manager';
 import { getMessagesListPath } from '../../entityUriHelper';
 import {
@@ -62,6 +64,18 @@ const Actions = styled.div`
   position: absolute;
   right: 0;
   bottom: 129px;
+`;
+
+const StyledPrevButton = styled(PrevButton)`
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+`;
+
+const StyledNextButton = styled(NextButton)`
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 `;
 
 const MessageText = styled.div`
@@ -286,7 +300,7 @@ class MessageList extends Component {
       ...other
     } = this.props;
 
-    const { entityUri, empty, current, message, error, loading } = messagesList;
+    const { entityUri, empty, current, message, error, loading, first, last } = messagesList;
     const dataExists = !empty && current !== null && !error && !loading;
 
     return (
@@ -322,6 +336,14 @@ class MessageList extends Component {
             />
           </ImageButton>
         </Actions>
+
+        {dataExists && message !== null && current !== first && (
+          <StyledPrevButton onClick={() => this.prev()} />
+        )}
+
+        {dataExists && message !== null && current !== last && (
+          <StyledNextButton onClick={() => this.next()} />
+        )}
 
         {dataExists && message !== null && (
           <Message

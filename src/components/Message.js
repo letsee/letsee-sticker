@@ -16,14 +16,15 @@ import type { Message as MessageType } from '../types';
 
 const StyledMessageMeta = styled(MessageMeta)`
   position: absolute;
-  left: 16px;
+  left: 0;
+  right: 0;
   bottom: 14px;
 `;
 
 const StyledShareButton = styled(ShareButton)`
   position: absolute;
-  right: 11px;
-  bottom: 3px;
+  right: 5px;
+  top: 30px;
 `;
 
 type MessagePropTypes = {
