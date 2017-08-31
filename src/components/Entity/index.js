@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import MessageList from './MessageList';
-// import Swipe from './Swipe';
 import ListTypeButton from './ListTypeButton';
 import {
   setCurrentCursor,
@@ -18,18 +17,9 @@ import {
   setCurrentMessage,
   fetchPrev,
   fetchNext,
-  // showSwipeGuide,
 } from '../../actions';
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
-import type { SwipeGuide } from '../../initialState';
 import type { MessageAuthor, MessageFormEntity, MessageWithId, MessagesList } from '../../types';
-
-// const StyledSwipe = styled(Swipe)`
-//   position: absolute;
-//   bottom: 105px;
-//   left: 50%;
-//   transform: translateX(-50%);
-// `;
 
 const Title = styled.div`
   position: absolute;
@@ -77,7 +67,6 @@ const StyledListTypeButton = styled(ListTypeButton)`
 `;
 
 type EntityPropTypes = {
-  swipeGuide: SwipeGuide,
   messagesList: MessagesList,
   data: MessageFormEntity,
   currentUser: MessageAuthor | null,
@@ -114,8 +103,8 @@ class Entity extends Component {
   }
 
   componentWillReceiveProps({
-    messagesList: { entityUri, count, public: isPublic },
-    firebase, dispatch, currentUser, swipeGuide,
+    messagesList: { entityUri, public: isPublic },
+    firebase, dispatch, currentUser,
   }: EntityPropTypes) {
     const prevEntityUri = this.props.messagesList.entityUri;
     const prevUserId = this.props.currentUser !== null && !this.props.messagesList.public ? this.props.currentUser.uid : null;
@@ -137,8 +126,6 @@ class Entity extends Component {
       countref.on('value', this.handleMessagesCountChange);
       listRef.limitToLast(1).on('value', this.handleLastMessageChange);
       listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
-    // } else if (!swipeGuide.wasShown && count > 1) {
-    //   dispatch(showSwipeGuide());
     }
   }
 
@@ -208,7 +195,6 @@ class Entity extends Component {
 
   render() {
     const {
-      swipeGuide,
       messagesList,
       currentUser,
       data,
@@ -242,10 +228,6 @@ class Entity extends Component {
           />
         )}
 
-        {/* {swipeGuide.isShowing && (
-          <StyledSwipe />
-        )} */}
-
         <MessageList
           data={messagesList}
           currentUser={currentUser}
@@ -262,6 +244,4 @@ class Entity extends Component {
   }
 }
 
-export default firebaseConnect()(connect(
-  ({ swipeGuide }) => ({ swipeGuide }),
-)(Entity));
+export default firebaseConnect()(connect()(Entity));

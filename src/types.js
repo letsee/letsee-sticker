@@ -54,7 +54,7 @@ export type MessageWithId = {
   entity: MessageEntity,
   public: boolean,
   stickers: Sticker[],
-  timestamp: number;
+  timestamp: number,
 };
 
 export type News = {

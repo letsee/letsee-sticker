@@ -8,10 +8,8 @@ import {
   select,
   race,
   call,
-  takeLatest,
 } from 'redux-saga/effects';
 import {
-  SHOW_SWIPE_GUIDE,
   DESTROY_MESSAGE_FORM,
   SUBMIT_MESSAGE_FORM,
   submitMessageFormSuccess,
@@ -19,7 +17,6 @@ import {
   destroyMessageForm,
   setPublic,
   setCurrentCursor,
-  hideSwipeGuide,
 } from '../actions';
 import { getMessagesListPath } from '../entityUriHelper';
 import type { Message } from '../types';
@@ -126,20 +123,9 @@ function* submitMessageForm(getFirebase) {
   }
 }
 
-function* showSwipeGuide() {
-  try {
-    yield call(delay, 3000);
-    yield put(hideSwipeGuide());
-  } catch (e) {
-    // TODO error
-    console.log(e);
-  }
-}
-
 function* sagas(getFirebase) {
   yield all([
     fork(submitMessageForm, getFirebase),
-    takeLatest(SHOW_SWIPE_GUIDE, showSwipeGuide),
   ]);
 }
 
