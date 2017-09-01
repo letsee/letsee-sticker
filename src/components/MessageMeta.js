@@ -39,7 +39,7 @@ const MessageMeta = ({
 }: MessageMetaPropTypes) => (
   <div {...other}>
     <AuthorName>{`${firstname} ${lastname}`.trim()}</AuthorName>
-    <Timestamp>{moment(timestamp).format('YYYY년 M년 D일')}</Timestamp>
+    <Timestamp>{moment(timestamp).format('YYYY년 M월 D일')}</Timestamp>
   </div>
 );
 
