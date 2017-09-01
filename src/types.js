@@ -18,6 +18,12 @@ export type StickerQuaternion = {
   w: number,
 };
 
+export type StickerRotation = {
+  x: number,
+  y: number,
+  z: number,
+};
+
 export type StickerType = 'emoji' | 'text';
 
 export type Sticker = {

@@ -150,6 +150,6 @@ const emojiList = [
 ];
 
 export const emojiListLength = emojiList.length;
-export const getNEmojis = (n: number) => emojiList.slice(0, n);
+export const getNEmojis = (n: number): string[] => emojiList.slice(0, n);
 
 export default emojiList;
