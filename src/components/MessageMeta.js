@@ -6,7 +6,7 @@ import type { MessageAuthor } from '../types';
 
 const AuthorName = styled.div`
   font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   text-align: center;
   color: #fff;
@@ -14,8 +14,9 @@ const AuthorName = styled.div`
 `;
 
 const Timestamp = styled.div`
+  margin-top: 2px;
   font-family: SFUIDisplay, sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   text-align: center;
   color: #fff;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);

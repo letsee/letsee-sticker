@@ -13,7 +13,7 @@ const StyledMessageMeta = styled(MessageMeta)`
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 14px;
+  bottom: 11px;
 `;
 
 const StyledShareButton = styled(ShareButton)`
@@ -66,8 +66,9 @@ class Message extends Component {
 
     return (
       <div {...other}>
-        {entityTracked && !loadingEntity && stickers.map(sticker => (
+        {entityTracked && !loadingEntity && stickers.map((sticker, i) => (
           <Sticker
+            key={i}
             data={sticker}
             entity={entity}
           />
