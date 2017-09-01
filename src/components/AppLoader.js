@@ -105,7 +105,7 @@ const AppLoader = ({
 
     <StyledHomeButton />
 
-    <StyledNewsButton onTouchEnd={onNewsClick} />
+    <StyledNewsButton onClick={onNewsClick} />
   </div>
 );
 
