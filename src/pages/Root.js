@@ -42,7 +42,7 @@ type RootPropTypes = {
   currentEntity: string | null,
   selectedSticker: string | null,
   messageForm: MessageFormType | null,
-  messagesList: MessagesList | null,
+  messagesList: MessagesList,
   entities: {
     byUri: { [uri: string]: MessageFormEntity },
   },
@@ -111,7 +111,7 @@ const Root = ({
     );
   }
 
-  if (messagesList !== null) {
+  if (messagesList.entityUri !== null && currentEntity !== null && messagesList.entityUri === currentEntity) {
     const currentEntityData = entities.byUri[messagesList.entityUri];
 
     return (

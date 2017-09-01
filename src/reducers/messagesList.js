@@ -12,35 +12,33 @@ import {
   FETCH_PREV,
   FETCH_NEXT,
 } from '../actions';
+import { messagesList as initialState } from '../initialState';
 import type { MessagesList } from '../types';
 
-const messagesList = (state: MessagesList | null = null, action): MessagesList | null => {
+const messagesList = (state: MessagesList = initialState, action): MessagesList | null => {
   switch (action.type) {
     case START_TRACK_ENTITY:
-      if (state === null) {
+      if (state.entityUri !== action.payload.uri) {
         return {
+          ...initialState,
           entityUri: action.payload.uri,
-          public: true,
-          loading: true,
-          empty: true,
-          error: false,
-          count: 0,
-          first: null,
-          last: null,
-          current: null,
-          message: null,
         };
       }
 
       return state;
     case END_TRACK_ENTITY:
-      if (state !== null && state.entityUri === action.payload.uri) {
-        return null;
+      if (state.entityUri === action.payload.uri) {
+        return {
+          ...initialState,
+          public: state.public,
+          entityUri: state.entityUri,
+          current: state.current,
+        };
       }
 
       return state;
     case SET_CURRENT_USER:
-      if (state !== null && action.payload === null) {
+      if (state.entityUri !== null && action.payload === null) {
         return {
           ...state,
           public: true,
@@ -57,7 +55,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
 
       return state;
     case SET_PUBLIC:
-      if (state !== null && state.public !== action.payload) {
+      if (state.entityUri !== null && state.public !== action.payload) {
         return {
           ...state,
           public: action.payload,
@@ -74,7 +72,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
 
       return state;
     case SET_COUNT:
-      if (state !== null) {
+      if (state.entityUri !== null) {
         return {
           ...state,
           empty: action.payload === 0,
@@ -84,7 +82,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
 
       return state;
     case SET_FIRST_CURSOR:
-      if (state !== null) {
+      if (state.entityUri !== null) {
         return {
           ...state,
           loading: action.payload === null ? false : state.loading,
@@ -95,7 +93,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
 
       return state;
     case SET_LAST_CURSOR:
-      if (state !== null) {
+      if (state.entityUri !== null) {
         return {
           ...state,
           loading: action.payload === null ? false : state.loading,
@@ -107,7 +105,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
 
       return state;
     case SET_CURRENT_CURSOR:
-      if (state !== null) {
+      if (state.entityUri !== null) {
         return {
           ...state,
           loading: action.payload === null && state.last === null ? false : state.loading,
@@ -119,7 +117,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
       return state;
     case FETCH_PREV:
     case FETCH_NEXT:
-      if (state !== null) {
+      if (state.entityUri !== null) {
         return {
           ...state,
           loading: true,
@@ -129,7 +127,7 @@ const messagesList = (state: MessagesList | null = null, action): MessagesList |
 
       return state;
     case SET_CURRENT_MESSAGE:
-      if (state !== null) {
+      if (state.entityUri !== null) {
         return {
           ...state,
           loading: false,

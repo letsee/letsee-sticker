@@ -105,7 +105,7 @@ export type MessageForm = {
 };
 
 export type MessagesList = {
-  entityUri: string,
+  entityUri: string | null,
   public: boolean,
   empty: boolean,
   count: number,
