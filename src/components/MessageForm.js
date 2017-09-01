@@ -650,58 +650,6 @@ class MessageForm extends Component {
       );
     }
 
-    if (!entityTracked) {
-      return (
-        <div {...other}>
-          <NavTopCenter>
-            스티커 만드는 중
-          </NavTopCenter>
-
-          <TargetGuide>
-            <TrackMessage>
-              {entity.image && (
-                <TrackMessageImage
-                  src={entity.image}
-                  alt={`${entity.name}의 정면을 비춰주세요`}
-                />
-              )}
-
-              <TrackMessageText>
-                {entity.name}의 정면을 비춰주세요
-
-                <StyledHelpButton onClick={onHelpClick} />
-              </TrackMessageText>
-            </TrackMessage>
-          </TargetGuide>
-
-          <NavTopLeft>
-            <CloseButton onClick={onClose} />
-          </NavTopLeft>
-
-          <NavTopRight>
-            <CompleteButton
-              onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
-              disabled={nextDisabled}
-            />
-          </NavTopRight>
-
-          <StyledTipButton onClick={onTipClick} />
-
-          {messagePrivacyOpen && (
-            <MessagePrivacy
-              error={error}
-              submitting={submitting}
-              entity={entity}
-              public={isPublic}
-              onPublicChange={onPublicChange}
-              onSubmit={onSubmit}
-              onClose={() => this.setState({ messagePrivacyOpen: false })}
-            />
-          )}
-        </div>
-      );
-    }
-
     if (mode === 'text') {
       return (
         <div {...other}>
@@ -724,7 +672,7 @@ class MessageForm extends Component {
 
     return (
       <div {...other}>
-        {mode === 'default' && [
+        {mode === 'default' && entityTracked && [
           <NavTopLeft key={0}>
             <CloseButton onClick={onClose} />
           </NavTopLeft>,
@@ -738,7 +686,7 @@ class MessageForm extends Component {
 
           <NavBottomRight key={3}>
             <AddEmojiButton
-              onTouchEnd={() => this.setState({ mode: 'emoji' }, () => {
+              onClick={() => this.setState({ mode: 'emoji' }, () => {
                 const e = letsee.getEntity(entity.uri);
                 e.removeRenderable(this.messageObject);
               })}
@@ -773,35 +721,86 @@ class MessageForm extends Component {
           ),
         ]}
 
-        <Transition
-          in={mode === 'emoji'}
-          timeout={transitionDuration}
-          mountOnEnter
-          unmountOnExit
-        >
-          {state => (
-            <EmojiDrawer
-              style={{
-                opacity: 0,
-                transform: 'translateY(100%)',
-                transition: `opacity ${transitionDuration}ms ease, transform ${transitionDuration}ms ease`,
-                ...transitionStyles[state],
-              }}
-              onClick={(emoji) => {
-                this.setState({ mode: 'default' }, () => {
-                  if (onEmojiInput) {
-                    onEmojiInput(emoji);
-                  }
-                });
-              }}
-              onClose={() => {
-                this.setState({ mode: 'default' }, () => {
-                  this.renderAR(this.props);
-                });
-              }}
+        {mode === 'default' && !entityTracked && [
+          <NavTopCenter key={0}>
+            스티커 만드는 중
+          </NavTopCenter>,
+
+          <TargetGuide key={1}>
+            <TrackMessage>
+              {entity.image && (
+                <TrackMessageImage
+                  src={entity.image}
+                  alt={`${entity.name}의 정면을 비춰주세요`}
+                />
+              )}
+
+              <TrackMessageText>
+                {entity.name}의 정면을 비춰주세요
+
+                <StyledHelpButton onClick={onHelpClick} />
+              </TrackMessageText>
+            </TrackMessage>
+          </TargetGuide>,
+
+          <NavTopLeft key={2}>
+            <CloseButton onClick={onClose} />
+          </NavTopLeft>,
+
+          <NavTopRight key={3}>
+            <CompleteButton
+              onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
+              disabled={nextDisabled}
             />
-          )}
-        </Transition>
+          </NavTopRight>,
+
+          <StyledTipButton key={4} onClick={onTipClick} />,
+
+          messagePrivacyOpen ? (
+            <MessagePrivacy
+              key={5}
+              error={error}
+              submitting={submitting}
+              entity={entity}
+              public={isPublic}
+              onPublicChange={onPublicChange}
+              onSubmit={onSubmit}
+              onClose={() => this.setState({ messagePrivacyOpen: false })}
+            />
+          ) : null,
+        ]}
+
+        {mode === 'emoji' && (
+          <Transition
+            in={mode === 'emoji'}
+            timeout={transitionDuration}
+            mountOnEnter
+            unmountOnExit
+          >
+            {state => (
+              <EmojiDrawer
+                style={{
+                  opacity: 0,
+                  transform: 'translateY(100%)',
+                  transition: `opacity ${transitionDuration}ms ease, transform ${transitionDuration}ms ease`,
+                  ...transitionStyles[state],
+                }}
+                onClick={(emoji) => {
+                  this.setState({ mode: 'default' }, () => {
+                    if (onEmojiInput) {
+                      onEmojiInput(emoji);
+                    }
+                  });
+                }}
+                onClose={() => {
+                  this.setState({ mode: 'default' }, () => {
+                    this.renderAR(this.props);
+                  });
+                }}
+              />
+            )}
+          </Transition>
+        )}
       </div>
     );
   }

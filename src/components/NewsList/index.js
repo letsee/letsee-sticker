@@ -300,7 +300,7 @@ class NewsList extends Component {
           <StyledCloseButton color="gray" onClick={onClose} />
 
           {!requestOpen && (
-            <NavRight onTouchEnd={() => this.setState({ requestOpen: true })}>
+            <NavRight onClick={() => this.setState({ requestOpen: true })}>
               등록 요청
             </NavRight>
           )}

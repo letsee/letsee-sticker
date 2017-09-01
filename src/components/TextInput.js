@@ -151,7 +151,7 @@ class TextInput extends Component {
           />
         </TextareaContainer>
 
-        <InputButton onTouchEnd={() => onComplete && onComplete(value.trim())}>
+        <InputButton onClick={() => onComplete && onComplete(value.trim())}>
           입력
         </InputButton>
       </div>
