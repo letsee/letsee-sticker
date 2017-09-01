@@ -94,46 +94,46 @@ const GestureImage = styled.img`
 const gestures = [{
   name: '가로/세로 이동',
   image: {
-    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-1_3x.png',
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_60/v1501869835/assets/icn-gesture-1_3x.png',
     srcSet: `
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-1_3x.png 2x,
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-1_3x.png 3x
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_120/v1501869835/assets/icn-gesture-1_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_180/v1501869835/assets/icn-gesture-1_3x.png 3x
     `,
   },
 }, {
   name: '깊이 이동',
   image: {
-    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-2_3x.png',
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_60/v1501869835/assets/icn-gesture-2_3x.png',
     srcSet: `
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-2_3x.png 2x,
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-2_3x.png 3x
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_120/v1501869835/assets/icn-gesture-2_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_180/v1501869835/assets/icn-gesture-2_3x.png 3x
     `,
   },
 }, {
   name: '회전',
   image: {
-    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-3_3x.png',
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_60/v1501869835/assets/icn-gesture-3_3x.png',
     srcSet: `
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-3_3x.png 2x,
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-3_3x.png 3x
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_120/v1501869835/assets/icn-gesture-3_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_180/v1501869835/assets/icn-gesture-3_3x.png 3x
     `,
   },
 }, {
   name: '3D 회전',
   image: {
-    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-4_3x.png',
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_60/v1501869835/assets/icn-gesture-4_3x.png',
     srcSet: `
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-4_3x.png 2x,
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-4_3x.png 3x
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_120/v1501869835/assets/icn-gesture-4_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_180/v1501869835/assets/icn-gesture-4_3x.png 3x
     `,
   },
 }, {
   name: '확대/축소',
   image: {
-    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_60/v1501869835/assets/icn-gesture-5_3x.png',
+    src: 'https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_60/v1501869835/assets/icn-gesture-5_3x.png',
     srcSet: `
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_120/v1501869835/assets/icn-gesture-5_3x.png 2x,
-      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501869835/assets/icn-gesture-5_3x.png 3x
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_120/v1501869835/assets/icn-gesture-5_3x.png 2x,
+      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_180/v1501869835/assets/icn-gesture-5_3x.png 3x
     `,
   },
 }];
