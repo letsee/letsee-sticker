@@ -8,10 +8,8 @@ import {
   select,
   race,
   call,
-  takeLatest,
 } from 'redux-saga/effects';
 import {
-  SHOW_SWIPE_GUIDE,
   DESTROY_MESSAGE_FORM,
   SUBMIT_MESSAGE_FORM,
   submitMessageFormSuccess,
@@ -19,7 +17,6 @@ import {
   destroyMessageForm,
   setPublic,
   setCurrentCursor,
-  hideSwipeGuide,
 } from '../actions';
 import { getMessagesListPath } from '../entityUriHelper';
 import type { Message } from '../types';
@@ -63,42 +60,42 @@ function* submitMessageForm(getFirebase) {
     const submitAction = yield take(SUBMIT_MESSAGE_FORM);
 
     try {
-      const {
-        id,
-        author: {
-          email,
-          picture,
-          ...author
-        },
-        entity: {
-          size,
-          ...entity
-        },
-        public: isPublic,
-        stickers,
-        timestamp,
-      } = submitAction.payload;
-
-      const stickersById = stickers.allIds.map((stickerId) => {
-        const {
-          id: sid,
-          ...sticker
-        } = stickers.byId[stickerId];
-
-        return sticker;
-      });
-
-      const message = {
-        author,
-        entity,
-        public: isPublic,
-        stickers: stickersById,
-        timestamp: timestamp || getFirebase().database.ServerValue.TIMESTAMP,
-      };
-
       const currentUser = yield select(state => state.currentUser);
 
-      if (currentUser !== null && author.uid === currentUser.uid) {
+      if (currentUser !== null && submitAction.payload.author.uid === currentUser.uid) {
+        const {
+          id,
+          author: {
+            email,
+            picture,
+            ...author
+          },
+          entity: {
+            size,
+            ...entity
+          },
+          public: isPublic,
+          stickers,
+          timestamp,
+        } = submitAction.payload;
+
+        const stickersById = stickers.allIds.map((stickerId) => {
+          const {
+            id: sid,
+            ...sticker
+          } = stickers.byId[stickerId];
+
+          return sticker;
+        });
+
+        const message = {
+          author,
+          entity,
+          public: isPublic,
+          stickers: stickersById,
+          timestamp: timestamp || getFirebase().database.ServerValue.TIMESTAMP,
+        };
+
         const { firebase } = yield race({
           firebase: call(persistToFirebase, getFirebase, id, message),
           timeout: call(delay, 3000), // TODO timeout?
@@ -126,20 +123,9 @@ function* submitMessageForm(getFirebase) {
   }
 }
 
-function* showSwipeGuide() {
-  try {
-    yield call(delay, 3000);
-    yield put(hideSwipeGuide());
-  } catch (e) {
-    // TODO error
-    console.log(e);
-  }
-}
-
 function* sagas(getFirebase) {
   yield all([
     fork(submitMessageForm, getFirebase),
-    takeLatest(SHOW_SWIPE_GUIDE, showSwipeGuide),
   ]);
 }
 

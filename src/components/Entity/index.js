@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import MessageList from './MessageList';
-// import Swipe from './Swipe';
-import ListTypeButton from './ListTypeButton';
+import MyMessagesButton from './MyMessagesButton';
+import BackButton from '../BackButton';
 import {
   setCurrentCursor,
   setFirstCursor,
@@ -18,32 +18,21 @@ import {
   setCurrentMessage,
   fetchPrev,
   fetchNext,
-  // showSwipeGuide,
 } from '../../actions';
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
-import type { SwipeGuide } from '../../initialState';
 import type { MessageAuthor, MessageFormEntity, MessageWithId, MessagesList } from '../../types';
-
-// const StyledSwipe = styled(Swipe)`
-//   position: absolute;
-//   bottom: 105px;
-//   left: 50%;
-//   transform: translateX(-50%);
-// `;
 
 const Title = styled.div`
   position: absolute;
   top: 25px;
-  left: 16px;
-  right: 103px;
+  left: ${props => (props.public ? 16 : 60)}px;
+  right: ${props => (props.public ? 103 : 59)}px;
   display: flex;
   align-items: center;
   text-align: center;
-  padding: 19px 0;
+  padding: 17px 0;
   font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-  letter-spacing: -0.3px;
+  font-size: 17px;
   color: #fff;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 `;
@@ -52,6 +41,7 @@ const EntityName = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  font-weight: bold;
 `;
 
 const MessagesCount = styled.span`
@@ -59,25 +49,23 @@ const MessagesCount = styled.span`
   vertical-align: middle;
   margin-left: 5px;
   font-family: SFUIDisplay, sans-serif;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: -0.3px;
-  color: #000;
-  text-shadow: none;
-  padding: 1px 7px;
-  border-radius: 100px;
-  background-color: #fff;
-  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.4);
+  font-size: 15px;
+  padding: 1px 0;
 `;
 
-const StyledListTypeButton = styled(ListTypeButton)`
+const StyledBackButton = styled(BackButton)`
+  position: absolute;
+  top: 25px;
+  left: 0;
+`;
+
+const StyledMyMessagesButton = styled(MyMessagesButton)`
   position: absolute;
   top: 30px;
   right: ${props => (props.empty ? 5 : 49)}px;
 `;
 
 type EntityPropTypes = {
-  swipeGuide: SwipeGuide,
   messagesList: MessagesList,
   data: MessageFormEntity,
   currentUser: MessageAuthor | null,
@@ -114,8 +102,8 @@ class Entity extends Component {
   }
 
   componentWillReceiveProps({
-    messagesList: { entityUri, count, public: isPublic },
-    firebase, dispatch, currentUser, swipeGuide,
+    messagesList: { entityUri, public: isPublic },
+    firebase, dispatch, currentUser,
   }: EntityPropTypes) {
     const prevEntityUri = this.props.messagesList.entityUri;
     const prevUserId = this.props.currentUser !== null && !this.props.messagesList.public ? this.props.currentUser.uid : null;
@@ -137,8 +125,6 @@ class Entity extends Component {
       countref.on('value', this.handleMessagesCountChange);
       listRef.limitToLast(1).on('value', this.handleLastMessageChange);
       listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
-    // } else if (!swipeGuide.wasShown && count > 1) {
-    //   dispatch(showSwipeGuide());
     }
   }
 
@@ -208,7 +194,6 @@ class Entity extends Component {
 
   render() {
     const {
-      swipeGuide,
       messagesList,
       currentUser,
       data,
@@ -224,27 +209,28 @@ class Entity extends Component {
 
     return (
       <div {...other}>
-        <Title>
+        <Title public={messagesList.public}>
           <EntityName>
-            {data.name}
+            {messagesList.public ? data.name : '내 스티커'}
           </EntityName>
 
           <MessagesCount>
-            {messagesList.count}
+            ({messagesList.count})
           </MessagesCount>
         </Title>
 
-        {currentUser !== null && (
-          <StyledListTypeButton
-            empty={messagesList.message === null || messagesList.empty}
-            public={messagesList.public}
-            onClick={() => dispatch(setPublic(!canBecomePrivate))}
+        {!messagesList.public && (
+          <StyledBackButton
+            onClick={() => dispatch(setPublic(true))}
           />
         )}
 
-        {/* {swipeGuide.isShowing && (
-          <StyledSwipe />
-        )} */}
+        {currentUser !== null && messagesList.public && (
+          <StyledMyMessagesButton
+            empty={messagesList.message === null || messagesList.empty}
+            onClick={() => dispatch(setPublic(!canBecomePrivate))}
+          />
+        )}
 
         <MessageList
           data={messagesList}
@@ -262,6 +248,4 @@ class Entity extends Component {
   }
 }
 
-export default firebaseConnect()(connect(
-  ({ swipeGuide }) => ({ swipeGuide }),
-)(Entity));
+export default firebaseConnect()(connect()(Entity));

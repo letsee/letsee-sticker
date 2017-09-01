@@ -18,6 +18,12 @@ export type StickerQuaternion = {
   w: number,
 };
 
+export type StickerRotation = {
+  x: number,
+  y: number,
+  z: number,
+};
+
 export type StickerType = 'emoji' | 'text';
 
 export type Sticker = {
@@ -54,7 +60,7 @@ export type MessageWithId = {
   entity: MessageEntity,
   public: boolean,
   stickers: Sticker[],
-  timestamp: number;
+  timestamp: number,
 };
 
 export type News = {
@@ -99,7 +105,7 @@ export type MessageForm = {
 };
 
 export type MessagesList = {
-  entityUri: string,
+  entityUri: string | null,
   public: boolean,
   empty: boolean,
   count: number,

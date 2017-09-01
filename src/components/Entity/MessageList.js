@@ -61,14 +61,14 @@ const Actions = styled.div`
 
 const StyledPrevButton = styled(PrevButton)`
   position: absolute;
-  left: 10px;
-  bottom: 10px;
+  left: 0;
+  bottom: 0;
 `;
 
 const StyledNextButton = styled(NextButton)`
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  right: 0;
+  bottom: 0;
 `;
 
 const MessageText = styled.div`
