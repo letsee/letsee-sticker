@@ -1,10 +1,11 @@
 // @flow
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Waypoint from 'react-waypoint';
 import chunk from 'lodash/chunk';
-import { getNEmojis, emojiListLength } from '../../emojiList';
-import { enableManager } from '../../manager';
+import { getNEmojis, emojiListLength } from '../emojiList';
+import { enableManager } from '../manager';
 
 const PER_PAGE = 200;
 
@@ -69,6 +70,7 @@ const Emoji = styled.div`
 type EmojiDrawerPropTypes = {
   onClick?: string => mixed, // eslint-disable-line react/require-default-props
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 class EmojiDrawer extends Component {
@@ -85,19 +87,19 @@ class EmojiDrawer extends Component {
   componentDidMount() {
     enableManager(false);
 
-    // TODO choose between click and touch?
-    // window.addEventListener('click', this.handleWindowClick);
-    window.addEventListener('touchend', this.handleWindowClick);
-    window.addEventListener('resize', this.handleWindowResize);
+    if (typeof window !== 'undefined' && window !== null) {
+      window.addEventListener('touchend', this.handleWindowClick);
+      window.addEventListener('resize', this.handleWindowResize);
+    }
   }
 
   componentWillUnmount() {
     enableManager(true);
 
-    // TODO choose between click and touch?
-    // window.removeEventListener('click', this.handleWindowClick);
-    window.removeEventListener('touchend', this.handleWindowClick);
-    window.removeEventListener('resize', this.handleWindowResize);
+    if (typeof window !== 'undefined' && window !== null) {
+      window.removeEventListener('touchend', this.handleWindowClick);
+      window.removeEventListener('resize', this.handleWindowResize);
+    }
   }
 
   props: EmojiDrawerPropTypes;
@@ -117,7 +119,9 @@ class EmojiDrawer extends Component {
       target = target.parentNode;
     }
 
-    this.props.onClose && this.props.onClose(e);
+    if (this.props.onClose) {
+      this.props.onClose(e);
+    }
   };
 
   drawer: HTMLDivElement;
@@ -165,5 +169,10 @@ class EmojiDrawer extends Component {
     );
   }
 }
+
+EmojiDrawer.propTypes = {
+  onClick: PropTypes.func, // eslint-disable-line react/require-default-props
+  onClose: PropTypes.func, // eslint-disable-line react/require-default-props
+};
 
 export default EmojiDrawer;

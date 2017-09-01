@@ -3,7 +3,7 @@ import React from 'react';
 import { ImageButton } from '../Button';
 
 const HelpButton = ({
-  children,
+  children, // eslint-disable-line react/prop-types
   ...other
 }) => (
   <ImageButton
@@ -12,10 +12,10 @@ const HelpButton = ({
   >
     <img
       alt="Help"
-      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_54/v1501836872/assets/btn-help_3x.png"
+      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_24,q_auto/v1502954653/assets/btn-detect-help_3x.png"
       srcSet="
-        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_108/v1501836872/assets/btn-help_3x.png 2x,
-        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,h_162/v1501836872/assets/btn-help_3x.png 3x
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_48,q_auto/v1502954653/assets/btn-detect-help_3x.png 2x,
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_72,q_auto/v1502954653/assets/btn-detect-help_3x.png 3x
       "
     />
   </ImageButton>

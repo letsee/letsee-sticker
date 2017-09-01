@@ -5,7 +5,8 @@
     "plugin:flowtype/recommended"
   ],
   "rules": {
-    "react/jsx-filename-extension": "off"
+    "react/jsx-filename-extension": "off",
+    "no-mixed-operators": ["error", { "allowSamePrecedence": true }]
   },
   "plugins": [
     "flowtype",
@@ -21,6 +22,8 @@
     "DOMRenderable": true,
     "Vector3": true,
     "Quaternion": true,
-    "Euler": true
+    "Euler": true,
+    "Object3D": true,
+    "Kakao": true
   }
 }

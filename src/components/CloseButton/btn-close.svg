@@ -1,9 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54">
     <defs>
-        <filter id="a" width="152.9%" height="152.9%" x="-26.5%" y="-26.5%" filterUnits="objectBoundingBox">
-            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
-            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="3"/>
-            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+        <filter id="a" width="140.9%" height="140.9%" x="-20.5%" y="-20.5%" filterUnits="objectBoundingBox">
+            <feMorphology in="SourceAlpha" operator="dilate" radius=".5" result="shadowSpreadOuter1"/>
+            <feOffset in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.450803895 0"/>
             <feMerge>
                 <feMergeNode in="shadowMatrixOuter1"/>
                 <feMergeNode in="SourceGraphic"/>
@@ -12,9 +13,9 @@
     </defs>
     <g fill="none" fill-rule="evenodd">
         <path d="M0 0h54v54H0z"/>
-        <g fill="#FFF" filter="url(#a)" opacity=".9" transform="translate(8 10)">
-            <path d="M24.256 7.285l2.186 2.186L9.685 26.227 7.5 24.042z"/>
-            <path d="M9.685 7.285l16.757 16.757-2.186 2.185L7.5 9.471z"/>
+        <g fill="#FFF" filter="url(#a)" opacity=".9" transform="rotate(45 -.314 38.314)">
+            <rect width="2.764" height="21.721" x="9.479" rx="1.382"/>
+            <rect width="21.721" height="2.764" y="9.479" rx="1.382"/>
         </g>
     </g>
 </svg>

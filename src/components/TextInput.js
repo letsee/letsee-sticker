@@ -1,13 +1,22 @@
 // @flow
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import CompleteButton from './CompleteButton';
+import Button from './Button';
 import { enableManager } from '../manager';
 
-const NavTopRight = styled.div`
+const InputButton = Button.extend`
   position: absolute;
   top: 25px;
   right: 0;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  padding: 17px 16.5px
 `;
 
 const TextareaContainer = styled.div`
@@ -61,6 +70,7 @@ type TextInputPropTypes = {
   },
   entityTracked: boolean,
   onComplete?: string => mixed, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
 };
 
 class TextInput extends Component {
@@ -141,12 +151,25 @@ class TextInput extends Component {
           />
         </TextareaContainer>
 
-        <NavTopRight>
-          <CompleteButton onTouchEnd={() => onComplete && onComplete(value.trim())} />
-        </NavTopRight>
+        <InputButton onTouchEnd={() => onComplete && onComplete(value.trim())}>
+          입력
+        </InputButton>
       </div>
     );
   }
 }
+
+TextInput.propTypes = {
+  entity: PropTypes.shape({
+    uri: PropTypes.string.isRequired,
+    size: PropTypes.shape({
+      width: PropTypes.number.isRequired,
+      height: PropTypes.number.isRequired,
+      depth: PropTypes.number.isRequired,
+    }).isRequired,
+  }).isRequired,
+  entityTracked: PropTypes.bool.isRequired,
+  onComplete: PropTypes.func, // eslint-disable-line react/require-default-props
+};
 
 export default TextInput;

@@ -20,8 +20,8 @@ const circleBounce = keyframes`
 
 const Circle = styled.div`
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: ${props => props.size * 0.04 * 20 / 14}px;
+  height: ${props => props.size * 0.04 * 20 / 14}px;
   border-radius: 50%;
   opacity: 0.6;
   animation: ${circleBounce} 1.4s infinite ease-in-out both;
@@ -34,7 +34,7 @@ const GreenCircle = Circle.extend`
 
 const BlueCircle = Circle.extend`
   background-color: #1c1cff;
-  margin: 0 10px;
+  margin: 0 ${props => props.size * 0.04 * 10 / 14}px;
   animation-delay: -0.16s;
 `;
 
@@ -45,27 +45,28 @@ const RedCircle = Circle.extend`
 const Text = styled.div`
   text-align: center;
   user-select: none;
-  margin-top: 23px;
-  opacity: 0.8;
-  font-size: 15px;
-  font-weight: 800;
+  margin-top: ${props => props.size * 0.04 * 10 / 14}px;
+  font-family: AppleSDGothicNeo, sans-serif;
+  font-size: ${props => props.size * 0.04}px;
+  letter-spacing: ${props => -props.size * 0.04 * 0.3 / 14}px;
   color: #fff;
 `;
 
 type PropTypes = {
+  size: number,
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-const EntityLoader = ({ children, ...other }: PropTypes) => (
+const EntityLoader = ({ size, children, ...other }: PropTypes) => (
   <div {...other}>
     <Circles>
-      <GreenCircle />
-      <BlueCircle />
-      <RedCircle />
+      <GreenCircle size={size} />
+      <BlueCircle size={size} />
+      <RedCircle size={size} />
     </Circles>
 
-    <Text>
-      로딩중..
+    <Text size={size}>
+      로딩중
     </Text>
   </div>
 );

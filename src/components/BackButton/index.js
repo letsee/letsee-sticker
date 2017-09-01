@@ -3,7 +3,7 @@ import React from 'react';
 import { ImageButton } from '../Button';
 
 const BackButton = ({
-  children,
+  children, // eslint-disable-line react/prop-types
   ...other
 }) => (
   <ImageButton
@@ -12,10 +12,10 @@ const BackButton = ({
   >
     <img
       alt="Back"
-      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1501839365/assets/btn-back_3x.png"
+      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1504233520/assets/btn-back-v2_3x.png"
       srcSet="
-        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1501839365/assets/btn-back_3x.png 2x,
-        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1501839365/assets/btn-back_3x.png 3x
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1504233520/assets/btn-back-v2_3x.png 2x,
+        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1504233520/assets/btn-back-v2_3x.png 3x
       "
     />
   </ImageButton>

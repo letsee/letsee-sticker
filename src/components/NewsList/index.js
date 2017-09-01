@@ -1,12 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-} from 'react-redux-firebase';
+import Waypoint from 'react-waypoint';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import NewsItem from './NewsItem';
@@ -14,6 +9,7 @@ import Button from '../Button';
 import CloseButton from '../CloseButton';
 import Spinner from '../Spinner';
 import { enableManager } from '../../manager';
+import type { News } from '../../types';
 
 const Container = styled.div`
   position: absolute;
@@ -90,6 +86,10 @@ const List = styled.ul`
   }
 `;
 
+const ListSpinner = styled(Spinner)`
+  margin: 26px auto;
+`;
+
 const BodyContainer = styled.div`
   position: absolute;
   top: 78px;
@@ -140,13 +140,11 @@ const RequestImageExampleImage = styled.img`
 `;
 
 type NewsListPropTypes = {
-  data: {
-    [id: string]: {
-      timestamp: number,
-      description: string,
-      image: string,
-    },
-  },
+  loading: boolean,
+  empty: boolean,
+  error: boolean,
+  hasNextPage: boolean,
+  data: { [id: string]: News },
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
 };
 
@@ -169,6 +167,7 @@ class NewsList extends Component {
   }
 
   props: NewsListPropTypes;
+  listContainer: HTMLDivElement;
 
   renderResult() {
     const { requestOpen } = this.state;
@@ -209,9 +208,7 @@ class NewsList extends Component {
       );
     }
 
-    const { data } = this.props;
-
-    if (!isLoaded(data)) {
+    if (this.props.loading && this.props.empty) {
       return (
         <ResultContainer>
           <Spinner gray />
@@ -219,24 +216,7 @@ class NewsList extends Component {
       );
     }
 
-    if (isEmpty(data)) {
-      return (
-        <ResultContainer>
-          <ResultMessageImage
-            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501870821/assets/icn-noentity_3x.png"
-            srcSet="
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_120,q_auto/v1501870821/assets/icn-noentity_3x.png 2x,
-              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_180,q_auto/v1501870821/assets/icn-noentity_3x.png 3x
-            "
-            alt="목록이 없습니다"
-          />
-
-          <ResultMessageText>목록이 없습니다</ResultMessageText>
-        </ResultContainer>
-      );
-    }
-
-    if (!data) {
+    if (this.props.error && this.props.empty) {
       return (
         <ResultContainer>
           <ResultMessageImage
@@ -253,8 +233,29 @@ class NewsList extends Component {
       );
     }
 
+    if (this.props.empty) {
+      return (
+        <ResultContainer>
+          <ResultMessageImage
+            src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1501870821/assets/icn-noentity_3x.png"
+            srcSet="
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_120,q_auto/v1501870821/assets/icn-noentity_3x.png 2x,
+              https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_180,q_auto/v1501870821/assets/icn-noentity_3x.png 3x
+            "
+            alt="목록이 없습니다"
+          />
+
+          <ResultMessageText>목록이 없습니다</ResultMessageText>
+        </ResultContainer>
+      );
+    }
+
+    const { data, loading, onWaypointEnter, hasNextPage } = this.props;
+
     return (
-      <BodyContainer>
+      <BodyContainer
+        innerRef={(container) => { this.listContainer = container; }}
+      >
         <List>
           {sortBy(keys(data), id => -data[id].timestamp).map((id: string) => {
             const item = data[id];
@@ -265,6 +266,23 @@ class NewsList extends Component {
               </li>
             );
           })}
+
+          {loading && (
+            <li>
+              <ListSpinner gray />
+            </li>
+          )}
+
+          {!loading && hasNextPage && (
+            <li>
+              <Waypoint
+                onEnter={onWaypointEnter}
+                fireOnRapidScroll
+                bottomOffset="-400px"
+                scrollableAncestor={this.listContainer}
+              />
+            </li>
+          )}
         </List>
       </BodyContainer>
     );
@@ -279,7 +297,7 @@ class NewsList extends Component {
         <Nav>
           {requestOpen ? '인식 대상 등록 요청' : '인식 대상 목록'}
 
-          <StyledCloseButton gray onTouchEnd={onClose} />
+          <StyledCloseButton color="gray" onClick={onClose} />
 
           {!requestOpen && (
             <NavRight onTouchEnd={() => this.setState({ requestOpen: true })}>
@@ -294,8 +312,4 @@ class NewsList extends Component {
   }
 }
 
-export default firebaseConnect([{
-  path: 'news',
-  storeAs: 'news',
-  queryParams: ['orderByChild=timestamp'],
-}])(connect(({ firebase: { data: { news } } }) => ({ data: news }))(NewsList));
+export default NewsList;

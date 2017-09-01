@@ -1,20 +1,59 @@
 // @flow
 import { delay } from 'redux-saga';
-import { take, fork, all, put, select, race, call } from 'redux-saga/effects';
-import moment from 'moment';
+import {
+  take,
+  fork,
+  all,
+  put,
+  select,
+  race,
+  call,
+} from 'redux-saga/effects';
 import {
   DESTROY_MESSAGE_FORM,
   SUBMIT_MESSAGE_FORM,
   submitMessageFormSuccess,
   submitMessageFormError,
-  openShareModal,
+  destroyMessageForm,
+  setPublic,
+  setCurrentCursor,
 } from '../actions';
+import { getMessagesListPath } from '../entityUriHelper';
+import type { Message } from '../types';
 
-const getStickersByEntity = (stickers, uri: string) => stickers.allIds
-  .map(id => stickers.byId[id])
-  .filter(sticker => sticker && sticker.entityUri === uri);
+function* persistToFirebase(getFirebase, id: string | null, message: Message) {
+  const firebase = getFirebase().database();
+  let messageRef;
 
-const persistToFirebase = (getFirebase, message) => getFirebase().push('/messages', message);
+  if (id === null) {
+    messageRef = firebase.ref('messages').push();
+  } else {
+    messageRef = firebase.ref(`/messages/${id}`);
+  }
+
+  const messageId = messageRef.key;
+  const authorMessagesPath = getMessagesListPath(message.entity.uri, message.author.uid);
+  const publicMessagesPath = getMessagesListPath(message.entity.uri, null);
+
+  let messageSet = false;
+
+  while (!messageSet) {
+    try {
+      yield messageRef.set(message);
+      messageSet = true;
+    } catch (e) {
+      // TODO retry??
+      console.log(e);
+    }
+  }
+
+  yield all([
+    firebase.ref(`${authorMessagesPath}/${messageId}`).set(message),
+    firebase.ref(`${publicMessagesPath}/${messageId}`).set(message.public ? message : null),
+  ]);
+
+  return messageRef;
+}
 
 function* submitMessageForm(getFirebase) {
   while (true) {
@@ -22,40 +61,64 @@ function* submitMessageForm(getFirebase) {
 
     try {
       const currentUser = yield select(state => state.currentUser);
-      const stickers = yield select(state => state.stickers);
-      const { uri, name, image } = yield select(state => state.entities.byUri[submitAction.payload.uri]);
-      const stickersById = getStickersByEntity(stickers, uri).map(({ id, entityUri, ...other }) => other);
 
-      const message = {
-        author: {
-          uid: currentUser.uid,
-          firstname: currentUser.firstname,
-          lastname: currentUser.lastname,
-        },
-        entity: { uri, name, image },
-        stickers: stickersById,
-        createdAt: moment().format('YYYYMMDDHHmmssZZ'),
-      };
+      if (currentUser !== null && submitAction.payload.author.uid === currentUser.uid) {
+        const {
+          id,
+          author: {
+            email,
+            picture,
+            ...author
+          },
+          entity: {
+            size,
+            ...entity
+          },
+          public: isPublic,
+          stickers,
+          timestamp,
+        } = submitAction.payload;
 
-      const { firebase, timeout, destroy } = yield race({
-        firebase: call(persistToFirebase, getFirebase, message),
-        timeout: call(delay, 3000), // TODO timeout?
-        destroy: take(DESTROY_MESSAGE_FORM),
-      });
+        const stickersById = stickers.allIds.map((stickerId) => {
+          const {
+            id: sid,
+            ...sticker
+          } = stickers.byId[stickerId];
 
-      if (destroy || timeout) {
+          return sticker;
+        });
+
+        const message = {
+          author,
+          entity,
+          public: isPublic,
+          stickers: stickersById,
+          timestamp: timestamp || getFirebase().database.ServerValue.TIMESTAMP,
+        };
+
+        const { firebase } = yield race({
+          firebase: call(persistToFirebase, getFirebase, id, message),
+          timeout: call(delay, 3000), // TODO timeout?
+          destroy: take(DESTROY_MESSAGE_FORM),
+        });
+
+        if (firebase) {
+          yield put(submitMessageFormSuccess(firebase.key));
+          yield put(destroyMessageForm());
+          yield put(setPublic(false));
+          yield put(setCurrentCursor(firebase.key));
+        } else {
+          // TODO error
+          yield put(submitMessageFormError(new Error('form destroyed')));
+        }
+      } else {
         // TODO error
-        yield put(submitMessageFormError(destroy.payload.uri, new Error('form destroyed')));
-      }
-
-      if (firebase) {
-        yield put(submitMessageFormSuccess(submitAction.payload.uri, firebase.path.o));
-        yield put(openShareModal(submitAction.payload.uri, firebase.path.o));
+        yield put(submitMessageFormError(new Error('user changed')));
       }
     } catch (e) {
       // TODO error
       console.log(e);
-      yield put(submitMessageFormError(submitAction.payload.uri, e));
+      yield put(submitMessageFormError(e));
     }
   }
 }

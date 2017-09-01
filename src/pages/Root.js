@@ -1,74 +1,69 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import withRouter from 'react-router/lib/withRouter';
+import uuidv4 from 'uuid/v4';
 import AppLoader from '../components/AppLoader';
 import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
-import ShareModal from '../components/ShareModal';
-import Help from '../components/Help';
-import NewsList from '../components/NewsList';
 import TransformationGuide from '../components/TransformationGuide';
+import Help from '../components/Help';
 import {
   initMessageForm,
-  clearMessageForm,
+  initEditMessageForm,
   destroyMessageForm,
+  setMessagePrivacy,
   submitMessageForm,
   selectSticker,
   deselectSticker,
+  resetSticker,
   deleteSticker,
   addSticker,
-  closeShareModal,
-  openHelp,
-  closeHelp,
-  openNews,
-  closeNews,
   openTransformationGuide,
   closeTransformationGuide,
   transformSticker,
+  openHelp,
+  closeHelp,
 } from '../actions';
-import openCapture from '../openCapture';
-import generateKakaoLinkUrl from '../generateKakaoLinkUrl';
+import openLogin from '../openLogin';
+import type {
+  MessageAuthor,
+  MessageForm as MessageFormType,
+  MessageFormEntity,
+  MessageWithId,
+  MessagesList,
+} from '../types';
 
 type RootPropTypes = {
-  transformationGuideOpened: boolean,
   helpOpened: boolean,
-  newsOpened: boolean,
-  currentUser: {
-    firstname: string,
-    lastname: string,
-    uid: string,
-  } | null,
+  loadingEntity: boolean,
+  transformationGuideOpened: boolean,
+  currentUser: MessageAuthor | null,
   currentEntity: string | null,
   selectedSticker: string | null,
-  messageForm: {
-    uri: string,
-    submitting: boolean,
-  } | null,
-  shareModal: { entityUri: string, path: [string, string] } | null,
+  messageForm: MessageFormType | null,
+  messagesList: MessagesList,
+  entities: {
+    byUri: { [uri: string]: MessageFormEntity },
+  },
 };
 
 const Root = ({
-  transformationGuideOpened,
   helpOpened,
-  newsOpened,
-  shareModal,
+  loadingEntity,
+  transformationGuideOpened,
   currentUser,
   entities,
   currentEntity,
   selectedSticker,
-  stickers,
   messageForm,
+  messagesList,
+  router,
   dispatch,
 }: RootPropTypes) => {
   if (transformationGuideOpened) {
     return (
       <TransformationGuide onClose={() => dispatch(closeTransformationGuide())} />
-    );
-  }
-
-  if (newsOpened) {
-    return (
-      <NewsList onClose={() => dispatch(closeNews())} />
     );
   }
 
@@ -79,37 +74,23 @@ const Root = ({
   }
 
   if (messageForm !== null) {
-    const entityTracked = currentEntity !== null && messageForm.uri === currentEntity;
-    const messageEntity = entities.byUri[messageForm.uri];
-    const selectedStickerData = stickers.byId[selectedSticker];
-    const stickersById = stickers.allIds
-      .map(id => stickers.byId[id])
-      .filter(sticker => sticker && sticker.entityUri === messageForm.uri);
+    const { entity, stickers } = messageForm;
+    const entityTracked = currentEntity !== null && entity.uri === currentEntity;
+    const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
 
     return (
       <div>
         <MessageForm
-          entity={messageEntity}
-          stickers={stickersById}
+          data={messageForm}
           selectedSticker={selectedStickerData}
           entityTracked={entityTracked}
-          submitting={messageForm.submitting}
-          onClose={() => {
-            dispatch(destroyMessageForm(messageForm.uri));
-            dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
-          }}
-          nextDisabled={stickersById.length === 0 || messageForm.submitting}
-          onNext={() => {
+          onPublicChange={newPublic => dispatch(setMessagePrivacy(newPublic))}
+          onClose={() => dispatch(destroyMessageForm())}
+          onSubmit={() => {
             if (currentUser === null) {
-              if (window._app && window._app.openLogin) {
-                const logIn = confirm('로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?');
-
-                if (logIn) {
-                  window._app.openLogin();
-                }
-              }
-            } else {
-              dispatch(submitMessageForm(messageForm.uri));
+              openLogin();
+            } else if (messageForm !== null) {
+              dispatch(submitMessageForm(messageForm));
             }
           }}
           onStickerClick={(id) => {
@@ -118,132 +99,102 @@ const Root = ({
             }
           }}
           onStickerTransform={(id, trans) => dispatch(transformSticker(id, trans))}
-          onTextInput={(value) => {
-            const action = dispatch(addSticker(messageForm.uri, value, 'text'));
-
-            if (entityTracked) {
-              dispatch(selectSticker(action.payload.id));
-            }
-          }}
-          onEmojiInput={(value) => {
-            const action = dispatch(addSticker(messageForm.uri, value, 'emoji'));
-
-            if (entityTracked) {
-              dispatch(selectSticker(action.payload.id));
-            }
-          }}
+          onTextInput={value => dispatch(addSticker(value, 'text', entityTracked))}
+          onEmojiInput={value => dispatch(addSticker(value, 'emoji', entityTracked))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
+          onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}
           onTipClick={() => dispatch(openTransformationGuide())}
+          onHelpClick={() => dispatch(openHelp())}
         />
-
-        {shareModal !== null && (
-          <ShareModal
-            onBack={() => dispatch(closeShareModal())}
-            onComplete={() => {
-              dispatch(destroyMessageForm(messageForm.uri));
-              dispatch(clearMessageForm(messageForm.uri, stickersById.map(sticker => sticker.id)));
-              dispatch(closeShareModal());
-            }}
-            onCaptureClick={() => {
-              openCapture();
-              dispatch(closeShareModal());
-            }}
-            onKakaoLinkClick={() => {
-              const messageId = shareModal.path[1];
-              const kakaoLinkUrl = generateKakaoLinkUrl(messageId);
-              const authorName = `${currentUser.firstname} ${currentUser.lastname}`.trim();
-              const entityName = messageEntity.name;
-
-              Kakao.Link.sendDefault({
-                objectType: 'feed',
-                content: {
-                  title: '렛시 스티커 메세지가 도착했어요!',
-                  description: `${authorName}님이 ${entityName}에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!`,
-                  imageUrl: process.env.KAKAO_IMAGE_URL,
-                  link: {
-                    mobileWebUrl: kakaoLinkUrl,
-                    webUrl: kakaoLinkUrl,
-                    androidExecParams: kakaoLinkUrl,
-                    iosExecParams: kakaoLinkUrl,
-                  },
-                },
-                buttons: [{
-                  title: '렛시 브라우저로 보기',
-                  link: {
-                    mobileWebUrl: kakaoLinkUrl,
-                    webUrl: kakaoLinkUrl,
-                    androidExecParams: kakaoLinkUrl,
-                    iosExecParams: kakaoLinkUrl,
-                  },
-                }],
-                fail: (...args) => {
-                  // TODO error
-                  console.log(args);
-                },
-              });
-            }}
-          />
-        )}
       </div>
     );
   }
 
-  if (currentEntity !== null) {
-    const currentEntityData = entities.byUri[currentEntity];
+  if (messagesList.entityUri !== null && currentEntity !== null && messagesList.entityUri === currentEntity) {
+    const currentEntityData = entities.byUri[messagesList.entityUri];
 
     return (
-      <Entity
-        data={currentEntityData}
-        onNewClick={() => {
-          if (currentUser === null) {
-            if (window._app && window._app.openLogin) {
-              const logIn = confirm('로그인이 필요한 서비스입니다.\n로그인 하시겠습니까?');
-
-              if (logIn) {
-                window._app.openLogin();
-              }
+      <div>
+        <Entity
+          messagesList={messagesList}
+          data={currentEntityData}
+          currentUser={currentUser}
+          onNewClick={() => {
+            if (currentUser === null) {
+              openLogin();
+            } else {
+              dispatch(initMessageForm(currentEntityData, currentUser));
             }
-          } else {
-            dispatch(initMessageForm(currentEntity));
-          }
-        }}
-      />
+          }}
+          onEditClick={(message: MessageWithId) => {
+            if (currentUser !== null && message.author.uid === currentUser.uid) {
+              const { author, entity, stickers, ...other } = message;
+
+              const stickersWithId = stickers.map(sticker => ({
+                ...sticker,
+                id: uuidv4(),
+              }));
+
+              const stickersById = stickersWithId.reduce((byId, sticker) => ({
+                ...byId,
+                [sticker.id]: sticker,
+              }), {});
+
+              const stickerIds = stickersWithId.map(sticker => sticker.id);
+
+              const messageFormData = {
+                ...other,
+                author: currentUser,
+                entity: entities.byUri[entity.uri],
+                stickers: {
+                  byId: stickersById,
+                  allIds: stickerIds,
+                },
+                error: false,
+                submitting: false,
+                submitted: false,
+              };
+
+              dispatch(initEditMessageForm(messageFormData));
+            }
+          }}
+        />
+      </div>
     );
   }
 
   return (
     <AppLoader
+      loadingEntity={loadingEntity}
       onHelpClick={() => dispatch(openHelp())}
-      onBannerClick={() => dispatch(openNews())}
+      onNewsClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}news`)}
     />
   );
 };
 
-export default connect(
+export default withRouter(connect(
   ({
     letseeLoaded,
+    loadingEntity,
     currentEntity,
     currentUser,
-    stickers,
     entities,
     selectedSticker,
     messageForm,
-    shareModal,
-    helpOpened,
-    newsOpened,
     transformationGuideOpened,
+    helpOpened,
+    messagesList,
   }) => ({
     letseeLoaded,
+    loadingEntity,
     currentEntity,
     currentUser,
-    stickers,
     entities,
     selectedSticker,
     messageForm,
-    shareModal,
-    helpOpened,
-    newsOpened,
     transformationGuideOpened,
+    helpOpened,
+    messagesList,
   }),
-)(Root);
+)(Root));

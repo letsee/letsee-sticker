@@ -1,22 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54">
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">
     <defs>
-        <filter id="a" width="139.1%" height="169.2%" x="-19.6%" y="-34.6%" filterUnits="objectBoundingBox">
-            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
-            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="3"/>
-            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+        <filter id="a" width="156.7%" height="156.7%" x="-28.3%" y="-21.7%" filterUnits="objectBoundingBox">
+            <feMorphology in="SourceAlpha" operator="dilate" radius=".5" result="shadowSpreadOuter1"/>
+            <feOffset in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.399145154 0"/>
             <feMerge>
                 <feMergeNode in="shadowMatrixOuter1"/>
                 <feMergeNode in="SourceGraphic"/>
             </feMerge>
         </filter>
     </defs>
-    <g fill="none" fill-rule="evenodd">
-        <path d="M0 0h54v54H0z"/>
-        <g filter="url(#a)" opacity=".9" transform="translate(4 14)">
-            <rect width="45" height="25" x=".5" y=".5" stroke="#FFF" rx="12.5"/>
-            <text fill="#FFF" font-family="AppleSDGothicNeo-Bold, Apple SD Gothic Neo" font-size="16" font-weight="bold" letter-spacing=".372">
-                <tspan x="10.77" y="19">TIP</tspan>
-            </text>
-        </g>
+    <g fill="none" fill-rule="evenodd" filter="url(#a)" opacity=".8" transform="translate(7 7)">
+        <path d="M0 0h30v30H0z"/>
+        <path fill="#FFF" d="M16.429 15.357v-.786a1 1 0 0 0-1-1H13.57a1.071 1.071 0 1 0 0 2.143v3.572h-.357a1.071 1.071 0 0 0 0 2.143h3.572a1.071 1.071 0 0 0 0-2.143h-.357v-3.929zM3.57 15c0-6.309 5.109-11.429 11.418-11.429 6.32 0 11.44 5.12 11.44 11.429s-5.12 11.429-11.44 11.429C8.68 26.429 3.57 21.309 3.57 15zM15 12.143a1.786 1.786 0 1 0 0-3.572 1.786 1.786 0 0 0 0 3.572z"/>
     </g>
 </svg>
