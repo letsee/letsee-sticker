@@ -149,14 +149,21 @@ class Sticker extends Component {
         this.stickerObject.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
       }
 
+      const textContent = text.trim().split(/[\n\r]/g).map((line, i) => (
+        <div key={i}>
+          {line.length > 0 && line}
+          <br />
+        </div>
+      ));
+
       render(
         type === 'emoji' ? (
           <EmojiSticker size={diagonal}>
-            {text.replace(/[\n\r]/g, '<br />')}
+            {textContent}
           </EmojiSticker>
         ) : (
           <TextSticker size={diagonal}>
-            {text.replace(/[\n\r]/g, '<br />')}
+            {textContent}
           </TextSticker>
         ),
         this.stickerObject.element,
