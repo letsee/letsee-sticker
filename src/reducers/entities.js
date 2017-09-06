@@ -8,9 +8,7 @@ import {
 const entity = (state = null, action) => {
   switch (action.type) {
     case ADD_ENTITY:
-      return {
-        ...action.payload,
-      };
+      return action.payload;
     case DELETE_ENTITY:
       return null;
     default:
@@ -31,14 +29,10 @@ const byUri = (state = {}, action) => {
   }
 };
 
-const allUris = (state = [], action) => {
-  let index;
-
+const allUris = (state: string[] = [], action): string[] => {
   switch (action.type) {
     case ADD_ENTITY:
-      index = state.findIndex(uri => uri === action.payload.uri);
-
-      if (index < 0) {
+      if (state.findIndex(uri => uri === action.payload.uri) < 0) {
         return [
           ...state,
           action.payload.uri,
@@ -47,12 +41,7 @@ const allUris = (state = [], action) => {
 
       return state;
     case DELETE_ENTITY:
-      index = state.findIndex(uri => uri === action.payload.uri);
-
-      return [
-        ...state.slice(0, index),
-        ...state.slice(index + 1),
-      ];
+      return state.filter(uri => uri !== action.payload.uri);
     default:
       return state;
   }

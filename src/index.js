@@ -47,7 +47,12 @@ match({ history, routes }, (err, redirect, renderProps) => {
     store.dispatch(letseeLoad());
 
     letsee.addEventListener('userchange', (e) => {
-      store.dispatch(setCurrentUser(e.user));
+      if (e.user === null) {
+        store.dispatch(setCurrentUser(null));
+      } else {
+        const { uid, firstname, lastname } = e.user;
+        store.dispatch(setCurrentUser({ uid, firstname, lastname }));
+      }
     });
 
     if (window._app && window._app.getUser) {

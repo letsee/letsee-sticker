@@ -94,20 +94,6 @@ const StyledStickerButton = styled(StickerButton)`
   left: 0;
 `;
 
-const CloseTextButton = Button.extend`
-  position: absolute;
-  top: 25px;
-  right: 0;
-  color: #fff;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
-  font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-  letter-spacing: 0.4px;
-  text-align: center;
-  padding: 17px 16px;
-`;
-
 type MessagePropTypes = {
   params: { id: string },
   currentEntity: string | null,
