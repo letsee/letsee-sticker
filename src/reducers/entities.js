@@ -9,6 +9,10 @@ import {
 const entity = (state = null, action) => {
   switch (action.type) {
     case FETCH_ENTITY:
+      return {
+        ...state,
+        ...action.payload,
+      };
     case FETCH_ENTITY_SUCCESS:
       return action.payload;
     default:

@@ -20,7 +20,7 @@ import {
   fetchNext,
 } from '../../actions';
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
-import type { MessageAuthor, MessageFormEntity, MessageWithId, MessagesList } from '../../types';
+import type { MessageAuthor, MessageEntity, MessageWithId, MessagesList } from '../../types';
 
 const Title = styled.div`
   position: absolute;
@@ -67,7 +67,7 @@ const StyledMyMessagesButton = styled(MyMessagesButton)`
 
 type EntityPropTypes = {
   messagesList: MessagesList,
-  data: MessageFormEntity,
+  data: MessageEntity,
   currentUser: MessageAuthor | null,
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props

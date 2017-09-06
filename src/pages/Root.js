@@ -29,7 +29,7 @@ import openLogin from '../openLogin';
 import type {
   MessageAuthor,
   MessageForm as MessageFormType,
-  MessageFormEntity,
+  MessageEntity,
   MessageWithId,
   MessagesList,
 } from '../types';
@@ -43,7 +43,8 @@ type RootPropTypes = {
   messageForm: MessageFormType | null,
   messagesList: MessagesList,
   entities: {
-    byUri: { [uri: string]: MessageFormEntity },
+    current: MessageEntity | null,
+    byUri: { [uri: string]: MessageEntity },
   },
 };
 

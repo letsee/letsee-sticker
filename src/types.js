@@ -24,34 +24,38 @@ export type StickerRotation = {
   z: number,
 };
 
-export type StickerType = 'emoji' | 'text';
+export type StickerTypeEnum = 'Emoji' | 'Text';
 
 export type Sticker = {
+  id: string,
   position: StickerPosition,
   quaternion: StickerQuaternion,
   scale: number,
   text: string,
-  type: StickerType,
+  type: StickerTypeEnum,
 };
 
 export type MessageAuthor = {
+  id: string,
   firstname: string,
   lastname: string,
   uid: string,
 };
 
 export type MessageEntity = {
-  image: string,
+  id: string,
+  image: string | null,
   name: string,
   uri: string,
 };
 
 export type Message = {
+  id: string,
   author: MessageAuthor,
   entity: MessageEntity,
   public: boolean,
   stickers: Sticker[],
-  timestamp: number;
+  timestamp: number | string;
 };
 
 export type MessageWithId = {
@@ -69,29 +73,18 @@ export type News = {
   timestamp: number,
 };
 
-export type MessageFormEntity = {
-  uri: string,
-  name: string,
-  image: string,
-  size: {
-    width: number,
-    height: number,
-    depth: number,
-  },
-};
-
 export type MessageFormSticker = {
   id: string,
   position: StickerPosition,
   quaternion: StickerQuaternion,
   scale: number,
   text: string,
-  type: StickerType,
+  type: StickerTypeEnum,
 };
 
 export type MessageForm = {
   id: string | null,
-  entity: MessageFormEntity,
+  entity: MessageEntity,
   stickers: {
     byId: { [id: string]: MessageFormSticker },
     allIds: string[],

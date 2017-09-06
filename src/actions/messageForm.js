@@ -2,11 +2,11 @@
 import uuidv4 from 'uuid/v4';
 import type {
   MessageForm,
-  MessageFormEntity,
+  MessageEntity,
   MessageAuthor,
   StickerPosition,
   StickerQuaternion,
-  StickerType,
+  StickerTypeEnum,
 } from '../types';
 
 export const INIT_MESSAGE_FORM: 'INIT_MESSAGE_FORM' = 'INIT_MESSAGE_FORM';
@@ -18,7 +18,7 @@ export const SUBMIT_MESSAGE_FORM: 'SUBMIT_MESSAGE_FORM' = 'SUBMIT_MESSAGE_FORM';
 export const SUBMIT_MESSAGE_FORM_SUCCESS: 'SUBMIT_MESSAGE_FORM_SUCCESS' = 'SUBMIT_MESSAGE_FORM_SUCCESS';
 export const SUBMIT_MESSAGE_FORM_ERROR: 'SUBMIT_MESSAGE_FORM_ERROR' = 'SUBMIT_MESSAGE_FORM_ERROR';
 
-export const initMessageForm = (entity: MessageFormEntity, author: MessageAuthor) => ({
+export const initMessageForm = (entity: MessageEntity, author: MessageAuthor) => ({
   type: INIT_MESSAGE_FORM,
   payload: {
     entity,
@@ -73,7 +73,7 @@ export const TRANSFORM_STICKER: 'TRANSFORM_STICKER' = 'TRANSFORM_STICKER';
 
 export const addSticker = (
   text: string,
-  type: StickerType,
+  type: StickerTypeEnum,
   selected: boolean = false,
 ) => ({
   type: ADD_STICKER,

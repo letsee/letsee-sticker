@@ -23,7 +23,7 @@ import type {
   MessageWithId,
   MessageAuthor,
   MessagesList,
-  MessageFormEntity,
+  MessageEntity,
 } from '../../types';
 
 const selectLatestMessage = (messagesObject: { [id: string]: MessageType }): MessageWithId | null => {
@@ -123,7 +123,7 @@ const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | n
 type MessageListPropTypes = {
   data: MessagesList,
   currentUser: MessageAuthor | null,
-  entity: MessageFormEntity,
+  entity: MessageEntity,
   onMessageReceive?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
   onMessageDelete?: void => mixed, // eslint-disable-line react/require-default-props
   onPrev?: void => mixed, // eslint-disable-line react/require-default-props
