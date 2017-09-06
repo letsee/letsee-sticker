@@ -23,7 +23,6 @@ const StyledShareButton = styled(ShareButton)`
 `;
 
 type MessagePropTypes = {
-  id: string,
   currentEntity: string | null,
   data: MessageType,
   loadingEntity: boolean,
@@ -48,7 +47,6 @@ class Message extends Component {
 
   render() {
     const {
-      id,
       shareDisabled,
       currentEntity,
       data,
@@ -57,7 +55,7 @@ class Message extends Component {
       ...other
     } = this.props;
 
-    const { entity, author, timestamp, stickers } = data;
+    const { id, entity, author, timestamp, stickers } = data;
     const { uri, name } = entity;
     const entityTracked = currentEntity !== null && currentEntity === uri;
     const { firstname, lastname } = author;
@@ -66,9 +64,9 @@ class Message extends Component {
 
     return (
       <div {...other}>
-        {entityTracked && !loadingEntity && stickers.map((sticker, i) => (
+        {entityTracked && !loadingEntity && stickers.map(sticker => (
           <Sticker
-            key={i}
+            key={sticker.id}
             data={sticker}
             entity={entity}
           />

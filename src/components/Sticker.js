@@ -157,7 +157,7 @@ class Sticker extends Component {
       ));
 
       render(
-        type === 'emoji' ? (
+        type === 'Emoji' ? (
           <EmojiSticker size={diagonal}>
             {textContent}
           </EmojiSticker>

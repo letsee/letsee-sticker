@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
 import type { MessageAuthor } from '../types';
 
 const AuthorName = styled.div`
@@ -24,7 +23,7 @@ const Timestamp = styled.div`
 
 type MessageMetaPropTypes = {
   author: MessageAuthor,
-  timestamp: number,
+  timestamp: number | string,
   children?: any, // eslint-disable-line react/require-default-props
 };
 
@@ -36,11 +35,15 @@ const MessageMeta = ({
   timestamp,
   children,
   ...other
-}: MessageMetaPropTypes) => (
-  <div {...other}>
-    <AuthorName>{`${firstname} ${lastname}`.trim()}</AuthorName>
-    <Timestamp>{moment(timestamp).format('YYYY년 M월 D일')}</Timestamp>
-  </div>
-);
+}: MessageMetaPropTypes) => {
+  const date = new Date(Date.parse(`${timestamp}`));
+
+  return (
+    <div {...other}>
+      <AuthorName>{`${firstname} ${lastname}`.trim()}</AuthorName>
+      <Timestamp>{date.getFullYear()}년 {date.getMonth() + 1}월 {date.getDate()}일</Timestamp>
+    </div>
+  );
+};
 
 export default MessageMeta;

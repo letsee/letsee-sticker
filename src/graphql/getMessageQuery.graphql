@@ -1,0 +1,50 @@
+query getMessageQuery($id: ID!) {
+  Message(id: $id) {
+    ...MessageFragment
+  }
+}
+
+fragment MessageFragment on Message {
+  __typename
+  id
+  public
+  timestamp: createdAt
+
+  entity {
+    ...MessageEntityFragment
+  }
+
+  author: user {
+    ...MessageAuthorFragment
+  }
+
+  stickers {
+    ...MessageStickerFragment
+  }
+}
+
+fragment MessageEntityFragment on Entity {
+  __typename
+  id
+  uri
+  name
+  image
+}
+
+fragment MessageAuthorFragment on User {
+  __typename
+  id
+  uid
+  firstname
+  lastname
+}
+
+fragment MessageStickerFragment on Sticker {
+  __typename
+  id
+  type
+  text
+  position
+  quaternion
+  scale
+}

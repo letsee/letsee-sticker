@@ -1,21 +1,15 @@
 // @flow
 import React, { Component } from 'react';
 import { render } from 'react-dom';
+import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-} from 'react-redux-firebase';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
 import MessageComponent from '../components/Message';
 import Spinner from '../components/Spinner';
-import Button from '../components/Button';
 import TargetGuide from '../components/TargetGuide';
 import HelpButton from '../components/HelpButton';
 import StickerButton from '../components/StickerButton';
-import CloseButton from '../components/CloseButton';
 import Envelope from '../components/Envelope';
 import Help from '../components/Help';
 import {
@@ -26,6 +20,7 @@ import {
   MIN_DIAGONAL,
   MAX_DIAGONAL,
 } from '../constants';
+import getMessageQuery from '../graphql/getMessageQuery.graphql';
 import type { Message as MessageType } from '../types';
 
 const SpinnerContainer = styled.div`
@@ -98,7 +93,11 @@ type MessagePropTypes = {
   params: { id: string },
   currentEntity: string | null,
   loadingEntity: boolean,
-  data: MessageType,
+  data: {
+    loading: boolean,
+    error: ?Error,
+    Message: ?MessageType,
+  },
   helpOpened: boolean,
 };
 
@@ -120,21 +119,25 @@ class Message extends Component {
 
   componentDidMount() {
     if (
-      this.props.data &&
+      !this.props.data.loading &&
+      !this.props.data.error &&
+      this.props.data.Message &&
       this.props.currentEntity !== null &&
-      this.props.currentEntity === this.props.data.entity.uri
+      this.props.currentEntity === this.props.data.Message.entity.uri
     ) {
-      this.renderAR(this.props);
+      this.renderAR(this.props.data.Message);
     }
   }
 
   componentWillReceiveProps(nextProps: MessagePropTypes) {
     if (
-      nextProps.data &&
+      !nextProps.data.loading &&
+      !nextProps.data.error &&
+      nextProps.data.Message &&
       nextProps.currentEntity !== null &&
-      nextProps.currentEntity === nextProps.data.entity.uri
+      nextProps.currentEntity === nextProps.data.Message.entity.uri
     ) {
-      this.renderAR(nextProps);
+      this.renderAR(nextProps.data.Message);
     }
   }
 
@@ -150,7 +153,7 @@ class Message extends Component {
 
   props: MessagePropTypes;
 
-  renderAR({ data: { entity: { uri }, author } }: MessagePropTypes) {
+  renderAR({ entity: { uri }, author }: MessagePropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const entity = letsee.getEntity(uri);
       const { width, height, depth } = entity.size;
@@ -179,7 +182,17 @@ class Message extends Component {
         <Envelope
           data={author}
           size={diagonal}
-          onClick={() => this.setState({ opened: true }, () => { this.renderAR(this.props); })}
+          onClick={() => this.setState({ opened: true }, () => {
+            if (
+              !this.props.data.loading &&
+              !this.props.data.error &&
+              this.props.data.Message &&
+              this.props.currentEntity !== null &&
+              this.props.currentEntity === this.props.data.Message.entity.uri
+            ) {
+              this.renderAR(this.props.data.Message);
+            }
+          })}
         />
       );
 
@@ -201,7 +214,7 @@ class Message extends Component {
       dispatch,
     } = this.props;
 
-    const loading = !isLoaded(data);
+    const { loading, error, Message: message } = data;
 
     if (loading) {
       return (
@@ -211,9 +224,7 @@ class Message extends Component {
       );
     }
 
-    const empty = isEmpty(data);
-
-    if (empty || !data) {
+    if (error || !message) {
       // TODO
       return (
         <h1>404</h1>
@@ -227,7 +238,7 @@ class Message extends Component {
     }
 
     const { opened } = this.state;
-    const { entity: { uri, name, image }, author } = data;
+    const { entity: { uri, name, image }, author } = message;
     const entityTracked = currentEntity !== null && currentEntity === uri;
     const { firstname, lastname } = author;
     const authorName = `${firstname} ${lastname}`.trim();
@@ -256,8 +267,7 @@ class Message extends Component {
 
         {opened && (
           <MessageComponent
-            id={id}
-            data={data}
+            data={message}
             currentEntity={currentEntity}
             loadingEntity={loadingEntity}
           />
@@ -271,18 +281,16 @@ class Message extends Component {
   }
 }
 
-export default firebaseConnect(
-  ({ params: { id } }) => ([{ path: `messages/${id}`, storeAs: 'message' }]),
-)(connect(
+export default connect(
   ({
-    firebase: { data: { message } },
     currentEntity,
     loadingEntity,
     helpOpened,
   }) => ({
-    data: message,
     currentEntity,
     loadingEntity,
     helpOpened,
   }),
-)(Message));
+)(graphql(getMessageQuery, {
+  options: ({ params: { id } }) => ({ variables: { id } }),
+})(Message));
