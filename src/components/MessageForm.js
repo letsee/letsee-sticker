@@ -240,13 +240,13 @@ class MessageForm extends Component {
   props: MessageFormPropTypes;
   press: boolean;
 
-  renderAR({ data: { entity: { uri, size }, stickers }, selectedSticker }: MessageFormPropTypes) {
+  renderAR({ data: { entity: { uri }, stickers }, selectedSticker }: MessageFormPropTypes) {
     if (this.state.mode !== 'default') {
       return;
     }
 
     const entity = letsee.getEntity(uri);
-    const { width, height, depth } = size;
+    const { width, height, depth } = entity.size;
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
     let realDiagonal = MAX_DIAGONAL;
 
@@ -403,7 +403,7 @@ class MessageForm extends Component {
   }
 
   handlePanMove = (e) => {
-    const { entityTracked, selectedSticker, data: { entity }, onStickerTransform } = this.props;
+    const { entityTracked, selectedSticker, data: { entity: { uri } }, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -412,7 +412,7 @@ class MessageForm extends Component {
       const { deltaX, deltaY, pointers } = e;
 
       if (pointers.length === 1) {
-        const { width, height, depth } = entity.size;
+        const { width, height, depth } = letsee.getEntity(uri).size;
         const { clientWidth, clientHeight } = document.documentElement;
         const realDiagonal = Math.sqrt((width * width) + (height * height));
         const ratio = realDiagonal / Math.sqrt((clientWidth * clientWidth) + (clientHeight * clientHeight)) * 2;
@@ -470,7 +470,7 @@ class MessageForm extends Component {
   };
 
   handlePinchMove = (e) => {
-    const { entityTracked, selectedSticker, data: { entity }, onStickerTransform } = this.props;
+    const { entityTracked, selectedSticker, data: { entity: { uri } }, onStickerTransform } = this.props;
 
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -478,7 +478,7 @@ class MessageForm extends Component {
       !this.press
     ) {
       const { deltaX, deltaY, scale } = e;
-      const { width, height } = entity.size;
+      const { width, height } = letsee.getEntit(uri).size;
 
       const realDiagonal = Math.sqrt((width * width) + (height * height));
       const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
@@ -579,7 +579,7 @@ class MessageForm extends Component {
   };
 
   handleTransform() {
-    const { width, height } = this.props.data.entity.size;
+    const { width, height } = letsee.getEntity(this.props.data.entity.uri).size;
     const { position, quaternion, scale } = this.selectedStickerObject;
 
     const realDiagonal = Math.sqrt((width * width) + (height * height));
@@ -654,7 +654,6 @@ class MessageForm extends Component {
       return (
         <div {...other}>
           <TextInput
-            entity={entity}
             entityTracked={entityTracked}
             onComplete={(value) => {
               this.setState({ mode: 'default' }, () => {

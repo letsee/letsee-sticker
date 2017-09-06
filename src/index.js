@@ -116,14 +116,12 @@ match({ history, routes }, (err, redirect, renderProps) => {
       const {
         image,
         name,
-        size,
         uri,
       } = e.target;
 
       const entity = {
         image,
         name,
-        size,
         uri,
       };
 
@@ -135,14 +133,12 @@ match({ history, routes }, (err, redirect, renderProps) => {
       const {
         image,
         name,
-        size,
         uri,
       } = e.target;
 
       const entity = {
         image,
         name,
-        size,
         uri,
       };
 

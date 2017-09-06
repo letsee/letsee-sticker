@@ -60,14 +60,6 @@ const Textarea = styled.textarea`
 `;
 
 type TextInputPropTypes = {
-  entity: {
-    uri: string,
-    size: {
-      width: number,
-      height: number,
-      depth: number,
-    },
-  },
   entityTracked: boolean,
   onComplete?: string => mixed, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
@@ -128,7 +120,6 @@ class TextInput extends Component {
     const { value, focus, height } = this.state;
 
     const {
-      entity,
       entityTracked,
       onComplete,
       children,
@@ -160,14 +151,6 @@ class TextInput extends Component {
 }
 
 TextInput.propTypes = {
-  entity: PropTypes.shape({
-    uri: PropTypes.string.isRequired,
-    size: PropTypes.shape({
-      width: PropTypes.number.isRequired,
-      height: PropTypes.number.isRequired,
-      depth: PropTypes.number.isRequired,
-    }).isRequired,
-  }).isRequired,
   entityTracked: PropTypes.bool.isRequired,
   onComplete: PropTypes.func, // eslint-disable-line react/require-default-props
 };

@@ -99,8 +99,8 @@ const Root = ({
             }
           }}
           onStickerTransform={(id, trans) => dispatch(transformSticker(id, trans))}
-          onTextInput={value => dispatch(addSticker(value, 'text', entityTracked))}
-          onEmojiInput={value => dispatch(addSticker(value, 'emoji', entityTracked))}
+          onTextInput={value => dispatch(addSticker(value, 'Text', entityTracked))}
+          onEmojiInput={value => dispatch(addSticker(value, 'Emoji', entityTracked))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
           onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}

@@ -209,10 +209,10 @@ class MessageList extends Component {
     }
   };
 
-  renderAR({ entity: e, onNewClick, data }: MessageListPropTypes) {
+  renderAR({ entity: { uri }, onNewClick, data }: MessageListPropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const { uri, size: { width, height, depth } } = e;
       const entity = letsee.getEntity(uri);
+      const { width, height, depth } = entity;
 
       if (this.object.parent !== entity.object) {
         entity.addRenderable(this.object);

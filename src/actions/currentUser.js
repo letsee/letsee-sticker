@@ -5,7 +5,7 @@ export const SET_CURRENT_USER: 'SET_CURRENT_USER' = 'SET_CURRENT_USER';
 export const SET_CURRENT_USER_SUCCESS: 'SET_CURRENT_USER_SUCCESS' = 'SET_CURRENT_USER_SUCCESS';
 export const SET_CURRENT_USER_ERROR: 'SET_CURRENT_USER_ERROR' = 'SET_CURRENT_USER_ERROR';
 
-export const setCurrentUser = (user: MessageAuthor | null) => ({
+export const setCurrentUser = (user: { uid: string, firstname: string, lastname: string } | null) => ({
   type: SET_CURRENT_USER,
   payload: user,
 });

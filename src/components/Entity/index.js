@@ -82,11 +82,6 @@ class Entity extends Component {
     data: PropTypes.shape({
       uri: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      size: PropTypes.shape({
-        width: PropTypes.number.isRequired,
-        height: PropTypes.number.isRequired,
-        depth: PropTypes.number.isRequired,
-      }).isRequired,
     }).isRequired,
     onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
   };
