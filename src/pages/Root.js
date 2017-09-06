@@ -39,7 +39,6 @@ type RootPropTypes = {
   loadingEntity: boolean,
   transformationGuideOpened: boolean,
   currentUser: MessageAuthor | null,
-  currentEntity: string | null,
   selectedSticker: string | null,
   messageForm: MessageFormType | null,
   messagesList: MessagesList,
@@ -54,7 +53,6 @@ const Root = ({
   transformationGuideOpened,
   currentUser,
   entities,
-  currentEntity,
   selectedSticker,
   messageForm,
   messagesList,
@@ -75,7 +73,7 @@ const Root = ({
 
   if (messageForm !== null) {
     const { entity, stickers } = messageForm;
-    const entityTracked = currentEntity !== null && entity.uri === currentEntity;
+    const entityTracked = entities.current !== null && entity.uri === entities.current.uri;
     const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
 
     return (
@@ -111,7 +109,7 @@ const Root = ({
     );
   }
 
-  if (messagesList.entityUri !== null && currentEntity !== null && messagesList.entityUri === currentEntity) {
+  if (messagesList.entityUri !== null && entities.current !== null && messagesList.entityUri === entities.current.uri) {
     const currentEntityData = entities.byUri[messagesList.entityUri];
 
     return (
@@ -177,7 +175,6 @@ export default withRouter(connect(
   ({
     letseeLoaded,
     loadingEntity,
-    currentEntity,
     currentUser,
     entities,
     selectedSticker,
@@ -188,7 +185,6 @@ export default withRouter(connect(
   }) => ({
     letseeLoaded,
     loadingEntity,
-    currentEntity,
     currentUser,
     entities,
     selectedSticker,

@@ -1,6 +1,6 @@
 // @flow
 import {
-  START_TRACK_ENTITY,
+  FETCH_ENTITY,
   END_TRACK_ENTITY,
   SET_PUBLIC,
   SET_COUNT,
@@ -17,7 +17,7 @@ import type { MessagesList } from '../types';
 
 const messagesList = (state: MessagesList = initialState, action): MessagesList | null => {
   switch (action.type) {
-    case START_TRACK_ENTITY:
+    case FETCH_ENTITY:
       if (state.entityUri !== action.payload.uri) {
         return {
           ...initialState,

@@ -123,7 +123,7 @@ class Message extends Component {
       !this.props.data.error &&
       this.props.data.Message &&
       this.props.currentEntity !== null &&
-      this.props.currentEntity === this.props.data.Message.entity.uri
+      this.props.currentEntity.uri === this.props.data.Message.entity.uri
     ) {
       this.renderAR(this.props.data.Message);
     }
@@ -135,15 +135,15 @@ class Message extends Component {
       !nextProps.data.error &&
       nextProps.data.Message &&
       nextProps.currentEntity !== null &&
-      nextProps.currentEntity === nextProps.data.Message.entity.uri
+      nextProps.currentEntity.uri === nextProps.data.Message.entity.uri
     ) {
       this.renderAR(nextProps.data.Message);
     }
   }
 
   componentWillUnmount() {
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntity(this.props.data.entity.uri);
+    if (typeof letsee !== 'undefined' && letsee !== null && this.props.data.Message) {
+      const entity = letsee.getEntity(this.props.data.Message.entity.uri);
 
       if (entity) {
         entity.removeRenderable(this.messageObject);
@@ -205,13 +205,14 @@ class Message extends Component {
 
   render() {
     const {
-      params: { id },
+      params,
       router,
       data,
       helpOpened,
       currentEntity,
       loadingEntity,
       dispatch,
+      ...other
     } = this.props;
 
     const { loading, error, Message: message } = data;
@@ -239,12 +240,12 @@ class Message extends Component {
 
     const { opened } = this.state;
     const { entity: { uri, name, image }, author } = message;
-    const entityTracked = currentEntity !== null && currentEntity === uri;
+    const entityTracked = currentEntity !== null && currentEntity.uri === uri;
     const { firstname, lastname } = author;
     const authorName = `${firstname} ${lastname}`.trim();
 
     return (
-      <div>
+      <div {...other}>
         {!loadingEntity && !entityTracked && (
           <div>
             <Title>{authorName}님의 스티커 메세지</Title>
@@ -268,7 +269,7 @@ class Message extends Component {
         {opened && (
           <MessageComponent
             data={message}
-            currentEntity={currentEntity}
+            currentEntity={currentEntity === null ? null : currentEntity.uri}
             loadingEntity={loadingEntity}
           />
         )}
@@ -283,11 +284,11 @@ class Message extends Component {
 
 export default connect(
   ({
-    currentEntity,
+    entities: { current },
     loadingEntity,
     helpOpened,
   }) => ({
-    currentEntity,
+    currentEntity: current,
     loadingEntity,
     helpOpened,
   }),

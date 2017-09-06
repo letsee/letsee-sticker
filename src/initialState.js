@@ -15,11 +15,13 @@ export const messagesList = {
 export default {
   letseeLoaded: false,
   loadingEntity: false,
-  currentEntity: null,
   currentUser: null,
   entities: {
+    current: null,
     byUri: {},
     allUris: [],
+    byId: {},
+    allIds: [],
   },
   messageForm: null,
   messagesList,

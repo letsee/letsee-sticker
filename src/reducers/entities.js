@@ -1,16 +1,16 @@
 // @flow
 import { combineReducers } from 'redux';
 import {
-  ADD_ENTITY,
-  DELETE_ENTITY,
+  FETCH_ENTITY,
+  FETCH_ENTITY_SUCCESS,
+  END_TRACK_ENTITY,
 } from '../actions';
 
 const entity = (state = null, action) => {
   switch (action.type) {
-    case ADD_ENTITY:
+    case FETCH_ENTITY:
+    case FETCH_ENTITY_SUCCESS:
       return action.payload;
-    case DELETE_ENTITY:
-      return null;
     default:
       return state;
   }
@@ -18,8 +18,8 @@ const entity = (state = null, action) => {
 
 const byUri = (state = {}, action) => {
   switch (action.type) {
-    case ADD_ENTITY:
-    case DELETE_ENTITY:
+    case FETCH_ENTITY:
+    case FETCH_ENTITY_SUCCESS:
       return {
         ...state,
         [action.payload.uri]: entity(state[action.payload.uri], action),
@@ -31,7 +31,8 @@ const byUri = (state = {}, action) => {
 
 const allUris = (state: string[] = [], action): string[] => {
   switch (action.type) {
-    case ADD_ENTITY:
+    case FETCH_ENTITY:
+    case FETCH_ENTITY_SUCCESS:
       if (state.findIndex(uri => uri === action.payload.uri) < 0) {
         return [
           ...state,
@@ -40,16 +41,64 @@ const allUris = (state: string[] = [], action): string[] => {
       }
 
       return state;
-    case DELETE_ENTITY:
-      return state.filter(uri => uri !== action.payload.uri);
+    default:
+      return state;
+  }
+};
+
+const byId = (state = {}, action) => {
+  switch (action.type) {
+    case FETCH_ENTITY_SUCCESS:
+      return {
+        ...state,
+        [action.payload.id]: entity(state[action.payload.id], action),
+      };
+    default:
+      return state;
+  }
+};
+
+const allIds = (state: string[] = [], action): string[] => {
+  switch (action.type) {
+    case FETCH_ENTITY_SUCCESS:
+      if (state.findIndex(id => id === action.payload.id) < 0) {
+        return [
+          ...state,
+          action.payload.id,
+        ];
+      }
+
+      return state;
+    default:
+      return state;
+  }
+};
+
+const current = (state = null, action) => {
+  switch (action.type) {
+    case FETCH_ENTITY:
+      if (state === null) {
+        return action.payload;
+      }
+
+      return state;
+    case END_TRACK_ENTITY:
+      if (state !== null && state.uri === action.payload.uri) {
+        return null;
+      }
+
+      return state;
     default:
       return state;
   }
 };
 
 const entities = combineReducers({
+  byId,
+  allIds,
   byUri,
   allUris,
+  current,
 });
 
 export default entities;

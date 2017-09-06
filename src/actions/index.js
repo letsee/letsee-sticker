@@ -1,5 +1,4 @@
 // @flow
-export * from './currentEntity';
 export * from './currentUser';
 export * from './entities';
 export * from './helpOpened';

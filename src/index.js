@@ -21,8 +21,7 @@ import {
   startLoading,
   stopLoading,
   setCurrentUser,
-  addEntity,
-  startTrackEntity,
+  fetchEntity,
   endTrackEntity,
 } from './actions';
 import Frame from './components/Frame';
@@ -125,8 +124,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
         uri,
       };
 
-      store.dispatch(addEntity(entity));
-      store.dispatch(startTrackEntity(entity));
+      store.dispatch(fetchEntity(entity));
     });
 
     letsee.addEventListener('trackend', (e) => {
