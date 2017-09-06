@@ -188,7 +188,7 @@ class Message extends Component {
               !this.props.data.error &&
               this.props.data.Message &&
               this.props.currentEntity !== null &&
-              this.props.currentEntity === this.props.data.Message.entity.uri
+              this.props.currentEntity.uri === this.props.data.Message.entity.uri
             ) {
               this.renderAR(this.props.data.Message);
             }
@@ -206,6 +206,10 @@ class Message extends Component {
   render() {
     const {
       params,
+      location,
+      route,
+      routeParams,
+      routes,
       router,
       data,
       helpOpened,
