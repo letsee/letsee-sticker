@@ -81,7 +81,16 @@ const allIds = (state: string[] = [], action): string[] => {
 const current = (state = null, action) => {
   switch (action.type) {
     case FETCH_ENTITY:
-      if (state === null) {
+      if (state === null || state.uri === action.payload.uri) {
+        return {
+          ...state,
+          ...action.payload,
+        };
+      }
+
+      return state;
+    case FETCH_ENTITY_SUCCESS:
+      if (state !== null && state.uri === action.payload.uri) {
         return action.payload;
       }
 
