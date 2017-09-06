@@ -6,12 +6,13 @@ require('isomorphic-fetch');
 import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
+import { ApolloProvider } from 'react-apollo';
 import { getFirebase } from 'react-redux-firebase';
 import { match, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
+import client from './client';
 import store, { runSaga } from './store';
 import sagas from './sagas';
 import routes from './routes';
@@ -150,9 +151,9 @@ match({ history, routes }, (err, redirect, renderProps) => {
   });
 
   render(
-    <Provider store={store}>
+    <ApolloProvider store={store} client={client}>
       <Router {...renderProps} />
-    </Provider>,
+    </ApolloProvider>,
     app,
   );
 });

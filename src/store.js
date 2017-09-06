@@ -3,6 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import createSagaMiddleware from 'redux-saga';
 import { reactReduxFirebase } from 'react-redux-firebase';
+import client from './client';
 import firebase from './firebase';
 import reducers from './reducers';
 import initialState from './initialState';
@@ -20,6 +21,7 @@ if (typeof window !== 'undefined' && window !== null && window.__PRELOADED_STATE
 const sagaMiddleware = createSagaMiddleware();
 
 const enhancers = composeWithDevTools(
+  applyMiddleware(client.middleware()),
   reactReduxFirebase(firebase, { enableLogging: process.env.NODE_ENV !== 'production' }),
   applyMiddleware(sagaMiddleware),
 );

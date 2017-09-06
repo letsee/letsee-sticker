@@ -2,6 +2,7 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import { firebaseStateReducer } from 'react-redux-firebase';
+import client from '../client';
 import currentEntity from './currentEntity';
 import currentUser from './currentUser';
 import entities from './entities';
@@ -25,6 +26,7 @@ const reducers = combineReducers({
   messagesList,
   selectedSticker,
   transformationGuideOpened,
+  apollo: client.reducer(),
   firebase: firebaseStateReducer,
   routing: routerReducer,
 });
