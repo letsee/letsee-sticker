@@ -175,7 +175,7 @@ type MessageFormPropTypes = {
   }) => mixed,
 };
 
-class MessageForm extends Component {
+class MessageForm extends Component<MessageFormPropTypes> {
   constructor(props: MessageFormPropTypes) {
     super(props);
 
@@ -237,7 +237,6 @@ class MessageForm extends Component {
     this.selectedStickerObject = null;
   }
 
-  props: MessageFormPropTypes;
   press: boolean;
 
   renderAR({ data: { entity: { uri }, stickers }, selectedSticker }: MessageFormPropTypes) {

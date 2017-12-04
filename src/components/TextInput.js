@@ -92,7 +92,6 @@ class TextInput extends Component<TextInputPropTypes, TextInputState> {
   }
 
   textarea: HTMLTextAreaElement;
-  props: TextInputPropTypes;
 
   resizeTextarea() {
     const textarea = this.textarea;

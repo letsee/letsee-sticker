@@ -23,7 +23,7 @@ type CompleteButtonProps = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-const CompleteButton = ({ children,  ...other }: CompleteButtonProps) => (
+const CompleteButton = ({ children, ...other }: CompleteButtonProps) => (
   <TextButton
     type="button"
     {...other}

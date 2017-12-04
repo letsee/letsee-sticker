@@ -2,10 +2,11 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-const HelpButton = ({
-  children, // eslint-disable-line react/prop-types
-  ...other
-}) => (
+type HelpButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+const HelpButton = ({ children, ...other }: HelpButtonProps) => (
   <ImageButton
     type="button"
     {...other}

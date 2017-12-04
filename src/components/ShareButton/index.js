@@ -2,11 +2,11 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
+type ShareButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
 
-const ShareButton = ({
-  children,
-  ...other
-}) => (
+const ShareButton = ({ children, ...other }: ShareButtonProps) => (
   <ImageButton
     type="button"
     {...other}

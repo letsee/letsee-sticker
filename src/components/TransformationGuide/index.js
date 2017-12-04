@@ -140,13 +140,18 @@ const gestures = [{
 
 const calculatePerRow = () => (typeof window !== 'undefined' && window !== null && document.documentElement.clientHeight >= MIN_HEIGHT ? 2 : 3);
 
-class TransformationGuide extends Component {
+type TransformationGuideProps = {
+  onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+type TransformationGuideState = {
+  perRow: number,
+};
+
+class TransformationGuide extends Component<TransformationGuideProps, TransformationGuideState> {
   state = {
     perRow: calculatePerRow(),
-  };
-
-  state: {
-    perRow: number,
   };
 
   componentDidMount() {
@@ -160,11 +165,6 @@ class TransformationGuide extends Component {
       window.removeEventListener('resize', this.handleWindowResize);
     }
   }
-
-  props: {
-    onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
-    children?: any, // eslint-disable-line react/require-default-props
-  };
 
   handleWindowResize = () => {
     this.setState({ perRow: calculatePerRow() });

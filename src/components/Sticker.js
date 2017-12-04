@@ -75,7 +75,7 @@ type StickerPropTypes = {
   data: StickerType,
 };
 
-class Sticker extends Component {
+class Sticker extends Component<StickerPropTypes> {
   constructor(props: StickerPropTypes) {
     super(props);
 
@@ -118,8 +118,6 @@ class Sticker extends Component {
       }
     }
   }
-
-  props: StickerPropTypes;
 
   renderAR({ entity: { uri }, data }: StickerPropTypes) {
     const entity = letsee.getEntity(uri);

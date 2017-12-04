@@ -73,15 +73,15 @@ type EmojiDrawerPropTypes = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-class EmojiDrawer extends Component {
+type EmojiDrawerState = {
+  page: number,
+  height: number,
+};
+
+class EmojiDrawer extends Component<EmojiDrawerPropTypes, EmojiDrawerState> {
   state = {
     page: 1,
     height: document.documentElement.clientHeight - 150,
-  };
-
-  state: {
-    page: number,
-    height: number,
   };
 
   componentDidMount() {
@@ -101,8 +101,6 @@ class EmojiDrawer extends Component {
       window.removeEventListener('resize', this.handleWindowResize);
     }
   }
-
-  props: EmojiDrawerPropTypes;
 
   handleWindowResize = () => {
     this.setState({ height: document.documentElement.clientHeight - 150 });

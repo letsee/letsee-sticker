@@ -166,7 +166,6 @@ class NewsList extends Component<NewsListPropTypes, NewsListState> {
     this.setState({ requestOpen: false });
   }
 
-  props: NewsListPropTypes;
   listContainer: HTMLDivElement;
 
   renderResult() {

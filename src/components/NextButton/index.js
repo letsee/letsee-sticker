@@ -10,10 +10,11 @@ const StyledImageButton = ImageButton.extend`
   }
 `;
 
-const NextButton = ({
-  children, // eslint-disable-line react/prop-types
-  ...other
-}) => (
+type NextButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+const NextButton = ({ children, ...other }: NextButtonProps) => (
   <StyledImageButton
     type="button"
     {...other}

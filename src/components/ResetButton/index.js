@@ -2,10 +2,11 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-const ResetButton = ({
-  children, // eslint-disable-line react/prop-types
-  ...other
-}) => (
+type ResetButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+const ResetButton = ({ children, ...other }: ResetButtonProps) => (
   <ImageButton
     type="button"
     {...other}

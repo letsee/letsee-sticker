@@ -2,10 +2,11 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-const LeaveMessageButton = ({
-  children, // eslint-disable-line react/prop-types
-  ...other
-}) => (
+type LeaveMessageButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+const LeaveMessageButton = ({ children, ...other }: LeaveMessageButtonProps) => (
   <ImageButton
     type="button"
     {...other}

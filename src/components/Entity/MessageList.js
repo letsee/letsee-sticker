@@ -132,7 +132,7 @@ type MessageListPropTypes = {
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
 };
 
-class MessageList extends Component {
+class MessageList extends Component<MessageListPropTypes> {
   constructor(props: MessageListPropTypes) {
     super(props);
 

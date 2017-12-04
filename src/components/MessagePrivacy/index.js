@@ -89,7 +89,7 @@ type MessagePrivacyPropTypes = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-class MessagePrivacy extends Component {
+class MessagePrivacy extends Component<MessagePrivacyPropTypes> {
   static propTypes = {
     error: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
@@ -113,7 +113,6 @@ class MessagePrivacy extends Component {
     }
   }
 
-  props: MessagePrivacyPropTypes;
   body: HTMLDivElement;
 
   handleWindowClick = (e: TouchEvent) => {

@@ -2,7 +2,11 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-const StickerButton = ({ children, ...other }) => (
+type StickerButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+const StickerButton = ({ children, ...other }: StickerButtonProps) => (
   <ImageButton
     type="button"
     {...other}

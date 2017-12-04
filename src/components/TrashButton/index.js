@@ -2,10 +2,11 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-const TrashButton = ({
-  children, // eslint-disable-line react/prop-types
-  ...other
-}) => (
+type TrashButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+const TrashButton = ({ children, ...other }: TrashButtonProps) => (
   <ImageButton
     type="button"
     {...other}

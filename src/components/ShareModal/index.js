@@ -93,7 +93,6 @@ class ShareModal extends Component<ShareModalPropTypes> {
     }
   }
 
-  props: ShareModalPropTypes;
   body: HTMLDivElement;
 
   handleWindowClick = (e: TouchEvent) => {

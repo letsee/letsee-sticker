@@ -7,10 +7,11 @@ const StyledImageButtonLink = ImageButtonLink.extend`
   text-decoration: none;
 `;
 
-const HomeButton = ({
-  children,
-  ...other
-}) => (
+type HomeButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+const HomeButton = ({ children, ...other }: HomeButtonProps) => (
   <StyledImageButtonLink
     href={process.env.LETSEE_SEARCH_URL || 'https://apps.letsee.io'}
     {...other}
