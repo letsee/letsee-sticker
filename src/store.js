@@ -6,9 +6,8 @@ import { reactReduxFirebase } from 'react-redux-firebase';
 import client from './client';
 import firebase from './firebase';
 import reducers from './reducers';
-import initialState from './initialState';
 
-let preloadedState = initialState;
+let preloadedState = {};
 
 if (typeof window !== 'undefined' && window !== null && window.__PRELOADED_STATE__) {
   // Grab the state from a global variable injected into the server-generated HTML

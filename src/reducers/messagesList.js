@@ -12,8 +12,20 @@ import {
   FETCH_PREV,
   FETCH_NEXT,
 } from '../actions';
-import { messagesList as initialState } from '../initialState';
 import type { MessagesList } from '../types';
+
+const initialState = {
+  public: true,
+  loading: true,
+  empty: true,
+  error: false,
+  count: 0,
+  first: null,
+  last: null,
+  current: null,
+  message: null,
+  entityUri: null,
+};
 
 const messagesList = (state: MessagesList = initialState, action): MessagesList | null => {
   switch (action.type) {

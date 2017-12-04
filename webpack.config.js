@@ -70,7 +70,7 @@ module.exports = {
       path: envFile,
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['react', 'vendor', 'manifest'],
+      names: ['react', 'vendor'],
     }),
     new ExtractTextPlugin({
       filename: 'css/[name].[contenthash].css',
@@ -86,7 +86,7 @@ module.exports = {
       path: envFile,
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['react', 'vendor', 'manifest'],
+      names: ['react', 'vendor'],
     }),
     new ExtractTextPlugin({
       filename: 'css/[name].[contenthash].css',
