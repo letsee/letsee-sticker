@@ -80,7 +80,7 @@ type ShareModalPropTypes = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-class ShareModal extends Component {
+class ShareModal extends Component<ShareModalPropTypes> {
   componentDidMount() {
     if (typeof window !== 'undefined' && window !== null) {
       window.addEventListener('touchend', this.handleWindowClick);

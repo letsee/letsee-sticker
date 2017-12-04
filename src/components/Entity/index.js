@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { firebaseConnect } from 'react-redux-firebase';
+import { graphql } from 'react-apollo';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import keys from 'lodash.keys';
@@ -20,6 +20,8 @@ import {
   fetchNext,
 } from '../../actions';
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
+import firebase from '../../firebase';
+import getMessagesQuery from '../../graphql/getMessagesQuery.graphql';
 import type { MessageAuthor, MessageEntity, MessageWithId, MessagesList } from '../../types';
 
 const Title = styled.div`
@@ -67,19 +69,19 @@ const StyledMyMessagesButton = styled(MyMessagesButton)`
 
 type EntityPropTypes = {
   messagesList: MessagesList,
-  data: MessageEntity,
+  entity: MessageEntity,
   currentUser: MessageAuthor | null,
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-class Entity extends Component {
+class Entity extends Component<EntityPropTypes> {
   static propTypes = {
     currentUser: PropTypes.shape({ // eslint-disable-line react/require-default-props
       uid: PropTypes.string.isRequired,
     }),
-    data: PropTypes.shape({
+    entity: PropTypes.shape({
       uri: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
@@ -87,10 +89,11 @@ class Entity extends Component {
   };
 
   componentWillMount() {
-    const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
+    const { messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
     const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
-    const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
-    const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
+    const database = firebase.database();
+    const countref = database.ref(getMessagesCountPath(entityUri, userId));
+    const listRef = database.ref(getMessagesListPath(entityUri, userId)).orderByKey();
     countref.on('value', this.handleMessagesCountChange);
     listRef.limitToLast(1).on('value', this.handleLastMessageChange);
     listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
@@ -98,7 +101,7 @@ class Entity extends Component {
 
   componentWillReceiveProps({
     messagesList: { entityUri, public: isPublic },
-    firebase, dispatch, currentUser,
+    dispatch, currentUser,
   }: EntityPropTypes) {
     const prevEntityUri = this.props.messagesList.entityUri;
     const prevUserId = this.props.currentUser !== null && !this.props.messagesList.public ? this.props.currentUser.uid : null;
@@ -108,15 +111,15 @@ class Entity extends Component {
       entityUri !== prevEntityUri ||
       prevUserId !== userId
     ) {
-      const prevFirebase = this.props.firebase.database();
-      const prevCountref = prevFirebase.ref(getMessagesCountPath(prevEntityUri, prevUserId));
-      const prevListRef = prevFirebase.ref(getMessagesListPath(prevEntityUri, prevUserId)).orderByKey();
+      const database = firebase.database();
+      const prevCountref = database.ref(getMessagesCountPath(prevEntityUri, prevUserId));
+      const prevListRef = database.ref(getMessagesListPath(prevEntityUri, prevUserId)).orderByKey();
       prevCountref.off('value', this.handleMessagesCountChange);
       prevListRef.limitToLast(1).off('value', this.handleLastMessageChange);
       prevListRef.limitToFirst(1).off('value', this.handleFirstMessageChange);
 
-      const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
-      const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
+      const countref = database.ref(getMessagesCountPath(entityUri, userId));
+      const listRef = database.ref(getMessagesListPath(entityUri, userId)).orderByKey();
       countref.on('value', this.handleMessagesCountChange);
       listRef.limitToLast(1).on('value', this.handleLastMessageChange);
       listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
@@ -124,19 +127,18 @@ class Entity extends Component {
   }
 
   componentWillUnmount() {
-    const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
+    const { messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
     const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
-    const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
-    const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
+    const database = firebase.database();
+    const countref = database.ref(getMessagesCountPath(entityUri, userId));
+    const listRef = database.ref(getMessagesListPath(entityUri, userId)).orderByKey();
     countref.off('value', this.handleMessagesCountChange);
     listRef.limitToLast(1).off('value', this.handleLastMessageChange);
     listRef.limitToFirst(1).off('value', this.handleFirstMessageChange);
   }
 
-  props: EntityPropTypes;
-
   handlePrev() {
-    const { firebase, messagesList, currentUser, dispatch } = this.props;
+    const { messagesList, currentUser, dispatch } = this.props;
     const { first, current, entityUri, public: isPublic, loading } = messagesList;
 
     if (first !== current && !loading) {
@@ -154,7 +156,7 @@ class Entity extends Component {
   }
 
   handleNext() {
-    const { firebase, messagesList, currentUser, dispatch } = this.props;
+    const { messagesList, currentUser, dispatch } = this.props;
     const { last, current, entityUri, public: isPublic, loading } = messagesList;
 
     if (last !== current && !loading) {
@@ -191,6 +193,7 @@ class Entity extends Component {
     const {
       messagesList,
       currentUser,
+      entity,
       data,
       onNewClick,
       onEditClick,
@@ -206,7 +209,7 @@ class Entity extends Component {
       <div {...other}>
         <Title public={messagesList.public}>
           <EntityName>
-            {messagesList.public ? data.name : '내 스티커'}
+            {messagesList.public ? entity.name : '내 스티커'}
           </EntityName>
 
           <MessagesCount>
@@ -230,7 +233,7 @@ class Entity extends Component {
         <MessageList
           data={messagesList}
           currentUser={currentUser}
-          entity={data}
+          entity={entity}
           onNewClick={onNewClick}
           onEditClick={onEditClick}
           onPrev={() => this.handlePrev()}

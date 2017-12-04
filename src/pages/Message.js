@@ -13,10 +13,6 @@ import StickerButton from '../components/StickerButton';
 import Envelope from '../components/Envelope';
 import Help from '../components/Help';
 import {
-  openHelp,
-  closeHelp,
-} from '../actions';
-import {
   MIN_DIAGONAL,
   MAX_DIAGONAL,
 } from '../constants';
@@ -97,11 +93,11 @@ type MessagePropTypes = {
     loading: boolean,
     error: ?Error,
   },
-  helpOpened: boolean,
 };
 
 type MessageState = {
   opened: boolean,
+  helpOpened: boolean,
 };
 
 class Message extends Component<MessagePropTypes, MessageState> {
@@ -109,6 +105,7 @@ class Message extends Component<MessagePropTypes, MessageState> {
     super(props);
 
     this.state = {
+      helpOpened: false,
       opened: false,
     };
 
@@ -211,7 +208,6 @@ class Message extends Component<MessagePropTypes, MessageState> {
       routes,
       router,
       data,
-      helpOpened,
       currentEntity,
       loadingEntity,
       dispatch,
@@ -235,9 +231,9 @@ class Message extends Component<MessagePropTypes, MessageState> {
       );
     }
 
-    if (helpOpened) {
+    if (this.state.helpOpened) {
       return (
-        <Help onCloseClick={() => dispatch(closeHelp())} />
+        <Help onCloseClick={() => this.setState({ helpOpened: false })} />
       );
     }
 
@@ -262,7 +258,7 @@ class Message extends Component<MessagePropTypes, MessageState> {
                 <TrackMessageText>
                   {name}의 정면을 비춰주세요
 
-                  <StyledHelpButton onTouchEnd={() => dispatch(openHelp())} />
+                  <StyledHelpButton onTouchEnd={() => this.setState({ helpOpened: true })} />
                 </TrackMessageText>
               </TrackMessage>
             </TargetGuide>
@@ -290,11 +286,9 @@ export default connect(
   ({
     entities: { current },
     loadingEntity,
-    helpOpened,
   }) => ({
     currentEntity: current,
     loadingEntity,
-    helpOpened,
   }),
 )(graphql(getMessageQuery, {
   options: ({ params: { id } }) => ({ variables: { id } }),

@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import withRouter from 'react-router/lib/withRouter';
 import uuidv4 from 'uuid/v4';
@@ -19,11 +19,7 @@ import {
   resetSticker,
   deleteSticker,
   addSticker,
-  openTransformationGuide,
-  closeTransformationGuide,
   transformSticker,
-  openHelp,
-  closeHelp,
 } from '../actions';
 import openLogin from '../openLogin';
 import type {
@@ -35,9 +31,7 @@ import type {
 } from '../types';
 
 type RootPropTypes = {
-  helpOpened: boolean,
   loadingEntity: boolean,
-  transformationGuideOpened: boolean,
   currentUser: MessageAuthor | null,
   selectedSticker: string | null,
   messageForm: MessageFormType | null,
@@ -48,37 +42,47 @@ type RootPropTypes = {
   },
 };
 
-const Root = ({
-  helpOpened,
-  loadingEntity,
-  transformationGuideOpened,
-  currentUser,
-  entities,
-  selectedSticker,
-  messageForm,
-  messagesList,
-  router,
-  dispatch,
-}: RootPropTypes) => {
-  if (transformationGuideOpened) {
-    return (
-      <TransformationGuide onClose={() => dispatch(closeTransformationGuide())} />
-    );
-  }
+type RootState = {
+  helpOpened: boolean,
+  transformationGuideOpened: boolean,
+};
 
-  if (helpOpened) {
-    return (
-      <Help onCloseClick={() => dispatch(closeHelp())} />
-    );
-  }
+class Root extends Component<RootPropTypes, RootState> {
+  state = {
+    helpOpened: false,
+    transformationGuideOpened: false,
+  };
 
-  if (messageForm !== null) {
-    const { entity, stickers } = messageForm;
-    const entityTracked = entities.current !== null && entity.uri === entities.current.uri;
-    const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
+  render() {
+    const {
+      loadingEntity,
+      currentUser,
+      entities,
+      selectedSticker,
+      messageForm,
+      messagesList,
+      router,
+      dispatch,
+    } = this.props;
 
-    return (
-      <div>
+    if (this.state.transformationGuideOpened) {
+      return (
+        <TransformationGuide onClose={() => this.setState({ transformationGuideOpened: false })} />
+      );
+    }
+
+    if (this.state.helpOpened) {
+      return (
+        <Help onCloseClick={() => this.setState({ helpOpened: false })} />
+      );
+    }
+
+    if (messageForm !== null) {
+      const { entity, stickers } = messageForm;
+      const entityTracked = entities.current !== null && entity.uri === entities.current.uri;
+      const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
+
+      return (
         <MessageForm
           data={messageForm}
           selectedSticker={selectedStickerData}
@@ -103,21 +107,19 @@ const Root = ({
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
           onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}
-          onTipClick={() => dispatch(openTransformationGuide())}
-          onHelpClick={() => dispatch(openHelp())}
+          onTipClick={() => this.setState({ transformationGuideOpened: true })}
+          onHelpClick={() => this.setState({ helpOpened: true })}
         />
-      </div>
-    );
-  }
+      );
+    }
 
-  if (messagesList.entityUri !== null && entities.current !== null && messagesList.entityUri === entities.current.uri) {
-    const currentEntityData = entities.byUri[messagesList.entityUri];
+    if (messagesList.entityUri !== null && entities.current !== null && messagesList.entityUri === entities.current.uri) {
+      const currentEntityData = entities.current;
 
-    return (
-      <div>
+      return (
         <Entity
           messagesList={messagesList}
-          data={currentEntityData}
+          entity={currentEntityData}
           currentUser={currentUser}
           onNewClick={() => {
             if (currentUser === null) {
@@ -159,18 +161,18 @@ const Root = ({
             }
           }}
         />
-      </div>
+      );
+    }
+
+    return (
+      <AppLoader
+        onHelpClick={() => this.setState({ helpOpened: true })}
+        onNewsClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}news`)}
+      />
     );
   }
-
-  return (
-    <AppLoader
       loadingEntity={loadingEntity}
-      onHelpClick={() => dispatch(openHelp())}
-      onNewsClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}news`)}
-    />
-  );
-};
+}
 
 export default withRouter(connect(
   ({
@@ -180,8 +182,6 @@ export default withRouter(connect(
     entities,
     selectedSticker,
     messageForm,
-    transformationGuideOpened,
-    helpOpened,
     messagesList,
   }) => ({
     letseeLoaded,
@@ -190,8 +190,6 @@ export default withRouter(connect(
     entities,
     selectedSticker,
     messageForm,
-    transformationGuideOpened,
-    helpOpened,
     messagesList,
   }),
 )(Root));
