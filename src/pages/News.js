@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from 'react';
-import { firebaseConnect } from 'react-redux-firebase';
 import size from 'lodash.size';
 import sortBy from 'lodash.sortby';
 import keys from 'lodash.keys';
 import NewsList from '../components/NewsList';
+import firebase from '../firebase';
 import type { News as NewsType } from '../types';
 
 const PER_PAGE = 10;
@@ -30,7 +30,7 @@ class News extends Component<any, NewsState> {
 
   componentWillMount() {
     this.setState({ loading: true }, () => {
-      const ref = this.props.firebase.database().ref('news').orderByChild('timestamp');
+      const ref = firebase.database().ref('news').orderByChild('timestamp');
 
       ref.on('child_removed', this.handleChildRemoved);
       ref.on('child_changed', this.handleChildChanged);
@@ -85,7 +85,7 @@ class News extends Component<any, NewsState> {
   }
 
   componentWillUnmount() {
-    const ref = this.props.firebase.database().ref('news').orderByChild('timestamp');
+    const ref = firebase.database().ref('news').orderByChild('timestamp');
     ref.off('child_removed', this.handleChildRemoved);
     ref.off('child_changed', this.handleChildChanged);
   }
@@ -115,7 +115,7 @@ class News extends Component<any, NewsState> {
   fetchData() {
     if (this.state.hasNextPage) {
       this.setState({ loading: true }, () => {
-        const ref = this.props.firebase.database().ref('news').orderByChild('timestamp');
+        const ref = firebase.database().ref('news').orderByChild('timestamp');
 
         ref.endAt(this.state.endCursor).limitToLast(PER_PAGE + 1).once('value', (snapshot) => {
           const data = snapshot.val();
@@ -169,4 +169,4 @@ class News extends Component<any, NewsState> {
   }
 }
 
-export default firebaseConnect()(News);
+export default News;
