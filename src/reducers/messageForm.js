@@ -13,9 +13,9 @@ import {
   RESET_STICKER,
   TRANSFORM_STICKER,
 } from '../actions';
-import type { MessageForm, MessageFormSticker } from '../types';
+import type { MessageForm, Sticker } from '../types';
 
-const sticker = (state: MessageFormSticker | null = null, action): MessageFormSticker | null => {
+const sticker = (state: Sticker | null = null, action): Sticker | null => {
   switch (action.type) {
     case ADD_STICKER:
       const { selected, ...other } = action.payload;
@@ -67,7 +67,7 @@ const sticker = (state: MessageFormSticker | null = null, action): MessageFormSt
   }
 };
 
-const stickersById = (state: { [id: string]: MessageFormSticker } = {}, action): { [id: string]: MessageFormSticker } => {
+const stickersById = (state: { [id: string]: Sticker } = {}, action): { [id: string]: Sticker } => {
   switch (action.type) {
     case ADD_STICKER:
     case DELETE_STICKER:

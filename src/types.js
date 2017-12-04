@@ -1,10 +1,4 @@
 // @flow
-export type ShareModal = {
-  messageId: string,
-  authorName: string,
-  entityName: string,
-};
-
 export type StickerPosition = {
   x: number,
   y: number,
@@ -35,36 +29,56 @@ export type Sticker = {
   type: StickerTypeEnum,
 };
 
-export type MessageAuthor = {
+export type StickerEdge = {
+  node: Sticker,
+  cursor: string,
+};
+
+export type User = {
   id: string,
   firstname: string,
   lastname: string,
   uid: string,
 };
 
-export type MessageEntity = {
+export type Entity = {
   id: string,
   image: string | null,
   name: string,
   uri: string,
 };
 
+export type PageInfo = {
+  hasNextPage: boolean,
+  hasPreviousPage: boolean,
+  startCursor: string | null,
+  endCursor: string | null,
+};
+
+export type StickerConnection = {
+  pageInfo: PageInfo,
+  edges: StickerEdge[],
+  count: number,
+};
+
 export type Message = {
   id: string,
-  author: MessageAuthor,
-  entity: MessageEntity,
+  author: User,
+  entity: Entity,
   public: boolean,
-  stickers: Sticker[],
+  stickers: StickerConnection,
   timestamp: number | string;
 };
 
-export type MessageWithId = {
-  id: string,
-  author: MessageAuthor,
-  entity: MessageEntity,
-  public: boolean,
-  stickers: Sticker[],
-  timestamp: number,
+export type MessageEdge = {
+  node: Message,
+  cursor: string,
+};
+
+export type MessageConnection = {
+  pageInfo: PageInfo,
+  edges: MessageEdge[],
+  count: number,
 };
 
 export type News = {
@@ -73,39 +87,17 @@ export type News = {
   timestamp: number,
 };
 
-export type MessageFormSticker = {
-  id: string,
-  position: StickerPosition,
-  quaternion: StickerQuaternion,
-  scale: number,
-  text: string,
-  type: StickerTypeEnum,
-};
-
 export type MessageForm = {
   id: string | null,
-  entity: MessageEntity,
+  entity: Entity,
   stickers: {
-    byId: { [id: string]: MessageFormSticker },
+    byId: { [id: string]: Sticker },
     allIds: string[],
   },
   timestamp?: number,
-  author: MessageAuthor,
+  author: User,
   public: boolean,
   submitting: boolean,
   submitted: boolean,
   error: boolean,
-};
-
-export type MessagesList = {
-  entityUri: string | null,
-  public: boolean,
-  empty: boolean,
-  count: number,
-  first: string | null,
-  last: string | null,
-  current: string | null,
-  message: MessageWithId | null,
-  error: boolean,
-  loading: boolean,
 };

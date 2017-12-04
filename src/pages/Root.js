@@ -23,22 +23,22 @@ import {
 } from '../actions';
 import openLogin from '../openLogin';
 import type {
-  MessageAuthor,
+  User,
   MessageForm as MessageFormType,
-  MessageEntity,
-  MessageWithId,
   MessagesList,
+  Entity as EntityType,
+  Message,
 } from '../types';
 
 type RootPropTypes = {
   loadingEntity: boolean,
-  currentUser: MessageAuthor | null,
+  currentUser: User | null,
   selectedSticker: string | null,
   messageForm: MessageFormType | null,
   messagesList: MessagesList,
   entities: {
-    current: MessageEntity | null,
-    byUri: { [uri: string]: MessageEntity },
+    current: EntityType | null,
+    byUri: { [uri: string]: EntityType },
   },
 };
 
@@ -128,7 +128,7 @@ class Root extends Component<RootPropTypes, RootState> {
               dispatch(initMessageForm(currentEntityData, currentUser));
             }
           }}
-          onEditClick={(message: MessageWithId) => {
+          onEditClick={(message: Message) => {
             if (currentUser !== null && message.author.uid === currentUser.uid) {
               const { author, entity, stickers, ...other } = message;
 

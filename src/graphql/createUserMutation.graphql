@@ -1,12 +1,12 @@
 mutation createUserMutation($input: SignupUserInput!) {
   createUser(input: $input) {
     user {
-      ...CurrentUserFragment
+      ...UserFragment
     }
   }
 }
 
-fragment CurrentUserFragment on User {
+fragment UserFragment on User {
   __typename
   id
   uid

@@ -2,7 +2,11 @@
 import React from 'react';
 import { ImageButton } from '../Button';
 
-const MyMessageButton = ({ children, ...other }) => (
+type MyMessageButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+const MyMessageButton = ({ children, ...other }: MyMessageButtonProps) => (
   <ImageButton
     type="button"
     {...other}

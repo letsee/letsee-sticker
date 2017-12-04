@@ -1,4 +1,4 @@
-fragment CurrentUserFragment on User {
+fragment UserFragment on User {
   __typename
   id
   uid

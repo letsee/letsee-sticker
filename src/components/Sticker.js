@@ -8,7 +8,7 @@ import {
   MAX_DIAGONAL,
 } from '../constants';
 import type {
-  MessageEntity,
+  Entity,
   Sticker as StickerType,
   StickerRotation,
   StickerQuaternion,
@@ -71,7 +71,7 @@ const compareRotations = (a: ?StickerRotation, b: ?StickerRotation): boolean => 
 };
 
 type StickerPropTypes = {
-  entity: MessageEntity,
+  entity: Entity,
   data: StickerType,
 };
 

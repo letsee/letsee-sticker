@@ -40,23 +40,23 @@ fragment MessageFragment on Message {
   timestamp: createdAt
 
   entity {
-    ...MessageEntityFragment
+    ...EntityFragment
   }
 
   author: user {
-    ...MessageAuthorFragment
+    ...UserFragment
   }
 
   stickers {
     edges {
       node {
-        ...MessageStickerFragment
+        ...StickerFragment
       }
     }
   }
 }
 
-fragment MessageEntityFragment on Entity {
+fragment EntityFragment on Entity {
   __typename
   id
   uri
@@ -64,7 +64,7 @@ fragment MessageEntityFragment on Entity {
   image
 }
 
-fragment MessageAuthorFragment on User {
+fragment UserFragment on User {
   __typename
   id
   uid
@@ -72,7 +72,7 @@ fragment MessageAuthorFragment on User {
   lastname
 }
 
-fragment MessageStickerFragment on Sticker {
+fragment StickerFragment on Sticker {
   __typename
   id
   type

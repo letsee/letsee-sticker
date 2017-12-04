@@ -1,12 +1,12 @@
 mutation updateUserMutation($input: UpdateUserInput!) {
   updateUser(input: $input) {
     user {
-      ...CurrentUserFragment
+      ...UserFragment
     }
   }
 }
 
-fragment CurrentUserFragment on User {
+fragment UserFragment on User {
   __typename
   id
   uid

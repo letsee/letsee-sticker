@@ -26,7 +26,7 @@ import {
 import styles from './MessageForm.css';
 import type {
   MessageForm as MessageFormType,
-  MessageFormSticker,
+  Sticker,
   StickerPosition,
   StickerQuaternion,
 } from '../types';
@@ -155,7 +155,7 @@ const StyledTipButton = styled(TipButton)`
 
 type MessageFormPropTypes = {
   data: MessageFormType,
-  selectedSticker: MessageFormSticker | null,
+  selectedSticker: Sticker | null,
   entityTracked: boolean,
   onPublicChange?: boolean => mixed, // eslint-disable-line react/require-default-props
   onStickerClick?: string => mixed, // eslint-disable-line react/require-default-props

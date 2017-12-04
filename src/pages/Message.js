@@ -17,7 +17,7 @@ import {
   MAX_DIAGONAL,
 } from '../constants';
 import getMessageQuery from '../graphql/getMessageQuery.graphql';
-import type { Message as MessageType, MessageEntity } from '../types';
+import type { Message as MessageType, Entity } from '../types';
 
 const SpinnerContainer = styled.div`
   position: absolute;
@@ -87,7 +87,7 @@ const StyledStickerButton = styled(StickerButton)`
 
 type MessagePropTypes = {
   params: { id: string },
-  currentEntity: MessageEntity | null,
+  currentEntity: Entity | null,
   loadingEntity: boolean,
   data: {
     loading: boolean,

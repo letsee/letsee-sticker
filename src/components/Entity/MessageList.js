@@ -20,10 +20,9 @@ import {
 } from '../../constants';
 import type {
   Message as MessageType,
-  MessageWithId,
-  MessageAuthor,
   MessagesList,
-  MessageEntity,
+  User,
+  Entity,
 } from '../../types';
 
 const selectLatestMessage = (messagesObject: { [id: string]: MessageType }): MessageWithId | null => {
@@ -104,32 +103,14 @@ const SpinnerContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const subscribeToCurrent = (data: MessagesList, userId: string | null, handleMessageChange) => {
-  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
-
-  if (data.current !== null) {
-    ref.equalTo(data.current).on('value', handleMessageChange);
-  }
-};
-
-const unsubscribeFromCurrent = (data: MessagesList, userId: string | null, handleMessageChange) => {
-  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
-
-  if (data.current !== null) {
-    ref.equalTo(data.current).off('value', handleMessageChange);
-  }
-};
-
 type MessageListPropTypes = {
-  data: MessagesList,
-  currentUser: MessageAuthor | null,
-  entity: MessageEntity,
-  onMessageReceive?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
+  currentUser: User | null,
+  entity: Entity,
   onMessageDelete?: void => mixed, // eslint-disable-line react/require-default-props
   onPrev?: void => mixed, // eslint-disable-line react/require-default-props
   onNext?: void => mixed, // eslint-disable-line react/require-default-props
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
+  onEditClick?: MessageType => mixed, // eslint-disable-line react/require-default-props
 };
 
 class MessageList extends Component<MessageListPropTypes> {

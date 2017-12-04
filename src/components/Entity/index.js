@@ -22,7 +22,7 @@ import {
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
 import firebase from '../../firebase';
 import getMessagesQuery from '../../graphql/getMessagesQuery.graphql';
-import type { MessageAuthor, MessageEntity, MessageWithId, MessagesList } from '../../types';
+import type { User, Entity as EntityType, Message } from '../../types';
 
 const Title = styled.div`
   position: absolute;
@@ -69,10 +69,10 @@ const StyledMyMessagesButton = styled(MyMessagesButton)`
 
 type EntityPropTypes = {
   messagesList: MessagesList,
-  entity: MessageEntity,
-  currentUser: MessageAuthor | null,
+  entity: EntityType,
+  currentUser: User | null,
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
+  onEditClick?: Message => mixed, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };
 

@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { ImageButton } from '../Button';
-import type { MessageAuthor } from '../../types';
+import type { User } from '../../types';
 
 const Container = styled.div`
   font-family: 'Noto Sans KR Black', AppleSDGothicNeo, sans-serif;
@@ -33,7 +33,7 @@ const EnvelopeButton = ImageButton.extend`
 
 type EnvelopePropTypes = {
   size: number,
-  data: MessageAuthor,
+  data: User,
   onClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };

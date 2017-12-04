@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import type { MessageAuthor } from '../types';
+import type { User } from '../types';
 
 const AuthorName = styled.div`
   font-family: AppleSDGothicNeo, sans-serif;
@@ -22,7 +22,7 @@ const Timestamp = styled.div`
 `;
 
 type MessageMetaPropTypes = {
-  author: MessageAuthor,
+  author: User,
   timestamp: number | string,
   children?: any, // eslint-disable-line react/require-default-props
 };

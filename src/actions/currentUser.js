@@ -1,5 +1,5 @@
 // @flow
-import type { MessageAuthor } from '../types';
+import type { User } from '../types';
 
 export const SET_CURRENT_USER: 'SET_CURRENT_USER' = 'SET_CURRENT_USER';
 export const SET_CURRENT_USER_SUCCESS: 'SET_CURRENT_USER_SUCCESS' = 'SET_CURRENT_USER_SUCCESS';
@@ -10,7 +10,7 @@ export const setCurrentUser = (user: { uid: string, firstname: string, lastname:
   payload: user,
 });
 
-export const setCurrentUserSuccess = (user: MessageAuthor | null) => ({
+export const setCurrentUserSuccess = (user: User | null) => ({
   type: SET_CURRENT_USER_SUCCESS,
   payload: user,
 });

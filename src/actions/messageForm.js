@@ -2,8 +2,8 @@
 import uuidv4 from 'uuid/v4';
 import type {
   MessageForm,
-  MessageEntity,
-  MessageAuthor,
+  Entity,
+  User,
   StickerPosition,
   StickerQuaternion,
   StickerTypeEnum,
@@ -18,7 +18,7 @@ export const SUBMIT_MESSAGE_FORM: 'SUBMIT_MESSAGE_FORM' = 'SUBMIT_MESSAGE_FORM';
 export const SUBMIT_MESSAGE_FORM_SUCCESS: 'SUBMIT_MESSAGE_FORM_SUCCESS' = 'SUBMIT_MESSAGE_FORM_SUCCESS';
 export const SUBMIT_MESSAGE_FORM_ERROR: 'SUBMIT_MESSAGE_FORM_ERROR' = 'SUBMIT_MESSAGE_FORM_ERROR';
 
-export const initMessageForm = (entity: MessageEntity, author: MessageAuthor) => ({
+export const initMessageForm = (entity: Entity, author: User) => ({
   type: INIT_MESSAGE_FORM,
   payload: {
     entity,

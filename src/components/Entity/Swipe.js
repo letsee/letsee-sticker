@@ -49,7 +49,12 @@ const SwipeText = styled.div`
   animation-name: ${FadeOut};
 `;
 
-const Swipe = ({ children, ...other }) => (
+type SwipeProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+
+const Swipe = ({ children, ...other }: SwipeProps) => (
   <div {...other}>
     <SwipeImage
       alt="밀어서 더 보기"
