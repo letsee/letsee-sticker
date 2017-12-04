@@ -1,0 +1,15 @@
+mutation updateEntityMutation($input: UpdateEntityInput!) {
+  updateEntity(input: $input) {
+    entity {
+      ...EntityFragment
+    }
+  }
+}
+
+fragment EntityFragment on Entity {
+  __typename
+  id
+  uri
+  name
+  image
+}

@@ -1,0 +1,15 @@
+query getEntityByUriQuery($uri: String!) {
+  viewer {
+    Entity(uri: $uri) {
+    	...EntityFragment
+    }
+  }
+}
+
+fragment EntityFragment on Entity {
+  __typename
+  id
+  uri
+  name
+  image
+}
