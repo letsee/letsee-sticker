@@ -1,0 +1,15 @@
+mutation createUserMutation($input: SignupUserInput!) {
+  createUser(input: $input) {
+    user {
+      ...CurrentUserFragment
+    }
+  }
+}
+
+fragment CurrentUserFragment on User {
+  __typename
+  id
+  uid
+  firstname
+  lastname
+}

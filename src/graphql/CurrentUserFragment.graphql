@@ -1,0 +1,7 @@
+fragment CurrentUserFragment on User {
+  __typename
+  id
+  uid
+  firstname
+  lastname
+}

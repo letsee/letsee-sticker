@@ -1,0 +1,15 @@
+query getUserByUidQuery($uid: String!) {
+  viewer {
+    User(uid: $uid) {
+      ...CurrentUserFragment
+    }
+  }
+}
+
+fragment CurrentUserFragment on User {
+  __typename
+  id
+  uid
+  firstname
+  lastname
+}
