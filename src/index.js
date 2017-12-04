@@ -8,7 +8,6 @@ import 'normalize.css';
 import React from 'react';
 import { render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
-import { getFirebase } from 'react-redux-firebase';
 import { match, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import styled from 'styled-components';
@@ -29,7 +28,7 @@ import Frame from './components/Frame';
 import EntityLoader from './components/EntityLoader';
 import { MIN_DIAGONAL, MAX_DIAGONAL } from './constants';
 
-runSaga(sagas, getFirebase);
+runSaga(sagas);
 const history = syncHistoryWithStore(browserHistory, store);
 
 match({ history, routes }, (err, redirect, renderProps) => {
@@ -117,12 +116,14 @@ match({ history, routes }, (err, redirect, renderProps) => {
         image,
         name,
         uri,
+        size,
       } = e.target;
 
       const entity = {
         image,
         name,
         uri,
+        size,
       };
 
       store.dispatch(fetchEntity(entity));
@@ -133,12 +134,14 @@ match({ history, routes }, (err, redirect, renderProps) => {
         image,
         name,
         uri,
+        size,
       } = e.target;
 
       const entity = {
         image,
         name,
         uri,
+        size,
       };
 
       store.dispatch(endTrackEntity(entity));

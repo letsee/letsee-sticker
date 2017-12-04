@@ -19,16 +19,17 @@ import {
   setCurrentCursor,
 } from '../actions';
 import { getMessagesListPath } from '../entityUriHelper';
+import firebase from '../firebase';
 import type { Message } from '../types';
 
-function* persistToFirebase(getFirebase, id: string | null, message: Message) {
-  const firebase = getFirebase().database();
+function* persistToFirebase(id: string | null, message: Message) {
+  const database = firebase().database();
   let messageRef;
 
   if (id === null) {
-    messageRef = firebase.ref('messages').push();
+    messageRef = database.ref('messages').push();
   } else {
-    messageRef = firebase.ref(`/messages/${id}`);
+    messageRef = database.ref(`/messages/${id}`);
   }
 
   const messageId = messageRef.key;
@@ -48,14 +49,14 @@ function* persistToFirebase(getFirebase, id: string | null, message: Message) {
   }
 
   yield all([
-    firebase.ref(`${authorMessagesPath}/${messageId}`).set(message),
-    firebase.ref(`${publicMessagesPath}/${messageId}`).set(message.public ? message : null),
+    database.ref(`${authorMessagesPath}/${messageId}`).set(message),
+    database.ref(`${publicMessagesPath}/${messageId}`).set(message.public ? message : null),
   ]);
 
   return messageRef;
 }
 
-function* submitMessageForm(getFirebase) {
+function* submitMessageForm() {
   while (true) {
     const submitAction = yield take(SUBMIT_MESSAGE_FORM);
 
@@ -93,17 +94,17 @@ function* submitMessageForm(getFirebase) {
           entity,
           public: isPublic,
           stickers: stickersById,
-          timestamp: timestamp || getFirebase().database.ServerValue.TIMESTAMP,
+          timestamp: timestamp || firebase.database.ServerValue.TIMESTAMP,
         };
 
-        const { firebase } = yield race({
-          firebase: call(persistToFirebase, getFirebase, id, message),
+        const { fb } = yield race({
+          fb: call(persistToFirebase, id, message),
           timeout: call(delay, 3000), // TODO timeout?
           destroy: take(DESTROY_MESSAGE_FORM),
         });
 
-        if (firebase) {
-          yield put(submitMessageFormSuccess(firebase.key));
+        if (fb) {
+          yield put(submitMessageFormSuccess(fb.key));
           yield put(destroyMessageForm());
           yield put(setPublic(false));
           yield put(setCurrentCursor(firebase.key));
@@ -123,9 +124,9 @@ function* submitMessageForm(getFirebase) {
   }
 }
 
-function* sagas(getFirebase) {
+function* sagas() {
   yield all([
-    fork(submitMessageForm, getFirebase),
+    fork(submitMessageForm),
   ]);
 }
 

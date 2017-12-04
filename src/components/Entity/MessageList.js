@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import { firebaseConnect } from 'react-redux-firebase';
 import styled from 'styled-components';
 import clamp from 'lodash.clamp';
 import keys from 'lodash.keys';
@@ -14,6 +13,7 @@ import PrevButton from './PrevButton';
 import NextButton from './NextButton';
 import manager, { enableManager } from '../../manager';
 import { getMessagesListPath } from '../../entityUriHelper';
+import firebase from '../../firebase';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
@@ -104,7 +104,7 @@ const SpinnerContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
+const subscribeToCurrent = (data: MessagesList, userId: string | null, handleMessageChange) => {
   const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
 
   if (data.current !== null) {
@@ -112,7 +112,7 @@ const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null,
   }
 };
 
-const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
+const unsubscribeFromCurrent = (data: MessagesList, userId: string | null, handleMessageChange) => {
   const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
 
   if (data.current !== null) {
@@ -143,9 +143,9 @@ class MessageList extends Component {
   }
 
   componentWillMount() {
-    const { firebase, data, currentUser } = this.props;
+    const { data, currentUser } = this.props;
     const userId = currentUser !== null && !data.public ? currentUser.uid : null;
-    subscribeToCurrent(firebase, data, userId, this.handleMessageChange);
+    subscribeToCurrent(data, userId, this.handleMessageChange);
   }
 
   componentDidMount() {
@@ -160,17 +160,17 @@ class MessageList extends Component {
     if (this.props.data.current !== nextProps.data.current) {
       const prevUserId = this.props.currentUser !== null && !this.props.data.public ? this.props.currentUser.uid : null;
       const userId = nextProps.currentUser !== null && !nextProps.data.public ? nextProps.currentUser.uid : null;
-      unsubscribeFromCurrent(this.props.firebase, this.props.data, prevUserId, this.handleMessageChange);
-      subscribeToCurrent(nextProps.firebase, nextProps.data, userId, this.handleMessageChange);
+      unsubscribeFromCurrent(this.props.data, prevUserId, this.handleMessageChange);
+      subscribeToCurrent(nextProps.data, userId, this.handleMessageChange);
     }
 
     this.renderAR(nextProps);
   }
 
   componentWillUnmount() {
-    const { firebase, data, currentUser } = this.props;
+    const { data, currentUser } = this.props;
     const userId = currentUser !== null && !data.public ? currentUser.uid : null;
-    unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange);
+    unsubscribeFromCurrent(data, userId, this.handleMessageChange);
 
     manager.off('swipeleft', this.prev);
     manager.off('swiperight', this.next);
@@ -291,7 +291,6 @@ class MessageList extends Component {
       onNewClick,
       onPrev,
       onNext,
-      firebase,
       ...other
     } = this.props;
 
@@ -360,4 +359,4 @@ class MessageList extends Component {
   }
 }
 
-export default firebaseConnect()(MessageList);
+export default MessageList;
