@@ -24,11 +24,10 @@ type User = {
 };
 
 const getUserByUid = (user: User) => client.query({
-  fetchPolicy: 'network-only',
   query: getUserByUidQuery,
   variables: { uid: user.uid },
 })
-  .then(res => res.viewer.User)
+  .then(res => res.data.viewer.User)
   .then(res => (res === null ? ({ ...user, id: null }) : res));
 
 const createUser = (user: User) => client.mutate({
@@ -59,8 +58,8 @@ export const logInUser = action$ => action$
   .filter(action => action.payload !== null)
   .switchMap(({ payload }) => Observable
     .fromPromise(getUserByUid(payload))
-    .switchMap((user) => {
-      if (user.id === null) {
+    .switchMap(({ id, ...user }) => {
+      if (id === null) {
         return Observable.fromPromise(createUser(user));
       }
 
@@ -68,13 +67,13 @@ export const logInUser = action$ => action$
         user.firstname !== payload.firstname ||
         user.lastname !== payload.lastname
       ) {
-        return Observable.fromPromise(updateUser(user.id, payload));
+        return Observable.fromPromise(updateUser(id, payload));
       }
 
-      return Observable.of(user);
+      return Observable.of({ id, ...user });
     }))
   .map(user => setCurrentUserSuccess(user))
-  .catch(error => setCurrentUserError(error));
+  .catch(error => Observable.of(setCurrentUserError(error)));
 
 export const logOutUser = action$ => action$
   .ofType(SET_CURRENT_USER)
