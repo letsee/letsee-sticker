@@ -1,5 +1,5 @@
 // @flow
-const getObjectById = (parent, id: string): ?Object3D => {
+const getObjectById = (parent, id: string) => {
   let result = null;
 
   parent.traverse((obj) => {

@@ -65,21 +65,17 @@ type TextInputPropTypes = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-class TextInput extends Component {
-  constructor(props: TextInputPropTypes) {
-    super(props);
+type TextInputState = {
+  focus: boolean,
+  value: string,
+  height: number,
+};
 
-    this.state = {
-      focus: false,
-      value: '',
-      height: 1,
-    };
-  }
-
-  state: {
-    focus: boolean,
-    value: string,
-    height: number,
+class TextInput extends Component<TextInputPropTypes, TextInputState> {
+  state = {
+    focus: false,
+    value: '',
+    height: 1,
   };
 
   componentDidMount() {

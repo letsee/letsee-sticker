@@ -1,14 +1,3 @@
-html {
-  position: relative;
-}
-
-body {
-  margin: 0;
-  font-family: AppleSDGothicNeo, sans-serif;
-  overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
 :local .sticker {
   display: block;
   box-sizing: border-box;

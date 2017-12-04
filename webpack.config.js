@@ -36,8 +36,7 @@ module.exports = {
   devServer: {
     contentBase: outputPath,
     compress: true,
-    host: '192.168.1.192',
-    port: 3000,
+    host: '0.0.0.0',
     historyApiFallback: true,
   },
   module: {
@@ -56,24 +55,6 @@ module.exports = {
             'postcss-loader',
           ],
         }),
-      },
-      {
-        test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            { loader: 'css-loader', options: { importLoaders: 1, camelCase: true, minimize: !isDev } },
-            'postcss-loader',
-            'sass-loader',
-          ],
-        }),
-      },
-      {
-        test: /\.(gif|png|jpg|jpeg)$/,
-        loader: 'file-loader',
-        query: {
-          outputPath: 'img/',
-        },
       },
       {
         test: /\.(graphql|gql)$/,

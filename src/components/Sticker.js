@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import styled, { css } from 'styled-components';
-import clamp from 'lodash/clamp';
+import clamp from 'lodash.clamp';
 import {
   MIN_DIAGONAL,
   MAX_DIAGONAL,

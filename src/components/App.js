@@ -1,8 +1,20 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
+import styled, { injectGlobal } from 'styled-components';
 import { Helmet } from 'react-helmet';
-import './App.scss';
+
+injectGlobal`
+  html {
+    position: relative;
+  }
+
+  body {
+    margin: 0;
+    font-family: AppleSDGothicNeo, sans-serif;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+`;
 
 const Main = styled.div`
   width: 100%;

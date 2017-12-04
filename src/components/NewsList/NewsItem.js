@@ -2,7 +2,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import moment from 'moment';
 import type { News } from '../../types';
 
 const Container = styled.div`
@@ -38,6 +37,15 @@ const Message = styled.div`
   word-wrap: break-word;
 `;
 
+const timestampToDate = (timestamp: number) => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${year}. ${month < 10 ? `0${month}` : month}. ${day < 10 ? `0${day}` : day}`;
+};
+
 type NewsItemPropTypes = {
   data: News,
   children?: any, // eslint-disable-line react/require-default-props
@@ -54,7 +62,7 @@ const NewsItem = ({
     </ImageContainer>
 
     <Message>
-      <div>{moment(timestamp).format('YYYY. M. D.')}</div>
+      <div>{timestampToDate(timestamp)}</div>
       <div>{description}</div>
     </Message>
   </Container>

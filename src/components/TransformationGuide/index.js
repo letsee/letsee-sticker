@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import chunk from 'lodash/chunk';
+import chunk from 'lodash.chunk';
 import CloseButton from '../CloseButton';
 
 const MIN_HEIGHT = 568;

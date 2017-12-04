@@ -52,12 +52,12 @@ const Text = styled.div`
   color: #fff;
 `;
 
-type PropTypes = {
+type EntityLoaderProps = {
   size: number,
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-const EntityLoader = ({ size, children, ...other }: PropTypes) => (
+const EntityLoader = ({ size, children, ...other }: EntityLoaderProps) => (
   <div {...other}>
     <Circles>
       <GreenCircle size={size} />

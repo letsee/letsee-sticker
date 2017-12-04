@@ -4,6 +4,7 @@ require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 import 'babel-polyfill';
+import 'normalize.css';
 import React from 'react';
 import { render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -11,7 +12,7 @@ import { getFirebase } from 'react-redux-firebase';
 import { match, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import styled from 'styled-components';
-import clamp from 'lodash/clamp';
+import clamp from 'lodash.clamp';
 import client from './client';
 import store, { runSaga } from './store';
 import sagas from './sagas';

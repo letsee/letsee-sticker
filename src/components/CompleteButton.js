@@ -19,10 +19,11 @@ const TextButton = Button.extend`
   }
 `;
 
-const CompleteButton = ({
-  children, // eslint-disable-line react/prop-types
-  ...other
-}) => (
+type CompleteButtonProps = {
+  children?: any, // eslint-disable-line react/require-default-props
+};
+
+const CompleteButton = ({ children,  ...other }: CompleteButtonProps) => (
   <TextButton
     type="button"
     {...other}

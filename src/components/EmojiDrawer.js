@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Waypoint from 'react-waypoint';
-import chunk from 'lodash/chunk';
+import chunk from 'lodash.chunk';
 import { getNEmojis, emojiListLength } from '../emojiList';
 import { enableManager } from '../manager';
 

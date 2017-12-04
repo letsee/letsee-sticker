@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 import { graphql } from 'react-apollo';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import clamp from 'lodash/clamp';
+import clamp from 'lodash.clamp';
 import MessageComponent from '../components/Message';
 import Spinner from '../components/Spinner';
 import TargetGuide from '../components/TargetGuide';
@@ -21,7 +21,7 @@ import {
   MAX_DIAGONAL,
 } from '../constants';
 import getMessageQuery from '../graphql/getMessageQuery.graphql';
-import type { Message as MessageType } from '../types';
+import type { Message as MessageType, MessageEntity } from '../types';
 
 const SpinnerContainer = styled.div`
   position: absolute;
@@ -91,7 +91,7 @@ const StyledStickerButton = styled(StickerButton)`
 
 type MessagePropTypes = {
   params: { id: string },
-  currentEntity: string | null,
+  currentEntity: MessageEntity | null,
   loadingEntity: boolean,
   data: {
     loading: boolean,
@@ -153,7 +153,7 @@ class Message extends Component {
 
   props: MessagePropTypes;
 
-  renderAR({ entity: { uri }, author }: MessagePropTypes) {
+  renderAR({ entity: { uri }, author }: MessageType) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const entity = letsee.getEntity(uri);
       const { width, height, depth } = entity.size;

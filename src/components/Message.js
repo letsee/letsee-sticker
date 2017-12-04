@@ -30,7 +30,11 @@ type MessagePropTypes = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
-class Message extends Component {
+type MessageState = {
+  shareModalOpened: boolean,
+};
+
+class Message extends Component<MessagePropTypes, MessageState> {
   static defaultProps = {
     shareDisabled: false,
   };
@@ -38,12 +42,6 @@ class Message extends Component {
   state = {
     shareModalOpened: false,
   };
-
-  state: {
-    shareModalOpened: boolean,
-  };
-
-  props: MessagePropTypes;
 
   render() {
     const {

@@ -1,15 +1,24 @@
 // @flow
 import React, { Component } from 'react';
 import { firebaseConnect } from 'react-redux-firebase';
-import size from 'lodash/size';
-import sortBy from 'lodash/sortBy';
-import keys from 'lodash/keys';
+import size from 'lodash.size';
+import sortBy from 'lodash.sortby';
+import keys from 'lodash.keys';
 import NewsList from '../components/NewsList';
 import type { News as NewsType } from '../types';
 
 const PER_PAGE = 10;
 
-class News extends Component {
+type NewsState = {
+  loading: boolean,
+  startCursor: number | null,
+  endCursor: number | null,
+  hasNextPage: boolean,
+  data: { [key: string]: NewsType },
+  error: boolean,
+};
+
+class News extends Component<any, NewsState> {
   state = {
     loading: false,
     startCursor: null,
@@ -17,15 +26,6 @@ class News extends Component {
     hasNextPage: false,
     data: {},
     error: false,
-  };
-
-  state: {
-    loading: boolean,
-    startCursor: number | null,
-    endCursor: number | null,
-    hasNextPage: boolean,
-    data: { [key: string]: NewsType },
-    error: boolean,
   };
 
   componentWillMount() {

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
 import Transition from 'react-transition-group/Transition';
-import clamp from 'lodash/clamp';
+import clamp from 'lodash.clamp';
 import AddEmojiButton from './AddEmojiButton';
 import AddTextButton from './AddTextButton';
 import CloseButton from './CloseButton';
@@ -23,7 +23,7 @@ import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
 } from '../constants';
-import styles from './App.scss';
+import styles from './MessageForm.css';
 import type {
   MessageForm as MessageFormType,
   MessageFormSticker,

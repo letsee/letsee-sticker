@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Waypoint from 'react-waypoint';
-import keys from 'lodash/keys';
-import sortBy from 'lodash/sortBy';
+import keys from 'lodash.keys';
+import sortBy from 'lodash.sortby';
 import NewsItem from './NewsItem';
 import Button from '../Button';
 import CloseButton from '../CloseButton';
@@ -148,13 +148,13 @@ type NewsListPropTypes = {
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
 };
 
-class NewsList extends Component {
+type NewsListState = {
+  requestOpen: boolean,
+};
+
+class NewsList extends Component<NewsListPropTypes, NewsListState> {
   state = {
     requestOpen: false,
-  };
-
-  state: {
-    requestOpen: boolean,
   };
 
   componentDidMount() {
