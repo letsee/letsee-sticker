@@ -157,7 +157,7 @@ type MessageFormPropTypes = {
   data: MessageFormType,
   selectedSticker: MessageFormSticker | null,
   entityTracked: boolean,
-  onPublicChange?: boolean => mixed,  // eslint-disable-line react/require-default-props
+  onPublicChange?: boolean => mixed, // eslint-disable-line react/require-default-props
   onStickerClick?: string => mixed, // eslint-disable-line react/require-default-props
   onTextInput?: string => mixed, // eslint-disable-line react/require-default-props
   onEmojiInput?: string => mixed, // eslint-disable-line react/require-default-props
@@ -478,7 +478,7 @@ class MessageForm extends Component {
       !this.press
     ) {
       const { deltaX, deltaY, scale } = e;
-      const { width, height } = letsee.getEntit(uri).size;
+      const { width, height } = letsee.getEntity(uri).size;
 
       const realDiagonal = Math.sqrt((width * width) + (height * height));
       const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);

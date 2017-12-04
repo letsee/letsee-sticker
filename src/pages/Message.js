@@ -96,12 +96,15 @@ type MessagePropTypes = {
   data: {
     loading: boolean,
     error: ?Error,
-    Message: ?MessageType,
   },
   helpOpened: boolean,
 };
 
-class Message extends Component {
+type MessageState = {
+  opened: boolean,
+};
+
+class Message extends Component<MessagePropTypes, MessageState> {
   constructor(props: MessagePropTypes) {
     super(props);
 
@@ -115,17 +118,15 @@ class Message extends Component {
     }
   }
 
-  state: { opened: boolean };
-
   componentDidMount() {
     if (
       !this.props.data.loading &&
       !this.props.data.error &&
-      this.props.data.Message &&
+      this.props.data.viewer && this.props.data.viewer.Message &&
       this.props.currentEntity !== null &&
-      this.props.currentEntity.uri === this.props.data.Message.entity.uri
+      this.props.currentEntity.uri === this.props.data.viewer.Message.entity.uri
     ) {
-      this.renderAR(this.props.data.Message);
+      this.renderAR(this.props.data.viewer.Message);
     }
   }
 
@@ -133,25 +134,23 @@ class Message extends Component {
     if (
       !nextProps.data.loading &&
       !nextProps.data.error &&
-      nextProps.data.Message &&
+      nextProps.data.viewer && nextProps.data.viewer.Message &&
       nextProps.currentEntity !== null &&
-      nextProps.currentEntity.uri === nextProps.data.Message.entity.uri
+      nextProps.currentEntity.uri === nextProps.data.viewer.Message.entity.uri
     ) {
-      this.renderAR(nextProps.data.Message);
+      this.renderAR(nextProps.data.viewer.Message);
     }
   }
 
   componentWillUnmount() {
-    if (typeof letsee !== 'undefined' && letsee !== null && this.props.data.Message) {
-      const entity = letsee.getEntity(this.props.data.Message.entity.uri);
+    if (typeof letsee !== 'undefined' && letsee !== null && this.props.data.viewer && this.props.data.viewer.Message) {
+      const entity = letsee.getEntity(this.props.data.viewer.Message.entity.uri);
 
       if (entity) {
         entity.removeRenderable(this.messageObject);
       }
     }
   }
-
-  props: MessagePropTypes;
 
   renderAR({ entity: { uri }, author }: MessageType) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
@@ -186,11 +185,11 @@ class Message extends Component {
             if (
               !this.props.data.loading &&
               !this.props.data.error &&
-              this.props.data.Message &&
+              this.props.data.viewer && this.props.data.viewer.Message &&
               this.props.currentEntity !== null &&
-              this.props.currentEntity.uri === this.props.data.Message.entity.uri
+              this.props.currentEntity.uri === this.props.data.viewer.Message.entity.uri
             ) {
-              this.renderAR(this.props.data.Message);
+              this.renderAR(this.props.data.viewer.Message);
             }
           })}
         />
@@ -219,7 +218,7 @@ class Message extends Component {
       ...other
     } = this.props;
 
-    const { loading, error, Message: message } = data;
+    const { loading, error, viewer } = data;
 
     if (loading) {
       return (
@@ -229,7 +228,7 @@ class Message extends Component {
       );
     }
 
-    if (error || !message) {
+    if (error || !viewer || !viewer.Message) {
       // TODO
       return (
         <h1>404</h1>
@@ -243,7 +242,7 @@ class Message extends Component {
     }
 
     const { opened } = this.state;
-    const { entity: { uri, name, image }, author } = message;
+    const { entity: { uri, name, image }, author } = viewer.Message;
     const entityTracked = currentEntity !== null && currentEntity.uri === uri;
     const { firstname, lastname } = author;
     const authorName = `${firstname} ${lastname}`.trim();
@@ -272,7 +271,7 @@ class Message extends Component {
 
         {opened && (
           <MessageComponent
-            data={message}
+            data={viewer.Message}
             currentEntity={currentEntity === null ? null : currentEntity.uri}
             loadingEntity={loadingEntity}
           />
@@ -286,6 +285,7 @@ class Message extends Component {
   }
 }
 
+// TODO subscribe for message update
 export default connect(
   ({
     entities: { current },

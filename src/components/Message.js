@@ -62,7 +62,7 @@ class Message extends Component<MessagePropTypes, MessageState> {
 
     return (
       <div {...other}>
-        {entityTracked && !loadingEntity && stickers.map(sticker => (
+        {entityTracked && !loadingEntity && stickers.edges.map(({ node: sticker }) => (
           <Sticker
             key={sticker.id}
             data={sticker}

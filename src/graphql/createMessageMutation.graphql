@@ -1,6 +1,6 @@
-query getMessageQuery($id: ID!) {
-  viewer {
-    Message(id: $id) {
+mutation createMessageMutation($input: CreateMessageInput) {
+  createMessage(input: $input) {
+    message {
       ...MessageFragment
     }
   }

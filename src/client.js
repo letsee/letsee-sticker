@@ -7,7 +7,7 @@ const wsClient = new SubscriptionClient(process.env.GRAPHCOOL_SUBSCRIPTIONS_ENDP
 });
 
 const networkInterface = createNetworkInterface({
-  uri: process.env.GRAPHCOOL_SIMPLE_ENDPOINT,
+  uri: process.env.GRAPHCOOL_RELAY_ENDPOINT,
 });
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(

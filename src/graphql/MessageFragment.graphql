@@ -1,11 +1,3 @@
-query getMessageQuery($id: ID!) {
-  viewer {
-    Message(id: $id) {
-      ...MessageFragment
-    }
-  }
-}
-
 fragment MessageFragment on Message {
 	__typename
   id
