@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ShareButton from './ShareButton';
-import MessageMeta from '../MessageMeta';
+import MessageMeta from './MessageMeta';
 import ShareModal from '../ShareModal';
-import Sticker from '../Sticker';
+import Sticker from './Sticker';
 import openCapture from '../../openCapture';
 import openKakaoLink from '../../openKakaoLink';
 import type { Message as MessageType } from '../../types';

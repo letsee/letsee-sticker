@@ -6,13 +6,13 @@ import clamp from 'lodash.clamp';
 import {
   MIN_DIAGONAL,
   MAX_DIAGONAL,
-} from '../constants';
+} from '../../constants';
 import type {
   Entity,
   Sticker as StickerType,
   StickerRotation,
   StickerQuaternion,
-} from '../types';
+} from '../../types';
 
 const StickerMixin = css`
   box-sizing: border-box;

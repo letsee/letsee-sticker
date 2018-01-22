@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import type { User } from '../types';
+import type { User } from '../../types';
 
 const AuthorName = styled.div`
   font-family: AppleSDGothicNeo, sans-serif;
