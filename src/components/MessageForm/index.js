@@ -6,30 +6,30 @@ import Transition from 'react-transition-group/Transition';
 import clamp from 'lodash.clamp';
 import AddEmojiButton from './AddEmojiButton';
 import AddTextButton from './AddTextButton';
-import CloseButton from './CloseButton';
-import CompleteButton from './CompleteButton';
-import HelpButton from './HelpButton';
-import TipButton from './TipButton';
+import CloseButton from '../CloseButton';
+import CompleteButton from '../CompleteButton';
+import HelpButton from '../HelpButton';
+import TipButton from '../TipButton';
 import EmojiDrawer from './EmojiDrawer';
-import Frame from './Frame';
-import TargetGuide from './TargetGuide';
+import Frame from '../Frame';
+import TargetGuide from '../TargetGuide';
 import TextInput from './TextInput';
 import Transformation from './Transformation';
-import TranslateZ from './Transformation/TranslateZ';
+import TranslateZ from './TranslateZ';
 import MessagePrivacy from './MessagePrivacy';
-import manager from '../manager';
-import getObjectById from '../getObjectById';
+import manager from '../../manager';
+import getObjectById from '../../getObjectById';
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
-} from '../constants';
+} from '../../constants';
 import styles from './MessageForm.css';
 import type {
   MessageForm as MessageFormType,
   Sticker,
   StickerPosition,
   StickerQuaternion,
-} from '../types';
+} from '../../types';
 
 const transitionDuration = 200;
 

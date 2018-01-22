@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import CloseButton from '../CloseButton';
 import Spinner from '../Spinner';
 import Button from '../Button';
+import { EntityProp } from '../../types';
+import type { Entity } from '../../types';
 
 const Container = styled.div`
   position: absolute;
@@ -80,9 +82,7 @@ type MessagePrivacyPropTypes = {
   error: boolean,
   submitting: boolean,
   public: boolean,
-  entity: {
-    name: string,
-  },
+  entity: Entity,
   onPublicChange?: boolean => mixed, // eslint-disable-line react/require-default-props
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
   onSubmit?: MouseEventHandler, // eslint-disable-line react/require-default-props
@@ -93,9 +93,7 @@ class MessagePrivacy extends Component<MessagePrivacyPropTypes> {
   static propTypes = {
     error: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
-    entity: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-    }).isRequired,
+    entity: EntityProp.isRequired,
     onPublicChange: PropTypes.func, // eslint-disable-line react/require-default-props
     onClose: PropTypes.func, // eslint-disable-line react/require-default-props
     onSubmit: PropTypes.func, // eslint-disable-line react/require-default-props

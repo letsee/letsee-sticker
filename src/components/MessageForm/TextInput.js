@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Button from './Button';
-import { enableManager } from '../manager';
+import Button from '../Button';
+import { enableManager } from '../../manager';
 
 const InputButton = Button.extend`
   position: absolute;
