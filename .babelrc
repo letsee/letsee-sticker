@@ -1,4 +1,4 @@
 {
   "presets": [ ["env", {"modules": false}], "stage-2", "react", "flow" ],
-  "plugins": [ "styled-components" ]
+  "plugins": [ "babel-plugin-styled-components" ]
 }

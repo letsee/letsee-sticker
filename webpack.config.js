@@ -30,8 +30,8 @@ module.exports = {
   },
   output: {
     path: outputPath,
-    filename: 'js/[name].[chunkhash].js',
-    chunkFilename: 'js/[name].[chunkhash].js',
+    filename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js',
+    chunkFilename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js',
     publicPath,
   },
   devServer: {
@@ -73,7 +73,7 @@ module.exports = {
       names: ['react', 'vendor'],
     }),
     new ExtractTextPlugin({
-      filename: 'css/[name].[contenthash].css',
+      filename: 'css/[name].css',
       allChunks: true,
     }),
     new HtmlWebpackPlugin({
