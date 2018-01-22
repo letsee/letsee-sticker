@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import TargetGuide from './TargetGuide';
+import TargetGuide from '../TargetGuide';
 import HomeButton from './HomeButton';
 import NewsButton from './NewsButton';
-import HelpButton from './HelpButton';
+import HelpButton from '../HelpButton';
 
 const TrackMessage = styled.div`
   position: absolute;
