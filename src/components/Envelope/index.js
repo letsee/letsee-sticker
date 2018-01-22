@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { ImageButton } from '../Button';
+import { UserProp } from '../../types';
 import type { User } from '../../types';
 
 const Container = styled.div`
@@ -83,10 +84,7 @@ const Envelope = ({
 
 Envelope.propTypes = {
   size: PropTypes.number.isRequired,
-  data: PropTypes.shape({
-    firstname: PropTypes.string.isRequired,
-    lastname: PropTypes.string.isRequired,
-  }).isRequired,
+  data: UserProp.isRequired,
   onClick: PropTypes.func, // eslint-disable-line react/require-default-props
 };
 

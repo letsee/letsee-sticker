@@ -3,9 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CompleteButton from '../CompleteButton';
-import TrashButton from '../TrashButton';
-import TipButton from '../TipButton';
-import ResetButton from '../ResetButton';
+import TrashButton from './TrashButton';
+import TipButton from './TipButton';
+import ResetButton from './ResetButton';
 
 const NavTopRight = styled.div`
   position: absolute;

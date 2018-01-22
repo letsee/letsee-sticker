@@ -9,7 +9,7 @@ import AddTextButton from './AddTextButton';
 import CloseButton from '../CloseButton';
 import CompleteButton from '../CompleteButton';
 import HelpButton from '../HelpButton';
-import TipButton from '../TipButton';
+import TipButton from './TipButton';
 import EmojiDrawer from './EmojiDrawer';
 import Frame from '../Frame';
 import TargetGuide from '../TargetGuide';
