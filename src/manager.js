@@ -1,6 +1,7 @@
 // @flow
 import Hammer from 'hammerjs';
 
+// hammerjs manager for sticker transform
 const manager = new Hammer.Manager(document.body);
 const Pan = new Hammer.Pan({ pointers: 0 });
 const Rotate = new Hammer.Rotate();

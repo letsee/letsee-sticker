@@ -4,6 +4,7 @@ import qs from 'qs';
 const LETSEE_BROWSER_LOAD_URL = 'https://browser.letsee.io/load';
 const GOOGLE = 'https://vm82m.app.goo.gl/';
 
+// generate kakao link url for message with given id
 const generateKakaoLinkUrl = (messageId: string): string => {
   const protocol = typeof window !== 'undefined' && window !== null ? window.location.protocol : 'http';
   const host = typeof window !== 'undefined' && window !== null ? window.location.host : 'apps.letsee.io'; // TODO host
@@ -24,6 +25,7 @@ const generateKakaoLinkUrl = (messageId: string): string => {
   return `${GOOGLE}?${qs.stringify(params)}`;
 };
 
+// open kakaotalk app with the given info
 const openKakaoLink = (messageId: string, authorName: string, entityName: string, options = {}) => {
   const kakaoLinkUrl = generateKakaoLinkUrl(messageId);
 

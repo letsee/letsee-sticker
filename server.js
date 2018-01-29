@@ -40,7 +40,7 @@ app.use(sassMiddleware({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('*', (req, res) => {
+app.get('*', (req, res) => { // render index for all routes
   res.render('index');
 });
 

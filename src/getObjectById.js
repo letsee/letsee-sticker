@@ -1,4 +1,5 @@
 // @flow
+// traverse 3D graph and find an object by uuid
 const getObjectById = (parent, id: string): ?Object3D => {
   let result = null;
 

@@ -9,6 +9,7 @@ const envFile = './.env';
 dotenv.config({ path: envFile });
 const isDev = process.env.NODE_ENV !== 'production';
 
+// node server webpack config
 module.exports = {
   entry: {
     'server.bundle': './server.js',

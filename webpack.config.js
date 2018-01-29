@@ -13,6 +13,7 @@ const isDev = process.env.NODE_ENV !== 'production';
 const publicPath = process.env.PUBLIC_PATH || '/';
 const outputPath = path.resolve(path.join(path.resolve(__dirname, 'public'), publicPath));
 
+// webpack client build config
 module.exports = {
   devtool: isDev ? 'source-map' : false,
   entry: {
@@ -36,7 +37,7 @@ module.exports = {
   devServer: {
     contentBase: outputPath,
     compress: true,
-    host: '192.168.1.192',
+    host: '0.0.0.0',
     port: 3000,
     historyApiFallback: true,
   },

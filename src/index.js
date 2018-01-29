@@ -32,7 +32,7 @@ runSaga(sagas, getFirebase);
 const history = syncHistoryWithStore(browserHistory, store);
 
 match({ history, routes }, (err, redirect, renderProps) => {
-  Kakao.init(process.env.KAKAO_APP_KEY);
+  Kakao.init(process.env.KAKAO_APP_KEY); // initialize kakao sdk
   const app = document.getElementById('app');
 
   const handleWindowResize = () => {
@@ -46,7 +46,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
   window.addEventListener('letsee.load', () => {
     store.dispatch(letseeLoad());
 
-    letsee.addEventListener('userchange', (e) => {
+    letsee.addEventListener('userchange', (e) => { // set current user data when user info changes
       store.dispatch(setCurrentUser(e.user));
     });
 
@@ -74,7 +74,9 @@ match({ history, routes }, (err, redirect, renderProps) => {
       transform: translate(-50%, -50%);
     `;
 
+    // set entity data loader
     letsee.setLoadingRenderable(loadingRenderable, (e) => {
+      // size loader depending on the size of entity
       const { width, height, depth } = e.pixelSize;
       const realDiagonal = Math.sqrt((width * width) + (height * height));
       const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
@@ -101,9 +103,9 @@ match({ history, routes }, (err, redirect, renderProps) => {
         loadingRenderable.position.setZ(depth / 2);
       }
 
-      store.dispatch(startLoading());
+      store.dispatch(startLoading()); // dispatch action for entity data loading start event
     }, () => {
-      store.dispatch(stopLoading());
+      store.dispatch(stopLoading()); // dispatch action for entity data loading end event
     });
 
     letsee.addEventListener('trackstart', (e) => {

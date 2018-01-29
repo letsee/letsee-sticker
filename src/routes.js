@@ -21,7 +21,7 @@ const routes = {
   },
   childRoutes: [
     {
-      path: 'news',
+      path: 'news', // a list of news
       getComponent: (nextState, callback) => {
         import('./pages/News').then((module) => {
           callback(null, module.default);
@@ -32,7 +32,7 @@ const routes = {
       },
     },
     {
-      path: ':id',
+      path: ':id', // individual message
       getComponent: (nextState, callback) => {
         import('./pages/Message').then((module) => {
           callback(null, module.default);
