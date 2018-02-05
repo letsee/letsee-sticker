@@ -121,7 +121,7 @@ class Message extends Component {
     super(props);
 
     this.state = {
-      opened: false,
+      opened: false, // indicates whether message is opened
     };
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
@@ -167,6 +167,8 @@ class Message extends Component {
   renderAR({ data: { entity: { uri }, author } }: MessagePropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const entity = letsee.getEntity(uri);
+
+      // resize renderable according to entity size
       const { width, height, depth } = entity.size;
       let realDiagonal = MAX_DIAGONAL;
 
@@ -183,6 +185,7 @@ class Message extends Component {
 
       this.messageObject.scale.setScalar(realToClamped);
 
+      // bring renderable to the front of entity
       if (typeof depth !== 'undefined' && depth !== null) {
         this.messageObject.position.setZ(depth / 2);
       }
@@ -217,7 +220,7 @@ class Message extends Component {
 
     const loading = !isLoaded(data);
 
-    if (loading) {
+    if (loading) { // loading data from firebase
       return (
         <SpinnerContainer>
           <Spinner />
@@ -227,7 +230,7 @@ class Message extends Component {
 
     const empty = isEmpty(data);
 
-    if (empty || !data) {
+    if (empty || !data) { // record does not exist
       // TODO
       return (
         <h1>404</h1>

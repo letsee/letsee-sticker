@@ -35,7 +35,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
   Kakao.init(process.env.KAKAO_APP_KEY); // initialize kakao sdk
   const app = document.getElementById('app');
 
-  const handleWindowResize = () => {
+  const handleWindowResize = () => { // resize app when window resizes
     app.style.width = `${document.documentElement.clientWidth}px`;
     app.style.height = `${document.documentElement.clientHeight}px`;
   };

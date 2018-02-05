@@ -1,4 +1,5 @@
 // @flow
+// initial redux store state
 export const messagesList = {
   public: true,
   loading: true,

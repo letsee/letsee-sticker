@@ -4,6 +4,9 @@ import {
   END_TRACK_ENTITY,
 } from '../actions';
 
+/**
+ * reducer for currently tracked entity uri
+ */
 const currentEntity = (state: string | null = null, action) => {
   switch (action.type) {
     case START_TRACK_ENTITY:

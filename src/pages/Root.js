@@ -87,14 +87,14 @@ const Root = ({
           onPublicChange={newPublic => dispatch(setMessagePrivacy(newPublic))}
           onClose={() => dispatch(destroyMessageForm())}
           onSubmit={() => {
-            if (currentUser === null) {
+            if (currentUser === null) { // make sure user is logged in
               openLogin();
-            } else if (messageForm !== null) {
+            } else if (messageForm !== null) { // submit message form
               dispatch(submitMessageForm(messageForm));
             }
           }}
           onStickerClick={(id) => {
-            if (!selectedStickerData) {
+            if (!selectedStickerData) { // select clicked sticker
               dispatch(selectSticker(id));
             }
           }}
@@ -121,14 +121,14 @@ const Root = ({
           data={currentEntityData}
           currentUser={currentUser}
           onNewClick={() => {
-            if (currentUser === null) {
+            if (currentUser === null) { // make sure user is logged in
               openLogin();
             } else {
-              dispatch(initMessageForm(currentEntityData, currentUser));
+              dispatch(initMessageForm(currentEntityData, currentUser)); // start message form
             }
           }}
           onEditClick={(message: MessageWithId) => {
-            if (currentUser !== null && message.author.uid === currentUser.uid) {
+            if (currentUser !== null && message.author.uid === currentUser.uid) { // make sure user is logged in and authorized
               const { author, entity, stickers, ...other } = message;
 
               const stickersWithId = stickers.map(sticker => ({
@@ -143,7 +143,7 @@ const Root = ({
 
               const stickerIds = stickersWithId.map(sticker => sticker.id);
 
-              const messageFormData = {
+              const messageFormData = { // edit message form data
                 ...other,
                 author: currentUser,
                 entity: entities.byUri[entity.uri],

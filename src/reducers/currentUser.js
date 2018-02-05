@@ -4,6 +4,9 @@ import {
 } from '../actions';
 import type { MessageAuthor } from '../types';
 
+/**
+ * reducer for currently logged in user
+ */
 const currentUser = (state: MessageAuthor | null = null, action) => {
   switch (action.type) {
     case SET_CURRENT_USER:

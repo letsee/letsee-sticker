@@ -58,6 +58,9 @@ const allUris = (state = [], action) => {
   }
 };
 
+/**
+ * reducer for entities that have been tracked
+ */
 const entities = combineReducers({
   byUri,
   allUris,
