@@ -91,7 +91,7 @@ class TextInput extends Component {
   };
 
   componentDidMount() {
-    enableManager(false);
+    enableManager(false); // disable hammer js
     this.resizeTextarea();
 
     setTimeout(() => {
@@ -106,6 +106,7 @@ class TextInput extends Component {
   textarea: HTMLTextAreaElement;
   props: TextInputPropTypes;
 
+  // resize textarea to fit text content
   resizeTextarea() {
     const textarea = this.textarea;
 

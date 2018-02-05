@@ -15,6 +15,9 @@ import {
 import { messagesList as initialState } from '../initialState';
 import type { MessagesList } from '../types';
 
+/**
+ * reducer for list of messages (public/my) for an entity
+ */
 const messagesList = (state: MessagesList = initialState, action): MessagesList | null => {
   switch (action.type) {
     case START_TRACK_ENTITY:

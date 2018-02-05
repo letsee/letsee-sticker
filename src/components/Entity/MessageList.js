@@ -26,6 +26,7 @@ import type {
   MessageFormEntity,
 } from '../../types';
 
+// select latest message from messages object
 const selectLatestMessage = (messagesObject: { [id: string]: MessageType }): MessageWithId | null => {
   const messageIds: string[] = sortBy(keys(messagesObject));
   const lastMessageId: string | null = messageIds[messageIds.length - 1] || null;
@@ -104,6 +105,7 @@ const SpinnerContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
+// subscribe to current message with the given handler
 const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
   const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
 
@@ -112,6 +114,7 @@ const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null,
   }
 };
 
+// unsubscribe from current message with the given handler
 const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
   const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
 
@@ -145,11 +148,12 @@ class MessageList extends Component {
   componentWillMount() {
     const { firebase, data, currentUser } = this.props;
     const userId = currentUser !== null && !data.public ? currentUser.uid : null;
-    subscribeToCurrent(firebase, data, userId, this.handleMessageChange);
+    subscribeToCurrent(firebase, data, userId, this.handleMessageChange); // subscribe to current message
   }
 
   componentDidMount() {
-    enableManager(false);
+    enableManager(false); // disable default hammerjs behavior
+    // set up pagination swipe
     manager.get('swipe').set({ enable: true });
     manager.on('swipeleft', this.prev);
     manager.on('swiperight', this.next);
@@ -157,7 +161,7 @@ class MessageList extends Component {
   }
 
   componentWillReceiveProps(nextProps: MessageListPropTypes) {
-    if (this.props.data.current !== nextProps.data.current) {
+    if (this.props.data.current !== nextProps.data.current) { // update current message
       const prevUserId = this.props.currentUser !== null && !this.props.data.public ? this.props.currentUser.uid : null;
       const userId = nextProps.currentUser !== null && !nextProps.data.public ? nextProps.currentUser.uid : null;
       unsubscribeFromCurrent(this.props.firebase, this.props.data, prevUserId, this.handleMessageChange);
@@ -170,8 +174,9 @@ class MessageList extends Component {
   componentWillUnmount() {
     const { firebase, data, currentUser } = this.props;
     const userId = currentUser !== null && !data.public ? currentUser.uid : null;
-    unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange);
+    unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange); // unsubscribe
 
+    // cleanup hammerjs
     manager.off('swipeleft', this.prev);
     manager.off('swiperight', this.next);
     manager.get('swipe').set({ enable: false });
@@ -190,9 +195,9 @@ class MessageList extends Component {
     const messagesObject = snapshot.val();
     const data = selectLatestMessage(messagesObject);
 
-    if (data === null) {
+    if (data === null) { // if data is null message has been deleted
       onMessageDelete && onMessageDelete();
-    } else {
+    } else { // update message data
       onMessageReceive && onMessageReceive(data);
     }
   };
@@ -214,10 +219,11 @@ class MessageList extends Component {
       const { uri, size: { width, height, depth } } = e;
       const entity = letsee.getEntity(uri);
 
-      if (this.object.parent !== entity.object) {
+      if (this.object.parent !== entity.object) { // add renderable to entity if not already added
         entity.addRenderable(this.object);
       }
 
+      // size renderable relative to entity diagonal
       let realDiagonal = MAX_DIAGONAL;
 
       if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
@@ -296,12 +302,12 @@ class MessageList extends Component {
     } = this.props;
 
     const { entityUri, empty, current, message, error, loading, first, last } = messagesList;
-    const dataExists = !empty && current !== null && !error;
+    const dataExists = !empty && current !== null && !error; // make sure current message data exists
 
     return (
       <div {...other}>
         <Actions>
-          {message !== null && dataExists && currentUser !== null && message.author.uid === currentUser.uid && (
+          {message !== null && dataExists && currentUser !== null && message.author.uid === currentUser.uid && ( // if current user owns current message, show edit button
             <ImageButton
               type="button"
               onClick={loading ? null : () => onEditClick && onEditClick(message)}
@@ -332,11 +338,11 @@ class MessageList extends Component {
           </ImageButton>
         </Actions>
 
-        {dataExists && message !== null && current !== first && (
+        {dataExists && message !== null && current !== first && ( // if current is not the first, show next
           <StyledNextButton onClick={loading ? null : () => this.prev()} />
         )}
 
-        {dataExists && message !== null && current !== last && (
+        {dataExists && message !== null && current !== last && ( // if current is not the last, show prev
           <StyledPrevButton onClick={loading ? null : () => this.next()} />
         )}
 

@@ -96,6 +96,9 @@ const stickersAllIds = (state: string[] = [], action): string[] => {
   }
 };
 
+/**
+ * reducer for message form
+ */
 const messageForm = (state: MessageForm | null = null, action): MessageForm | null => {
   switch (action.type) {
     case INIT_MESSAGE_FORM:

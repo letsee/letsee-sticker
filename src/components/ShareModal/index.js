@@ -96,7 +96,7 @@ class ShareModal extends Component {
   props: ShareModalPropTypes;
   body: HTMLDivElement;
 
-  handleWindowClick = (e: TouchEvent) => {
+  handleWindowClick = (e: TouchEvent) => { // close if user clicks outside the modal
     let target = e.target;
 
     while (target !== document.body) {

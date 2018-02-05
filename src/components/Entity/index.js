@@ -94,11 +94,13 @@ class Entity extends Component {
   componentWillMount() {
     const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
     const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
+    // get reference for messages count
     const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
+    // get reference for messages list
     const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
     countref.on('value', this.handleMessagesCountChange);
-    listRef.limitToLast(1).on('value', this.handleLastMessageChange);
-    listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
+    listRef.limitToLast(1).on('value', this.handleLastMessageChange); // track last message for pagination
+    listRef.limitToFirst(1).on('value', this.handleFirstMessageChange); // track first message for pagination
   }
 
   componentWillReceiveProps({
@@ -112,7 +114,7 @@ class Entity extends Component {
     if (
       entityUri !== prevEntityUri ||
       prevUserId !== userId
-    ) {
+    ) { // update firebase refs when entity uri or user info changes
       const prevFirebase = this.props.firebase.database();
       const prevCountref = prevFirebase.ref(getMessagesCountPath(prevEntityUri, prevUserId));
       const prevListRef = prevFirebase.ref(getMessagesListPath(prevEntityUri, prevUserId)).orderByKey();
@@ -129,6 +131,7 @@ class Entity extends Component {
   }
 
   componentWillUnmount() {
+    // cleanup listeners when unmounting
     const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
     const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
     const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
@@ -144,16 +147,16 @@ class Entity extends Component {
     const { firebase, messagesList, currentUser, dispatch } = this.props;
     const { first, current, entityUri, public: isPublic, loading } = messagesList;
 
-    if (first !== current && !loading) {
+    if (first !== current && !loading) { // make sure current message is not the first of the list
       dispatch(fetchPrev());
       const path = getMessagesListPath(entityUri, (currentUser !== null && !isPublic) ? currentUser.uid : null);
       const ref = firebase.database().ref(path).orderByKey();
-      const filteredRef = current === null ? ref.limitToLast(1) : ref.endAt(current).limitToLast(2);
+      const filteredRef = current === null ? ref.limitToLast(1) : ref.endAt(current).limitToLast(2); // get previous message from current
 
       filteredRef.once('value', (snapshot) => {
         const messageIds = sortBy(keys(snapshot.val()));
         const messageId = messageIds.length > 0 ? messageIds[0] : null;
-        this.props.dispatch(setCurrentCursor(messageId));
+        this.props.dispatch(setCurrentCursor(messageId)); // set current message cursor
       });
     }
   }
@@ -162,27 +165,27 @@ class Entity extends Component {
     const { firebase, messagesList, currentUser, dispatch } = this.props;
     const { last, current, entityUri, public: isPublic, loading } = messagesList;
 
-    if (last !== current && !loading) {
+    if (last !== current && !loading) { // make sure current message is not the last of the list
       dispatch(fetchNext());
       const path = getMessagesListPath(entityUri, (currentUser !== null && !isPublic) ? currentUser.uid : null);
       const ref = firebase.database().ref(path).orderByKey();
-      const filteredRef = current === null ? ref.limitToLast(1) : ref.startAt(current).limitToFirst(2);
+      const filteredRef = current === null ? ref.limitToLast(1) : ref.startAt(current).limitToFirst(2); // get next message from current
 
       filteredRef.once('value', (snapshot) => {
         const messageIds = sortBy(keys(snapshot.val()));
         const messageId = messageIds.length > 0 ? messageIds[messageIds.length - 1] : null;
-        this.props.dispatch(setCurrentCursor(messageId));
+        this.props.dispatch(setCurrentCursor(messageId)); // set current message cursor
       });
     }
   }
 
-  handleLastMessageChange = (snapshot) => {
+  handleLastMessageChange = (snapshot) => { // keep track of last message
     const messageIds = sortBy(keys(snapshot.val()));
     const messageId = messageIds.length > 0 ? messageIds[messageIds.length - 1] : null;
     this.props.dispatch(setLastCursor(messageId));
   };
 
-  handleFirstMessageChange = (snapshot) => {
+  handleFirstMessageChange = (snapshot) => { // keep track of first message
     const messageIds = sortBy(keys(snapshot.val()));
     const messageId = messageIds.length > 0 ? messageIds[0] : null;
     this.props.dispatch(setFirstCursor(messageId));
@@ -205,6 +208,7 @@ class Entity extends Component {
       ...other
     } = this.props;
 
+    // if user is logged in and current mode is public, the mode can change to private
     const canBecomePrivate = messagesList.public && currentUser !== null;
 
     return (

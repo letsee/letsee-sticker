@@ -116,7 +116,7 @@ class MessagePrivacy extends Component {
   props: MessagePrivacyPropTypes;
   body: HTMLDivElement;
 
-  handleWindowClick = (e: TouchEvent) => {
+  handleWindowClick = (e: TouchEvent) => { // close if user clicks outside
     if (!this.props.submitting) {
       let target = e.target;
 

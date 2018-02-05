@@ -6,6 +6,9 @@ import {
   DELETE_STICKER,
 } from '../actions';
 
+/**
+ * reducer for currently selected sticker
+ */
 const selectedSticker = (state: string | null = null, action) => {
   switch (action.type) {
     case ADD_STICKER:

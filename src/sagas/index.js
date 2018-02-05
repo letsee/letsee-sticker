@@ -25,7 +25,7 @@ function* persistToFirebase(getFirebase, id: string | null, message: Message) {
   const firebase = getFirebase().database();
   let messageRef;
 
-  if (id === null) {
+  if (id === null) { // if id is null message is new record
     messageRef = firebase.ref('messages').push();
   } else {
     messageRef = firebase.ref(`/messages/${id}`);
@@ -39,7 +39,7 @@ function* persistToFirebase(getFirebase, id: string | null, message: Message) {
 
   while (!messageSet) {
     try {
-      yield messageRef.set(message);
+      yield messageRef.set(message); // retry setting message until success
       messageSet = true;
     } catch (e) {
       // TODO retry??
@@ -47,7 +47,7 @@ function* persistToFirebase(getFirebase, id: string | null, message: Message) {
     }
   }
 
-  yield all([
+  yield all([ // update user's messages and public messages subtree
     firebase.ref(`${authorMessagesPath}/${messageId}`).set(message),
     firebase.ref(`${publicMessagesPath}/${messageId}`).set(message.public ? message : null),
   ]);
@@ -60,9 +60,12 @@ function* submitMessageForm(getFirebase) {
     const submitAction = yield take(SUBMIT_MESSAGE_FORM);
 
     try {
+      // get current user data
       const currentUser = yield select(state => state.currentUser);
 
+      // make sure user is logged in
       if (currentUser !== null && submitAction.payload.author.uid === currentUser.uid) {
+        // format data for persistence
         const {
           id,
           author: {
@@ -96,13 +99,14 @@ function* submitMessageForm(getFirebase) {
           timestamp: timestamp || getFirebase().database.ServerValue.TIMESTAMP,
         };
 
+        // race 3s timeout, API call and user cancel action
         const { firebase } = yield race({
           firebase: call(persistToFirebase, getFirebase, id, message),
           timeout: call(delay, 3000), // TODO timeout?
           destroy: take(DESTROY_MESSAGE_FORM),
         });
 
-        if (firebase) {
+        if (firebase) { // if firebase submits before timeout or user cancel action
           yield put(submitMessageFormSuccess(firebase.key));
           yield put(destroyMessageForm());
           yield put(setPublic(false));

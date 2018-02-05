@@ -85,9 +85,9 @@ class EmojiDrawer extends Component {
   };
 
   componentDidMount() {
-    enableManager(false);
+    enableManager(false); // disable hammerjs
 
-    if (typeof window !== 'undefined' && window !== null) {
+    if (typeof window !== 'undefined' && window !== null) { // guard for ssr
       window.addEventListener('touchend', this.handleWindowClick);
       window.addEventListener('resize', this.handleWindowResize);
     }
@@ -108,7 +108,7 @@ class EmojiDrawer extends Component {
     this.setState({ height: document.documentElement.clientHeight - 150 });
   };
 
-  handleWindowClick = (e: TouchEvent) => {
+  handleWindowClick = (e: TouchEvent) => { // if user clicks outside thet drawer, close
     let target = e.target;
 
     while (target !== document.body) {
@@ -152,7 +152,7 @@ class EmojiDrawer extends Component {
             </Row>
           ))}
 
-          {emojis.length < emojiListLength && (
+          {emojis.length < emojiListLength && ( // paginate emojis
             <Waypoint
               key={emojis[emojis.length - 1]}
               fireOnRapidScroll

@@ -93,7 +93,7 @@ class Sticker extends Component {
 
   componentWillReceiveProps(nextProps: StickerPropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      if (
+      if ( // make sure data is different to call render again
         nextProps.entity.uri !== this.props.entity.uri ||
         nextProps.data.type !== this.props.data.type ||
         nextProps.data.text !== this.props.data.text ||
@@ -114,7 +114,7 @@ class Sticker extends Component {
       const entity = letsee.getEntity(this.props.entity.uri);
 
       if (entity) {
-        entity.removeRenderable(this.stickerObject);
+        entity.removeRenderable(this.stickerObject); // clean up
       }
     }
   }
@@ -140,12 +140,14 @@ class Sticker extends Component {
       }
 
       const { position, rotation, quaternion, scale, text, type } = data;
+      // set position and scale of the sticker
       this.stickerObject.position.set(position.x, position.y, position.z);
       this.stickerObject.scale.setScalar(scale * realToClamped);
 
-      if (quaternion) {
+      // set rotation
+      if (quaternion) { // new stickers have quaternions
         this.stickerObject.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-      } else {
+      } else { // old stickers have euler rotations
         this.stickerObject.quaternion.setFromEuler(new Euler(rotation.x, rotation.y, rotation.z));
       }
 

@@ -200,6 +200,7 @@ class MessageForm extends Component {
   };
 
   componentWillMount() {
+    // add event listeners for sticker transformation
     manager.on('panmove', this.handlePanMove);
     manager.on('panend', this.handlePanEnd);
     manager.on('pinchmove', this.handlePinchMove);
@@ -222,6 +223,7 @@ class MessageForm extends Component {
   }
 
   componentWillUnmount() {
+    // remove event listeners for sticker transformation
     manager.off('panmove', this.handlePanMove);
     manager.off('panend', this.handlePanEnd);
     manager.off('pinchmove', this.handlePinchMove);
@@ -263,6 +265,7 @@ class MessageForm extends Component {
       entity.addRenderable(this.messageObject);
     }
 
+    // clean up existing stickers
     for (let i = this.messageObject.children.length; i >= 0; i -= 1) {
       const child = this.messageObject.children[i];
 
@@ -275,7 +278,7 @@ class MessageForm extends Component {
       }
     }
 
-    if (stickersArray.length === 0) {
+    if (stickersArray.length === 0) { // if there are no stickers
       const buttonsTmp = document.createElement('template');
       const framesTmp = document.createElement('template');
 
@@ -330,7 +333,8 @@ class MessageForm extends Component {
 
       this.messageObject.add(framesAR);
       this.messageObject.add(buttonsAR);
-    } else {
+    } else { // if there are stickers
+      // iterate and add sticker renderable to entity
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale } = stickersArray[i];
         const selected = selectedSticker && selectedSticker.id === id;
@@ -349,6 +353,7 @@ class MessageForm extends Component {
 
         element.className = styles[type];
 
+        // set size depending on sticker type
         if (type === 'emoji') {
           const fontSize = diagonal * 0.22;
           element.style.fontSize = `${fontSize}px`;
@@ -360,6 +365,7 @@ class MessageForm extends Component {
           element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
         }
 
+        // set opactiy depending of selected sticker data
         if (selectedSticker && !selected) {
           element.style.opacity = '0.3';
         } else {
@@ -378,7 +384,7 @@ class MessageForm extends Component {
 
         element.innerHTML = textWithBreaks;
 
-        if (selected) {
+        if (selected) { // if sticker is selected, show frame
           const frameTmp = document.createElement('template');
           const frameImageSize = diagonal * Math.sqrt(2) * 0.06;
 
@@ -411,7 +417,7 @@ class MessageForm extends Component {
     ) {
       const { deltaX, deltaY, pointers } = e;
 
-      if (pointers.length === 1) {
+      if (pointers.length === 1) { // one finger pan - translate
         const { width, height, depth } = entity.size;
         const { clientWidth, clientHeight } = document.documentElement;
         const realDiagonal = Math.sqrt((width * width) + (height * height));
@@ -425,6 +431,7 @@ class MessageForm extends Component {
             max = realDiagonal;
           }
 
+          // clamp sticker position
           this.selectedStickerObject.position.z = clamp(z - deltaY * ratio, -1.5 * max, 1.5 * max);
           this.translateZ.position.copy(this.selectedStickerObject.position);
           this.translateZ.scale.copy(this.selectedStickerObject.scale);
@@ -440,7 +447,7 @@ class MessageForm extends Component {
             z,
           );
         }
-      } else if (pointers.length === 3 && !this.press) {
+      } else if (pointers.length === 3 && !this.press) { // three finger pan - rotation
         const { x, y, z, w } = selectedSticker.quaternion;
         const q = new Quaternion(x, y, z, w);
         const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
@@ -476,7 +483,7 @@ class MessageForm extends Component {
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
       this.selectedStickerObject.uuid === selectedSticker.id &&
       !this.press
-    ) {
+    ) { // two finger pinch - translate and scale
       const { deltaX, deltaY, scale } = e;
       const { width, height } = entity.size;
 
@@ -531,7 +538,7 @@ class MessageForm extends Component {
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
       this.selectedStickerObject.uuid === selectedSticker.id &&
       !this.press
-    ) {
+    ) { // two finger rotate - rotate around Z
       const { x, y, z, w } = selectedSticker.quaternion;
       const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
       const rotateAxis = new Vector3(0, 0, -1).applyQuaternion(conjugate).normalize();
@@ -570,7 +577,7 @@ class MessageForm extends Component {
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
       this.selectedStickerObject.uuid === selectedSticker.id
-    ) {
+    ) { // press triggers translation along Z axis
       this.press = true;
       this.translateZ.position.copy(this.selectedStickerObject.position);
       this.translateZ.scale.copy(this.selectedStickerObject.scale);
@@ -578,7 +585,7 @@ class MessageForm extends Component {
     }
   };
 
-  handleTransform() {
+  handleTransform() { // update selected sticker's transform
     const { width, height } = this.props.data.entity.size;
     const { position, quaternion, scale } = this.selectedStickerObject;
 

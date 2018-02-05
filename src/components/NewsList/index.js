@@ -158,7 +158,7 @@ class NewsList extends Component {
   };
 
   componentDidMount() {
-    enableManager(false);
+    enableManager(false); // disable hammerjs
   }
 
   componentWillUnmount() {
