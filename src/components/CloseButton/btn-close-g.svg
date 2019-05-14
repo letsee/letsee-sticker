@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54">
-    <g fill="none" fill-rule="evenodd">
-        <path d="M0 0h54v54H0z"/>
-        <g fill="#9F9F9F" opacity=".9" transform="rotate(45 -.314 38.314)">
-            <rect width="2.764" height="21.721" x="9.479" rx="1.382"/>
-            <rect width="21.721" height="2.764" y="9.479" rx="1.382"/>
-        </g>
-    </g>
-</svg>

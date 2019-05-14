@@ -1,7 +1,0 @@
-fragment EntityFragment on Entity {
-  __typename
-  id
-  uri
-  name
-  image
-}
