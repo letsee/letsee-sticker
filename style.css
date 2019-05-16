@@ -482,7 +482,7 @@ icon-view-sucsess img{
     height: 45px;
     background-image: url("assets/add_content.png");
     background-size: 100%;
-    z-index: 10;
+    z-index: 20;
     opacity: 0.5;
     display: none;
     -webkit-transition: all 100ms linear;
@@ -506,3 +506,29 @@ icon-view-sucsess img{
 #addLink { background-image: url("assets/add_link.png"); }
 #addSearch { background-image: url("assets/add_search.png"); }
 #addYoutube { background-image: url("assets/add_youtube.png"); }
+
+/* Help Button css */
+
+#btnHelp {
+    width: 30px;
+    position: absolute;
+    top: 53px;
+    right: 10px;
+    z-index: 14;
+    display: block;
+}
+
+#containerHelp {
+    opacity: 1.0;
+    position: absolute;
+    z-index: 11;
+    top:0;
+    box-sizing: border-box;
+    padding: 50px;
+}
+
+#imgHelp {
+    background-color: #EDEDED;
+    border-radius: 10px;
+    display: none;
+}

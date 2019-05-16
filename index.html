@@ -39,11 +39,6 @@
 
       <div class="intro-title"></div>
         <div class="target-intro-wrapper">
-            <img class="target-intro-frame lt" src="assets/frame-b-lt.png" srcset="assets/frame-b-lt@2x.png 2x, assets/frame-b-lt@3x.png 3x">
-            <img class="target-intro-frame rt" src="assets/frame-b-rt.png" srcset="assets/frame-b-rt@2x.png 2x, assets/frame-b-rt@3x.png 3x">
-            <img class="target-intro-frame lb" src="assets/frame-b-lb.png" srcset="assets/frame-b-lb@2x.png 2x, assets/frame-b-lb@3x.png 3x">
-            <img class="target-intro-frame rb" src="assets/frame-b-rb.png" srcset="assets/frame-b-rb@2x.png 2x, assets/frame-b-rb@3x.png 3x">
-
             <div class="target-intro-text">
             </div>
         </div>
@@ -120,13 +115,18 @@
       </div>
     </div>
 
+    <img id="btnHelp" src="assets/help.png" onclick="showHelpImage();" />
+    <div id="containerHelp">
+      <img id="imgHelp">
+      </img>
+    </div>
   </body>
 </html>
 
 <!-- import script -->
 <script type="text/javascript" src="index.js"></script>
 <script type="text/javascript" src="motion.js"></script>
-<script type="text/javascript" src="animation.js"></script>
+<script type="text/javascript" src="layout.js"></script>
 <script type="text/javascript">
   $(function() {
     initLayout();

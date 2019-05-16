@@ -2,8 +2,14 @@
 let w = window.innerWidth;
 let h = window.innerHeight;
 let menu = $("#menu");
+
+// set global elements.
 let btnAdd = document.getElementById("btnAdd");
+let imgHelp = document.getElementById("imgHelp");
+
+// set switchs.
 let isMenuOpen = false;
+let isHelpOpen = false;
 
 // function for doing menu animation
 function showMenu() {
@@ -32,6 +38,7 @@ function showAddBtn(isShow) {
 
 }
 
+// function to set layout when app initialize.
 function initLayout() {
 
   btnAdd.style.top = ((h / 2) - ($(btnAdd).height() / 2)) + "px";
@@ -39,12 +46,11 @@ function initLayout() {
   btnAdd.style.display = "block";
 
   initMenu();
+  initHelpContainer();
 }
 
-
+// function for setting menu layout in the middle.
 function initMenu() {
-
-
 
   menu.css("top", ((h / 2) - (menu.outerHeight() / 2)) + "px");
   menu.css("left", ((w / 2) - (menu.outerWidth() / 2)) + "px");
@@ -85,5 +91,30 @@ function initMenu() {
 
 }
 
+// Function for set Help Button
+function initHelpContainer() {
+  let containerHelp = document.getElementById("containerHelp");
+  containerHelp.style.width = w + "px";
+  containerHelp.style.height = h + "px";
+
+  imgHelp.style.width = "100%";
+  imgHelp.style.height = "100%";
+  imgHelp.src = "assets/web_help.png";
+}
+
+function showHelpImage() {
+
+  // when help image invisible.
+  if(isHelpOpen === false) {
+    imgHelp.style.display = "block";
+    btnAdd.style.display = "none";
+    isHelpOpen = true;
+  } else {
+
+    imgHelp.style.display = "none";
+    btnAdd.style.display = "block";
+    isHelpOpen = false;
+  }
+}
 
 
