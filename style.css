@@ -466,3 +466,43 @@ icon-view-sucsess img{
     text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
     text-align : center;
 }
+
+/* 애니메이션 부분 */
+
+#menu {
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    display: none;
+}
+
+#btnAdd {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background-image: url("assets/add_content.png");
+    background-size: 100%;
+    z-index: 10;
+    opacity: 0.5;
+    display: none;
+    -webkit-transition: all 100ms linear;
+}
+
+#buttons {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.btnMenu {
+    position: absolute;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#addText { background-image: url("assets/add_text.png"); }
+#addImage { background-image: url("assets/add_image.png"); }
+#addLink { background-image: url("assets/add_link.png"); }
+#addSearch { background-image: url("assets/add_search.png"); }
+#addYoutube { background-image: url("assets/add_youtube.png"); }

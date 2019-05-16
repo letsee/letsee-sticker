@@ -18,7 +18,7 @@
   <script src="https://hammerjs.github.io/dist/hammer.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
   <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-
+  <script src="lib/jquery-1.9.1.min.js"></script>
   </head>
   <body>
     <div id="temp" style=" font-size: 36px; position:absolute; border:1px solid red; visibility: hidden;"></div>
@@ -45,8 +45,6 @@
             <img class="target-intro-frame rb" src="assets/frame-b-rb.png" srcset="assets/frame-b-rb@2x.png 2x, assets/frame-b-rb@3x.png 3x">
 
             <div class="target-intro-text">
-                <p>스티커 메세지를 남길</p>
-                <p>제품을 비춰주세요</p>
             </div>
         </div>
       <div class="edit-title">위치/크기 조정</div>
@@ -111,11 +109,31 @@
     </div>
     <div id="target"></div>
 
-    <!-- import script -->
-    <script type="text/javascript" src="index.js"></script>
-    <script type="text/javascript" src="motion.js"></script>
+    <div id="btnAdd" onclick="showMenu(isMenuOpen);"></div>
+    <div id="menu">
+      <div id="buttons">
+        <div id="addText" class="btnMenu" onclick='$("#inputText").fadeIn()'></div>
+        <div id="addImage" class="btnMenu" onclick="addNewImage();"></div>
+        <div id="addLink" class="btnMenu" onclick="saveEdit();"></div>
+        <div id="addSearch" class="btnMenu" onclick="addUcc();"></div>
+        <div id="addYoutube" class="btnMenu" onclick="addNewYoutube();"></div>
+      </div>
+    </div>
 
   </body>
 </html>
+
+<!-- import script -->
+<script type="text/javascript" src="index.js"></script>
+<script type="text/javascript" src="motion.js"></script>
+<script type="text/javascript" src="animation.js"></script>
+<script type="text/javascript">
+  $(function() {
+    initLayout();
+  })
+
+</script>
+
+
 
 <button style="position:absolute;z-index: 1000" onclick="addJungwooText()">정우추가</button>
