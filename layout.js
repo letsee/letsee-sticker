@@ -47,6 +47,7 @@ function initLayout() {
 
   initMenu();
   initHelpContainer();
+  createDOMRenderableFromJson();
 }
 
 // function for setting menu layout in the middle.

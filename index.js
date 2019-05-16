@@ -72,7 +72,6 @@ window.addEventListener('letsee.load', function(){
 
   world = new Object3D();
   content = new Object3D();
-
   var
     param = window.location.href.split("?");
 
@@ -642,6 +641,7 @@ function notification(){
 
 }
 
+// 서버로부터 오는 데이터
 function view(){
 
   if(notificationObject){
@@ -676,7 +676,6 @@ function view(){
     typeLoadControl(6);
 
   };
-
 
 }
 
@@ -1311,6 +1310,7 @@ function select(key){
 
   database.ref('stickers/' + key)
     .once('value')
+    // 데이터를 가져오는 부분
     .then(function(data){
 
       notificationName = data.val().name;
@@ -1332,8 +1332,8 @@ function resizeTextarea(ev) {
   document.getElementById("temp").innerText = this.value;
 
   if(this.value === '') this.style.width = '360px';
-  else this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
-  //   this.style.width = (document.getElementById("temp").offsetWidth+40)+'px';
+  else this.style.width = (document.getElementById("temp").offsetWidth+100)+'px';
+  //   this.style.width = (document.getElementById("temp").offsetWidth+100)+'px';
 
 
 }
@@ -1375,5 +1375,99 @@ function addJungwooText() {
   let jungwooText = createDOMRanderable("<div>이정우 입니다. ^^</div>", 'target-ready-content');
   world.add(jungwooText);
   editObject = jungwooText;
+
+  createDOMRenderableFromJson();
 }
+
+let dData;
+
+function createDOMRenderableFromJson() {
+  dData = [
+    {
+      "text": "더미1",
+      "position": {
+        "x": 100,
+        "y": 100,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1
+    },
+    {
+      "text": "더미2",
+      "position": {
+        "x": -100,
+        "y": 100,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1
+    },
+    {
+      "text": "더미3",
+      "position": {
+        "x": 100,
+        "y": -100,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1
+    },
+    {
+      "text": "더미4",
+      "position": {
+        "x": -100,
+        "y": -100,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1
+    }
+  ];
+
+  dData.forEach(function(item) {
+
+      let element = document.createElement('div');
+      element.style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
+
+      let div = document.createElement('div');
+      div.className = "target-text-content";
+      div.innerHTML = item.text;
+
+      element.appendChild(div);
+      element.className = "renderable-item";
+
+      // element 는 div, object 설정
+      let object = new DOMRenderable(element);
+
+      // 여기서부터 가져온 데이터로 position 등등을 설정함.
+      object.position.set(item.position.x, item.position.y, item.position.z);
+      object.rotateX(item.rotation.x);
+      object.rotateY(item.rotation.y);
+      object.rotateZ(item.rotation.z);
+      object.scale.set(item.scale,item.scale,item.scale);
+
+      world.add(object);
+  });
+
+
+}
+
+
 
