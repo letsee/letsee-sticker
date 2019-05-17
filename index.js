@@ -1378,6 +1378,7 @@ function formatDate(time, format) {
 // "이정우 입니다" 텍스트 추가하기.
 function initDummyData() {
 
+  /*
   // set renderable data
   let dData = [
     {
@@ -1438,6 +1439,7 @@ function initDummyData() {
     }
   ];
   localStorage.setItem("renderables", JSON.stringify(dData));
+  */
   createDOMRenderableFromJson();
 }
 
@@ -1480,5 +1482,29 @@ function addTextItem() {
 
   showInputTextDiv();
   showInputConfirmDiv();
-
 }
+
+
+function addTextComplete(text) {
+  showBtnAddAndMenu();
+
+  let dData = JSON.parse(localStorage.getItem("renderables"));
+  let object = {
+    "text": text,
+    "position": {
+      "x": editObject.position.x,
+      "y": editObject.position.y,
+      "z": editObject.position.z
+    },
+    "rotation": {
+      "x": editObject.rotation.x,
+      "y": editObject.rotation.y,
+      "z": editObject.rotation.z
+    },
+    "scale": editObject.scale.x
+  };
+
+  dData.push(object);
+  localStorage.setItem("renderables", JSON.stringify(dData));
+}
+

@@ -104,7 +104,7 @@
     </div>
     <div id="target"></div>
 
-    <div id="btnAdd" onclick="showMenu(isMenuOpen);"></div>
+    <div id="btnAdd" onclick="showMenuDiv()"></div>
     <div id="menu">
       <div id="buttons">
         <div id="addText" class="btnMenu" onclick='showInputTextDiv()'></div>
@@ -134,7 +134,7 @@
 
 
     <div id="inputConfirm">
-      <div onclick="editSucsess();" class="icon-edit-sucsess">완료</div>
+      <div onclick="addTextComplete($('#inputArea').val());" class="icon-edit-sucsess">완료</div>
       <img onclick="typeLoadControl(1, 0);" src="assets/btn-trash.svg" id="delete-input"/>
       <!--
       <div class="edit-target-see-wrapper">
@@ -159,7 +159,3 @@
   })
 
 </script>
-
-
-
-<button style="position:absolute;z-index: 1000" onclick="initDummyData()">정우추가</button>

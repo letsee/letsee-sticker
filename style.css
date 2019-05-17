@@ -589,6 +589,7 @@ icon-view-sucsess img{
     height:100%;
     top:0;
     display: none;
+    z-index: 30;
 }
 
 .icon-edit-sucsess {
