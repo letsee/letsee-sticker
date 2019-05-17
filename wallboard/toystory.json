@@ -1,0 +1,11 @@
+{
+	"uri":"toystory.json",
+	"name":"toystory",
+	"size":{
+		"width": 140,
+		"height": 200
+	},
+	"scale": 1,
+	"image":"./toystory.jpg",
+	"information":{}
+}
