@@ -50,7 +50,7 @@ body{
     margin-bottom: 5px;
 }
 
-.icon-images.trash{
+.icon-images. {
     margin-top : 80px;
 }
 
@@ -67,16 +67,6 @@ body{
 }
 
 .icon-text-sucsess{
-    font-family: AppleSDGothicNeo, sans-serif;
-    font-size: 18px;
-    font-weight: bold;
-    letter-spacing: 0.4px;
-    margin-right: 14px;
-    margin-top : 14px;
-    text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
-}
-
-.icon-edit-sucsess{
     font-family: AppleSDGothicNeo, sans-serif;
     font-size: 18px;
     font-weight: bold;
@@ -307,7 +297,7 @@ icon-view-sucsess img{
 /* ======================================================================*/
 /* input text ar */
 /* ======================================================================*/
-.input-text-area textarea, textarea{
+.input-text-area textarea{
     resize:none;
     overflow: hidden;
     width  : 360px;
@@ -474,6 +464,7 @@ icon-view-sucsess img{
     height: 150px;
     position: absolute;
     display: none;
+    z-index: 20;
 }
 
 #btnAdd {
@@ -482,7 +473,7 @@ icon-view-sucsess img{
     height: 45px;
     background-image: url("assets/add_content.png");
     background-size: 100%;
-    z-index: 20;
+    z-index: 21;
     opacity: 0.5;
     display: none;
     -webkit-transition: all 100ms linear;
@@ -518,7 +509,7 @@ icon-view-sucsess img{
     display: block;
 }
 
-#containerHelp {
+#divHelp {
     opacity: 1.0;
     position: absolute;
     z-index: 11;
@@ -531,4 +522,92 @@ icon-view-sucsess img{
     background-color: #EDEDED;
     border-radius: 10px;
     display: none;
+}
+
+
+/* input div css */
+
+#inputText {
+    position: absolute;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    background-color:rgb(0, 181, 204);
+    display: none;
+    top:0;
+    text-align: center;
+    opacity: 0.9;
+    padding-top: 6%;
+}
+
+#inputArea {
+    height: 25%;
+    width: 80% !important;
+    padding: 15px;
+    font-size: 12pt;
+    resize: none;
+    border: none;
+    letter-spacing: -0.5px;
+    border-radius: 10px;
+}
+
+#btnLetseeit {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#btnLetseeit img {
+    width: 40%;
+}
+
+.page-header {
+    width: 100%;
+    height: 60px;
+    text-align: center;
+    position: relative;
+}
+
+.page-header p {
+    margin: 0;
+    line-height: 60px;
+    font-size: 13pt;
+    color: white;
+}
+.page-header img {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    width: 30px;
+}
+
+/* 입력한 text 크기조절 및 확인 */
+
+#inputConfirm {
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    display: none;
+}
+
+.icon-edit-sucsess {
+    font-family: AppleSDGothicNeo, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.4px;
+    margin-right: 14px;
+    margin-top : 14px;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    top:5%;
+    right:0;
+    position:absolute;
+
+}
+
+#delete-input {
+    margin-right: 10px;
+    top:70%;
+    right:0;
+    position:absolute;
 }

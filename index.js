@@ -102,6 +102,7 @@ window.addEventListener('letsee.load', function(){
       // letsee.getEntity('unknown').renderables[1].scale.set(0.3,0.3,0.3);
     }
 
+    // 현재 타겟의 uri
     var uri = e.target.uri;
     document.querySelector('.target-intro-wrapper').style.display = 'none';
     document.querySelector('.intro-title').style.display = 'none';
@@ -485,7 +486,7 @@ function typeLoadControl(type, deleted){
       isRedit ? edit(editObject) :
         (function(){
         typeof editText === 'string' ?
-          edit(createDOMRanderable(editText)) :
+          edit(createDOMRenderable(editText)) :
           (function(){
             editText.element.children[0].id = '';
             edit(editText);
@@ -520,22 +521,24 @@ function ready(){
 
   if(isTraking) document.querySelector('.icon-images.create').style.display = 'block';
 
-  renderables.ready.target = createDOMRanderable('<label id="current-target-name">'+name+'</label>', 'target-ready-content');
-  renderables.ready.text   = createDOMRanderable("<div>스티커 메세지를 남겨보세요</div>", 'target-ready-content');
-  renderables.ready.plus   = createDOMRanderable('<img src="assets/btn-add-content.png" srcset="assets/btn-add-content@2x.png 2x, assets/btn-add-content@3x.png 3x">', 'ready-button', createLettet);
+  renderables.ready.target = createDOMRenderable('<label id="current-target-name">'+name+'</label>', 'target-ready-content');
+  renderables.ready.text   = createDOMRenderable("<div>스티커 메세지를 남겨보세요</div>", 'target-ready-content');
+  renderables.ready.plus   = createDOMRenderable('<img src="assets/btn-add-content.png" srcset="assets/btn-add-content@2x.png 2x, assets/btn-add-content@3x.png 3x">', 'ready-button', createLettet);
 
   if(currentTarget){
 
     if(currentTarget.size.width > 100){
-      renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
       renderables.ready.text.position.y = ((currentTarget.size.height/2)-50);
       renderables.ready.plus.position.y = -20;
       renderables.ready.plus.scale.set(.5,.5,.5);
+      renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
     }else{
-      renderables.ready.target.position.y = 7;
-      renderables.ready.plus.position.y   = -20;
+
       renderables.ready.text.scale.set(.3,.3,.3);
+      renderables.ready.target.position.y = 7;
       renderables.ready.target.scale.set(.3,.3,.3);
+
+      renderables.ready.plus.position.y   = -20;
       renderables.ready.plus.scale.set(.2,.2,.2);
     }
 
@@ -543,8 +546,9 @@ function ready(){
 
   world.add(renderables.ready.target);
   world.add(renderables.ready.text);
-  world.add(renderables.ready.plus);
+  //world.add(renderables.ready.plus);
 
+  initDummyData();
 }
 
 function create(){
@@ -553,9 +557,9 @@ function create(){
   world.position.y = 0;
 
   if(content.children.length === 0){
-    renderables.create.wrapper = createDOMRanderable('', 'create-target-wrapper');
-    renderables.create.emoji   = createDOMRanderable('<img src="assets/group-2-copy-3.png" srcset="assets/group-2-copy-3@2x.png 2x, assets/group-2-copy-3@3x.png 3x">', 'create-target-emoji');
-    renderables.create.text    = createDOMRanderable('<img src="assets/icn-ar-text.png" srcset="assets/icn-ar-text@2x.png 2x, assets/icn-ar-text@3x.png 3x">', 'create-target-text');
+    renderables.create.wrapper = createDOMRenderable('', 'create-target-wrapper');
+    renderables.create.emoji   = createDOMRenderable('<img src="assets/group-2-copy-3.png" srcset="assets/group-2-copy-3@2x.png 2x, assets/group-2-copy-3@3x.png 3x">', 'create-target-emoji');
+    renderables.create.text    = createDOMRenderable('<img src="assets/icn-ar-text.png" srcset="assets/icn-ar-text@2x.png 2x, assets/icn-ar-text@3x.png 3x">', 'create-target-text');
 
     renderables.create.emoji.element.addEventListener("click", function(){
       typeLoadControl(3);
@@ -604,7 +608,7 @@ function inputText(){
 
   });
 
-  renderables.input.text.textarea = createDOMRanderable('<textarea id="ar-textarea" placeholder="메세지를 입력해주세요" type="text"></textarea>','input-text-area');
+  renderables.input.text.textarea = createDOMRenderable('<textarea id="ar-textarea" placeholder="메세지를 입력해주세요" type="text"></textarea>','input-text-area');
 
   if(currentTarget.size.width > 100) renderables.input.text.textarea.scale.set(.7,.7,.7);
   else renderables.input.text.textarea.scale.set(.3,.3,.3);
@@ -631,9 +635,9 @@ function inputEmoji(){
 
 function notification(){
 
-  renderables.notification.title   = createDOMRanderable('<p><label id="noti-name">'+notificationName+'</label>님의</p> <p>스티커 메세지</p>', 'notification-title');
-  renderables.notification.icon    = createDOMRanderable('<img src="assets/icn-open-messege.png" srcset="assets/icn-open-messege@2x.png 2x, assets/icn-open-messege@3x.png 3x">', 'notification-icon', viewContent);
-  renderables.notification.content = createDOMRanderable('열어 볼까요?', 'notification-content');
+  renderables.notification.title   = createDOMRenderable('<p><label id="noti-name">'+notificationName+'</label>님의</p> <p>스티커 메세지</p>', 'notification-title');
+  renderables.notification.icon    = createDOMRenderable('<img src="assets/icn-open-messege.png" srcset="assets/icn-open-messege@2x.png 2x, assets/icn-open-messege@3x.png 3x">', 'notification-icon', viewContent);
+  renderables.notification.content = createDOMRenderable('열어 볼까요?', 'notification-content');
 
   world.add(renderables.notification.title);
   world.add(renderables.notification.icon);
@@ -1045,16 +1049,17 @@ function typeStartControl(e){
       document.getElementById('edit-target-see-name').innerText = currentTarget.name;
 
       if(currentTarget.size.width > 100){
-        renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
         renderables.ready.text.position.y = ((currentTarget.size.height/2)-50);
         renderables.ready.plus.position.y = -20;
         renderables.ready.plus.scale.set(.6,.6,.6);
+        renderables.ready.target.position.y = (currentTarget.size.height/2)-30;
+
       }else{
-        renderables.ready.target.position.y = 7;
         renderables.ready.plus.position.y   = -20;
         renderables.ready.text.scale.set(.3,.3,.3);
-        renderables.ready.target.scale.set(.3,.3,.3);
         renderables.ready.plus.scale.set(.2,.2,.2);
+        renderables.ready.target.position.y = 7;
+        renderables.ready.target.scale.set(.3,.3,.3);
       }
       break;
     case 1 :
@@ -1179,7 +1184,7 @@ function typeEndControl(e){
   }
 }
 
-function createDOMRanderable(value, className, clickCallback){
+function createDOMRenderable(value, className, clickCallback){
 
   var element = document.createElement('div');
 
@@ -1371,18 +1376,10 @@ function formatDate(time, format) {
 }
 
 // "이정우 입니다" 텍스트 추가하기.
-function addJungwooText() {
-  let jungwooText = createDOMRanderable("<div>이정우 입니다. ^^</div>", 'target-ready-content');
-  world.add(jungwooText);
-  editObject = jungwooText;
+function initDummyData() {
 
-  createDOMRenderableFromJson();
-}
-
-let dData;
-
-function createDOMRenderableFromJson() {
-  dData = [
+  // set renderable data
+  let dData = [
     {
       "text": "더미1",
       "position": {
@@ -1440,9 +1437,16 @@ function createDOMRenderableFromJson() {
       "scale": 1
     }
   ];
+  localStorage.setItem("renderables", JSON.stringify(dData));
+  createDOMRenderableFromJson();
+}
+
+// Create renderable item from localstorage json and add to the world.
+function createDOMRenderableFromJson() {
+  // get renderable data
+  let dData = JSON.parse(localStorage.getItem("renderables"));
 
   dData.forEach(function(item) {
-
       let element = document.createElement('div');
       element.style.textShadow = '0 0 8px rgba(0, 0, 0, 0.5)';
 
@@ -1462,12 +1466,19 @@ function createDOMRenderableFromJson() {
       object.rotateY(item.rotation.y);
       object.rotateZ(item.rotation.z);
       object.scale.set(item.scale,item.scale,item.scale);
-
+      
       world.add(object);
   });
-
-
 }
 
+function addTextItem() {
+  let text = $('#inputArea').val();
 
+  let jungwooText = createDOMRenderable("<div>" + text + "</div>", 'target-ready-content');
+  world.add(jungwooText);
+  editObject = jungwooText;
 
+  showInputTextDiv();
+  showInputConfirmDiv();
+
+}

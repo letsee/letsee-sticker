@@ -10,6 +10,10 @@ let imgHelp = document.getElementById("imgHelp");
 // set switchs.
 let isMenuOpen = false;
 let isHelpOpen = false;
+let isOpenInputText = false;
+let isOpenInputConfirm = false;
+
+inputArea = $("#inputArea");
 
 // function for doing menu animation
 function showMenu() {
@@ -46,8 +50,14 @@ function initLayout() {
   btnAdd.style.display = "block";
 
   initMenu();
-  initHelpContainer();
-  createDOMRenderableFromJson();
+  initHelpDiv();
+  //createDOMRenderableFromJson();
+
+  var m = parseInt(inputArea.css("margin-left"));
+  var p = parseInt(inputArea.css("padding"));
+  var b = parseInt(inputArea.css("border"));
+
+  inputArea.width( (w - (m * 2) - (p * 2 ) - (b * 2)) + "px" );
 }
 
 // function for setting menu layout in the middle.
@@ -93,10 +103,10 @@ function initMenu() {
 }
 
 // Function for set Help Button
-function initHelpContainer() {
-  let containerHelp = document.getElementById("containerHelp");
-  containerHelp.style.width = w + "px";
-  containerHelp.style.height = h + "px";
+function initHelpDiv() {
+  let divHelp = document.getElementById("divHelp");
+  divHelp.style.width = w + "px";
+  divHelp.style.height = h + "px";
 
   imgHelp.style.width = "100%";
   imgHelp.style.height = "100%";
@@ -111,11 +121,33 @@ function showHelpImage() {
     btnAdd.style.display = "none";
     isHelpOpen = true;
   } else {
-
     imgHelp.style.display = "none";
     btnAdd.style.display = "block";
     isHelpOpen = false;
   }
 }
 
+// function for showing 'inputText' div element.
+function showInputTextDiv() {
+  if(isOpenInputText === false) {
+    $("#inputText").fadeIn();
+    showMenu();
+    isOpenInputText = true;
+  } else {
+    $("#inputText").fadeOut();
+    isOpenInputText = false;
+  }
+}
+
+// function for showing 'inputConfirm' div element.
+function showInputConfirmDiv() {
+  if(isOpenInputConfirm === false) {
+    $("#inputConfirm").fadeIn();
+    isOpenInputConfirm = true;
+
+  } else {
+    $("#inputConfirm").fadeOut();
+    isOpenInputConfirm = false;
+  }
+}
 
