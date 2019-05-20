@@ -65,7 +65,7 @@ window.addEventListener('letsee.load', function(){
   var
     intro = document.querySelector('.target-intro-wrapper');
     intro.style.width  = window.screen.availWidth-(window.screen.availWidth/5)+'px';
-  intro.style.height = (window.screen.availHeight-(window.screen.availHeight/4.55))+'px';
+    intro.style.height = (window.screen.availHeight-(window.screen.availHeight/4.55))+'px';
 
   firebase.initializeApp(config);
   database = firebase.database();

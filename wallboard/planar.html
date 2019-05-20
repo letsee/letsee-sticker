@@ -29,7 +29,7 @@
 
 <div id="container" class="test"></div>
 
-<div id="btnAdd" onclick="showMenuDiv()"></div>
+<div id="btnAdd" onclick="addTextItem()"></div>
 <div id="menu">
 	<div id="buttons">
 		<div id="addText"  class="btnMenu" onclick='showInputTextDiv()'></div>
@@ -72,6 +72,7 @@
 </div>
 </body>
 
+<script type="text/javascript" src="js/layout.js"></script>
 <script>
   const config = {
     "appKey": "Tb8arp5eF9ZMDw0u2QiOyV845R61eltmeZQKwFBXBeeNU9Q5vgpduQdF5oipQX9X",
@@ -84,23 +85,27 @@
   });
 
   app.addEventListener("trackstart", function(e) {
+    var uri = e.target.uri;
+    let CURRENT_URI = uri;
 
-    console.log(e);
-    e.target.renderables[0].position._x = -100;
+    // 현재 uri 와 currentUri 가 다를때 실행됨
+    if (uri !== CURRENT_URI) {
+      if (CURRENT_URI) {
+        //app.LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
+      }
+    }
   });
+
   app.addEventListener("trackmove", function(e) {
-    //console.log(e);
-  });
-
-  app.addEventListener("", function(e) {
     console.log(e);
 
-	});
+    console.log(e);
+  });
 
   app.addEventListener('app_status', e => {
     switch(e.code) {
       case 203:
-        console.log(app.letseeEngine.getEntities());
+        initWorldObject3D(app.letseeEngine.getEntities());
         break;
       default:
         console.log(e);
@@ -108,16 +113,80 @@
     }
   });
 
-  function createNewEle() {
-    let world = new Object3D();
+
+  const world = new Object3D();
+
+  function addTextItem() {
+    //let text = $('#inputArea').val();
+
+    // 첫번째 변수로 element의 css를 넣고 두번째 변수로
+    //let jungwooText = createDOMRenderable("<div>" + text + "</div>", 'target-ready-content');
+
+    //editObject = jungwooText;
+    //showInputTextDiv();
+    //showInputConfirmDiv();
+  }
+
+  function createDOMRenderable(value, className, _position = null, _rotation = null, _scale = null) {
+    let element = document.createElement('div');
+    element.innerHTML = value;
+    element.className = className ? className : '';
+
+    const renderableEle = new DOMRenderable(element);
+
+    // renderableEle.position.set(..._position);
+
+    if (_position) renderableEle.position.set(..._position);
+
+    if (_rotation) {
+      renderableEle.rotateX(_rotation[0]);
+      renderableEle.rotateY(_rotation[1]);
+      renderableEle.rotateZ(_rotation[2]);
+
+		}
+    // if (_scale) renderableEle.scale.set(..._scale);
+    return renderableEle ;
+  }
+
+  // Init first object
+  function initWorldObject3D(entity) {
+    let position = [50,40,1];
+		let rotation = [5,80,10];
+    world.add(
+      createDOMRenderable('aaaaaa','test',position, rotation)
+		);
+    entity[0].addRenderable(world);
+  }
+
+  // 카드 만들기. 인풋창에 들어간 내용으로 html태그 제작
+  function createCard(content) {
+
+  }
+
+  // 카드 화면에 붙이기. 위에 만든 카드를 화면에 붙이고 hammer이벤트로 조정
+  function addCard(content) {
+    world.add(
+      createDOMRenderable('content','test')
+    );
+  }
+
+  // 서버 전송
+  function save() {
 
 	}
 
+
 </script>
+<!-- input area -->
+<img >
+<textarea>
+dhsjakjdklsajkdllsja
+</textarea>
+<!--
 
-
-<script type="text/javascript" src="js/layout.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/eventController.js"></script>
+-->
 
 
 </html>
