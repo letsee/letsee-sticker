@@ -4,21 +4,17 @@
 	<meta charset="UTF-8">
 	<title>Letsee WebAR Demo - Escape Room 1.0</title>
 	<meta content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport" />
-	<script src="./vendor/letsee/Letsee.0.9.10.js"></script>
-	<style media="place" type="text/css">
-		#aaa {-letsee-target: uri('toystory.json');-letsee-position: coords(0, 0, 0);}
-		#container {-letsee-target: uri('toystory.json');-letsee-position: coords(0, 0, 0);}
-		#container1 {-letsee-target: uri('toystory.json');-letsee-position: coords(10, 0, 0);}
-		#container2 {-letsee-target: uri('toystory.json');-letsee-position: coords(20, 0, 0);}
-		#container3 {-letsee-target: uri('toystory.json');-letsee-position: coords(30, 0, 0);}
-		#container4 {-letsee-target: uri('toystory.json');-letsee-position: coords(-44, 0, 0);}
-		#container5 {-letsee-target: uri('toystory.json');-letsee-position: coords(0, 0, 10);}
-		#container6 {-letsee-target: uri('toystory.json');-letsee-position: coords(0, 20, -100);}
-		#container7 {-letsee-target: uri('toystory.json');-letsee-position: coords(0, 50, 0);}
-		#container8 {-letsee-target: uri('toystory.json');-letsee-position: coords(0, 20, 0);}
-		#container9 {-letsee-target: uri('toystory.json');-letsee-position: coords(0, 10, 0);}
 
+	<script src="./vendor/letsee/Letsee.0.9.10.js"></script>
+	<script src="./vendor/jquery/jquery-1.9.1.min.js"></script>
+
+	<link rel="stylesheet" href="css/layout.css"/>
+	<link rel="stylesheet" href="css/renderable.css"/>
+
+	<style media="place" type="text/css">
+		#container {-letsee-target: uri('toystory.json');-letsee-position: coords(0, 0, 0);}
 	</style>
+
 	<style>
 		.test {
 			border: 1px solid #f00;
@@ -26,27 +22,102 @@
 			height: 100px;
 		}
 	</style>
+
 </head>
 <body>
-<div id="aaa">
-	<div>sasdas</div>
+
+
+<div id="container" class="test"></div>
+
+<div id="btnAdd" onclick="showMenuDiv()"></div>
+<div id="menu">
+	<div id="buttons">
+		<div id="addText"  class="btnMenu" onclick='showInputTextDiv()'></div>
+		<div id="addImage" class="btnMenu" onclick="addNewImage();"></div>
+		<div id="addLink" class="btnMenu" onclick="saveEdit();"></div>
+		<div id="addSearch" class="btnMenu" onclick="addUcc();"></div>
+		<div id="addYoutube" class="btnMenu" onclick="addNewYoutube();"></div>
+	</div>
 </div>
-<div id="container" class="test">온머ㅏㅗ암</div>
-<div id="container1" class="test">ㅇㅁ너ㅏㅣㅇㅁ</div>
-<div id="container2" class="test">ㅇㄴ머ㅏㅣ어ㅣㄴㅁ</div>
-<div id="container3" class="test">ㅇㅁ누ㅗㅓㅏ</div>
-<div id="container4" class="test"></div>
-<div id="container5" class="test"></div>
-<div id="container6" class="test"></div>
-<div id="container7" class="test"></div>
-<div id="container8" class="test"></div>
-<div id="container9" class="test"></div>
-<script>
-	const config = {
-		"appKey": "Tb8arp5eF9ZMDw0u2QiOyV845R61eltmeZQKwFBXBeeNU9Q5vgpduQdF5oipQX9X",
-    	"trackerType": "PLANAR"
-	};
-	const app = new Letsee(config);
-</script>
+
+<img id="btnHelp" src="assets/help.png" onclick="showHelpImage();" />
+<div id="divHelp">
+	<img id="imgHelp">
+	</img>
+</div>
+
+<div id="inputText">
+	<div id="inputHeader" class="page-header">
+		<p>Input Text</p>
+		<img src="assets/close.png" onclick="showInputTextDiv()" />
+	</div>
+	<textarea id="inputArea" placeholder="이 곳에 텍스트를 입력해 글을 게시합니다"></textarea>
+	<div id="btnLetseeit">
+		<img src="assets/letsee_it.png" onclick="addTextItem()" />
+	</div>
+</div>
+
+
+<div id="inputConfirm">
+	<div onclick="addTextComplete($('#inputArea').val());" class="icon-edit-sucsess">완료</div>
+	<img onclick="typeLoadControl(1, 0);" src="assets/btn-trash.svg" id="delete-input"/>
+	<!--
+  <div class="edit-target-see-wrapper">
+    <img class="edit-target-see-frame lt" src="assets/lt3x.png" >
+    <img class="edit-target-see-frame rt" src="assets/rt3x.png" >
+    <img class="edit-target-see-frame lb" src="assets/lb3x.png" >
+    <img class="edit-target-see-frame rb" src="assets/rb3x.png" >
+  </div>
+  -->
+</div>
 </body>
+
+<script>
+  const config = {
+    "appKey": "Tb8arp5eF9ZMDw0u2QiOyV845R61eltmeZQKwFBXBeeNU9Q5vgpduQdF5oipQX9X",
+    "trackerType": "PLANAR"
+  };
+  const app = new Letsee(config);
+
+  $(function() {
+    initLayout();
+  });
+
+  app.addEventListener("trackstart", function(e) {
+
+    console.log(e);
+    e.target.renderables[0].position._x = -100;
+  });
+  app.addEventListener("trackmove", function(e) {
+    //console.log(e);
+  });
+
+  app.addEventListener("", function(e) {
+    console.log(e);
+
+	});
+
+  app.addEventListener('app_status', e => {
+    switch(e.code) {
+      case 203:
+        console.log(app.letseeEngine.getEntities());
+        break;
+      default:
+        console.log(e);
+        break;
+    }
+  });
+
+  function createNewEle() {
+    let world = new Object3D();
+
+	}
+
+</script>
+
+
+<script type="text/javascript" src="js/layout.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+
+
 </html>

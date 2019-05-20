@@ -64,7 +64,7 @@ window.addEventListener('letsee.load', function(){
 
   var
     intro = document.querySelector('.target-intro-wrapper');
-  intro.style.width  = window.screen.availWidth-(window.screen.availWidth/5)+'px';
+    intro.style.width  = window.screen.availWidth-(window.screen.availWidth/5)+'px';
   intro.style.height = (window.screen.availHeight-(window.screen.availHeight/4.55))+'px';
 
   firebase.initializeApp(config);
@@ -1468,7 +1468,7 @@ function createDOMRenderableFromJson() {
       object.rotateY(item.rotation.y);
       object.rotateZ(item.rotation.z);
       object.scale.set(item.scale,item.scale,item.scale);
-      
+
       world.add(object);
   });
 }

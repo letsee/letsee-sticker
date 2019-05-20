@@ -1,0 +1,11 @@
+.target-ready-content{
+    width : 1000px;
+    opacity: 0.8;
+    text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    /* font-family: AppleSDGothicNeo, sans-serif; */
+    font-weight: 800;
+    font-size: 1em;
+    letter-spacing: -0.8px;
+    text-align: center;
+    margin : 0;
+}
