@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div>
+    CHECK!!
+    <pre>
+$ mongodb-runner start
+$ parse-server --appId ar-docent --masterKey masterkey --restAPIKey djasklasdas --port 8811 --databaseURI mongodb://localhost/docent_test
+    </pre>
+
+</div>
+
+<section>
+    <h3>Save card</h3>
+    <div>
+        <dl>
+            <dt>image</dt>
+            <dd><input type="file" id="imagefile"></dd>
+            <dt>text</dt>
+            <dd><textarea placeholder="Input text here!" id="textContent"></textarea></dd>
+            <dd><button id="submit">save</button> </dd>
+        </dl>
+    </div>
+</section>
+<section>
+    <h3>View content</h3>
+    <div>
+        <dl>
+            <dt>Call</dt>
+            <dd><button id="call">Call data from server</button> </dd>
+            <dt>Content</dt>
+            <dd>
+                <div id="content"></div>
+            </dd>
+        </dl>
+    </div>
+</section>
+
+
+<script>
+  axios.defaults.baseURL = 'http://localhost:8811/parse/';
+  axios.defaults.headers.common['X-Parse-Application-Id'] = 'ar-docent';
+  axios.defaults.headers.common['X-Parse-REST-API-Key'] = 'djasklasdas';
+  let template =  {
+    "id": 'djksdla',
+    "type": 'image',
+    "content": null,
+    "imageUrl": null,
+    "position": {
+      "_x": 0,
+      "_y": 0,
+      "_z": 0
+    },
+    "rotation": {
+      "_x": 0,
+      "_y": 0,
+      "_z": 0
+    },
+    "scale": {
+      "_x": 0,
+      "_y": 0,
+      "_z": 0
+    }
+  };
+  let currentObject = null;
+
+  const textArea = document.getElementById('textContent');
+  const imageObj = document.getElementById('imagefile');
+  const submitBtn = document.getElementById('submit');
+  const callBtn = document.getElementById('call');
+  const getParam = "id, type, content, imageUrl, position, rotation, scale";
+
+  submitBtn.addEventListener('click', saveImage);
+  call.addEventListener('click', getData);
+
+
+  function setData(args) {
+    return {...currentObject, ...args}
+  }
+
+  function saveImage() {
+    currentObject = template;
+    axios.post('files/'+'saveImage.jpg',
+      imageObj.files[0]
+    )
+      .then( (data) => {
+        currentObject.imageUrl = data.data.url;
+        saveData();
+        console.log(data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+  function saveData() {
+    axios.post(
+      'classes/wallbaord',
+      setData({"content": textArea.value})
+    )
+      .then( () => {
+
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+  function getData() {
+
+    axios.get('classes/wallbaord', {
+      params: {
+        // 'keys': getParam
+      }
+    })
+      .then(data => {
+        console.log(data);
+      })
+  }
+
+
+</script>
+
+</body>
+</html>
