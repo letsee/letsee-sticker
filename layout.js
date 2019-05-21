@@ -160,6 +160,7 @@ function showInputTextDiv() {
 }
 
 // function for showing 'inputConfirm' div element.
+// 'InputConfirm' div include trash icon, and complete icon.
 function showInputConfirmDiv() {
   if(isOpenInputConfirm === false) {
     $("#inputConfirm").fadeIn();

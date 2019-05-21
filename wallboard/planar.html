@@ -7,6 +7,7 @@
 
 	<script src="./vendor/letsee/Letsee.0.9.10.js"></script>
 	<script src="./vendor/jquery/jquery-1.9.1.min.js"></script>
+	<script src="https://hammerjs.github.io/dist/hammer.js"></script>
 
 	<link rel="stylesheet" href="css/layout.css"/>
 	<link rel="stylesheet" href="css/renderable.css"/>
@@ -29,7 +30,7 @@
 
 <div id="container" class="test"></div>
 
-<div id="btnAdd" onclick="addTextItem()"></div>
+<div id="btnAdd" onclick="showMenuDiv()"></div>
 <div id="menu">
 	<div id="buttons">
 		<div id="addText"  class="btnMenu" onclick='showInputTextDiv()'></div>
@@ -53,13 +54,14 @@
 	</div>
 	<textarea id="inputArea" placeholder="이 곳에 텍스트를 입력해 글을 게시합니다"></textarea>
 	<div id="btnLetseeit">
-		<img src="assets/letsee_it.png" onclick="addTextItem()" />
+		<img src="assets/letsee_it.png" onclick="createTextCard()" />
 	</div>
 </div>
 
 
 <div id="inputConfirm">
-	<div onclick="addTextComplete($('#inputArea').val());" class="icon-edit-sucsess">완료</div>
+	<!-- 완료버튼 눌렀을 시 서버에 데이터 저장하고 보여주기 -->
+	<div onclick="save();" class="icon-edit-sucsess">완료</div>
 	<img onclick="typeLoadControl(1, 0);" src="assets/btn-trash.svg" id="delete-input"/>
 	<!--
   <div class="edit-target-see-wrapper">
@@ -80,25 +82,35 @@
   };
   const app = new Letsee(config);
 
+  let editObject;
+  let CURRENT_URI = '';
+	let currentTarget;
+
   $(function() {
     initLayout();
   });
 
   app.addEventListener("trackstart", function(e) {
-    var uri = e.target.uri;
-    let CURRENT_URI = uri;
-
-    // 현재 uri 와 currentUri 가 다를때 실행됨
+    let uri = e.target.uri;
     if (uri !== CURRENT_URI) {
       if (CURRENT_URI) {
-        //app.LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
+        LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
+        CURRENT_URI = uri;
+        currentTarget = LetseeEngine.getEntity(CURRENT_URI);
+
+        //ready();
       }
+
+      CURRENT_URI = uri;
+      e.target.addRenderable(world);
+
+      let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
+      world.position.z = depth;
     }
   });
 
   app.addEventListener("trackmove", function(e) {
     console.log(e);
-
     console.log(e);
   });
 
@@ -142,8 +154,12 @@
       renderableEle.rotateX(_rotation[0]);
       renderableEle.rotateY(_rotation[1]);
       renderableEle.rotateZ(_rotation[2]);
-
 		}
+
+		if (_scale) {
+      renderableEle.scale.set(_scale, _scale, _scale);
+		}
+
     // if (_scale) renderableEle.scale.set(..._scale);
     return renderableEle ;
   }
@@ -152,38 +168,56 @@
   function initWorldObject3D(entity) {
     let position = [50,40,1];
 		let rotation = [5,80,10];
+
     world.add(
       createDOMRenderable('aaaaaa','test',position, rotation)
 		);
     entity[0].addRenderable(world);
+    currentTarget = LetseeEngine.getEntity('toystory.json');
+
   }
 
   // 카드 만들기. 인풋창에 들어간 내용으로 html태그 제작
-  function createCard(content) {
+  function createTextCard() {
+    let inputArea = $('#inputArea');
+		let _content = inputArea.val();
+		inputArea.val = "";
 
+		_content = `<div style="border: 1px solid yellow">${_content}</div>`;
+		// 이부분에서 카드 컨텐츠 제작하는 div가 들어가야함.
+		addCard(_content);
   }
 
   // 카드 화면에 붙이기. 위에 만든 카드를 화면에 붙이고 hammer이벤트로 조정
   function addCard(content) {
-    world.add(
-      createDOMRenderable('content','test')
-    );
+    let position = [0,0,0];
+    let rotation = [0,0,0];
+    let scale = 1;
+
+    let renderable = createDOMRenderable(content, "test", position, rotation, scale);
+    world.add(renderable);
+
+    editObject = renderable;
+
+    showInputTextDiv();
+    showInputConfirmDiv();
+
   }
 
   // 서버 전송
   function save() {
-
+    showInputConfirmDiv();
 	}
-
-
 </script>
-<!-- input area -->
+
+<!-- hammer motion code -->
+<script type="text/javascript" src="js/hammer.js"></script>
+
+<!-- input area
 <img >
 <textarea>
 dhsjakjdklsajkdllsja
 </textarea>
-<!--
-
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="js/eventController.js"></script>
 -->
