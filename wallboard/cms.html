@@ -79,7 +79,6 @@ $ parse-server --appId ar-docent --masterKey masterkey --restAPIKey djasklasdas 
   submitBtn.addEventListener('click', saveImage);
   call.addEventListener('click', getData);
 
-
   function setData(args) {
     return {...currentObject, ...args}
   }
@@ -91,39 +90,41 @@ $ parse-server --appId ar-docent --masterKey masterkey --restAPIKey djasklasdas 
     )
       .then( (data) => {
         currentObject.imageUrl = data.data.url;
-        saveData();
+        saveImageData();
         console.log(data);
       })
       .catch(error => {
         console.log(error);
       })
   }
-  function saveData() {
-    axios.post(
-      'classes/wallbaord',
-      setData({"content": textArea.value})
-    )
-      .then( () => {
 
+  function saveImageData() {
+    axios.post(
+      'classes/wallboard',
+      setData(currentObject))
+      .then( () => {
+        currentObject = null;
       })
       .catch(error => {
         console.log(error);
       })
-  }
-  function getData() {
+    }
 
-    axios.get('classes/wallbaord', {
-      params: {
-        // 'keys': getParam
-      }
-    })
+  function getData() {
+    axios.get('classes/wallboard', {
+          params: {
+            // 'keys': getParam
+          }
+        })
       .then(data => {
         console.log(data);
+        currentObject = null;
       })
-  }
+      .catch(error => {
 
+      })
+    }
 
 </script>
-
 </body>
 </html>

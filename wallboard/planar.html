@@ -8,6 +8,7 @@
 	<script src="./vendor/letsee/Letsee.0.9.10.js"></script>
 	<script src="./vendor/jquery/jquery-1.9.1.min.js"></script>
 	<script src="https://hammerjs.github.io/dist/hammer.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 	<link rel="stylesheet" href="css/layout.css"/>
 	<link rel="stylesheet" href="css/renderable.css"/>
@@ -54,7 +55,7 @@
 	</div>
 	<textarea id="inputArea" placeholder="이 곳에 텍스트를 입력해 글을 게시합니다"></textarea>
 	<div id="btnLetseeit">
-		<img src="assets/letsee_it.png" onclick="createTextCard()" />
+		<img src="assets/letsee_it.png" onclick="createTextCard('text')" />
 	</div>
 </div>
 
@@ -114,7 +115,8 @@
 	app.addEventListener("trackstart", function(e) {
 		let uri = e.target.uri;
 		if (uri !== CURRENT_URI) {
-			if (CURRENT_URI) {
+      /*
+		  if (CURRENT_URI) {
 				LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
 				CURRENT_URI = uri;
 				currentTarget = LetseeEngine.getEntity(CURRENT_URI);
@@ -128,7 +130,9 @@
 			let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
 			world.position.z = depth;
 		}
-	});
+	}*/
+    }}
+	);
 
 	app.addEventListener("trackmove", function(e) {
 		console.log(e);
@@ -146,22 +150,11 @@
 		}
 	});
 
-
 	const world = new Object3D();
-
-	function addTextItem() {
-		//let text = $('#inputArea').val();
-
-		// 첫번째 변수로 element의 css를 넣고 두번째 변수로
-		//let jungwooText = createDOMRenderable("<div>" + text + "</div>", 'target-ready-content');
-
-		//editObject = jungwooText;
-		//showInputTextDiv();
-		//showInputConfirmDiv();
-	}
 
 	const cardContentInput = document.getElementById('inputArea');
 
+	// Function to make renderable item and renderable item's position, rotation, scale.
 	function createDOMRenderable(value, className, _position = null, _rotation = null, _scale = null) {
 		let element = document.createElement('div');
 		element.innerHTML = value;
@@ -169,16 +162,17 @@
 
 		const renderableEle = new DOMRenderable(element);
 
-		// renderableEle.position.set(..._position);
-
+		// Set position
 		if (_position) renderableEle.position.set(..._position);
 
-		if (_rotation) {
+    // Set rotation
+    if (_rotation) {
 			renderableEle.rotateX(_rotation[0]);
 			renderableEle.rotateY(_rotation[1]);
 			renderableEle.rotateZ(_rotation[2]);
 		}
 
+		// Set scale
 		if (_scale) {
 			renderableEle.scale.set(_scale, _scale, _scale);
 		}
@@ -187,16 +181,166 @@
 		return renderableEle ;
 	}
 
-	// Init first object
+  var cardObjects = [{
+    "id": "dummy",
+    "type": null,
+    "content": `
+					<div class="cardElement" rel="card">
+						<div class="wrapper">
+							<div class="inner">
+								<div class="imagebox"></div>
+								<div class="textBox">
+									${cardContentInput.value}
+								</div>
+							</div>
+						</div>
+					</div>
+				`,
+    "imageName": null,
+    "position": {
+      "_x": 50,
+      "_y": 50,
+      "_z": 0
+    },
+    "rotation": {
+      "_x": 0,
+      "_y": 0,
+      "_z": 0
+    },
+    "scale": {
+      "_x": 1,
+      "_y": 1,
+      "_z": 1
+    }
+  },
+    {
+      "id": "dummy",
+      "type": null,
+      "content": `
+				<div class="cardElement" rel="card">
+					<div class="wrapper">
+						<div class="inner">
+							<div class="imagebox"></div>
+							<div class="textBox">
+								${cardContentInput.value}
+							</div>
+						</div>
+					</div>
+				</div>
+			`,
+      "imageName": null,
+      "position": {
+        "_x": 50,
+        "_y": 50,
+        "_z": 0
+      },
+      "rotation": {
+        "_x": 0,
+        "_y": 0,
+        "_z": 0
+      },
+      "scale": {
+        "_x": 1,
+        "_y": 1,
+        "_z": 1
+      }
+    },
+    {
+      "id": "dummy",
+      "type": null,
+      "content": `
+				<div class="cardElement" rel="card">
+					<div class="wrapper">
+						<div class="inner">
+							<div class="imagebox"></div>
+							<div class="textBox">
+								${cardContentInput.value}
+							</div>
+						</div>
+					</div>
+				</div>
+			`,
+      "imageName": null,
+      "position": {
+        "_x": -50,
+        "_y": -50,
+        "_z": 0
+      },
+      "rotation": {
+        "_x": 0,
+        "_y": 0,
+        "_z": 0
+      },
+      "scale": {
+        "_x": 1,
+        "_y": 1,
+        "_z": 1
+      }
+    },
+    {
+      "id": "dummy",
+      "type": null,
+      "content": `
+				<div class="cardElement" rel="card">
+					<div class="wrapper">
+						<div class="inner">
+							<div class="imagebox"></div>
+							<div class="textBox">
+								${cardContentInput.value}
+							</div>
+						</div>
+					</div>
+				</div>
+			`,
+      "imageName": null,
+      "position": {
+        "_x": 50,
+        "_y": -50,
+        "_z": 0
+      },
+      "rotation": {
+        "_x": 0,
+        "_y": 0,
+        "_z": 0
+      },
+      "scale": {
+        "_x": 1,
+        "_y": 1,
+        "_z": 1
+      }
+    }
+  ];
+
+
+  // Initialize app.
 	function initWorldObject3D(entity) {
+	  /*
 		let position = [50,40,1];
 		let rotation = [5,80,10];
 
 		world.add(
 				createDOMRenderable('aaaaaa','test',position, rotation)
 		);
+		*/
 		entity[0].addRenderable(world);
 		currentTarget = LetseeEngine.getEntity('toystory.json');
+
+
+
+	}
+
+
+	function printCardsItemFromJson(data) {
+    // let cardObjects = JSON.parse(JSON.stringify(data));
+
+    data.forEach(function(item) {
+			let position  = [item.position._x, item.position._y, item.position._z];
+			let rotation  = [item.rotation._x, item.rotation._y, item.rotation._z];
+			let scale = item.scale.x;
+
+      let renderableItem = createDOMRenderable(item.content, "test" ,position, rotation, scale);
+      world.add(renderableItem);
+    });
 
 	}
 
@@ -212,27 +356,26 @@
 		const randomId = "dummy";
 		const type = _type || null;
 		const content = `
-<div class="cardElement" rel="card">
-	<div class="wrapper">
-		<div class="inner">
-			<div class="imagebox"></div>
-			<div class="textBox">
-				${cardContentInput.value}
-			</div>
-		</div>
-	</div>
-</div>`;
+					<div class="cardElement" rel="card">
+						<div class="wrapper">
+							<div class="inner">
+								<div class="imagebox"></div>
+								<div class="textBox">
+									${cardContentInput.value}
+								</div>
+							</div>
+						</div>
+					</div>`
+		;
 		currentCardObject = updateCardObject({
 			"id": randomId,
 			"type": type,
 			"content": content,
-		})
+		});
+
 		addCard();
 		cardContentInput.value = "";
 	}
-
-
-
 
 	// 카드 화면에 붙이기. 위에 만든 카드를 화면에 붙이고 hammer이벤트로 조정
 	function addCard() {
@@ -244,17 +387,15 @@
 		world.add(renderable);
 
 		editObject = renderable;
+    currentCard = editObject;
 
-
-		showInputTextDiv();
+    // Set layout
+    showInputTextDiv();
 		showInputConfirmDiv();
-		currentCard = editObject;
-
 	}
 
 	// 서버 전송
 	function save() {
-		console.log(currentCard);
 		currentCardObject =  updateCardObject(
 				{
 					"position": {
@@ -273,20 +414,52 @@
 						"_z": currentCard.scale._z
 					}
 				}
-		)
+		);
+
 		showInputConfirmDiv();
-
-
-		postCard(currentCardObject)
-				.then(data => {
-					// remove currentCard = editObject => null
-
-					// reset
-					currentCardObject = objectTemplate;
-				})
+    postCard();
 	}
-</script>
 
+
+
+	// local parse server 연동
+  axios.defaults.baseURL = 'http://localhost:8811/parse/';
+  axios.defaults.headers.common['X-Parse-Application-Id'] = 'ar-docent';
+  axios.defaults.headers.common['X-Parse-REST-API-Key'] = 'djasklasdas';
+
+  function postCard() {
+    axios.post('classes/wallboard',
+      setCardData(currentCardObject))
+      .then(() => {
+        currentCardObject = null;
+      	editObject = null;
+        currentCardObject = objectTemplate;
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
+  function setCardData(args) {
+    return {...currentCardObject, ...args}
+  }
+
+  function getCardData() {
+    axios.get('classes/wallboard')
+      .then(data => {
+        printCardsItemFromJson(data.data.results);
+        currentCardObject = null;
+        editObject = null;
+        currentCardObject = objectTemplate;
+
+      })
+      .catch(error => {
+				console.warn(error);
+      })
+  }
+  getCardData();
+
+</script>
 <!-- hammer motion code -->
 <script type="text/javascript" src="js/hammer.js"></script>
 
@@ -298,6 +471,5 @@ dhsjakjdklsajkdllsja
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="js/eventController.js"></script>
 -->
-
 
 </html>
