@@ -76,137 +76,214 @@
 
 <script type="text/javascript" src="js/layout.js"></script>
 <script>
-  const config = {
-    "appKey": "Tb8arp5eF9ZMDw0u2QiOyV845R61eltmeZQKwFBXBeeNU9Q5vgpduQdF5oipQX9X",
-    "trackerType": "PLANAR"
-  };
-  const app = new Letsee(config);
+	const config = {
+		"appKey": "Tb8arp5eF9ZMDw0u2QiOyV845R61eltmeZQKwFBXBeeNU9Q5vgpduQdF5oipQX9X",
+		"trackerType": "PLANAR"
+	};
+	const app = new Letsee(config);
 
-  let editObject;
-  let CURRENT_URI = '';
+	let editObject;
+	let CURRENT_URI = '';
 	let currentTarget;
+	const objectTemplate = {
+		"id": null,
+		"type": null,
+		"content": null,
+		"imageName": null,
+		"position": {
+			"_x": null,
+			"_y": null,
+			"_z": null
+		},
+		"rotation": {
+			"_x": null,
+			"_y": null,
+			"_z": null
+		},
+		"scale": {
+			"_x": null,
+			"_y": null,
+			"_z": null
+		}
+	};
 
-  $(function() {
-    initLayout();
-  });
+	$(function() {
+		initLayout();
+	});
 
-  app.addEventListener("trackstart", function(e) {
-    let uri = e.target.uri;
-    if (uri !== CURRENT_URI) {
-      if (CURRENT_URI) {
-        LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
-        CURRENT_URI = uri;
-        currentTarget = LetseeEngine.getEntity(CURRENT_URI);
+	app.addEventListener("trackstart", function(e) {
+		let uri = e.target.uri;
+		if (uri !== CURRENT_URI) {
+			if (CURRENT_URI) {
+				LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
+				CURRENT_URI = uri;
+				currentTarget = LetseeEngine.getEntity(CURRENT_URI);
 
-        //ready();
-      }
+				//ready();
+			}
 
-      CURRENT_URI = uri;
-      e.target.addRenderable(world);
+			CURRENT_URI = uri;
+			e.target.addRenderable(world);
 
-      let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
-      world.position.z = depth;
-    }
-  });
+			let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
+			world.position.z = depth;
+		}
+	});
 
-  app.addEventListener("trackmove", function(e) {
-    console.log(e);
-    console.log(e);
-  });
+	app.addEventListener("trackmove", function(e) {
+		console.log(e);
+		console.log(e);
+	});
 
-  app.addEventListener('app_status', e => {
-    switch(e.code) {
-      case 203:
-        initWorldObject3D(app.letseeEngine.getEntities());
-        break;
-      default:
-        console.log(e);
-        break;
-    }
-  });
+	app.addEventListener('app_status', e => {
+		switch(e.code) {
+			case 203:
+				initWorldObject3D(app.letseeEngine.getEntities());
+				break;
+			default:
+				console.log(e);
+				break;
+		}
+	});
 
 
-  const world = new Object3D();
+	const world = new Object3D();
 
-  function addTextItem() {
-    //let text = $('#inputArea').val();
+	function addTextItem() {
+		//let text = $('#inputArea').val();
 
-    // 첫번째 변수로 element의 css를 넣고 두번째 변수로
-    //let jungwooText = createDOMRenderable("<div>" + text + "</div>", 'target-ready-content');
+		// 첫번째 변수로 element의 css를 넣고 두번째 변수로
+		//let jungwooText = createDOMRenderable("<div>" + text + "</div>", 'target-ready-content');
 
-    //editObject = jungwooText;
-    //showInputTextDiv();
-    //showInputConfirmDiv();
-  }
+		//editObject = jungwooText;
+		//showInputTextDiv();
+		//showInputConfirmDiv();
+	}
 
-  function createDOMRenderable(value, className, _position = null, _rotation = null, _scale = null) {
-    let element = document.createElement('div');
-    element.innerHTML = value;
-    element.className = className ? className : '';
+	const cardContentInput = document.getElementById('inputArea');
 
-    const renderableEle = new DOMRenderable(element);
+	function createDOMRenderable(value, className, _position = null, _rotation = null, _scale = null) {
+		let element = document.createElement('div');
+		element.innerHTML = value;
+		element.className = className ? className : '';
 
-    // renderableEle.position.set(..._position);
+		const renderableEle = new DOMRenderable(element);
 
-    if (_position) renderableEle.position.set(..._position);
+		// renderableEle.position.set(..._position);
 
-    if (_rotation) {
-      renderableEle.rotateX(_rotation[0]);
-      renderableEle.rotateY(_rotation[1]);
-      renderableEle.rotateZ(_rotation[2]);
+		if (_position) renderableEle.position.set(..._position);
+
+		if (_rotation) {
+			renderableEle.rotateX(_rotation[0]);
+			renderableEle.rotateY(_rotation[1]);
+			renderableEle.rotateZ(_rotation[2]);
 		}
 
 		if (_scale) {
-      renderableEle.scale.set(_scale, _scale, _scale);
+			renderableEle.scale.set(_scale, _scale, _scale);
 		}
 
-    // if (_scale) renderableEle.scale.set(..._scale);
-    return renderableEle ;
-  }
+		// if (_scale) renderableEle.scale.set(..._scale);
+		return renderableEle ;
+	}
 
-  // Init first object
-  function initWorldObject3D(entity) {
-    let position = [50,40,1];
+	// Init first object
+	function initWorldObject3D(entity) {
+		let position = [50,40,1];
 		let rotation = [5,80,10];
 
-    world.add(
-      createDOMRenderable('aaaaaa','test',position, rotation)
+		world.add(
+				createDOMRenderable('aaaaaa','test',position, rotation)
 		);
-    entity[0].addRenderable(world);
-    currentTarget = LetseeEngine.getEntity('toystory.json');
+		entity[0].addRenderable(world);
+		currentTarget = LetseeEngine.getEntity('toystory.json');
 
-  }
+	}
 
-  // 카드 만들기. 인풋창에 들어간 내용으로 html태그 제작
-  function createTextCard() {
-    let inputArea = $('#inputArea');
-		let _content = inputArea.val();
-		inputArea.val = "";
+	let currentCard = null;
+	let currentCardObject = null;
 
-		_content = `<div style="border: 1px solid yellow">${_content}</div>`;
-		// 이부분에서 카드 컨텐츠 제작하는 div가 들어가야함.
-		addCard(_content);
-  }
+	function updateCardObject(arg) {
+		return {...currentCardObject, ...arg};
+	}
 
-  // 카드 화면에 붙이기. 위에 만든 카드를 화면에 붙이고 hammer이벤트로 조정
-  function addCard(content) {
-    let position = [0,0,0];
-    let rotation = [0,0,0];
-    let scale = 1;
+	// 카드 만들기. 인풋창에 들어간 내용으로 html태그 제작
+	function createTextCard(_type = null) {
+		const randomId = "dummy";
+		const type = _type || null;
+		const content = `
+<div class="cardElement" rel="card">
+	<div class="wrapper">
+		<div class="inner">
+			<div class="imagebox"></div>
+			<div class="textBox">
+				${cardContentInput.value}
+			</div>
+		</div>
+	</div>
+</div>`;
+		currentCardObject = updateCardObject({
+			"id": randomId,
+			"type": type,
+			"content": content,
+		})
+		addCard();
+		cardContentInput.value = "";
+	}
 
-    let renderable = createDOMRenderable(content, "test", position, rotation, scale);
-    world.add(renderable);
 
-    editObject = renderable;
 
-    showInputTextDiv();
-    showInputConfirmDiv();
 
-  }
+	// 카드 화면에 붙이기. 위에 만든 카드를 화면에 붙이고 hammer이벤트로 조정
+	function addCard() {
+		let position = [0,0,0];
+		let rotation = [0,0,0];
+		let scale = 1;
 
-  // 서버 전송
-  function save() {
-    showInputConfirmDiv();
+		let renderable = createDOMRenderable(currentCardObject.content, "test", position, rotation, scale);
+		world.add(renderable);
+
+		editObject = renderable;
+
+
+		showInputTextDiv();
+		showInputConfirmDiv();
+		currentCard = editObject;
+
+	}
+
+	// 서버 전송
+	function save() {
+		console.log(currentCard);
+		currentCardObject =  updateCardObject(
+				{
+					"position": {
+						"_x": currentCard.position._x,
+						"_y": currentCard.position._y,
+						"_z": currentCard.position._z
+					},
+					"rotation": {
+						"_x": currentCard.rotation._x,
+						"_y": currentCard.rotation._y,
+						"_z": currentCard.rotation._z
+					},
+					"scale": {
+						"_x": currentCard.scale._x,
+						"_y": currentCard.scale._y,
+						"_z": currentCard.scale._z
+					}
+				}
+		)
+		showInputConfirmDiv();
+
+
+		postCard(currentCardObject)
+				.then(data => {
+					// remove currentCard = editObject => null
+
+					// reset
+					currentCardObject = objectTemplate;
+				})
 	}
 </script>
 
