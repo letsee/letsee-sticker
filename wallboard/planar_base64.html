@@ -73,6 +73,7 @@
 	</div>
 </div>
 
+
 <div id="inputConfirm">
 	<!-- 완료버튼 눌렀을 시 서버에 데이터 저장하고 보여주기 -->
 	<div onclick="save();" class="icon-edit-sucsess">완료</div>
@@ -190,7 +191,7 @@
 		axios.post('files/'+'awe2019.jpg', imageObj.files[0])
 				.then( (data) => {
 					currentCardObject.imageUrl = data.data.url;
-					postCard();
+					saveImageData();
 				})
 				.catch(error => {
 					console.warn(error);
@@ -289,18 +290,16 @@
 	function createCard(_type = null) {
 		if (_type === "text") {
 
-
-			// document.querySelector("img[data-id='bfcc46bb-b047-4fcf-a8b5-9128139f1aff']")
 			const imageData = CreateThumbnail.getImage(imageObj.files[0])
 					.then(result => {
 						console.log(result);
 						const randomId = UUID();
 						const type = _type || null;
 						const content = `
-					<div class="cardElement" data-type="card" data-id="${randomId}">
+					<div class="cardElement" data-type="card" data-id="${cardContentInput.id}">
 						<div class="wrapper">
 							<div class="inner">
-								<div class="imagebox"><img src="${result}" data-type="cardImage" data-id="${randomId}"></div>
+								<div class="imagebox"><img src="${result}"></div>
 								<div class="textBox">
 									${cardContentInput.value}
 								</div>
@@ -355,23 +354,23 @@
 	// 서버 전송
 	function save() {
 		currentCardObject = updateCardObject(
-			{
-				"position": {
-					"_x": editObject.position._x,
-					"_y": editObject.position._y,
-					"_z": editObject.position._z
-				},
-				"rotation": {
-					"_x": editObject.rotation._x,
-					"_y": editObject.rotation._y,
-					"_z": editObject.rotation._z
-				},
-				"scale": {
-					"_x": editObject.scale._x,
-					"_y": editObject.scale._y,
-					"_z": editObject.scale._z
+				{
+					"position": {
+						"_x": editObject.position._x,
+						"_y": editObject.position._y,
+						"_z": editObject.position._z
+					},
+					"rotation": {
+						"_x": editObject.rotation._x,
+						"_y": editObject.rotation._y,
+						"_z": editObject.rotation._z
+					},
+					"scale": {
+						"_x": editObject.scale._x,
+						"_y": editObject.scale._y,
+						"_z": editObject.scale._z
+					}
 				}
-			}
 		);
 
 		showInputConfirmDiv();

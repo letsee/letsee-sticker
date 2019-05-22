@@ -90,7 +90,7 @@ $ parse-server --appId ar-docent --masterKey masterkey --restAPIKey djasklasdas 
     )
       .then( (data) => {
         currentObject.imageUrl = data.data.url;
-        saveImageData();
+        postCard();
         console.log(data);
       })
       .catch(error => {
@@ -98,7 +98,7 @@ $ parse-server --appId ar-docent --masterKey masterkey --restAPIKey djasklasdas 
       })
   }
 
-  function saveImageData() {
+  function postCard() {
     axios.post(
       'classes/wallboard',
       setData(currentObject))
