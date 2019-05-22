@@ -2,8 +2,8 @@
 	"uri":"toystory.json",
 	"name":"toystory",
 	"size":{
-		"width": 140,
-		"height": 200
+		"width": 420,
+		"height": 600
 	},
 	"scale": 1,
 	"image":"./toystory.jpg",

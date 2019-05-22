@@ -18,10 +18,21 @@
 	</style>
 
 	<style>
-		.test {
-			border: 1px solid #f00;
-			width: 100px;
-			height: 100px;
+		.cardElement {
+			width: 400px;
+			height: 400px;
+			font-size: 40px;
+			background: rgba(255, 255, 255, 0.8);
+			border-radius: 5%;
+			border: 10px solid rgba(0, 0, 0, 0.48);
+			padding: 15px;
+		}
+		.imagebox {
+			width: 100%;
+		}
+		.imagebox img {
+			display: block;
+			width: 100%;
 		}
 	</style>
 
@@ -29,7 +40,7 @@
 <body>
 
 
-<div id="container" class="test"></div>
+<div id="container"></div>
 
 <div id="btnAdd" onclick="showMenuDiv()"></div>
 <div id="menu">
@@ -52,6 +63,9 @@
 	<div id="inputHeader" class="page-header">
 		<p>Input Text</p>
 		<img src="assets/close.png" onclick="showInputTextDiv()" />
+	</div>
+	<div id="imageUpload">
+		<input type="file" id="uploadImageInput" accept=".jpg,.jpeg.,.gif,.png">
 	</div>
 	<textarea id="inputArea" placeholder="이 곳에 텍스트를 입력해 글을 게시합니다"></textarea>
 	<div id="btnLetseeit">
@@ -76,16 +90,72 @@
 </body>
 
 <script type="text/javascript" src="js/layout.js"></script>
+<script type="text/javascript" src="./thumb.js"></script>
 <script>
+	/* Letsee init */
 	const config = {
 		"appKey": "Tb8arp5eF9ZMDw0u2QiOyV845R61eltmeZQKwFBXBeeNU9Q5vgpduQdF5oipQX9X",
 		"trackerType": "PLANAR"
 	};
 	const app = new Letsee(config);
+	let currentCardObject = null;
 
-	let editObject;
-	let CURRENT_URI = '';
-	let currentTarget;
+	app.addEventListener("trackstart", function(e) {
+		let uri = e.target.uri;
+		if (uri !== CURRENT_URI) {
+			/*
+                if (CURRENT_URI) {
+                      LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
+                      CURRENT_URI = uri;
+                      currentTarget = LetseeEngine.getEntity(CURRENT_URI);
+
+                      //ready();
+                  }
+
+                  CURRENT_URI = uri;
+                  e.target.addRenderable(world);
+
+                  let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
+                  world.position.z = depth;
+              }
+          }*/
+		}});
+	app.addEventListener("trackmove", function(e) {
+	});
+	app.addEventListener("trackend", function(e) {
+	});
+	app.addEventListener('app_status', e => {
+		switch(e.code) {
+			case 203:
+				initWorldObject3D(app.letseeEngine.getEntities());
+				break;
+			default:
+				console.log(e);
+				break;
+		}
+	});
+
+
+	$(function() {
+		initLayout();
+	});
+
+	function UUID() {
+		let d = new Date().getTime();
+
+		if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+			d += performance.now(); // use high-precision timer if available
+		}
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+			let r = (d + Math.random() * 16) % 16 | 0;
+
+			d = Math.floor(d / 16);
+			return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+		});
+	}
+
+	/* Set ajax */
+
 	const objectTemplate = {
 		"id": null,
 		"type": null,
@@ -107,73 +177,87 @@
 			"_z": null
 		}
 	};
+	// init Parse server
+	axios.defaults.baseURL = 'http://localhost:8811/parse/';
+	axios.defaults.headers.common['X-Parse-Application-Id'] = 'ar-docent';
+	axios.defaults.headers.common['X-Parse-REST-API-Key'] = 'djasklasdas';
 
-	$(function() {
-		initLayout();
-	});
+	function updateCardObject(args) {
+		return {...currentCardObject, ...args}
+	}
 
-	app.addEventListener("trackstart", function(e) {
-		let uri = e.target.uri;
-		if (uri !== CURRENT_URI) {
-      /*
-		  if (CURRENT_URI) {
-				LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
-				CURRENT_URI = uri;
-				currentTarget = LetseeEngine.getEntity(CURRENT_URI);
+	function saveImage() {
+		currentObject = template;
+		axios.post('files/'+'awe2019.jpg', imageObj.files[0])
+				.then( (data) => {
+					currentCardObject.imageUrl = data.data.url;
+					saveImageData();
+				})
+				.catch(error => {
+					console.warn(error);
+				})
+	}
+	function postCard() {
+		axios.post('classes/wallboard', updateCardObject(currentCardObject))
+				.then(() => {
+					currentCardObject = null;
+					editObject = null;
+					currentCardObject = objectTemplate;
+				})
+				.catch(error => {
+					console.warn(error);
+				})
+	}
 
-				//ready();
-			}
+	function getCardData() {
+		axios.get('classes/wallboard')
+				.then(data => {
+					printCardsItemFromJson(data.data.results);
+					currentCardObject = null;
+					editObject = null;
+					currentCardObject = objectTemplate;
+				})
+				.catch(error => {
+					console.warn(error);
+				})
+	}
 
-			CURRENT_URI = uri;
-			e.target.addRenderable(world);
+	// 초기 화면 렌더링
+	getCardData();
 
-			let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
-			world.position.z = depth;
-		}
-	}*/
-    }}
-	);
 
-	app.addEventListener("trackmove", function(e) {
-		//console.log(e);
-		//console.log(e);
-	});
+	/* Publish card */
 
-	app.addEventListener('app_status', e => {
-		switch(e.code) {
-			case 203:
-				initWorldObject3D(app.letseeEngine.getEntities());
-				break;
-			default:
-				console.log(e);
-				break;
-		}
-	});
+	let editObject;
+	let CURRENT_URI = '';
+	let currentTarget = null;
+
 
 	const world = new Object3D();
 	const cardContentInput = document.getElementById('inputArea');
+	const imageObj = document.getElementById('uploadImageInput');
 
 	// Function to make renderable item and renderable item's position, rotation, scale.
-	function createDOMRenderable(value, className, _position = null, _rotation = null, _scale = null) {
+	function createDOMRenderable(value, _position = null, _rotation = null, _scale = null) {
 		let element = document.createElement('div');
 		element.innerHTML = value;
-		element.className = className ? className : '';
 
 		const renderableEle = new DOMRenderable(element);
 
 		// Set position
 		if (_position) renderableEle.position.set(..._position);
 
-    // Set rotation
-    if (_rotation) {
+		// Set rotation
+		if (_rotation) {
 			renderableEle.rotateX(_rotation[0]);
 			renderableEle.rotateY(_rotation[1]);
 			renderableEle.rotateZ(_rotation[2]);
 		}
 
 		// Set scale
+
 		if (_scale) {
-			renderableEle.scale.set(_scale, _scale, _scale);
+			renderableEle.scale.set(..._scale);
 		}
 
 		// if (_scale) renderableEle.scale.set(..._scale);
@@ -181,159 +265,118 @@
 	}
 
 
-  // Initialize app.
-	function initWorldObject3D(entity) {
-	  /*
-		let position = [50,40,1];
-		let rotation = [5,80,10];
-
-		world.add(
-				createDOMRenderable('aaaaaa','test',position, rotation)
-		);
-		*/
-		entity[0].addRenderable(world);
-		currentTarget = LetseeEngine.getEntity('toystory.json');
-
-	}
-
 	function printCardsItemFromJson(data) {
-    // let cardObjects = JSON.parse(JSON.stringify(data));
-
-    data.forEach(function(item) {
-			let position  = [item.position._x, item.position._y, item.position._z];
+		// let cardObjects = JSON.parse(JSON.stringify(data));
+		data.forEach(function(item, index) {
+			let position  = [item.position._x, item.position._y, (index*-50)-50];
 			let rotation  = [item.rotation._x, item.rotation._y, item.rotation._z];
-			let scale = item.scale.x;
-
-      let renderableItem = createDOMRenderable(item.content, "test", position, rotation, scale);
-      world.add(renderableItem);
-    });
+			let scale = [item.scale._x, item.scale._y, item.scale._z];
+			let renderableItem = createDOMRenderable(item.content, position, rotation, scale);
+			world.add(renderableItem);
+		});
 	}
 
-	let currentCard = null;
-	let currentCardObject = null;
-
-	function updateCardObject(arg) {
-		return {...currentCardObject, ...arg};
+	// Initialize app.
+	function initWorldObject3D(entity) {
+		entity[0].addRenderable(world);
+		currentTarget = LetseeEngine.getEntities()[0]
 	}
+
+
+
+	// const imageThumbnail = new CreateThumbnail();
 
 	// 카드 만들기. 인풋창에 들어간 내용으로 html태그 제작
 	function createCard(_type = null) {
 		if (_type === "text") {
-      const randomId = "dummy";
-      const type = _type || null;
-      const content = `
-					<div class="cardElement" rel="card">
+
+			const imageData = CreateThumbnail.getImage(imageObj.files[0])
+					.then(result => {
+						console.log(result);
+						const randomId = UUID();
+						const type = _type || null;
+						const content = `
+					<div class="cardElement" data-type="card" data-id="${cardContentInput.id}">
 						<div class="wrapper">
 							<div class="inner">
-								<div class="imagebox"></div>
+								<div class="imagebox"><img src="${result}"></div>
 								<div class="textBox">
 									${cardContentInput.value}
 								</div>
 							</div>
 						</div>
 					</div>`
-      ;
-      currentCardObject = updateCardObject({
-        "id": randomId,
-        "type": type,
-        "content": content,
-      });
+						;
+						currentCardObject = updateCardObject({
+							"id": randomId,
+							"type": type,
+							"content": content,
+						});
 
-      addCard();
-      cardContentInput.value = "";
+						addCard();
+						cardContentInput.value = "";
+
+					})
+					.catch(error => {
+						console.warn(error);
+					});
+
+
+
+
 		} else if (_type === "image") {
 			const randomId = "dummy";
 			const type = _type || null;
 			const content = null
 
 			currentCardObject = updateCardObject({
-        "id": randomId,
-        "type": type,
-        "content": content
+				"id": randomId,
+				"type": type,
+				"content": content
 			})
 		}
 	}
-
 	// 카드 화면에 붙이기. 위에 만든 카드를 화면에 붙이고 hammer이벤트로 조정
 	function addCard() {
 		let position = [0,0,0];
 		let rotation = [0,0,0];
-		let scale = 1;
+		let scale = [1,1,1];
+		let renderable = createDOMRenderable(currentCardObject.content, position, rotation, scale);
 
-		let renderable = createDOMRenderable(currentCardObject.content, "test", position, rotation, scale);
 		world.add(renderable);
-
 		editObject = renderable;
-    currentCard = editObject;
-
-    // Set layout
-    showInputTextDiv();
+		// currentCard = editObject;
+		// Set layout
+		showInputTextDiv();
 		showInputConfirmDiv();
 
 	}
-
 	// 서버 전송
 	function save() {
-		currentCardObject =  updateCardObject(
+		currentCardObject = updateCardObject(
 				{
 					"position": {
-						"_x": currentCard.position._x,
-						"_y": currentCard.position._y,
-						"_z": currentCard.position._z
+						"_x": editObject.position._x,
+						"_y": editObject.position._y,
+						"_z": editObject.position._z
 					},
 					"rotation": {
-						"_x": currentCard.rotation._x,
-						"_y": currentCard.rotation._y,
-						"_z": currentCard.rotation._z
+						"_x": editObject.rotation._x,
+						"_y": editObject.rotation._y,
+						"_z": editObject.rotation._z
 					},
 					"scale": {
-						"_x": currentCard.scale._x,
-						"_y": currentCard.scale._y,
-						"_z": currentCard.scale._z
+						"_x": editObject.scale._x,
+						"_y": editObject.scale._y,
+						"_z": editObject.scale._z
 					}
 				}
 		);
 
 		showInputConfirmDiv();
-    postCard();
+		postCard();
 	}
-
 	// local parse server 연동
-  axios.defaults.baseURL = 'http://localhost:8811/parse/';
-  axios.defaults.headers.common['X-Parse-Application-Id'] = 'ar-docent';
-  axios.defaults.headers.common['X-Parse-REST-API-Key'] = 'djasklasdas';
-
-  function postCard() {
-    axios.post('classes/wallboard',
-      setCardData(currentCardObject))
-      .then(() => {
-        currentCardObject = null;
-      	editObject = null;
-        currentCardObject = objectTemplate;
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  }
-
-  function setCardData(args) {
-    return {...currentCardObject, ...args}
-  }
-
-  function getCardData() {
-    axios.get('classes/wallboard')
-      .then(data => {
-        printCardsItemFromJson(data.data.results);
-        currentCardObject = null;
-        editObject = null;
-        currentCardObject = objectTemplate;
-
-      })
-      .catch(error => {
-				console.warn(error);
-      })
-  }
-  getCardData();
 
 </script>
 <!-- hammer motion code -->
