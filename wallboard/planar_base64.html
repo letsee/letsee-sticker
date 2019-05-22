@@ -198,14 +198,14 @@
 				})
 	}
 	function postCard() {
-		axios.post('classes/wallboard', updateCardObject(currentCardObject))
-				.then(() => {
-					currentCardObject = null;
-					editObject = null;
-					currentCardObject = objectTemplate;
-				})
-				.catch(error => {
-					console.warn(error);
+      axios.post('classes/wallboard', updateCardObject(currentCardObject))
+        .then(() => {
+          currentCardObject = null;
+          editObject = null;
+          currentCardObject = objectTemplate;
+        })
+        .catch(error => {
+          console.warn(error);
 				})
 	}
 
