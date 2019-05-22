@@ -55,7 +55,7 @@
 	</div>
 	<textarea id="inputArea" placeholder="이 곳에 텍스트를 입력해 글을 게시합니다"></textarea>
 	<div id="btnLetseeit">
-		<img src="assets/letsee_it.png" onclick="createTextCard('text')" />
+		<img src="assets/letsee_it.png" onclick="createCard('text')" />
 	</div>
 </div>
 
@@ -90,7 +90,7 @@
 		"id": null,
 		"type": null,
 		"content": null,
-		"imageName": null,
+		"imageUrl": null,
 		"position": {
 			"_x": null,
 			"_y": null,
@@ -135,8 +135,8 @@
 	);
 
 	app.addEventListener("trackmove", function(e) {
-		console.log(e);
-		console.log(e);
+		//console.log(e);
+		//console.log(e);
 	});
 
 	app.addEventListener('app_status', e => {
@@ -151,7 +151,6 @@
 	});
 
 	const world = new Object3D();
-
 	const cardContentInput = document.getElementById('inputArea');
 
 	// Function to make renderable item and renderable item's position, rotation, scale.
@@ -181,136 +180,6 @@
 		return renderableEle ;
 	}
 
-  var cardObjects = [{
-    "id": "dummy",
-    "type": null,
-    "content": `
-					<div class="cardElement" rel="card">
-						<div class="wrapper">
-							<div class="inner">
-								<div class="imagebox"></div>
-								<div class="textBox">
-									${cardContentInput.value}
-								</div>
-							</div>
-						</div>
-					</div>
-				`,
-    "imageName": null,
-    "position": {
-      "_x": 50,
-      "_y": 50,
-      "_z": 0
-    },
-    "rotation": {
-      "_x": 0,
-      "_y": 0,
-      "_z": 0
-    },
-    "scale": {
-      "_x": 1,
-      "_y": 1,
-      "_z": 1
-    }
-  },
-    {
-      "id": "dummy",
-      "type": null,
-      "content": `
-				<div class="cardElement" rel="card">
-					<div class="wrapper">
-						<div class="inner">
-							<div class="imagebox"></div>
-							<div class="textBox">
-								${cardContentInput.value}
-							</div>
-						</div>
-					</div>
-				</div>
-			`,
-      "imageName": null,
-      "position": {
-        "_x": 50,
-        "_y": 50,
-        "_z": 0
-      },
-      "rotation": {
-        "_x": 0,
-        "_y": 0,
-        "_z": 0
-      },
-      "scale": {
-        "_x": 1,
-        "_y": 1,
-        "_z": 1
-      }
-    },
-    {
-      "id": "dummy",
-      "type": null,
-      "content": `
-				<div class="cardElement" rel="card">
-					<div class="wrapper">
-						<div class="inner">
-							<div class="imagebox"></div>
-							<div class="textBox">
-								${cardContentInput.value}
-							</div>
-						</div>
-					</div>
-				</div>
-			`,
-      "imageName": null,
-      "position": {
-        "_x": -50,
-        "_y": -50,
-        "_z": 0
-      },
-      "rotation": {
-        "_x": 0,
-        "_y": 0,
-        "_z": 0
-      },
-      "scale": {
-        "_x": 1,
-        "_y": 1,
-        "_z": 1
-      }
-    },
-    {
-      "id": "dummy",
-      "type": null,
-      "content": `
-				<div class="cardElement" rel="card">
-					<div class="wrapper">
-						<div class="inner">
-							<div class="imagebox"></div>
-							<div class="textBox">
-								${cardContentInput.value}
-							</div>
-						</div>
-					</div>
-				</div>
-			`,
-      "imageName": null,
-      "position": {
-        "_x": 50,
-        "_y": -50,
-        "_z": 0
-      },
-      "rotation": {
-        "_x": 0,
-        "_y": 0,
-        "_z": 0
-      },
-      "scale": {
-        "_x": 1,
-        "_y": 1,
-        "_z": 1
-      }
-    }
-  ];
-
 
   // Initialize app.
 	function initWorldObject3D(entity) {
@@ -325,10 +194,7 @@
 		entity[0].addRenderable(world);
 		currentTarget = LetseeEngine.getEntity('toystory.json');
 
-
-
 	}
-
 
 	function printCardsItemFromJson(data) {
     // let cardObjects = JSON.parse(JSON.stringify(data));
@@ -338,10 +204,9 @@
 			let rotation  = [item.rotation._x, item.rotation._y, item.rotation._z];
 			let scale = item.scale.x;
 
-      let renderableItem = createDOMRenderable(item.content, "test" ,position, rotation, scale);
+      let renderableItem = createDOMRenderable(item.content, "test", position, rotation, scale);
       world.add(renderableItem);
     });
-
 	}
 
 	let currentCard = null;
@@ -352,10 +217,11 @@
 	}
 
 	// 카드 만들기. 인풋창에 들어간 내용으로 html태그 제작
-	function createTextCard(_type = null) {
-		const randomId = "dummy";
-		const type = _type || null;
-		const content = `
+	function createCard(_type = null) {
+		if (_type === "text") {
+      const randomId = "dummy";
+      const type = _type || null;
+      const content = `
 					<div class="cardElement" rel="card">
 						<div class="wrapper">
 							<div class="inner">
@@ -366,15 +232,26 @@
 							</div>
 						</div>
 					</div>`
-		;
-		currentCardObject = updateCardObject({
-			"id": randomId,
-			"type": type,
-			"content": content,
-		});
+      ;
+      currentCardObject = updateCardObject({
+        "id": randomId,
+        "type": type,
+        "content": content,
+      });
 
-		addCard();
-		cardContentInput.value = "";
+      addCard();
+      cardContentInput.value = "";
+		} else if (_type === "image") {
+			const randomId = "dummy";
+			const type = _type || null;
+			const content = null
+
+			currentCardObject = updateCardObject({
+        "id": randomId,
+        "type": type,
+        "content": content
+			})
+		}
 	}
 
 	// 카드 화면에 붙이기. 위에 만든 카드를 화면에 붙이고 hammer이벤트로 조정
@@ -392,6 +269,7 @@
     // Set layout
     showInputTextDiv();
 		showInputConfirmDiv();
+
 	}
 
 	// 서버 전송
@@ -419,8 +297,6 @@
 		showInputConfirmDiv();
     postCard();
 	}
-
-
 
 	// local parse server 연동
   axios.defaults.baseURL = 'http://localhost:8811/parse/';
