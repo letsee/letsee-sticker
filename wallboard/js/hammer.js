@@ -56,7 +56,7 @@ manager.on('panmove', function(e) {
     editObject.position.x = editObject.position.x > 0 ? (currentTarget.size.width*2)-1 : -( (currentTarget.size.width*2)-1)
 
     touch.current.x = editObject.position.x;
-    touch.current.y = -editObject.position.y
+    touch.current.y = -editObject.position.y;
     touch.isBoundary = true;
     return;
   }
@@ -102,8 +102,8 @@ manager.on('panend', function(e) {
       manager.get('rotate').set({ enable : true });
 
     } else {
-      touch.current.x = touch.current.x + e.deltaX/4;
-      touch.current.y = touch.current.y + e.deltaY/4;
+      touch.current.x = touch.current.x + e.deltaX;
+      touch.current.y = touch.current.y + e.deltaY;
     }
   }
 });
