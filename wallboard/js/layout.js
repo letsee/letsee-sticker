@@ -4,12 +4,12 @@ let h = window.innerHeight;
 let menu = $("#menu");
 
 // set global elements.
-let btnAdd = document.getElementById("btnAdd");
+let addButton = document.getElementById("addButton");
 let imgHelp = document.getElementById("imgHelp");
 
 // set switchs.
 let isOpenMenu = false;
-let isOpenHelpImage = false;
+let idOpenHelpDiv = false;
 let isOpenInputText = false;
 let isOpenInputConfirm = false;
 let isOpenBtnAddAndMenu = false;
@@ -19,9 +19,9 @@ inputArea = $("#inputArea");
 
 // function to set layout when app initialize.
 function initLayout() {
-  btnAdd.style.top = ((h / 2) - ($(btnAdd).height() / 2)) + "px";
-  btnAdd.style.left = ((w / 2) - ($(btnAdd).width() / 2)) + "px";
-  btnAdd.style.display = "block";
+  addButton.style.top = ((h / 2) - ($(addButton).height() / 2)) + "px";
+  addButton.style.left = ((w / 2) - ($(addButton).width() / 2)) + "px";
+  addButton.style.display = "block";
 
   initMenu();
   initHelpDiv();
@@ -79,26 +79,32 @@ function initMenu() {
 // Function for set Help Button
 function initHelpDiv() {
   let divHelp = document.getElementById("divHelp");
-  divHelp.style.width = w + "px";
-  divHelp.style.height = h + "px";
+  //divHelp.style.width = w + "px";
+  //divHelp.style.height = h + "px";
+  divHelp.style.width = w * 0.8 + "px";
+  divHelp.style.height = h * 0.9 + "px";
+  divHelp.style.marginLeft = w * 0.1 + "px";
+  divHelp.style.marginTop = h * 0.05 + "px";
 
-  imgHelp.style.width = "100%";
-  imgHelp.style.height = "100%";
-  imgHelp.src = "assets/web_help.png";
+  let xButtonHelp = document.getElementById("xButtonHelp");
+  xButtonHelp.width = w * 0.1;
+  xButtonHelp.style.marginLeft = w * 0.85 + "px";
+  xButtonHelp.style.marginTop = h * 0.025 +"px"
+
 }
 
 // function for showing "menu" div element.
 function showMenuDiv() {
 
-  let btnAdd = document.getElementById("btnAdd");
+  let addButton = document.getElementById("addButton");
 
   if(isOpenMenu === false) {
-    btnAdd.style.WebkitTransform = "rotate(45deg)";
+    addButton.style.WebkitTransform = "rotate(45deg)";
     menu.fadeIn();
     isOpenMenu = true;
 
   } else {
-    btnAdd.style.WebkitTransform = "rotate(0deg)";
+    addButton.style.WebkitTransform = "rotate(0deg)";
     isOpenMenu = false;
     menu.fadeOut();
   }
@@ -107,31 +113,28 @@ function showMenuDiv() {
 // function for showing "btnAdd" div element.
 function showBtnAddAndMenu() {
   let menu = document.getElementById("menu");
-  let btnAdd = document.getElementById("btnAdd");
 
   if (isOpenBtnAddAndMenu === false) {
-    btnAdd.style.display = "none";
-    if (btnAdd.style.WebkitTransform !== "rotate(0deg)") menu.style.display = "none";
     isOpenBtnAddAndMenu = true;
 
   } else {
-    btnAdd.style.display = "block";
-    if (btnAdd.style.WebkitTransform !== "rotate(0deg)") menu.style.display = "block";
-    isOpenBtnAddAndMenu = false;
+     isOpenBtnAddAndMenu = false;
   }
 }
 
 function showHelpImage() {
-  if(isOpenHelpImage === false) {
-    imgHelp.style.display = "block";
+  if(idOpenHelpDiv === false) {
+    //imgHelp.style.display = "block";
     //btnAdd.style.display = "none";
     showBtnAddAndMenu();
-    isOpenHelpImage = true;
+    idOpenHelpDiv = true;
+    $("#divHelp").fadeIn();
   } else {
-    imgHelp.style.display = "none";
+    //imgHelp.style.display = "none";
     //btnAdd.style.display = "block";
     showBtnAddAndMenu();
-    isOpenHelpImage = false;
+    idOpenHelpDiv = false;
+    $("#divHelp").fadeOut();
   }
 }
 
