@@ -76,8 +76,9 @@ manager.on('panmove', function(e) {
     touch.helper.position.z = editObject.position.z - 0;
 
   } else {
-    var dX = touch.current.x + (e.deltaX/4);
-    var dY = touch.current.y + (e.deltaY/4);
+    // hammer 이동 비율 조정
+    var dX = touch.current.x + (e.deltaX);
+    var dY = touch.current.y + (e.deltaY);
 
     editObject.position.x = dX;
     editObject.position.y = -dY;

@@ -382,19 +382,23 @@
 	}
 
   let renderable = null;
+	let currentCardIndex = 0;
 	// 카드 화면에 붙이기. 위에 만든 카드를 화면에 붙이고 hammer이벤트로 조정
 	function addCard(imgData) {
-		let position = [0,0,0];
+		let position = [0,0,50 * currentCardIndex];
 		let rotation = [0,0,0];
 		let scale = [1,1,1];
 		renderable = createDOMRenderable(currentCardObject.content, position, rotation, scale);
 
 		world.add(renderable);
 		editObject = renderable;
+		currentCardIndex ++;
 
 		if(imgData !== null) {
       let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
 			img.src = imgData;
+			console.log(img);
+
     }
 
 		// currentCard = editObject;
@@ -408,6 +412,7 @@
 	  if(renderable !== null) {
       world.remove(renderable);
       editObject = null;
+      currentCardIndex --;
     }
 
     showInputConfirmDiv();
