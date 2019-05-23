@@ -32,7 +32,7 @@
 		}
 		.imagebox img {
 			display: block;
-			width: 100%;
+			margin: 0 auto;
 		}
 	</style>
 
@@ -305,7 +305,7 @@
 			let renderableItem = createDOMRenderable(item.content, position, rotation, scale);
 			world.add(renderableItem);
 
-    });
+		});
 	}
 
 	// Initialize app.
@@ -321,12 +321,12 @@
 			// document.querySelector("img[data-id='bfcc46bb-b047-4fcf-a8b5-9128139f1aff']")
 			// 이미지 업로드시
 			if(imageObj.files.length > 0) {
-        CreateThumbnail.getImage(imageObj.files[0])
+
+        CreateThumbnail.getImageResize(imageObj.files[0])
           .then(result => {
             console.log(result);
             const randomId = UUID();
             const type = "image";
-
             const content = `
 					<div class="cardElement" data-type="card" data-id="${randomId}">
 						<div class="wrapper">
@@ -345,13 +345,14 @@
               "content": content,
             });
 
-            addCard(result);
+            addCard();
             //cardContentInput.value = "";
            })
 
            .catch(error => {
              console.warn(error);
            });
+
 
       } else {
 
@@ -395,9 +396,9 @@
 		currentCardIndex ++;
 
 		if(imgData !== null) {
-      let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
-			img.src = imgData;
-			console.log(img);
+      //let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
+      //img.src = imgData;
+			//console.log(img);
 
     }
 
@@ -405,7 +406,7 @@
 		// Set layout
     showInputTextDiv();
 		showInputConfirmDiv();
-
+		ResizeImage();
 	}
 
 	function removeCard() {
@@ -444,7 +445,60 @@
 		showInputConfirmDiv();
 		postCard();
 	}
-	// local parse server 연동
+
+
+	// 이미지를 원하는 크기로 리사이징. width, height 최대값이 380으로.
+  function ResizeImage() {
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+      var filesToUploads = document.getElementById('uploadImageInput').files;
+      var file = filesToUploads[0];
+      if (file) {
+
+        var reader = new FileReader();
+        // Set the image once loaded into file reader
+        reader.onload = function(e) {
+
+          var img = document.createElement("img");
+          img.src = e.target.result;
+
+          var canvas = document.createElement("canvas");
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+
+          var MAX_WIDTH = 380;
+          var MAX_HEIGHT = 380;
+          var width = img.width;
+          var height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          let dataurl = canvas.toDataURL(file.type);
+          //document.getElementById('output').src = dataurl;
+
+          let myImg = document.querySelector(`img[data-id='${currentCardObject.id}']`);
+          myImg.src = dataurl;
+
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      alert('The File APIs are not fully supported in this browser.');
+    }
+  }
 
 </script>
 <!-- hammer motion code -->
