@@ -12,10 +12,15 @@ let idOpenHelpDiv = false;
 let isOpenXButtonHelp = false;
 let isOpenInfoButtonHelp = true;
 
+let recommendDiv =  $("#recommendDiv");
+
 inputArea = $("#inputArea");
 
 // function to set layout when app initialize.
 function initLayoutPortrait() {
+
+  initOrientation();
+
   addButton.style.top = ((h / 2) - ($(addButton).height() / 2)) + "px";
   addButton.style.left = ((w / 2) - ($(addButton).width() / 2)) + "px";
   addButton.style.display = "block";
@@ -50,7 +55,16 @@ function initLayoutPortrait() {
 }
 
 function initLayoutLandscape() {
+  initOrientation();
+}
 
+
+function initOrientation() {
+  if(window.orientation === 0) {
+    recommendDiv.fadeIn();
+  } else {
+    recommendDiv.fadeOut();
+  }
 }
 
 function showHelpImage() {
@@ -120,14 +134,18 @@ $(window).on("orientationchange",function(){
   {
     w = window.innerWidth;
     h = window.innerHeight;
-    setTimeout(initLayout, 100);
+    //setTimeout(initLayout, 100);
+    recommendDiv.width = "100%";
+    recommendDiv.height = "100%";
+    recommendDiv.fadeIn();
 
   }
   else // Landscape
   {
-    w = window.innerWidth;
+     w = window.innerWidth;
     h = window.innerHeight;
-    setTimeout(initLayout, 100);
+    //setTimeout(initLayout, 100);
+    recommendDiv.fadeOut();
 
   }
 });
