@@ -367,29 +367,7 @@
             addCard();
 
         } else {
-
-            const randomId = UUID();
-            const type = "text";
-            const content = `
-				<div class="cardElement" data-type="card" data-id="${randomId}">
-					<div class="wrapper">
-						<div class="inner">
-							<div class="imagebox"><img src="" data-type="cardImage" data-id="${randomId}"></div>
-							<div class="textBox">
-								${cardContentInput.value}
-							</div>
-						</div>
-					</div>
-				</div>`;
-
-            currentCardObject = updateCardObject({
-                "id": randomId,
-                "type": type,
-                "content": content
-            });
-
-            addCard(null);
-            cardContentInput.value = "";
+						window.alert('파일을 선택해주세요.');
         }
     }
 
