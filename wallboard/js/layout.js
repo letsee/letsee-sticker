@@ -8,8 +8,8 @@ let h = window.innerHeight;
 let isOpenInputText = false;
 let isOpenInputConfirm = false;
 let idOpenHelpDiv = false;
-let isOpenXButtonHelp = false;
-let isOpenInfoButtonHelp = true;
+let isOpenXButtonGuide = false;
+let isOpenInfoButtonGuide = true;
 
 let recommendDiv =  $("#recommendDiv");
 let inputArea = $("#inputArea");
@@ -31,15 +31,6 @@ function initLayoutLandscape() {
   var b = parseInt(inputArea.css("border"));
 
   inputArea.width( (w - (m * 2) - (p * 2 ) - (b * 2)) + "px" );
-
-  // set help div
-  let divHelp = document.getElementById("divHelp");
-  //divHelp.style.width = w + "px";
-  //divHelp.style.height = h + "px";
-  //divHelp.style.width = w * 0.8 + "px"; 80%
-  //divHelp.style.height = h * 0.9 + "px"; 90%
-  //divHelp.style.marginLeft = w * 0.1 + "px"; 10%
-  //divHelp.style.marginTop = h * 0.05 + "px"; 5%
 
   // set xbutton
   /*
@@ -72,37 +63,37 @@ function initOrientation() {
 function showHelpImage() {
   if(idOpenHelpDiv === false) {
     idOpenHelpDiv = true;
-    $("#divHelp").fadeIn();
+    $("#guideDiv").fadeIn();
     showInfoButtonHelp();
     showXButtonHelp();
 
   } else {
     idOpenHelpDiv = false;
-    $("#divHelp").fadeOut();
+    $("#guideDiv").fadeOut();
     showInfoButtonHelp();
     showXButtonHelp();
   }
 }
 
 function showXButtonHelp() {
-  if(isOpenXButtonHelp ===  false) {
-    $("#xButtonHelp").fadeIn();
-    isOpenXButtonHelp = true
+  if(isOpenXButtonGuide ===  false) {
+    $("#xButtonGuide").fadeIn();
+    isOpenXButtonGuide = true
   }
   else {
-    $("#xButtonHelp").fadeOut();
-    isOpenXButtonHelp = false;
+    $("#xButtonGuide").fadeOut();
+    isOpenXButtonGuide = false;
   }
 }
 
 function showInfoButtonHelp() {
-  if(isOpenInfoButtonHelp ===  false) {
-    $("#infoButtonHelp").fadeIn();
-    isOpenInfoButtonHelp = true
+  if(isOpenInfoButtonGuide ===  false) {
+    $("#infoButtonGuide").fadeIn();
+    isOpenInfoButtonGuide = true
   }
   else {
-    $("#infoButtonHelp").fadeOut();
-    isOpenInfoButtonHelp = false;
+    $("#infoButtonGuide").fadeOut();
+    isOpenInfoButtonGuide = false;
   }
 }
 
@@ -146,3 +137,20 @@ $(window).on("orientationchange",function(){
     initLayoutLandscape();
   }
 });
+
+//////////////////////
+
+let mainDiv = $("#mainDiv");
+let addCardDiv = $("#addCardDiv");
+
+function backToMain() {
+
+  mainDiv.fadeIn();
+  addCardDiv.fadeOut()
+}
+
+function goToAddCardDiv() {
+
+  mainDiv.fadeOut();
+  addCardDiv.fadeIn()
+}

@@ -55,48 +55,20 @@
 </div>
 <!-- end vertical-->
 
-<div style="width:100%;height:100%; position:absolute; text-align: center; overflow: scroll;">
+<!-- 첫화면 (main) -->
+<div id="mainDiv" style="display:none;width:100%;height:100%; position:absolute; text-align: center; overflow: scroll;">
 	<div style="text-align: center">
-		<img src="assets/welcom_message.png" style="width:45%;margin-top: 5%"/><br/>
+		<img src="assets/welcome_message.png" style="width:45%;margin-top: 5%"/><br/>
 	</div>
-	<img src="assets/add_button.png" id="addButton" onclick="showInputTextDiv()" style="margin: 5% auto ; width:8%;"/>
+	<img src="assets/add_button.png" id="addButton" onclick="goToAddCardDiv()" style="margin: 5% auto ; width:8%;"/>
 	<img id="letseeBottomImg" src="assets/letsee_bottom.png" style="margin: 3% auto; width:25%"/>
-	<img src="assets/info_button.png" id="infoButtonHelp" onclick="showHelpImage()"  style="position:absolute; top:2%;right:5%; width:7%"/>
+	<img src="assets/info_button.png" id="infoButtonGuide" onclick="showHelpImage()"  style="position:absolute; top:2%;right:5%; width:7%"/>
 </div>
 
-<img src = "assets/x_button.png" id="xButtonHelp" onclick="showHelpImage()" style="width:7%; top:2%; right:5%"/>
+<img src = "assets/x_button.png" id="xButtonGuide" onclick="showHelpImage()" style="width:7%; top:2%; right:5%"/>
 
-<div style="width:100%;height:100%; position:absolute; text-align: center; overflow: scroll; background-color: #00accb">
-	<div style="width:100%;height:15%;padding-top:3%; background-color: rgba(39, 39, 39, 0.6);">
-		<img src="assets/back_button.png" style="float:left;left:7%;top:4%;width:5% ;position:absolute">
-		<img src="assets/pick_message2.png" style="width:45%;"/>
-	</div>
-
-	<div style="position:absolute;width:100%; top:23%; z-index: 90" >
-		<img src="assets/stick.png" style="width:15%;" />
-	</div>
-
-	<div style="position:absolute;width:100%; top: 27%">
-		<img src="assets/photo_frame.png" style="width:20%;"/>
-	</div>
-	<div style="position:absolute;width:100%; top:32%">
-		<img src="assets/rectangle.png" style="width:17% ;background-color:#ffffff"/>
-	</div>
-
-	<div style="position:absolute;width:100%; top:34%">
-		<img src="assets/upload_file.png" style="width:10%"/>
-	</div>
-	<div style="position:absolute;width:100%; top:42%">
-		<img src="assets/picture.png" style="width:8%"/>
-	</div>
-
-	<div style="position:absolute;width:100%; bottom:4%">
-		<img src="assets/post_message.png" style="width:15%;"/>
-	</div>
-
-</div>
-
-<div id="divHelp" style="width:80%;height:90%;margin-top: 5%; margin-left:10%">
+<!-- 도움말 화면 -->
+<div id="guideDiv" style="width:80%;height:90%;margin-top: 5%; margin-left:10%">
 	<br/>
 	<img src = "assets/letsee.png" style="width:10%"/><br/>
 	<img src = "assets/guide1.png" style="width:20%"/><br/>
@@ -113,13 +85,49 @@
 		<img src="assets/close.png" onclick="showInputTextDiv()" />
 	</div>
 	<div id="imageUpload">
-		<input type="file" id="uploadImageInput" accept=".jpg,.jpeg.,.gif,.png">
+		<!--<input type="file" id="uploadImageInput" name='uploadImageInput' accept=".jpg,.jpeg.,.gif,.png"> -->
 	</div>
 	<textarea id="inputArea" placeholder="이 곳에 텍스트를 입력해 글을 게시합니다"></textarea>
 	<div id="btnLetseeit">
 		<img src="assets/letsee_it.png" onclick="createCard()" />
 	</div>
 </div>
+
+<!-- 카드 입력 화면 -->
+<input style="display:none" type="file" id="uploadImageInput" name='uploadImageInput' accept=".jpg,.jpeg.,.gif,.png" onchange="showPreviewImage()">
+<div id="addCardDiv" style="width:100%;height:100%; display: block; position:absolute; text-align: center; overflow: scroll; background-color: #00accb">
+	<div style="width:100%;height:15%;padding-top:3%; background-color: rgba(39, 39, 39, 0.6);">
+		<img id="backToMainImg" src="assets/back_button.png" style="float:left;left:7%;top:4%;width:5% ;position:absolute" onclick = "backToMain()">
+		<img src="assets/pick_message2.png" style="width:45%;"/>
+	</div>
+
+	<div style="position:absolute;width:100%; top:23%; z-index: 90" >
+		<img src="assets/stick.png" style="width:15%;" />
+	</div>
+
+	<div style="position:absolute;width:100%; top: 27%">
+		<img src="assets/photo_frame.png" style="width:20%;"/>
+	</div>
+	<div style="position:absolute;width:100%; top:32%">
+		<img id="rectangleImg" src="assets/rectangle.png" style="width:17% ;background-color:#ffffff" onclick="fileClick()"/>
+	</div>
+
+	<div style="position:absolute;width:100%; top:34%" onclick="fileClick()">
+		<img src="assets/upload_file.png" style="width:10%"/>
+	</div>
+	<div style="position:absolute;width:100%; top:42%" onclick="fileClick()" >
+		<img src="assets/picture.png" style="width:8%"/>
+	</div>
+
+	<div style="position:absolute;width:100%; bottom:4%">
+		<img src="assets/post_message.png" style="width:15%;"/>
+	</div>
+</div>
+
+<!-- 카드 이동 화면 -->
+<div id="moveCardDiv" style="width:100%;height:100%; display: none; position:absolute; text-align: center; overflow: scroll; background-color: #00accb">
+</div>
+
 
 <div id="inputConfirm">
 	<!-- 완료버튼 눌렀을 시 서버에 데이터 저장하고 보여주기 -->
@@ -139,152 +147,149 @@
 <script type="text/javascript" src="js/layout.js"></script>
 <script type="text/javascript" src="./thumb.js"></script>
 <script>
-    /* Letsee init */
-    const config = {
-        "appKey": "Tb8arp5eF9ZMDw0u2QiOyV845R61eltmeZQKwFBXBeeNU9Q5vgpduQdF5oipQX9X",
-        "trackerType": "PLANAR"
-    };
-    const app = new Letsee(config);
-    let currentCardObject = null;
+  /* Letsee init */
+  const config = {
+    "appKey": "Tb8arp5eF9ZMDw0u2QiOyV845R61eltmeZQKwFBXBeeNU9Q5vgpduQdF5oipQX9X",
+    "trackerType": "PLANAR"
+  };
+  const app = new Letsee(config);
+  let currentCardObject = null;
 
-    app.addEventListener("trackstart", function(e) {
-        let uri = e.target.uri;
-        if (uri !== CURRENT_URI) {
-            /*
-                if (CURRENT_URI) {
-                      LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
-                      CURRENT_URI = uri;
-                      currentTarget = LetseeEngine.getEntity(CURRENT_URI);
+  app.addEventListener("trackstart", function(e) {
+    let uri = e.target.uri;
+    if (uri !== CURRENT_URI) {
+      /*
+          if (CURRENT_URI) {
+                LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
+                CURRENT_URI = uri;
+                currentTarget = LetseeEngine.getEntity(CURRENT_URI);
 
-                      //ready();
-                  }
+                //ready();
+            }
 
-                  CURRENT_URI = uri;
-                  e.target.addRenderable(world);
+            CURRENT_URI = uri;
+            e.target.addRenderable(world);
 
-                  let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
-                  world.position.z = depth;
-              }
-          }*/
-        }});
-    app.addEventListener("trackmove", function(e) {
-    });
-    app.addEventListener("trackend", function(e) {
-    });
-    app.addEventListener('app_status', e => {
-        switch(e.code) {
-            case 203:
-                initWorldObject3D(app.letseeEngine.getEntities());
-                break;
-            default:
-                console.log(e);
-                break;
+            let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
+            world.position.z = depth;
         }
-    });
-
-		// function to initialize layout.
-    $(function() {
-      	initOrientation();
-    });
-
-    // function to get uuid
-    function UUID() {
-        let d = new Date().getTime();
-
-        if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
-            d += performance.now(); // use high-precision timer if available
-        }
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            let r = (d + Math.random() * 16) % 16 | 0;
-
-            d = Math.floor(d / 16);
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
+    }*/
+    }});
+  app.addEventListener("trackmove", function(e) {
+  });
+  app.addEventListener("trackend", function(e) {
+  });
+  app.addEventListener('app_status', e => {
+    switch(e.code) {
+      case 203:
+        initWorldObject3D(app.letseeEngine.getEntities());
+        break;
+      default:
+        console.log(e);
+        break;
     }
+  });
 
-    /* Set ajax */
+  // function to initialize layout.
+  $(function() {
+    initOrientation();
+  });
 
-    const objectTemplate = {
-        "id": null,
-        "type": null,
-        "content": null,
-        "imageUrl": null,
-        "position": {
-            "_x": null,
-            "_y": null,
-            "_z": null
-        },
-        "rotation": {
-            "_x": null,
-            "_y": null,
-            "_z": null
-        },
-        "scale": {
-            "_x": null,
-            "_y": null,
-            "_z": null
-        }
-    };
-    // init Parse server
-    //axios.defaults.baseURL = 'http://localhost:8811/parse/';
-    //axios.defaults.headers.common['X-Parse-Application-Id'] = 'ar-docent';
-    //axios.defaults.headers.common['X-Parse-REST-API-Key'] = 'djasklasdas';
+  // function to get uuid
+  function UUID() {
+    let d = new Date().getTime();
 
-
-    axios.defaults.baseURL = 'https://browser.letsee.io:8337/parse';
-    axios.defaults.headers.common['X-Parse-Application-Id'] = 'awe2019wallboard';
-
-    let prefix = "https://browser.letsee.io:8337/parse/files/awe2019wallboard/";
-
-    function updateCardObject(args) {
-        return {...currentCardObject, ...args}
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+      d += performance.now(); // use high-precision timer if available
     }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      let r = (d + Math.random() * 16) % 16 | 0;
 
-    /**
-		 *	1. First upload image to server and get Image url;
-		 *  2. Second upload resized image to server and get resized Image url;
-		 *  3. Third put image url and resized image url to card object and upload card object;
-		 */
-    const saveImage = function() {
-			return new Promise((resolve, reject) => {
-        axios.post('files/'+ currentCardObject.id , imageObj.files[0])
-          .then((data) => {
-            let imageUrl = `https://browser.letsee.io:8337/parse/files/awe2019wallboard/${data.data.name}`;
-						resolve(imageUrl)
-          })
-          .catch(error => {
-            reject(error);
-          })
-      });
-		};
+      d = Math.floor(d / 16);
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
 
-		const saveResizedImage =  function (imageUrl) {
-      return new Promise((resolve, reject) => {
-        axios.post('files/'+ currentCardObject.id + '_thumbnail' , resizedFile)
-          .then((data) => {
-            var object = {
-              imageUrl : imageUrl,
-							resizedImageUrl : `https://browser.letsee.io:8337/parse/files/awe2019wallboard/${data.data.name}`
-						};
-            resolve(object)
-          })
-          .catch(error => {
-            reject(error);
-          })
-      });
-    };
+  /* Set ajax */
 
+  const objectTemplate = {
+    "id": null,
+    "type": null,
+    "content": null,
+    "imageUrl": null,
+    "position": {
+      "_x": null,
+      "_y": null,
+      "_z": null
+    },
+    "rotation": {
+      "_x": null,
+      "_y": null,
+      "_z": null
+    },
+    "scale": {
+      "_x": null,
+      "_y": null,
+      "_z": null
+    }
+  };
+  // init Parse server
+  //axios.defaults.baseURL = 'http://localhost:8811/parse/';
+  //axios.defaults.headers.common['X-Parse-Application-Id'] = 'ar-docent';
+  //axios.defaults.headers.common['X-Parse-REST-API-Key'] = 'djasklasdas';
 
 
-		const uploadImagesAndCardObject = function(object) {
+  axios.defaults.baseURL = 'https://browser.letsee.io:8337/parse';
+  axios.defaults.headers.common['X-Parse-Application-Id'] = 'awe2019wallboard';
 
-		  return new Promise((resolve, reject) => {
-        currentCardObject.imageUrl = object.imageUrl;
-        currentCardObject.resizedImageUrl = object.resizedImageUrl;
-        //let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
-        //img.src = data.data.url;
 
-        currentCardObject.content = `
+  function updateCardObject(args) {
+    return {...currentCardObject, ...args}
+  }
+
+  /**
+   *  1. First upload image to server and get Image url;
+   *  2. Second upload resized image to server and get resized Image url;
+   *  3. Third put image url and resized image url to card object and upload card object;
+   */
+  let prefix = "https://browser.letsee.io:8337/parse/files/awe2019wallboard/";
+  const saveImage = function() {
+    return new Promise((resolve, reject) => {
+      axios.post('files/'+ currentCardObject.id , imageObj.files[0])
+        .then((data) => {
+          let imageUrl = `${prefix}${data.data.name}`;
+          resolve(imageUrl)
+        })
+        .catch(error => {
+          reject(error);
+        })
+    });
+  };
+
+  const saveResizedImage =  function (imageUrl) {
+    return new Promise((resolve, reject) => {
+      axios.post('files/'+ currentCardObject.id + '_thumbnail' , resizedFile)
+        .then((data) => {
+          var object = {
+            imageUrl : imageUrl,
+            resizedImageUrl : `${prefix}${data.data.name}`
+          };
+          resolve(object)
+        })
+        .catch(error => {
+          reject(error);
+        })
+    });
+  };
+
+  const uploadImagesAndCardObject = function(object) {
+    return new Promise((resolve, reject) => {
+      currentCardObject.imageUrl = object.imageUrl;
+      currentCardObject.resizedImageUrl = object.resizedImageUrl;
+      //let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
+      //img.src = data.data.url;
+
+      currentCardObject.content = `
 				<div class="cardElement" data-type="card" data-id="${currentCardObject.id}">
 					<div class="wrapper">
 						<div class="inner">
@@ -296,106 +301,103 @@
 					</div>
 				</div>`;
 
-        axios.post('classes/wallboard', updateCardObject(currentCardObject))
-          .then((result) => {
-            currentCardObject = null;
-            editObject = null;
-            currentCardObject = objectTemplate;
-            cardContentInput.value = "";
-          	resolve(result);
-          })
-          .catch(error => {
-            reject(error);
-          });
-			});
-    };
-
-    // Function to get card data from server
-    function getCardData() {
-        axios.get('classes/wallboard',{
-            params: {
-                order: '-createdAt'
-            }})
-            .then(data => {
-                printCardsItemFromJson(data.data.results);
-                currentCardObject = null;
-                editObject = null;
-                currentCardObject = objectTemplate;
-            })
-            .catch(error => {
-                console.warn(error);
-            })
-    }
-
-    // 초기 화면 렌더링
-    getCardData();
-
-
-    /* Publish card */
-    let editObject;
-    let CURRENT_URI = '';
-    let currentTarget = null;
-
-    const world = new Object3D();
-    const cardContentInput = document.getElementById('inputArea');
-    const imageObj = document.getElementById('uploadImageInput');
-
-    // Function to make renderable item and renderable item's position, rotation, scale.
-    function createDOMRenderable(value, _position = null, _rotation = null, _scale = null) {
-        let element = document.createElement('div');
-        element.innerHTML = value;
-
-        const renderableEle = new DOMRenderable(element);
-
-        // Set position
-        if (_position) renderableEle.position.set(..._position);
-
-        // Set rotation
-        if (_rotation) {
-            renderableEle.rotateX(_rotation[0]);
-            renderableEle.rotateY(_rotation[1]);
-            renderableEle.rotateZ(_rotation[2]);
-        }
-
-        // Set scale
-
-        if (_scale) {
-            renderableEle.scale.set(..._scale);
-        }
-
-        // if (_scale) renderableEle.scale.set(..._scale);
-        return renderableEle ;
-    }
-
-
-    function printCardsItemFromJson(data) {
-        // let cardObjects = JSON.parse(JSON.stringify(data));
-        data.forEach(function(item, index) {
-            let position  = [item.position._x, item.position._y, (index * -50) -50];
-            let rotation  = [item.rotation._x, item.rotation._y, item.rotation._z];
-            let scale = [item.scale._x, item.scale._y, item.scale._z];
-            let renderableItem = createDOMRenderable(item.content, position, rotation, scale);
-            world.add(renderableItem);
-
+      axios.post('classes/wallboard', updateCardObject(currentCardObject))
+        .then((result) => {
+          currentCardObject = null;
+          editObject = null;
+          currentCardObject = objectTemplate;
+          cardContentInput.value = "";
+          resolve(result);
+        })
+        .catch(error => {
+          reject(error);
         });
+    });
+  };
+
+  // Function to get card data from server
+  function getCardData() {
+    axios.get('classes/wallboard',{
+      params: {
+        order: '-createdAt'
+      }})
+      .then(data => {
+        printCardsItemFromJson(data.data.results);
+        currentCardObject = null;
+        editObject = null;
+        currentCardObject = objectTemplate;
+      })
+      .catch(error => {
+        console.warn(error);
+      })
+  }
+
+  // 초기 화면 렌더링
+  getCardData();
+
+
+  /* Publish card */
+  let editObject;
+  let CURRENT_URI = '';
+  let currentTarget = null;
+
+  const world = new Object3D();
+  const cardContentInput = document.getElementById('inputArea');
+  const imageObj = document.getElementById('uploadImageInput');
+
+  // Function to make renderable item and renderable item's position, rotation, scale.
+  function createDOMRenderable(value, _position = null, _rotation = null, _scale = null) {
+    let element = document.createElement('div');
+    element.innerHTML = value;
+
+    const renderableEle = new DOMRenderable(element);
+
+    if (_position) renderableEle.position.set(..._position);
+
+    if (_rotation) {
+      renderableEle.rotateX(_rotation[0]);
+      renderableEle.rotateY(_rotation[1]);
+      renderableEle.rotateZ(_rotation[2]);
     }
 
-    // Initialize app.
-    function initWorldObject3D(entity) {
-        entity[0].addRenderable(world);
-        currentTarget = LetseeEngine.getEntities()[0]
+    if (_scale) {
+      renderableEle.scale.set(..._scale);
     }
 
+    // if (_scale) renderableEle.scale.set(..._scale);
+    return renderableEle ;
+  }
 
-    // Function to create card data.
-    function createCard() {
-        // document.querySelector("img[data-id='bfcc46bb-b047-4fcf-a8b5-9128139f1aff']")
-        // 이미지 업로드시
-        if(imageObj.files.length > 0) {
 
-            const randomId = UUID();
-            const type = "image";
-            const content = `
+  // Function to make renderable and add to world using json data
+  function printCardsItemFromJson(data) {
+    // let cardObjects = JSON.parse(JSON.stringify(data));
+    data.forEach(function(item, index) {
+      let position  = [item.position._x, item.position._y, (index * -50) -50];
+      let rotation  = [item.rotation._x, item.rotation._y, item.rotation._z];
+      let scale = [item.scale._x, item.scale._y, item.scale._z];
+      let renderableItem = createDOMRenderable(item.content, position, rotation, scale);
+      world.add(renderableItem);
+
+    });
+  }
+
+  // Initialize app.
+  function initWorldObject3D(entity) {
+    entity[0].addRenderable(world);
+    currentTarget = LetseeEngine.getEntities()[0]
+  }
+
+
+  // Function to create card data.
+  function createCard() {
+    // document.querySelector("img[data-id='bfcc46bb-b047-4fcf-a8b5-9128139f1aff']")
+    // 이미지 업로드시
+    if(imageObj.files.length > 0) {
+
+      const randomId = UUID();
+      const type = "image";
+      const content = `
 				<div class="cardElement" data-type="card" data-id="${randomId}">
 					<div class="wrapper">
 						<div class="inner">
@@ -407,209 +409,224 @@
 					</div>
 				</div>`;
 
-            currentCardObject = updateCardObject({
-                "id": randomId,
-                "type": type,
-                "content": content,
-            });
+      currentCardObject = updateCardObject({
+        "id": randomId,
+        "type": type,
+        "content": content,
+      });
 
-            addCard();
+      addCard();
 
-        } else {
-						window.alert('파일을 선택해주세요.');
+    } else {
+      window.alert('파일을 선택해주세요.');
+    }
+  }
+
+  let renderable = null;
+  let currentCardIndex = 0;
+
+  // Function to make card renderable using card data and add gesture to move card.
+  function addCard(imgData) {
+    let position = [0,0,50 * currentCardIndex];
+    let rotation = [0,0,0];
+    let scale = [1,1,1];
+    renderable = createDOMRenderable(currentCardObject.content, position, rotation, scale);
+
+    world.add(renderable);
+    editObject = renderable;
+    currentCardIndex ++;
+
+    if(imgData !== null) {
+      //let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
+      //img.src = imgData;
+      //console.log(img);
+    }
+
+    // currentCard = editObject;
+    // Set layout
+    showInputTextDiv();
+    showInputConfirmDiv();
+
+    /**
+     * src = 이미지 base64가 두번 호출되어야만 resizing 수행. => 원인 파악 x
+     */
+    ResizeImage();
+    ResizeImage();
+  }
+
+  // Function to remove card from layout
+  function removeCard() {
+    if(renderable !== null) {
+      world.remove(renderable);
+      editObject = null;
+      currentCardIndex --;
+    }
+
+    showInputConfirmDiv();
+  }
+
+
+  // 서버 전송
+  function save() {
+    currentCardObject = updateCardObject(
+      {
+        "position": {
+          "_x": editObject.position._x,
+          "_y": editObject.position._y,
+          "_z": editObject.position._z
+        },
+        "rotation": {
+          "_x": editObject.rotation._x,
+          "_y": editObject.rotation._y,
+          "_z": editObject.rotation._z
+        },
+        "scale": {
+          "_x": editObject.scale._x,
+          "_y": editObject.scale._y,
+          "_z": editObject.scale._z
         }
-    }
-
-    let renderable = null;
-    let currentCardIndex = 0;
-
-		// Function to make card renderable using card data and add gesture to move card.
-    function addCard(imgData) {
-        let position = [0,0,50 * currentCardIndex];
-        let rotation = [0,0,0];
-        let scale = [1,1,1];
-        renderable = createDOMRenderable(currentCardObject.content, position, rotation, scale);
-
-        world.add(renderable);
-        editObject = renderable;
-        currentCardIndex ++;
-
-        if(imgData !== null) {
-            //let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
-            //img.src = imgData;
-            //console.log(img);
-        }
-
-        // currentCard = editObject;
-        // Set layout
-        showInputTextDiv();
-        showInputConfirmDiv();
-
-        /**
-         * src = 이미지 base64가 두번 호출되어야만 resizing 수행. => 원인 파악 x
-         */
-        ResizeImage();
-        ResizeImage();
-    }
-
-    // Function to remove card from layout
-    function removeCard() {
-        if(renderable !== null) {
-            world.remove(renderable);
-            editObject = null;
-            currentCardIndex --;
-        }
-
-        showInputConfirmDiv();
-    }
-
-
-    // 서버 전송
-    function save() {
-        currentCardObject = updateCardObject(
-            {
-                "position": {
-                    "_x": editObject.position._x,
-                    "_y": editObject.position._y,
-                    "_z": editObject.position._z
-                },
-                "rotation": {
-                    "_x": editObject.rotation._x,
-                    "_y": editObject.rotation._y,
-                    "_z": editObject.rotation._z
-                },
-                "scale": {
-                    "_x": editObject.scale._x,
-                    "_y": editObject.scale._y,
-                    "_z": editObject.scale._z
-                }
-            }
-        );
-
-        showInputConfirmDiv();
-        postCard();
-    }
-
-    // Function to post card data to server
-    function postCard() {
-      if(currentCardObject.type === "image") {
-        saveImage()
-					.then((data) => {
-          	return saveResizedImage(data);
-					})
-					.then((data) => {
-					  return uploadImagesAndCardObject(data)
-					})
-					.catch(error => {
-					  console.log(error);
-					})
-
-      } else {
-        axios.post('classes/wallboard', updateCardObject(currentCardObject))
-          .then(() => {
-            currentCardObject = null;
-            editObject = null;
-            currentCardObject = objectTemplate;
-            cardContentInput.value = ""
-
-          })
-          .catch(error => {
-            console.warn(error);
-          });
       }
+    );
+
+    showInputConfirmDiv();
+    postCard();
+  }
+
+  // Function to post card data to server
+  function postCard() {
+    if(currentCardObject.type === "image") {
+      saveImage()
+        .then((data) => {
+          return saveResizedImage(data);
+        })
+        .then((data) => {
+          return uploadImagesAndCardObject(data)
+        })
+        .catch(error => {
+          console.log(error);
+        })
+
+    } else {
+      axios.post('classes/wallboard', updateCardObject(currentCardObject))
+        .then(() => {
+          currentCardObject = null;
+          editObject = null;
+          currentCardObject = objectTemplate;
+          cardContentInput.value = ""
+
+        })
+        .catch(error => {
+          console.warn(error);
+        });
     }
+  }
 
-		let resizedFile;
-    // width, height 최대값이 380으로 이미지 리사이징.
-    function ResizeImage() {
-        if (window.File && window.FileReader && window.FileList && window.Blob) {
-            const filesToUploads = imageObj.files;
-            const file = filesToUploads[0];
+  let resizedFile;
+  // width, height 최대값이 380으로 이미지 리사이징.
+  function ResizeImage() {
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+      const filesToUploads = imageObj.files;
+      const file = filesToUploads[0];
 
-            if (file) {
-              const reader = new FileReader();
-							// Set the image once loaded into file reader
-							reader.onload = function(e) {
-									var img = document.createElement("img");
-									img.src = e.target.result;
+      if (file) {
+        const reader = new FileReader();
+        // Set the image once loaded into file reader
+        reader.onload = function(e) {
+          var img = document.createElement("img");
+          img.src = e.target.result;
 
-									var canvas = document.createElement("canvas");
-									var ctx = canvas.getContext("2d");
-									ctx.drawImage(img, 0, 0);
+          var canvas = document.createElement("canvas");
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
 
-									var MAX_WIDTH = 380;
-									var MAX_HEIGHT = 380;
-									var width = img.width;
-									var height = img.height;
+          var MAX_WIDTH = 380;
+          var MAX_HEIGHT = 380;
+          var width = img.width;
+          var height = img.height;
 
-									if (width > height) {
-											if (width > MAX_WIDTH) {
-													height *= MAX_WIDTH / width;
-													width = MAX_WIDTH;
-											}
-									} else {
-											if (height > MAX_HEIGHT) {
-													width *= MAX_HEIGHT / height;
-													height = MAX_HEIGHT;
-											}
-									}
-									canvas.width = width;
-									canvas.height = height;
-									var ctx = canvas.getContext("2d");
-									ctx.drawImage(img, 0, 0, width, height);
-
-									let dataurl = canvas.toDataURL(file.type);
-									//document.getElementById('output').src = dataurl;
-
-									let myImg = document.querySelector(`img[data-id='${currentCardObject.id}']`);
-									myImg.src = dataurl;
-
-									let blob = dataURLToBlob(dataurl);
-									let fileFromBlob = blobToFile(blob);
-
-									resizedFile = fileFromBlob;
-
-								};
-                reader.readAsDataURL(file);
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
             }
-        } else {
-            alert('The File APIs are not fully supported in this browser.');
-        }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          let dataurl = canvas.toDataURL(file.type);
+          //document.getElementById('output').src = dataurl;
+
+          let myImg = document.querySelector(`img[data-id='${currentCardObject.id}']`);
+          myImg.src = dataurl;
+
+          let blob = dataURLToBlob(dataurl);
+          let fileFromBlob = blobToFile(blob);
+
+          resizedFile = fileFromBlob;
+
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      alert('The File APIs are not fully supported in this browser.');
+    }
+  }
+
+  // Function to make dataurl image to blob type.
+  let dataURLToBlob = function(dataURL) {
+    let BASE64_MARKER = ';base64,';
+    if (dataURL.indexOf(BASE64_MARKER) == -1) {
+      let parts = dataURL.split(',');
+      let contentType = parts[0].split(':')[1];
+      let raw = parts[1];
+
+      return new Blob([raw], {type: contentType});
     }
 
-		// Function to make dataurl image to blob type.
-    let dataURLToBlob = function(dataURL) {
-        let BASE64_MARKER = ';base64,';
-        if (dataURL.indexOf(BASE64_MARKER) == -1) {
-            let parts = dataURL.split(',');
-            let contentType = parts[0].split(':')[1];
-            let raw = parts[1];
+    let parts = dataURL.split(BASE64_MARKER);
+    let contentType = parts[0].split(':')[1];
+    let raw = window.atob(parts[1]);
+    let rawLength = raw.length;
 
-            return new Blob([raw], {type: contentType});
-        }
+    let uInt8Array = new Uint8Array(rawLength);
 
-        let parts = dataURL.split(BASE64_MARKER);
-        let contentType = parts[0].split(':')[1];
-        let raw = window.atob(parts[1]);
-        let rawLength = raw.length;
+    for (let i = 0; i < rawLength; ++i) {
+      uInt8Array[i] = raw.charCodeAt(i);
+    }
 
-        let uInt8Array = new Uint8Array(rawLength);
+    return new Blob([uInt8Array], {type: contentType});
+  };
 
-        for (let i = 0; i < rawLength; ++i) {
-            uInt8Array[i] = raw.charCodeAt(i);
-        }
+  // Function to change blob data type to file type
+  let blobToFile = function(blob) {
+    const fd = new FormData();
+    fd.set('a', blob);
+    return fd.get('a');
+  }
 
-        return new Blob([uInt8Array], {type: contentType});
+  function fileClick() {
+    document.all.uploadImageInput.click();
+  }
+
+  function showPreviewImage() {
+    let fileReader = new FileReader();
+    fileReader.onload = function () {
+      // var img = document.createElement('img');
+      // img.src = fileReader.result;
+      let rectangleImg = document.getElementById("rectangleImg");
+      rectangleImg.src = fileReader.result;
+      rectangleImg.style.height = window.innerWidth * 0.17 + "px";
+
     };
-
-    // Function to change blob data type to file type
-		let blobToFile = function(blob) {
-      const fd = new FormData();
-      fd.set('a', blob);
-      return fd.get('a');
-    }
-
-
+    fileReader.readAsDataURL(imageObj.files[0]);
+  }
 
 </script>
 <!-- hammer motion code -->

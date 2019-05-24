@@ -51,16 +51,7 @@
 
 /* Help Button css */
 
-#btnHelp {
-    width: 30px;
-    position: absolute;
-    top: 53px;
-    right: 10px;
-    z-index: 14;
-    display: block;
-}
-
-#divHelp {
+#guideDiv {
     position:absolute;
     text-align: center;
     object-fit: contain;
@@ -72,13 +63,13 @@
     overflow: scroll;
 }
 
-#xButtonHelp {
+#xButtonGuide {
     z-index: 12;
     position:absolute;
     display: none;
 }
 
-#infoButtonHelp {
+#infoButtonGuide {
     z-index: 12;
     position:absolute
 }
