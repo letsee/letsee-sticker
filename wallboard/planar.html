@@ -44,16 +44,6 @@
 
 <div id="addButton" onclick="showInputTextDiv()"></div>
 
-<div id="menu">
-	<div id="buttons">
-		<div id="addText"  class="btnMenu" onclick='showInputTextDiv()'></div>
-		<div id="addImage" class="btnMenu" onclick="addNewImage();"></div>
-		<div id="addLink" class="btnMenu" onclick="saveEdit();"></div>
-		<div id="addSearch" class="btnMenu" onclick="addUcc();"></div>
-		<div id="addYoutube" class="btnMenu" onclick="addNewYoutube();"></div>
-	</div>
-</div>
-
 <img src = "assets/x_button.png" id="xButtonHelp" onclick="showHelpImage()" />
 <img src = "assets/info_button.png" id="infoButtonHelp" onclick="showHelpImage()" />
 <div id="divHelp">
@@ -143,11 +133,12 @@
         }
     });
 
-
+		// function to initialize layout.
     $(function() {
-        initLayout();
+      	initLayoutPortrait()
     });
 
+    // function to get uuid
     function UUID() {
         let d = new Date().getTime();
 
@@ -194,60 +185,76 @@
         return {...currentCardObject, ...args}
     }
 
-    function saveImage() {
-        axios.post('files/'+ currentCardObject.id , imageObj.files[0])
-            .then( (data) => {
-                currentCardObject.imageUrl = data.data.url;
-                //let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
-                //img.src = data.data.url;
+    //const imagePrefix = "https://brower.letsee.io:8337/";
 
-                currentCardObject.content = `
-					<div class="cardElement" data-type="card" data-id="${currentCardObject.id}">
-						<div class="wrapper">
-							<div class="inner">
-								<div class="imagebox"><img src=${data.data.url} data-type="cardImage" data-id="${currentCardObject.id}"></div>
-								<div class="textBox">
-									${cardContentInput.value}
-								</div>
+    /**
+		 *	1. First upload image to server and get Image url;
+		 *  2. Second upload resized image to server and get resized Image url;
+		 *  4. Third put image url and resized image url to card object and upload card object;
+		 */
+    const saveImage = function() {
+			return new Promise((resolve, reject) => {
+        axios.post('files/'+ currentCardObject.id , imageObj.files[0])
+          .then((data) => {
+						resolve(data.data.url)
+          })
+          .catch(error => {
+            reject(error);
+          })
+      });
+		};
+
+		const saveResizedImage =  function (imageUrl) {
+      return new Promise((resolve, reject) => {
+        axios.post('files/'+ currentCardObject.id + '_thumbnail' , resizedFile)
+          .then((data) => {
+            var object = {
+              imageUrl : imageUrl,
+							resizedImageUrl : data.data.url
+						};
+            resolve(object)
+          })
+          .catch(error => {
+            reject(error);
+          })
+      });
+    };
+
+		const uploadImagesAndCardObject = function(object) {
+
+		  return new Promise((resolve, reject) => {
+        currentCardObject.imageUrl = object.imageUrl;
+        currentCardObject.resizedImageUrl = object.resizedImageUrl;
+        //let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
+        //img.src = data.data.url;
+
+        currentCardObject.content = `
+				<div class="cardElement" data-type="card" data-id="${currentCardObject.id}">
+					<div class="wrapper">
+						<div class="inner">
+							<div class="imagebox"><img src=${object.resizedImageUrl} data-original="${object.imageUrl}" data-type="cardImage" data-id="${currentCardObject.id}"></div>
+							<div class="textBox">
+								${cardContentInput.value}
 							</div>
 						</div>
-					</div>`;
+					</div>
+				</div>`;
 
-                //postCard();
-                axios.post('classes/wallboard', updateCardObject(currentCardObject))
-                    .then(() => {
-                        currentCardObject = null;
-                        editObject = null;
-                        currentCardObject = objectTemplate;
-                        cardContentInput.value = ""
-                    })
-                    .catch(error => {
-                        console.warn(error);
-                    });
-            })
-            .catch(error => {
-                console.warn(error);
-            })
-    }
+        axios.post('classes/wallboard', updateCardObject(currentCardObject))
+          .then((result) => {
+            currentCardObject = null;
+            editObject = null;
+            currentCardObject = objectTemplate;
+            cardContentInput.value = ""
+          	resolve(result);
+          })
+          .catch(error => {
+            reject(error);
+          });
+			});
+    };
 
-    function postCard() {
-        if(currentCardObject.type === "image") {
-            saveImage();
-        } else {
-            axios.post('classes/wallboard', updateCardObject(currentCardObject))
-                .then(() => {
-                    currentCardObject = null;
-                    editObject = null;
-                    currentCardObject = objectTemplate;
-                    cardContentInput.value = ""
-
-                })
-                .catch(error => {
-                    console.warn(error);
-                });
-        }
-    }
-
+    // Function to get card data from server
     function getCardData() {
         axios.get('classes/wallboard',{
             params: {
@@ -324,8 +331,7 @@
     }
 
 
-    // const imageThumbnail = new CreateThumbnail();
-    // 카드 만들기. 인풋창에 들어간 내용으로 html태그 제작
+    // Function to create card data.
     function createCard() {
         // document.querySelector("img[data-id='bfcc46bb-b047-4fcf-a8b5-9128139f1aff']")
         // 이미지 업로드시
@@ -382,7 +388,8 @@
 
     let renderable = null;
     let currentCardIndex = 0;
-    // 카드 화면에 붙이기. 위에 만든 카드를 화면에 붙이고 hammer이벤트로 조정
+
+		// Function to make card renderable using card data and add gesture to move card.
     function addCard(imgData) {
         let position = [0,0,50 * currentCardIndex];
         let rotation = [0,0,0];
@@ -411,6 +418,7 @@
         ResizeImage();
     }
 
+    // Function to remove card from layout
     function removeCard() {
         if(renderable !== null) {
             world.remove(renderable);
@@ -449,59 +457,86 @@
     }
 
 
+    // Function to post card data to server
+    function postCard() {
+      if(currentCardObject.type === "image") {
+        saveImage()
+					.then((data) => {
+          	return saveResizedImage(data);
+					})
+					.then((data) => {
+					  return uploadImagesAndCardObject(data)
+					})
+					.catch(error => {
+					  console.log(error);
+					})
+
+      } else {
+        axios.post('classes/wallboard', updateCardObject(currentCardObject))
+          .then(() => {
+            currentCardObject = null;
+            editObject = null;
+            currentCardObject = objectTemplate;
+            cardContentInput.value = ""
+
+          })
+          .catch(error => {
+            console.warn(error);
+          });
+      }
+    }
+
+		let resizedFile;
     // width, height 최대값이 380으로 이미지 리사이징.
     function ResizeImage() {
         if (window.File && window.FileReader && window.FileList && window.Blob) {
             const filesToUploads = imageObj.files;
             const file = filesToUploads[0];
 
-
-            console.log(imageObj.files[0]);
-            console.log("zz");
-
             if (file) {
+              const reader = new FileReader();
+							// Set the image once loaded into file reader
+							reader.onload = function(e) {
+									var img = document.createElement("img");
+									img.src = e.target.result;
 
-                const reader = new FileReader();
-                // Set the image once loaded into file reader
-                reader.onload = function(e) {
+									var canvas = document.createElement("canvas");
+									var ctx = canvas.getContext("2d");
+									ctx.drawImage(img, 0, 0);
 
-                    var img = document.createElement("img");
-                    img.src = e.target.result;
-                    console.log(dataURLToBlob(e.target.result));
+									var MAX_WIDTH = 380;
+									var MAX_HEIGHT = 380;
+									var width = img.width;
+									var height = img.height;
 
+									if (width > height) {
+											if (width > MAX_WIDTH) {
+													height *= MAX_WIDTH / width;
+													width = MAX_WIDTH;
+											}
+									} else {
+											if (height > MAX_HEIGHT) {
+													width *= MAX_HEIGHT / height;
+													height = MAX_HEIGHT;
+											}
+									}
+									canvas.width = width;
+									canvas.height = height;
+									var ctx = canvas.getContext("2d");
+									ctx.drawImage(img, 0, 0, width, height);
 
-                    var canvas = document.createElement("canvas");
-                    var ctx = canvas.getContext("2d");
-                    ctx.drawImage(img, 0, 0);
+									let dataurl = canvas.toDataURL(file.type);
+									//document.getElementById('output').src = dataurl;
 
-                    var MAX_WIDTH = 380;
-                    var MAX_HEIGHT = 380;
-                    var width = img.width;
-                    var height = img.height;
+									let myImg = document.querySelector(`img[data-id='${currentCardObject.id}']`);
+									myImg.src = dataurl;
 
-                    if (width > height) {
-                        if (width > MAX_WIDTH) {
-                            height *= MAX_WIDTH / width;
-                            width = MAX_WIDTH;
-                        }
-                    } else {
-                        if (height > MAX_HEIGHT) {
-                            width *= MAX_HEIGHT / height;
-                            height = MAX_HEIGHT;
-                        }
-                    }
-                    canvas.width = width;
-                    canvas.height = height;
-                    var ctx = canvas.getContext("2d");
-                    ctx.drawImage(img, 0, 0, width, height);
+									let blob = dataURLToBlob(dataurl);
+									let fileFromBlob = blobToFile(blob);
 
-                    let dataurl = canvas.toDataURL(file.type);
-                    //document.getElementById('output').src = dataurl;
+									resizedFile = fileFromBlob;
 
-                    let myImg = document.querySelector(`img[data-id='${currentCardObject.id}']`);
-                    myImg.src = dataurl;
-
-                };
+								};
                 reader.readAsDataURL(file);
             }
         } else {
@@ -509,36 +544,39 @@
         }
     }
 
-	// dataUrl을 blob형식으로 바꿔준다.
-    var dataURLToBlob = function(dataURL) {
-        var BASE64_MARKER = ';base64,';
+		// Function to make dataurl image to blob type.
+    let dataURLToBlob = function(dataURL) {
+        let BASE64_MARKER = ';base64,';
         if (dataURL.indexOf(BASE64_MARKER) == -1) {
-            var parts = dataURL.split(',');
-            var contentType = parts[0].split(':')[1];
-            var raw = parts[1];
+            let parts = dataURL.split(',');
+            let contentType = parts[0].split(':')[1];
+            let raw = parts[1];
 
             return new Blob([raw], {type: contentType});
         }
 
-        var parts = dataURL.split(BASE64_MARKER);
-        var contentType = parts[0].split(':')[1];
-        var raw = window.atob(parts[1]);
-        var rawLength = raw.length;
+        let parts = dataURL.split(BASE64_MARKER);
+        let contentType = parts[0].split(':')[1];
+        let raw = window.atob(parts[1]);
+        let rawLength = raw.length;
 
-        var uInt8Array = new Uint8Array(rawLength);
+        let uInt8Array = new Uint8Array(rawLength);
 
-        for (var i = 0; i < rawLength; ++i) {
+        for (let i = 0; i < rawLength; ++i) {
             uInt8Array[i] = raw.charCodeAt(i);
         }
 
-        /* : blob를 파일 형태로 바꿔줌. (리사이징 된 이미지를 서버로 전송할 때)
-        	const fd = new FormData();
-            fd.set('a',dataURLToBlob(dataurl));
-            console.log(fd.get('a'));
-         */
-
         return new Blob([uInt8Array], {type: contentType});
+    };
+
+    // Function to change blob data type to file type
+		let blobToFile = function(blob) {
+      const fd = new FormData();
+      fd.set('a', blob);
+      return fd.get('a');
     }
+
+
 
 </script>
 <!-- hammer motion code -->
