@@ -39,16 +39,10 @@
 </head>
 <body>
 
-
 <div id="container"></div>
 
-<div id="addButton" onclick="showInputTextDiv()"></div>
-
-<img src = "assets/x_button.png" id="xButtonHelp" onclick="showHelpImage()" />
-<img src = "assets/info_button.png" id="infoButtonHelp" onclick="showHelpImage()" />
-
 <!-- when layout vertical -->
-<div id="recommendDiv" style ="background-color:#434343 ;width:100%;height:100%;position:absolute; text-align: center" >
+<div id="recommendDiv" style ="background-color:#434343 ;width:100%;height:100%;position:absolute;z-index: 999; text-align: center" >
 	<div style="margin-top:20%">
 		<img style="width:90%;margin-left:5%" src="assets/horizontal_message.png"/>
 	</div>
@@ -61,15 +55,29 @@
 </div>
 <!-- end vertical-->
 
-<div id="divHelp">
+<div style="width:100%;height:100%; position:absolute; text-align: center; overflow: scroll;">
+	<div style="text-align: center">
+		<img src="assets/welcom_message.png" style="width:45%;margin-top: 5%"/><br/>
+	</div>
+	<img src="assets/add_button.png" id="addButton" onclick="showInputTextDiv()" style="margin: 5% auto ; width:8%;"/>
+	<img id="letseeBottomImg" src="assets/letsee_bottom.png" style="margin: 3% auto; width:25%"/>
+	<img src="assets/info_button.png" id="infoButtonHelp" onclick="showHelpImage()"  style="position:absolute; top:2%;right:5%; width:7%"/>
+</div>
+
+
+<img src = "assets/x_button.png" id="xButtonHelp" onclick="showHelpImage()" style="width:7%; top:2%; right:5%"/>
+
+
+
+<div id="divHelp" style="width:80%;height:90%;margin-top: 5%; margin-left:10%">
 	<br/>
-	<img src = "assets/letsee.png" style="width:40%"/><br/>
-	<img src = "assets/guide1.png" style="width:50%"/>
-	<img src="assets/line.png" style="width:90%"/><br/><br/>
-	<img src = "assets/guide2.png" style="width:80%"/>
-	<img src = "assets/guide3.png" style="width:80%"/>
-	<img src="assets/line.png" style="width:90%"/><br/><br/>
-	<img src = "assets/guide4.png" style="width:90%"/>
+	<img src = "assets/letsee.png" style="width:10%"/><br/>
+	<img src = "assets/guide1.png" style="width:20%"/><br/>
+	<img src="assets/line.png" style="width:60%"/><br/><br/>
+	<img src = "assets/guide2.png" style="width:50%"/><br/>
+	<img src = "assets/guide3.png" style="width:50%"/><br/>
+	<img src="assets/line.png" style="width:60%"/><br/><br/>
+	<img src = "assets/guide4.png" style="width:60%"/>
 </div>
 
 <div id="inputText">
@@ -149,7 +157,7 @@
 
 		// function to initialize layout.
     $(function() {
-      	initLayoutPortrait()
+      	initOrientation();
     });
 
     // function to get uuid

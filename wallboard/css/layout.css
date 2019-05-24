@@ -16,19 +16,16 @@
     background-size: 100%;
     z-index: 21;
     opacity: 0.5;
-    display: none;
+    display: block;
     -webkit-transition: all 100ms linear;
 }
 
 #addButton {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    background-image: url("../assets/add_button.png");
+
     background-size: 100%;
     z-index: 21;
     opacity: 0.5;
-    display: none;
+    display: block;
     -webkit-transition: all 100ms linear;
 }
 
