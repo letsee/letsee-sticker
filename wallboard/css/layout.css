@@ -76,6 +76,12 @@
 
 #xButtonHelp {
     z-index: 12;
+    position:absolute;
+    display: none;
+}
+
+#infoButtonHelp {
+    z-index: 12;
     position:absolute
 }
 

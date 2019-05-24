@@ -9,11 +9,13 @@ let imgHelp = document.getElementById("imgHelp");
 
 // set switchs.
 let isOpenMenu = false;
-let idOpenHelpDiv = false;
 let isOpenInputText = false;
 let isOpenInputConfirm = false;
-let isOpenBtnAddAndMenu = false;
-let isOpenHelpBtn = true;
+let isOpenAddBtn = false;
+
+let idOpenHelpDiv = false;
+let isOpenXButtonHelp = false;
+let isOpenInfoButtonHelp = true;
 
 inputArea = $("#inputArea");
 
@@ -89,13 +91,17 @@ function initHelpDiv() {
   let xButtonHelp = document.getElementById("xButtonHelp");
   xButtonHelp.width = w * 0.1;
   xButtonHelp.style.marginLeft = w * 0.85 + "px";
-  xButtonHelp.style.marginTop = h * 0.025 +"px"
+  xButtonHelp.style.marginTop = h * 0.025 +"px";
 
+  let infoButtonHelp = document.getElementById("infoButtonHelp");
+  infoButtonHelp.width = w * 0.1;
+  infoButtonHelp.style.marginLeft = w * 0.85 + "px";
+  infoButtonHelp.style.marginTop = h * 0.025 +"px";
 }
 
 // function for showing "menu" div element.
+/*
 function showMenuDiv() {
-
   let addButton = document.getElementById("addButton");
 
   if(isOpenMenu === false) {
@@ -109,52 +115,60 @@ function showMenuDiv() {
     menu.fadeOut();
   }
 }
+*/
 
 // function for showing "btnAdd" div element.
-function showBtnAddAndMenu() {
-  let menu = document.getElementById("menu");
-
-  if (isOpenBtnAddAndMenu === false) {
-    isOpenBtnAddAndMenu = true;
-
+function showBtnAdd() {
+  if (isOpenAddBtn === false) {
+    $("#addButton").fadeIn();
+    isOpenAddBtn = true;
   } else {
-     isOpenBtnAddAndMenu = false;
+    $("#addButton").fadeOut();
+    isOpenAddBtn = false;
   }
 }
 
 function showHelpImage() {
   if(idOpenHelpDiv === false) {
-    //imgHelp.style.display = "block";
-    //btnAdd.style.display = "none";
-    showBtnAddAndMenu();
     idOpenHelpDiv = true;
     $("#divHelp").fadeIn();
+    showInfoButtonHelp();
+    showXButtonHelp();
+
   } else {
-    //imgHelp.style.display = "none";
-    //btnAdd.style.display = "block";
-    showBtnAddAndMenu();
     idOpenHelpDiv = false;
     $("#divHelp").fadeOut();
+    showInfoButtonHelp();
+    showXButtonHelp();
   }
 }
 
-function showHelpBtn() {
-  if(isOpenHelpBtn ===  false) {
-    $("#btnHelp").fadeIn();
-    isOpenHelpBtn = true
+function showXButtonHelp() {
+  if(isOpenXButtonHelp ===  false) {
+    $("#xButtonHelp").fadeIn();
+    isOpenXButtonHelp = true
   }
   else {
-    $("#btnHelp").fadeOut();
-    isOpenHelpBtn = false;
+    $("#xButtonHelp").fadeOut();
+    isOpenXButtonHelp = false;
   }
+}
 
+function showInfoButtonHelp() {
+  if(isOpenInfoButtonHelp ===  false) {
+    $("#infoButtonHelp").fadeIn();
+    isOpenInfoButtonHelp = true
+  }
+  else {
+    $("#infoButtonHelp").fadeOut();
+    isOpenInfoButtonHelp = false;
+  }
 }
 
 // function for showing 'inputText' div element.
 function showInputTextDiv() {
   if(isOpenInputText === false) {
     $("#inputText").fadeIn();
-    showMenuDiv();
     isOpenInputText = true;
   } else {
     $("#inputText").fadeOut();
