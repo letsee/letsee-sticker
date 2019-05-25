@@ -142,15 +142,20 @@ $(window).on("orientationchange",function(){
 
 let mainDiv = $("#mainDiv");
 let addCardDiv = $("#addCardDiv");
+let moveCardDiv = $("#moveCardDiv");
 
-function backToMain() {
+function goToMain() {
 
   mainDiv.fadeIn();
-  addCardDiv.fadeOut()
+  addCardDiv.fadeOut();
+  moveCardDiv.fadeOut();
 }
 
 function goToAddCardDiv() {
 
   mainDiv.fadeOut();
-  addCardDiv.fadeIn()
+  addCardDiv.fadeIn();
+  moveCardDiv.fadeOut();
 }
+
+

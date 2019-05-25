@@ -188,7 +188,7 @@ manager.on('press', function(e) {
   touch.press = true;
 
   var helpElement = document.createElement('div');
-  helpElement.innerHTML = '<img style="" src="assets/idc-zpos.png" srcset="assets/idc-zpos@2x.png 2x, assets/idc-zpos@3x.png 3x">';
+  helpElement.innerHTML = '<img style="" src="assets/  srcset="assets/idc-zpos@2x.png 2x, assets/idc-zpos@3x.png 3x">';
 
   touch.helper = new DOMRenderable(helpElement);
 
