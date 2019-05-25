@@ -145,6 +145,8 @@ let addCardDiv = $("#addCardDiv");
 let moveCardDiv = $("#moveCardDiv");
 
 function goToMain() {
+  $(".ar-renderer").css('z-index', 0);
+  removeCard()
 
   mainDiv.fadeIn();
   addCardDiv.fadeOut();
@@ -152,10 +154,25 @@ function goToMain() {
 }
 
 function goToAddCardDiv() {
+  $(".ar-renderer").css('z-index', 0);
+  removeCard()
 
   mainDiv.fadeOut();
   addCardDiv.fadeIn();
   moveCardDiv.fadeOut();
+
+}
+
+function goToMoveCardDiv() {
+  $(".ar-renderer").css('z-index', 1);
+
+  mainDiv.fadeOut();
+  addCardDiv.fadeOut();
+  moveCardDiv.fadeIn();
+
 }
 
 
+function postComplete() {
+  goToMoveCardDiv();
+}
