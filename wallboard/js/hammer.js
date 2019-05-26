@@ -143,6 +143,8 @@ manager.on('pinchmove', function(e) {
   // var scale = (e.scale-(e.scale/2)) * touch.current.scale;
 
   editObject.scale.set(scale, scale, scale);
+  helpObject.scale.set(scale, scale, scale);
+
 
   var dX = touch.current.x + (e.deltaX/4);
   var dY = touch.current.y + (e.deltaY/4);
