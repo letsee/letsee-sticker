@@ -144,18 +144,23 @@ let mainDiv = $("#mainDiv");
 let addCardDiv = $("#addCardDiv");
 let moveCardDiv = $("#moveCardDiv");
 
-function goToMain() {
+function goToMain(isPostCard) {
   $(".ar-renderer").css('z-index', 0);
-  removeCard()
 
   mainDiv.fadeIn();
   addCardDiv.fadeOut();
   moveCardDiv.fadeOut();
+
+  if (isPostCard !== true) {
+    removeCard();
+    removeHelper();
+  }
 }
 
 function goToAddCardDiv() {
   $(".ar-renderer").css('z-index', 0);
-  removeCard()
+  removeCard();
+  removeHelper();
 
   mainDiv.fadeOut();
   addCardDiv.fadeIn();

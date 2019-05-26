@@ -53,7 +53,7 @@ manager.on('panmove', function(e) {
   if(touch.isBoundary) return;
 
   if(currentTarget.size.width*2 < editObject.position.x || -currentTarget.size.width*2 > editObject.position.x){
-    editObject.position.x = editObject.position.x > 0 ? (currentTarget.size.width*2)-1 : -( (currentTarget.size.width*2)-1)
+    editObject.position.x = editObject.position.x > 0 ? (currentTarget.size.width*2)-1 : -( (currentTarget.size.width*2)-1);
 
     touch.current.x = editObject.position.x;
     touch.current.y = -editObject.position.y;
@@ -73,7 +73,10 @@ manager.on('panmove', function(e) {
     var dZ = touch.current.z + (e.deltaY/4);
 
     editObject.position.z = -dZ;
+    helpObject.position.z = -dZ;
+
     touch.helper.position.z = editObject.position.z - 0;
+
 
   } else {
     // hammer 이동 비율 조정
@@ -82,6 +85,10 @@ manager.on('panmove', function(e) {
 
     editObject.position.x = dX;
     editObject.position.y = -dY;
+
+    helpObject.position.x = dX;
+    helpObject.position.y = -dY -25;
+
   };
 });
 
@@ -142,6 +149,10 @@ manager.on('pinchmove', function(e) {
 
   editObject.position.x = dX;
   editObject.position.y = -dY;
+
+  helpObject.position.x = dX;
+  helpObject.position.y = -dY -25;
+
 });
 
 // 수평이동 종료
@@ -158,7 +169,13 @@ manager.on('rotatemove', function(e) {
   if(touch.gestureF3.enable)return;
   if(!editObject)return;
 
-  if(touch.OLD_ROTATE_Z) editObject.rotateZ( (touch.OLD_ROTATE_Z - e.rotation) / 60 );
+  if(touch.OLD_ROTATE_Z)
+  {
+    editObject.rotateZ( (touch.OLD_ROTATE_Z - e.rotation) / 60 );
+    helpObject.rotateZ ((touch.OLD_ROTATE_Z - e.rotation) / 60);
+  }
+
+
   touch.OLD_ROTATE_Z = e.rotation;
 });
 
@@ -233,8 +250,8 @@ function touchMove(e){
     mQ.setFromRotationMatrix(m);
 
     mQ.multiply(editObject.quaternion);
-
     editObject.quaternion.copy(mQ);
+    helpObject.quaternion.copy(mQ);
 
     touch.move.x = e.touches[1].pageX;
     touch.move.y = e.touches[1].pageY;

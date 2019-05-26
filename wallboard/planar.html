@@ -19,13 +19,15 @@
 
 	<style>
 		.cardElement {
-			width: 400px;
-			height: 400px;
+			width: 380px;
+			height: 420px;
 			font-size: 40px;
-			background: rgba(255, 255, 255, 0.8);
+			background-image: url("assets/photo_frame.png");
 			border-radius: 5%;
-			border: 10px solid rgba(0, 0, 0, 0.48);
-			padding: 15px;
+			padding: 15px 15px 30px 15px;
+			object-fit: contain;
+			text-align: center;
+			margin-top:10%;
 		}
 		.imagebox {
 			width: 100%;
@@ -33,6 +35,17 @@
 		.imagebox img {
 			display: block;
 			margin: 0 auto;
+			width: 340px;
+			height: 360px;
+		}
+
+		#helpElement {
+			width: 630px;
+			height: 700px;
+			background-image: url("assets/help.png") ;
+			background-size: 630px 700px;
+			background-repeat: no-repeat;
+
 		}
 	</style>
 
@@ -98,7 +111,7 @@
 <input style="display:none" type="file" id="uploadImageInput" name='uploadImageInput' accept=".jpg,.jpeg.,.gif,.png" onchange="showPreviewImage()">
 <div id="addCardDiv" style="width:100%;height:100%; display: none; position:absolute; text-align: center; overflow: scroll; background-color: #00accb">
 	<div style="width:100%;height:15%;padding-top:3%; background-color: rgba(39, 39, 39, 0.6);">
-		<img id="backToMainImg" src="assets/back_button.png" style="float:left;left:7%;top:4%;width:5% ;position:absolute" onclick = "goToMain()">
+		<img id="backToMainImg" src="assets/back_button.png" style="float:left;left:7%;top:4%;width:5% ;position:absolute" onclick = "goToMain(false)">
 		<img src="assets/pick_message2.png" style="width:45%;"/>
 	</div>
 
@@ -114,10 +127,10 @@
 	</div>
 
 	<div style="position:absolute;width:100%; top:34%" onclick="fileClick()">
-		<img src="assets/upload_file.png" style="width:10%"/>
+		<img id="upload_file_message" src="assets/upload_file.png" style="width:10%"/>
 	</div>
 	<div style="position:absolute;width:100%; top:42%" onclick="fileClick()" >
-		<img src="assets/picture.png" style="width:8%"/>
+		<img id="picture_image" src="assets/picture.png" style="width:8%"/>
 	</div>
 
 	<div style="position:absolute;width:100%; bottom:4%">
@@ -132,8 +145,8 @@
 		<img src="assets/move_card_message.png" style="width:55%;"/>
 	</div>
 	<div style ="width:100%; padding-right: 10%">
-		<img style="width:8%; float:right; margin-right: 2%; position:absolute; z-index: 2; right:12%" src="assets/check_button.png" />
-		<img style="width:8%; float:right; margin-right: 2%; position:absolute; z-index: 2; right:2%" src="assets/x_button2.png" onclick="goToMain()"/>
+		<img style="width:8%; float:right; margin-right: 2%; position:absolute; z-index: 2; right:12%" src="assets/check_button.png" onclick = "postCard()" />
+		<img style="width:8%; float:right; margin-right: 2%; position:absolute; z-index: 2; right:2%" src="assets/x_button2.png" onclick="goToMain(false)"/>
 	</div>
 </div>
 
@@ -142,7 +155,7 @@
 
 <div id="inputConfirm">
 	<!-- 완료버튼 눌렀을 시 서버에 데이터 저장하고 보여주기 -->
-	<div onclick="save();" class="icon-edit-sucsess">완료</div>
+	<div onclick="postCard();" class="icon-edit-sucsess">완료</div>
 	<img onclick="removeCard()" src="assets/btn-trash.svg" id="delete-input"/>
 	<!--
   <div class="edit-target-see-wrapper">
@@ -249,10 +262,8 @@
   //axios.defaults.headers.common['X-Parse-Application-Id'] = 'ar-docent';
   //axios.defaults.headers.common['X-Parse-REST-API-Key'] = 'djasklasdas';
 
-
   axios.defaults.baseURL = 'https://browser.letsee.io:8337/parse';
   axios.defaults.headers.common['X-Parse-Application-Id'] = 'awe2019wallboard';
-
 
   function updateCardObject(args) {
     return {...currentCardObject, ...args}
@@ -301,16 +312,16 @@
       //img.src = data.data.url;
 
       currentCardObject.content = `
-				<div class="cardElement" data-type="card" data-id="${currentCardObject.id}">
-					<div class="wrapper">
-						<div class="inner">
-							<div class="imagebox"><img src=${object.resizedImageUrl} data-original="${object.imageUrl}" data-type="cardImage" data-id="${currentCardObject.id}"></div>
-							<div class="textBox">
-								${cardContentInput.value}
-							</div>
-						</div>
-					</div>
-				</div>`;
+			<div class="cardElement" data-type="card" data-id="${currentCardObject.id}">
+                <img src="assets/stick.png" style="width:360px; z-index: 3; margin-top:-15%"/>
+                <div class="wrapper">
+                    <div class="inner">
+                        <div class="imagebox">
+                            <img src=${object.resizedImageUrl} data-original="${object.imageUrl}" data-type="cardImage" data-id="${currentCardObject.id}">
+                        </div>
+                    </div>
+                </div>
+            </div>`;
 
       axios.post('classes/wallboard', updateCardObject(currentCardObject))
         .then((result) => {
@@ -349,6 +360,8 @@
 
   /* Publish card */
   let editObject;
+  let helpObject;
+
   let CURRENT_URI = '';
   let currentTarget = null;
 
@@ -410,10 +423,12 @@
       const type = "image";
       const content = `
 				<div class="cardElement" data-type="card" data-id="${randomId}">
+					<img src="assets/stick.png" style="width:360px; z-index: 3; margin-top:-15%"/>
 					<div class="wrapper">
 						<div class="inner">
-							<div class="imagebox"><img src="" data-type="cardImage" data-id="${randomId}"></div>
-
+							<div class="imagebox">
+								<img src="" data-type="cardImage" data-id="${randomId}">
+							</div>
 						</div>
 					</div>
 				</div>`;
@@ -432,6 +447,7 @@
   }
 
   let renderable = null;
+  let helpRenderable = null;
   let currentCardIndex = 0;
 
   // Function to make card renderable using card data and add gesture to move card.
@@ -440,29 +456,26 @@
     let rotation = [0,0,0];
     let scale = [1,1,1];
     renderable = createDOMRenderable(currentCardObject.content, position, rotation, scale);
-
     world.add(renderable);
+
+
+    position = [0,-25,50 * currentCardIndex];
+    helpRenderable = createDOMRenderable(`<div id = "helpElement"></div>`, position, rotation, scale);
+    world.add(helpRenderable);
+
     editObject = renderable;
+    helpObject = helpRenderable;
+
     currentCardIndex ++;
 
-    if(imgData !== null) {
-      //let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
-      //img.src = imgData;
-      //console.log(img);
-    }
-
-    // currentCard = editObject;
-    // Set layout
-    // showInputTextDiv();
-    // showInputConfirmDiv();
-
-	goToMoveCardDiv()
 
     /**
      * src = 이미지 base64가 두번 호출되어야만 resizing 수행. => 원인 파악 x
      */
     ResizeImage();
     ResizeImage();
+
+    goToMoveCardDiv();
   }
 
   // Function to remove card from layout
@@ -476,9 +489,15 @@
     //showInputConfirmDiv();
   }
 
+  function removeHelper() {
+    world.remove(helpRenderable);
+    helpObject = null;
+    helpRenderable = null;
+  }
 
-  // 서버 전송
-  function save() {
+  // Function to post card data to server
+  function postCard() {
+
     currentCardObject = updateCardObject(
       {
         "position": {
@@ -499,12 +518,6 @@
       }
     );
 
-    showInputConfirmDiv();
-    postCard();
-  }
-
-  // Function to post card data to server
-  function postCard() {
     if(currentCardObject.type === "image") {
       saveImage()
         .then((data) => {
@@ -516,21 +529,12 @@
         .catch(error => {
           console.log(error);
         })
-
-    } else {
-      axios.post('classes/wallboard', updateCardObject(currentCardObject))
-        .then(() => {
-          currentCardObject = null;
-          editObject = null;
-          currentCardObject = objectTemplate;
-          cardContentInput.value = ""
-
-        })
-        .catch(error => {
-          console.warn(error);
-        });
     }
+
+    removeHelper();
+    goToMain(true);
   }
+
 
   let resizedFile;
   // width, height 최대값이 380으로 이미지 리사이징.
@@ -634,6 +638,9 @@
       let rectangleImg = document.getElementById("rectangleImg");
       rectangleImg.src = fileReader.result;
       rectangleImg.style.height = window.innerWidth * 0.17 + "px";
+
+      $("#upload_file_message").fadeOut();
+      $("#picture_image").fadeOut();
 
     };
     fileReader.readAsDataURL(imageObj.files[0]);
