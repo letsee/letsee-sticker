@@ -328,7 +328,6 @@
           currentCardObject = null;
           editObject = null;
           currentCardObject = objectTemplate;
-          cardContentInput.value = "";
           resolve(result);
         })
         .catch(error => {
@@ -526,13 +525,15 @@
         .then((data) => {
           return uploadImagesAndCardObject(data)
         })
+		.then((result) => {
+		  console.log(result);
+          removeHelper();
+          goToMain(true);
+		})
         .catch(error => {
           console.log(error);
         })
     }
-
-    removeHelper();
-    goToMain(true);
   }
 
 
