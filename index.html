@@ -5,7 +5,7 @@
 	<title>Letsee WebAR Demo - Escape Room 1.0</title>
 	<meta content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport" />
 
-	<script src="vendor/letsee/Letsee.0.9.10.js"></script>
+	<script src="./vendor/letsee/Letsee.0.9.10.js"></script>
 	<script src="./vendor/jquery/jquery-1.9.1.min.js"></script>
 	<script src="https://hammerjs.github.io/dist/hammer.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -17,7 +17,21 @@
 		#container {-letsee-target: uri('world_map.json');-letsee-position: coords(0, 0, 0);}
 	</style>
 
+	<!-- 화면 조정 미디어 쿼리 -->
+
 	<style>
+
+		@media all and (orientation:portrait) {
+			#recommendDiv {
+				display: block !important;
+			}
+		}
+		@media all and (orientation:landscape) {
+			#recommendDiv {
+				display: none !important;
+			}
+		}
+
 		.cardElement {
 			width: 380px;
 			height: 380px;
@@ -36,6 +50,7 @@
 			margin: 0 auto;
 			width: 340px;
 			height: 360px;
+			border-radius: 10%;
 		}
 
 		#helpElement {
@@ -69,18 +84,17 @@
 
 <!-- 첫화면 (main) -->
 <div id="mainDiv" style="display:block;width:100%;height:100%; position:absolute; text-align: center; overflow: scroll;">
-	<div style="text-align: center">
-		<img src="assets/welcome_message.png" style="width:45%;margin-top: 5%"/><br/>
+	<img src="assets/add_button.png" id="addButton" onclick="goToAddCardDiv()" style="position:absolute; width:8%; bottom:10%; right:5%"/>
+	<div style="width:100%; position:absolute ; bottom: 4%">
+		<img id="letseeBottomImg" src="assets/letsee_bottom.png" style="margin: 3% auto; width:25%;"/>
 	</div>
-	<img src="assets/add_button.png" id="addButton" onclick="goToAddCardDiv()" style="margin: 5% auto ; width:8%;"/>
-	<img id="letseeBottomImg" src="assets/letsee_bottom.png" style="margin: 3% auto; width:25%"/>
-	<img src="assets/info_button.png" id="infoButtonGuide" onclick="showHelpImage()"  style="position:absolute; top:2%;right:5%; width:7%"/>
+	<img src="assets/info_button.png" id="infoButtonGuide" onclick="showHelpImage()"  style="position:absolute;width:5%; left:7%;bottom:12%;"/>
 </div>
 
-<img src = "assets/x_button.png" id="xButtonGuide" onclick="showHelpImage()" style="width:7%; top:2%; right:5%"/>
+<img src = "assets/x_button.png" id="xButtonGuide" onclick="showHelpImage()" style="width:5%; left:7%; bottom:12%"/>
 
 <!-- 도움말 화면 -->
-<div id="guideDiv" style="width:80%;height:90%;margin-top: 5%; margin-left:10%">
+<div id="guideDiv" style="width:80%;height:77%;margin-top: 2%; margin-left:10%">
 	<br/>
 	<img src = "assets/letsee.png" style="width:10%"/><br/>
 	<img src = "assets/guide1.png" style="width:20%"/><br/>
@@ -90,6 +104,7 @@
 	<img src="assets/line.png" style="width:60%"/><br/><br/>
 	<img src = "assets/guide4.png" style="width:60%"/>
 </div>
+
 
 <!--
 <div id="inputText">
@@ -421,7 +436,7 @@
       const randomId = UUID();
       const type = "image";
       const content =
-				`<div class="cardElement" data-type="card" data-id="${randomId}">
+        `<div class="cardElement" data-type="card" data-id="${randomId}">
 						<div class="wrapper">
 							<div class="inner">
 								<div class="imagebox">
@@ -539,7 +554,7 @@
 
 
   let halfResizedFile = null;
-	let resizedFile = null;
+  let resizedFile = null;
 
   // width, height 최대값이 380으로 이미지 리사이징.
   function ResizeImage() {

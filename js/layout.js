@@ -48,15 +48,10 @@ function initLayoutLandscape() {
 }
 
 function initOrientation() {
-
   // 세로모드일시
   if(window.orientation === 0) {
-    recommendDiv.fadeIn();
   } else {
-
-    // 가로모드일시 레이아웃 초기화
     initLayoutLandscape();
-    recommendDiv.fadeOut();
   }
 }
 
@@ -128,12 +123,12 @@ $(window).on("orientationchange",function(){
     //setTimeout(initLayout, 100);
     recommendDiv.width = "100%";
     recommendDiv.height = "100%";
-    recommendDiv.fadeIn();
+    //recommendDiv.fadeIn();
   }
   else // Landscape
   {
     //setTimeout(initLayout, 100);
-    recommendDiv.fadeOut();
+    //recommendDiv.fadeOut();
     initLayoutLandscape();
   }
 });
