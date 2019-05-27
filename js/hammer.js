@@ -80,8 +80,8 @@ manager.on('panmove', function(e) {
 
   } else {
     // hammer 이동 비율 조정
-    var dX = touch.current.x + (e.deltaX);
-    var dY = touch.current.y + (e.deltaY);
+    var dX = touch.current.x + (e.deltaX * 7);
+    var dY = touch.current.y + (e.deltaY * 7);
 
     editObject.position.x = dX;
     editObject.position.y = -dY;
@@ -109,14 +109,15 @@ manager.on('panend', function(e) {
       manager.get('rotate').set({ enable : true });
 
     } else {
-      touch.current.x = touch.current.x + e.deltaX;
-      touch.current.y = touch.current.y + e.deltaY;
+      touch.current.x = touch.current.x + e.deltaX * 7;
+      touch.current.y = touch.current.y + e.deltaY * 7;
     }
   }
 });
 
-// 수직이동
+// 핀치 이동 시작
 manager.on('pinchmove', function(e) {
+  /*
   if(touch.gestureF3.enable)return;
   if(!editObject)return;
 
@@ -154,20 +155,23 @@ manager.on('pinchmove', function(e) {
 
   helpObject.position.x = dX;
   helpObject.position.y = -dY -25;
-
+  */
 });
 
-// 수평이동 종료
+// 핀치 이동 종료
 manager.on('pinchend', function(e) {
+  /*
   if(touch.gestureF3.enable)return;
   if(!editObject)return;
   if(touch.isBoundary) touch.isBoundary = false;
 
   touch.current.scale = e.scale * touch.current.scale;
   // touch.current.scale = (e.scale-(e.scale/2)) * touch.current.scale;
+  */
 });
 
 manager.on('rotatemove', function(e) {
+  /*
   if(touch.gestureF3.enable)return;
   if(!editObject)return;
 
@@ -179,14 +183,17 @@ manager.on('rotatemove', function(e) {
 
 
   touch.OLD_ROTATE_Z = e.rotation;
+  */
 });
 
 // 회전 종료시
 manager.on('rotateend', function(e) {
+  /*
   if(touch.gestureF3.enable)return;
   if(!editObject)return;
 
   touch.OLD_ROTATE_Z = null;
+  */
 });
 
 // 손을 떼었을 때

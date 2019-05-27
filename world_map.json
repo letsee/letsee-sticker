@@ -1,0 +1,11 @@
+{
+	"uri":"world_map.json",
+	"name":"world_map",
+	"size":{
+		"width": 1820,
+		"height": 1110
+	},
+	"scale": 0.5,
+	"image":"./world_map.jpg",
+	"information":{}
+}

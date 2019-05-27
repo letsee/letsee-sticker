@@ -5,7 +5,7 @@
 	<title>Letsee WebAR Demo - Escape Room 1.0</title>
 	<meta content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport" />
 
-	<script src="./vendor/letsee/Letsee.0.9.10.js"></script>
+	<script src="vendor/letsee/Letsee.0.9.10.js"></script>
 	<script src="./vendor/jquery/jquery-1.9.1.min.js"></script>
 	<script src="https://hammerjs.github.io/dist/hammer.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -14,20 +14,19 @@
 	<link rel="stylesheet" href="css/renderable.css"/>
 
 	<style media="place" type="text/css">
-		#container {-letsee-target: uri('toystory.json');-letsee-position: coords(0, 0, 0);}
+		#container {-letsee-target: uri('world_map.json');-letsee-position: coords(0, 0, 0);}
 	</style>
 
 	<style>
 		.cardElement {
 			width: 380px;
-			height: 420px;
+			height: 380px;
 			font-size: 40px;
-			background-image: url("assets/photo_frame.png");
 			border-radius: 5%;
 			padding: 15px 15px 30px 15px;
 			object-fit: contain;
 			text-align: center;
-			margin-top:10%;
+			margin-top:10%
 		}
 		.imagebox {
 			width: 100%;
@@ -40,10 +39,10 @@
 		}
 
 		#helpElement {
-			width: 630px;
-			height: 700px;
+			width: 600px;
+			height: 640px;
 			background-image: url("assets/help.png") ;
-			background-size: 630px 700px;
+			background-size: 600px 640px;
 			background-repeat: no-repeat;
 
 		}
@@ -168,7 +167,7 @@
 </div>
 </body>
 
-<script type="text/javascript" src="js/layout.js"></script>
+<script type="text/javascript" src="./js/layout.js"></script>
 <script type="text/javascript" src="./thumb.js"></script>
 <script>
   /* Letsee init */
@@ -218,6 +217,7 @@
   $(function() {
     initOrientation();
   });
+
 
   // function to get uuid
   function UUID() {
@@ -277,7 +277,7 @@
   let prefix = "https://browser.letsee.io:8337/parse/files/awe2019wallboard/";
   const saveImage = function() {
     return new Promise((resolve, reject) => {
-      axios.post('files/'+ currentCardObject.id , imageObj.files[0])
+      axios.post('files/'+ currentCardObject.id , halfResizedFile)
         .then((data) => {
           let imageUrl = `${prefix}${data.data.name}`;
           resolve(imageUrl)
@@ -311,17 +311,17 @@
       //let img = document.querySelector(`img[data-id='${currentCardObject.id}']`);
       //img.src = data.data.url;
 
-      currentCardObject.content = `
-			<div class="cardElement" data-type="card" data-id="${currentCardObject.id}">
-                <img src="assets/stick.png" style="width:360px; z-index: 3; margin-top:-15%"/>
-                <div class="wrapper">
-                    <div class="inner">
-                        <div class="imagebox">
-                            <img src=${object.resizedImageUrl} data-original="${object.imageUrl}" data-type="cardImage" data-id="${currentCardObject.id}">
-                        </div>
-                    </div>
-                </div>
-            </div>`;
+      currentCardObject.content = `<div class="cardElement" data-type="card" data-id="${currentCardObject.id}">
+        			<div class="wrapper">
+        				<div class="inner">
+        					<div class="imagebox">
+        						<img src=${object.resizedImageUrl} data-original="${object.imageUrl}" data-type="cardImage" data-id="${currentCardObject.id}"
+        					</div>
+        				</div>
+        			</div>`
+
+
+
 
       axios.post('classes/wallboard', updateCardObject(currentCardObject))
         .then((result) => {
@@ -420,17 +420,19 @@
 
       const randomId = UUID();
       const type = "image";
-      const content = `
-				<div class="cardElement" data-type="card" data-id="${randomId}">
-					<img src="assets/stick.png" style="width:360px; z-index: 3; margin-top:-15%"/>
-					<div class="wrapper">
-						<div class="inner">
-							<div class="imagebox">
-								<img src="" data-type="cardImage" data-id="${randomId}">
+      const content =
+				`<div class="cardElement" data-type="card" data-id="${randomId}">
+						<div class="wrapper">
+							<div class="inner">
+								<div class="imagebox">
+								  <img src="" data-type="cardImage" data-id="${randomId}">
+								</div>
 							</div>
 						</div>
-					</div>
-				</div>`;
+					</div>`
+
+
+
 
       currentCardObject = updateCardObject({
         "id": randomId,
@@ -525,11 +527,11 @@
         .then((data) => {
           return uploadImagesAndCardObject(data)
         })
-		.then((result) => {
-		  console.log(result);
+        .then((result) => {
+          console.log(result);
           removeHelper();
           goToMain(true);
-		})
+        })
         .catch(error => {
           console.log(error);
         })
@@ -537,7 +539,9 @@
   }
 
 
-  let resizedFile;
+  let halfResizedFile = null;
+	let resizedFile = null;
+
   // width, height 최대값이 380으로 이미지 리사이징.
   function ResizeImage() {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -551,42 +555,8 @@
           var img = document.createElement("img");
           img.src = e.target.result;
 
-          var canvas = document.createElement("canvas");
-          var ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0);
-
-          var MAX_WIDTH = 380;
-          var MAX_HEIGHT = 380;
-          var width = img.width;
-          var height = img.height;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          var ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, width, height);
-
-          let dataurl = canvas.toDataURL(file.type);
-          //document.getElementById('output').src = dataurl;
-
-          let myImg = document.querySelector(`img[data-id='${currentCardObject.id}']`);
-          myImg.src = dataurl;
-
-          let blob = dataURLToBlob(dataurl);
-          let fileFromBlob = blobToFile(blob);
-
-          resizedFile = fileFromBlob;
-
+          resizedFile = makeResizedImage(380, 380, img, file.type);
+          halfResizedFile =  makeResizedImage(img.width / 2, img.height / 2, img, file.type);
         };
         reader.readAsDataURL(file);
       }
@@ -594,6 +564,45 @@
       alert('The File APIs are not fully supported in this browser.');
     }
   }
+
+
+  function makeResizedImage(max_width, max_height, img , type, output) {
+    var MAX_WIDTH = max_width;
+    var MAX_HEIGHT = max_height;
+    var width = img.width;
+    var height = img.height;
+
+    var canvas = document.createElement("canvas");
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, width, height);
+
+    if (width > height) {
+      if (width > MAX_WIDTH) {
+        height *= MAX_WIDTH / width;
+        width = MAX_WIDTH;
+      }
+    } else {
+      if (height > MAX_HEIGHT) {
+        width *= MAX_HEIGHT / height;
+        height = MAX_HEIGHT;
+      }
+    }
+
+    canvas.width = width;
+    canvas.height = height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, width, height);
+
+    let dataurl = canvas.toDataURL(type);
+    let blob = dataURLToBlob(dataurl);
+    let fileFromBlob = blobToFile(blob);
+
+    let myImg = document.querySelector(`img[data-id='${currentCardObject.id}']`);
+    myImg.src = dataurl;
+
+    return fileFromBlob;
+  }
+
 
   // Function to make dataurl image to blob type.
   let dataURLToBlob = function(dataURL) {
