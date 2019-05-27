@@ -2,10 +2,10 @@
 	"uri":"toystory.json",
 	"name":"toystory",
 	"size":{
-		"width": 420,
-		"height": 600
+		"width": 9100,
+		"height": 5550
 	},
-	"scale": 1,
-	"image":"./toystory.jpg",
+	"scale": 0.1,
+	"image":"./world_map1.jpg",
 	"information":{}
 }
