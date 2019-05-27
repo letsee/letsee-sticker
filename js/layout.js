@@ -151,9 +151,12 @@ function goToMain(isPostCard) {
   addCardDiv.fadeOut();
   moveCardDiv.fadeOut();
 
+  removeHelper();
   if (isPostCard !== true) {
     removeCard();
     removeHelper();
+  } else {
+    renderable = null;
   }
 }
 
