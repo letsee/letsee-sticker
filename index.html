@@ -122,7 +122,7 @@
 </div>
 -->
 <!-- 카드 입력 화면 -->
-<input style="display:none" type="file" id="uploadImageInput" name='uploadImageInput' accept=".jpg,.jpeg.,.gif,.png" onchange="showPreviewImage()">
+<input style="display:none" type="file" id="uploadImageInput" name='uploadImageInput' accept=".jpg,.jpeg.,.gif,.png" >
 
 
 
@@ -755,25 +755,101 @@
     document.all.uploadImageInput.click();
   }
 
-  function showPreviewImage() {
+
+  let orientation;
+  let base64data;
+  let rectangleImg = document.getElementById("rectangleImg");
+
+  document.getElementById('uploadImageInput').onchange = function(e) {
+    loadImage(
+      imageObj.files[0],
+      function (img, data) {
+        if(data.exif !== undefined) {
+
+          getSizeOrientatedImageBinary(data, base64data);
+          $("#upload_file_message").fadeOut();
+          $("#picture_image").fadeOut();
+        } else {
+          rectangleImg.src = base64data;
+        }
+      },
+      {meta : true}
+    );
+
     let fileReader = new FileReader();
-    fileReader.onload = function () {
-      // var img = document.createElement('img');
-      // img.src = fileReader.result;
-      let rectangleImg = document.getElementById("rectangleImg");
-      rectangleImg.src = fileReader.result;
-      // rectangleImg.style.height = window.innerWidth * 0.17 + "px";
-
-      $("#upload_file_message").fadeOut();
-      $("#picture_image").fadeOut();
-
+    fileReader.onload = function (e) {
+      base64data = fileReader.result;
     };
     fileReader.readAsDataURL(imageObj.files[0]);
-  }
+  };
+
+  function getSizeOrientatedImageBinary (data, base64data) {
+
+    let dummyImage = document.createElement('img');
+    dummyImage.src = base64data;
+    dummyImage.onload = () => {
+      let img = document.getElementById("rectangleImg");
+      let width = dummyImage.width;
+      let height = dummyImage.height;
+
+      let canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      let ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      let orientation = data.exif.get('Orientation');
+
+      switch (orientation) {
+        case 2:
+          // horizontal flip
+          ctx.translate(width, 0)
+          ctx.scale(-1, 1)
+          break
+        case 3:
+          // 180° rotate left
+          ctx.translate(width, height)
+          ctx.rotate(Math.PI)
+          break
+        case 4:
+          // vertical flip
+          ctx.translate(0, height);
+          ctx.scale(1, -1);
+          break
+        case 5:
+          // vertical flip + 90 rotate right
+          ctx.rotate(0.5 * Math.PI);
+          ctx.scale(1, -1);
+          break
+        case 6:
+          // 90° rotate right
+          ctx.rotate(0.5 * Math.PI);
+          ctx.translate(0, -height);
+          break
+        case 7:
+          // horizontal flip + 90 rotate right
+          ctx.rotate(0.5 * Math.PI);
+          ctx.translate(width, -height);
+          ctx.scale(-1, 1)
+          break
+        case 8:
+          // 90° rotate left
+          ctx.rotate(-0.5 * Math.PI);
+          ctx.translate(-width, 0);
+          break
+      }
+
+      ctx.drawImage(dummyImage, 0, 0, width, height)
+      dummyImage.onload = null;
+      let dataurl = canvas.toDataURL(imageObj.files[0].type);
+      img.src = dataurl;
+
+    }
+  };
 
 </script>
 <!-- hammer motion code -->
 <script type="text/javascript" src="js/hammer.js"></script>
+<script src="js/load-image.all.min.js"></script>
 
 <!-- input area
 <img >
