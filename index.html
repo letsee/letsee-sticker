@@ -5,7 +5,7 @@
 	<title>Letsee WebAR Demo - Escape Room 1.0</title>
 	<meta content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport" />
 
-	<script src="./vendor/letsee/Letsee.0.9.10.js"></script>
+	<script src="../libs/Letsee.0.9.10.min.js"></script>
 	<script src="./vendor/jquery/jquery-1.9.1.min.js"></script>
 	<script src="https://hammerjs.github.io/dist/hammer.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -84,14 +84,14 @@
 
 <!-- 첫화면 (main) -->
 <div id="mainDiv" style="display:block;width:100%;height:100%; position:absolute; text-align: center; overflow: scroll;">
-	<img src="assets/add_button.png" id="addButton" onclick="goToAddCardDiv()" style="position:absolute; width:8%; bottom:10%; right:5%"/>
-	<div style="width:100%; position:absolute ; bottom: 4%">
-		<img id="letseeBottomImg" src="assets/letsee_bottom.png" style="margin: 3% auto; width:25%;"/>
+	<img src="assets/add_button.png" id="addButton" onclick="goToAddCardDiv()" style="position:absolute; width:8%; bottom:9%; right:7%"/>
+	<div style="width:100%; position:absolute ; bottom: 2%">
+		<img id="letseeBottomImg" src="assets/letsee_bottom.png" style="margin: 1% auto; width:25%;"/>
 	</div>
-	<img src="assets/info_button.png" id="infoButtonGuide" onclick="showHelpImage()"  style="position:absolute;width:5%; left:7%;bottom:12%;"/>
+	<!-- <img src="assets/info_button.png" id="infoButtonGuide" onclick="showHelpImage()"  style="position:absolute;width:5%; left:7%;bottom:12%;"/> -->
 </div>
 
-<img src = "assets/x_button.png" id="xButtonGuide" onclick="showHelpImage()" style="width:5%; left:7%; bottom:12%"/>
+<!-- <img src = "assets/x_button.png" id="xButtonGuide" onclick="showHelpImage()" style="width:5%; left:7%; bottom:12%"/> -->
 
 <!-- 도움말 화면 -->
 <div id="guideDiv" style="width:80%;height:77%;margin-top: 2%; margin-left:10%">
@@ -193,34 +193,38 @@
   const app = new Letsee(config);
   let currentCardObject = null;
 
-  app.addEventListener("trackstart", function(e) {
+  let CURRENT_URI = null;
+  let currentTarget = null;
+  const world = new Object3D();
+
+  LetseeEngine.addEventListener("trackstart", function(e) {
     let uri = e.target.uri;
+
+    if(CURRENT_URI == null) {
+      CURRENT_URI = uri;
+      currentTarget = LetseeEngine.getEntity(CURRENT_URI);
+      e.target.addRenderable(world);
+    }
+
     if (uri !== CURRENT_URI) {
-      /*
-          if (CURRENT_URI) {
-                LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
-                CURRENT_URI = uri;
-                currentTarget = LetseeEngine.getEntity(CURRENT_URI);
+      LetseeEngine.getEntity(CURRENT_URI).removeRenderable(world);
+      CURRENT_URI = uri;
+      currentTarget = LetseeEngine.getEntity(CURRENT_URI);
+      e.target.addRenderable(world);
+      //ready();
+      //let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
+      //world.position.z = depth;
+    }
 
-                //ready();
-            }
-
-            CURRENT_URI = uri;
-            e.target.addRenderable(world);
-
-            let depth = e.target.size.depth === null ? 0 : e.target.size.depth/2;
-            world.position.z = depth;
-        }
-    }*/
-    }});
-  app.addEventListener("trackmove", function(e) {
   });
-  app.addEventListener("trackend", function(e) {
+  LetseeEngine.addEventListener("trackmove", function(e) {
   });
-  app.addEventListener('app_status', e => {
+  LetseeEngine.addEventListener("trackend", function(e) {
+  });
+  LetseeEngine.addEventListener('app_status', e => {
     switch(e.code) {
       case 203:
-        initWorldObject3D(app.letseeEngine.getEntities());
+        initWorldObject3D(LetseeEngine.getEntities());
         break;
       default:
         console.log(e);
@@ -376,10 +380,6 @@
   let editObject;
   let helpObject;
 
-  let CURRENT_URI = '';
-  let currentTarget = null;
-
-  const world = new Object3D();
   const cardContentInput = document.getElementById('inputArea');
   const imageObj = document.getElementById('uploadImageInput');
 

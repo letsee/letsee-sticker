@@ -24,7 +24,7 @@
 
     background-size: 100%;
     z-index: 21;
-    opacity: 0.5;
+    opacity: 1;
     display: block;
     -webkit-transition: all 100ms linear;
 }
