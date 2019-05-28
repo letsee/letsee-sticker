@@ -123,8 +123,108 @@
 -->
 <!-- 카드 입력 화면 -->
 <input style="display:none" type="file" id="uploadImageInput" name='uploadImageInput' accept=".jpg,.jpeg.,.gif,.png" onchange="showPreviewImage()">
-<div id="addCardDiv" style="width:100%;height:100%; display: none; position:absolute; text-align: center; overflow: scroll; background-color: #00accb">
-	<div style="width:100%;height:15%;padding-top:3%; background-color: rgba(39, 39, 39, 0.6);">
+
+
+
+<style>
+	#addCardDiv {
+		width:100%;
+		height:100%;
+		display: none;
+		position:absolute;
+		text-align: center;
+		overflow: scroll;
+		background-color: #00accb;
+	}
+	#cardHolder {
+		width: 180px;
+		height: auto;
+		position: absolute;
+		left: 50%;
+		top: 46%;
+		transform: translate(-50%, -50%);
+		/* max-height: 220px; */
+		/* overflow: hidden; */
+	}
+	#cardHolder .inner {
+		height: 100%;
+		overflow: hidden;
+		max-height: 200px;
+	}
+	#cardHolder .inner:before {
+		content: '';
+		background: url(./assets/frame_top.png) no-repeat center top;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		background-size: cover;
+		z-index: 10;
+	}
+	#cardHolder:after {
+		content: '';
+		background: url(./assets/frame_bottom.png) no-repeat center bottom;
+		width: 100%;
+		height: 40px;
+		position: absolute;
+		left: 0;
+		bottom: -40px;
+		background-size: cover;
+		z-index: 10;
+	}
+
+	#cardHolder .sourceImg {
+		display: block;
+		width: 100%;
+		/* position: absolute; */
+		/* margin: 0 auto; */
+		padding: 20px 10px 0;
+		margin: 0 auto;
+		box-sizing: border-box;
+	}
+	#postHeader {
+		width: 100%;
+		text-align: center;
+		color: #fff;
+		background: #000000a1;
+		padding: 0;
+		margin: 0;
+		height: 50px;
+		line-height: 50px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		font-size: 20px;
+	}
+
+	#postHeader img {
+		position: absolute;
+		width: 30px;
+		top: 10px;
+		left: 40px;
+	}
+	#postHeader p {
+		padding: 0;
+		margin: 0;
+		font-family: sans-serif;
+		font-weight: 100;
+	}
+
+
+</style>
+<div id="addCardDiv">
+	<div id="postHeader">
+		<img id="backToMainImg" src="assets/back_button.png" onclick = "goToMain(false)">
+		<p>Please pick your pictures and post it!</p>
+	</div>
+	<div id="cardHolder">
+		<div class="inner" onclick="fileClick()">
+			<img id="rectangleImg" class="sourceImg" src="assets/placeholder.png">
+		</div>
+	</div>
+
+	<!--<div style="width:100%;height:15%;padding-top:3%; background-color: rgba(39, 39, 39, 0.6);">
 		<img id="backToMainImg" src="assets/back_button.png" style="float:left;left:7%;top:4%;width:5% ;position:absolute" onclick = "goToMain(false)">
 		<img src="assets/pick_message2.png" style="width:45%;"/>
 	</div>
@@ -147,6 +247,9 @@
 		<img id="picture_image" src="assets/picture.png" style="width:8%"/>
 	</div>
 
+	<div style="position:absolute;width:100%; bottom:4%">
+		<img src="assets/post_message.png" style="width:15%;" onclick="createCard()"/>
+	</div>-->
 	<div style="position:absolute;width:100%; bottom:4%">
 		<img src="assets/post_message.png" style="width:15%;" onclick="createCard()"/>
 	</div>
@@ -445,10 +548,6 @@
 							</div>
 						</div>
 					</div>`
-
-
-
-
       currentCardObject = updateCardObject({
         "id": randomId,
         "type": type,
@@ -661,7 +760,7 @@
       // img.src = fileReader.result;
       let rectangleImg = document.getElementById("rectangleImg");
       rectangleImg.src = fileReader.result;
-      rectangleImg.style.height = window.innerWidth * 0.17 + "px";
+      // rectangleImg.style.height = window.innerWidth * 0.17 + "px";
 
       $("#upload_file_message").fadeOut();
       $("#picture_image").fadeOut();
