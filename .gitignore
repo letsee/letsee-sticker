@@ -67,3 +67,4 @@ fabric.properties
 server.bundle.js
 views/index.ejs
 public
+backup

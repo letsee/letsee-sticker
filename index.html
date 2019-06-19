@@ -5,7 +5,7 @@
 	<title>Letsee WebAR Demo - Escape Room 1.0</title>
 	<meta content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport" />
 
-	<script src="../libs/Letsee.0.9.10.min.js"></script>
+	<script src="./libs/Letsee.0.9.10.min.js"></script>
 	<script src="./vendor/jquery/jquery-1.9.1.min.js"></script>
 	<script src="https://hammerjs.github.io/dist/hammer.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -123,8 +123,6 @@
 -->
 <!-- 카드 입력 화면 -->
 <input style="display:none" type="file" id="uploadImageInput" name='uploadImageInput' accept=".jpg,.jpeg.,.gif,.png" >
-
-
 
 <style>
 	#addCardDiv {
@@ -802,47 +800,46 @@
       switch (orientation) {
         case 2:
           // horizontal flip
-          ctx.translate(width, 0)
-          ctx.scale(-1, 1)
-          break
+          ctx.translate(width, 0);
+          ctx.scale(-1, 1);
+          break;
         case 3:
           // 180° rotate left
-          ctx.translate(width, height)
-          ctx.rotate(Math.PI)
+          ctx.translate(width, height);
+          ctx.rotate(Math.PI);
           break
         case 4:
           // vertical flip
           ctx.translate(0, height);
           ctx.scale(1, -1);
-          break
+          break;
         case 5:
           // vertical flip + 90 rotate right
           ctx.rotate(0.5 * Math.PI);
           ctx.scale(1, -1);
-          break
+          break;
         case 6:
           // 90° rotate right
           ctx.rotate(0.5 * Math.PI);
           ctx.translate(0, -height);
-          break
+          break;
         case 7:
           // horizontal flip + 90 rotate right
           ctx.rotate(0.5 * Math.PI);
           ctx.translate(width, -height);
-          ctx.scale(-1, 1)
-          break
+          ctx.scale(-1, 1);
+          break;
         case 8:
           // 90° rotate left
           ctx.rotate(-0.5 * Math.PI);
           ctx.translate(-width, 0);
-          break
+          break;
       }
 
-      ctx.drawImage(dummyImage, 0, 0, width, height)
+      ctx.drawImage(dummyImage, 0, 0, width, height);
       dummyImage.onload = null;
       let dataurl = canvas.toDataURL(imageObj.files[0].type);
       img.src = dataurl;
-
     }
   };
 
