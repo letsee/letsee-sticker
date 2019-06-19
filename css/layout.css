@@ -20,15 +20,6 @@
     -webkit-transition: all 100ms linear;
 }
 
-#addButton {
-
-    background-size: 100%;
-    z-index: 21;
-    opacity: 1;
-    display: block;
-    -webkit-transition: all 100ms linear;
-}
-
 #buttons {
     position: relative;
     width: 100%;
@@ -61,6 +52,10 @@
     z-index: 11;
     display: none;
     overflow: scroll;
+    width:80%;
+    height:77%;
+    margin-top: 2%;
+    margin-left:10%
 }
 
 #xButtonGuide {
@@ -82,8 +77,6 @@
 
 
 /* input div css */
-
-
 
 #inputText {
     position: absolute;
@@ -169,4 +162,250 @@
     top:70%;
     right:0;
     position:absolute;
+}
+
+/* wallboard위의 카드 element */
+
+.cardElement {
+    width: 380px;
+    height: 380px;
+    font-size: 40px;
+    border-radius: 5%;
+    padding: 15px 15px 30px 15px;
+    object-fit: contain;
+    text-align: center;
+    margin-top:10%
+}
+.imagebox {
+    width: 100%;
+}
+.imagebox img {
+    display: block;
+    margin: 0 auto;
+    width: 340px;
+    height: 360px;
+    border-radius: 10%;
+}
+
+/* 도움말 */
+
+#helpElement {
+    width: 600px;
+    height: 640px;
+    background-image: url("../assets/help.png") ;
+    background-size: 600px 640px;
+    background-repeat: no-repeat;
+
+}
+
+/* 사진 등록해서 카드 등록하는 화면 */
+
+#addCardDiv {
+    width:100%;
+    height:100%;
+    display: none;
+    position:absolute;
+    text-align: center;
+    overflow: scroll;
+    background-color: #00accb;
+}
+
+#cardHolder {
+    width: 180px;
+    height: auto;
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    transform: translate(-50%, -50%);
+    /* max-height: 220px; */
+    /* overflow: hidden; */
+}
+
+#cardHolder .inner {
+    height: 100%;
+    overflow: hidden;
+    max-height: 200px;
+}
+
+#cardHolder .inner:before {
+    content: '';
+    background: url(../assets/frame_top.png) no-repeat center top;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-size: cover;
+    z-index: 10;
+}
+
+#cardHolder:after {
+    content: '';
+    background: url(../assets/frame_bottom.png) no-repeat center bottom;
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    left: 0;
+    bottom: -40px;
+    background-size: cover;
+    z-index: 10;
+}
+
+#cardHolder .sourceImg {
+    display: block;
+    width: 100%;
+    /* position: absolute; */
+    /* margin: 0 auto; */
+    padding: 20px 10px 0;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+#postHeader {
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: #000000a1;
+    padding: 0;
+    margin: 0;
+    height: 50px;
+    line-height: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+}
+
+#postHeader img {
+    position: absolute;
+    width: 30px;
+    top: 10px;
+    left: 40px;
+}
+#postHeader p {
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+    font-weight: 100;
+}
+
+/* 가로모드 진입 권장 화면 */
+#recommendDiv {
+    background-color:#434343;
+    width:100%;
+    height:100%;
+    position:absolute;
+    z-index: 999;
+    text-align: center
+}
+
+#recommendDivHeader {
+    margin-top:20%;
+}
+
+#recommendDivImg {
+    width:70%;
+    margin-top:20%;
+    left:15%
+}
+
+#recommendDivHeaderImg {
+    width:90%;
+    margin-left:5%;
+}
+
+#recommendDivFooterImageFirst {
+    width:80%;
+    margin-top: 20%
+}
+
+#recommendDivFooterImageSecond {
+    width:10%;
+    margin-top:18%;
+    margin-left:3%;
+    float:left
+}
+
+/* 첫 메인 화면 UI */
+
+#mainDiv {
+    display:block;
+    width:100%;
+    height:100%;
+    position:absolute;
+    text-align: center;
+    overflow: scroll;
+}
+
+#addButton {
+    background-size: 100%;
+    z-index: 21;
+    opacity: 1;
+    display: block;
+    -webkit-transition: all 100ms linear;
+    position:absolute;
+    width:8%;
+    bottom:9%;
+    right:7%;
+}
+
+#mainDivFooter {
+    width:100%;
+    position:absolute;
+    bottom: 2%
+}
+
+#mainDivFooterImg {
+    margin: 1% auto;
+    width:25%;
+}
+
+/* 카드 이동화면 (지도에서) */
+
+#moveCardDiv {
+    width:100%;
+    height:100%;
+    display: none;
+    position:absolute;
+    text-align: center;
+    overflow: scroll;
+}
+
+#moveCardDivHeader {
+    width:100%;
+    height:15%;
+    padding-top:3%;
+    background-color: rgba(39, 39, 39, 0.6);
+}
+
+#backToAddCardDivImg {
+    float:left;
+    left:7%;
+    top:4%;
+    width:5%;
+    position:absolute;
+    z-index:2
+}
+
+#moveCardDivFooter {
+    width:100%;
+    padding-right: 10%
+}
+
+#moveCardDivFooterCheckImage {
+    width:8%;
+    float:right;
+    margin-right: 2%;
+    position:absolute;
+    z-index: 2;
+    right:12%
+}
+
+#moveCardDivFooterCancelImage {
+    width:8%;
+    float:right;
+    margin-right: 2%;
+    position:absolute;
+    z-index: 2;
+    right:2%
 }

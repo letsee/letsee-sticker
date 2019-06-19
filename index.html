@@ -29,161 +29,46 @@
 			}
 		}
 
-		.cardElement {
-			width: 380px;
-			height: 380px;
-			font-size: 40px;
-			border-radius: 5%;
-			padding: 15px 15px 30px 15px;
-			object-fit: contain;
-			text-align: center;
-			margin-top:10%
-		}
-		.imagebox {
-			width: 100%;
-		}
-		.imagebox img {
-			display: block;
-			margin: 0 auto;
-			width: 340px;
-			height: 360px;
-			border-radius: 10%;
-		}
-
-		#helpElement {
-			width: 600px;
-			height: 640px;
-			background-image: url("assets/help.png") ;
-			background-size: 600px 640px;
-			background-repeat: no-repeat;
-
-		}
 	</style>
-
 </head>
 <body>
 
 <div id="container"></div>
 
 <!-- when layout vertical -->
-<div id="recommendDiv" style ="background-color:#434343 ;width:100%;height:100%;position:absolute;z-index: 999; text-align: center" >
-	<div style="margin-top:20%">
-		<img style="width:90%;margin-left:5%" src="assets/horizontal_message.png"/>
+<div id="recommendDiv">
+	<div id="recommendDivHeader">
+		<img id="recommendDivHeaderImg" src="assets/horizontal_message.png"/>
 	</div>
-	<img style="width:70%; margin-top:20%; left:15%" src="assets/landscape_phone.png"/><br/>
-
-	<div>
-		<img style="width:80%; margin-top: 20%" src="assets/horizontal_message2.png"/>
-		<img style="width:10%; margin-top:18%; margin-left:3%; float:left" src="assets/horizontal_info.png"/>
+	<img id="recommendDivImg" src="assets/landscape_phone.png"/><br/>
+	<div id="recommendDivFooter">
+		<img id="recommendDivFooterImageFirst" src="assets/horizontal_message2.png"/>
+		<img id="recommendDivFooterImageSecond" src="assets/horizontal_info.png"/>
 	</div>
 </div>
 
 <!-- 첫화면 (main) -->
-<div id="mainDiv" style="display:block;width:100%;height:100%; position:absolute; text-align: center; overflow: scroll;">
-	<img src="assets/add_button.png" id="addButton" onclick="goToAddCardDiv()" style="position:absolute; width:8%; bottom:9%; right:7%"/>
-	<div style="width:100%; position:absolute ; bottom: 2%">
-		<img id="letseeBottomImg" src="assets/letsee_bottom.png" style="margin: 1% auto; width:25%;"/>
+<div id="mainDiv">
+	<img id="addButton"  src="assets/add_button.png" onclick="goToAddCardDiv()"/>
+	<div id="mainDivFooter">
+		<img id="mainDivFooterImg" src="assets/letsee_bottom.png"/>
 	</div>
 </div>
-<div id="guideDiv" style="width:80%;height:77%;margin-top: 2%; margin-left:10%">
+
+<!-- 첫화면 (가이드) -->
+<div id="guideDiv">
 	<br/>
 	<img src = "assets/letsee.png" style="width:10%"/><br/>
 	<img src = "assets/guide1.png" style="width:20%"/><br/>
-	<img src="assets/line.png" style="width:60%"/><br/><br/>
+	<img src = "assets/line.png" style="width:60%"/><br/><br/>
 	<img src = "assets/guide2.png" style="width:50%"/><br/>
 	<img src = "assets/guide3.png" style="width:50%"/><br/>
-	<img src="assets/line.png" style="width:60%"/><br/><br/>
+	<img src = "assets/line.png" style="width:60%"/><br/><br/>
 	<img src = "assets/guide4.png" style="width:60%"/>
 </div>
+
 <input style="display:none" type="file" id="uploadImageInput" name='uploadImageInput' accept=".jpg,.jpeg.,.gif,.png" >
 
-<style>
-	#addCardDiv {
-		width:100%;
-		height:100%;
-		display: none;
-		position:absolute;
-		text-align: center;
-		overflow: scroll;
-		background-color: #00accb;
-	}
-	#cardHolder {
-		width: 180px;
-		height: auto;
-		position: absolute;
-		left: 50%;
-		top: 46%;
-		transform: translate(-50%, -50%);
-		/* max-height: 220px; */
-		/* overflow: hidden; */
-	}
-	#cardHolder .inner {
-		height: 100%;
-		overflow: hidden;
-		max-height: 200px;
-	}
-	#cardHolder .inner:before {
-		content: '';
-		background: url(./assets/frame_top.png) no-repeat center top;
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		left: 0;
-		top: 0;
-		background-size: cover;
-		z-index: 10;
-	}
-	#cardHolder:after {
-		content: '';
-		background: url(./assets/frame_bottom.png) no-repeat center bottom;
-		width: 100%;
-		height: 40px;
-		position: absolute;
-		left: 0;
-		bottom: -40px;
-		background-size: cover;
-		z-index: 10;
-	}
-
-	#cardHolder .sourceImg {
-		display: block;
-		width: 100%;
-		/* position: absolute; */
-		/* margin: 0 auto; */
-		padding: 20px 10px 0;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-	#postHeader {
-		width: 100%;
-		text-align: center;
-		color: #fff;
-		background: #000000a1;
-		padding: 0;
-		margin: 0;
-		height: 50px;
-		line-height: 50px;
-		position: absolute;
-		top: 0;
-		left: 0;
-		font-size: 20px;
-	}
-
-	#postHeader img {
-		position: absolute;
-		width: 30px;
-		top: 10px;
-		left: 40px;
-	}
-	#postHeader p {
-		padding: 0;
-		margin: 0;
-		font-family: sans-serif;
-		font-weight: 100;
-	}
-
-
-</style>
 <div id="addCardDiv">
 	<div id="postHeader">
 		<img id="backToMainImg" src="assets/back_button.png" onclick = "goToMain(false)">
@@ -200,19 +85,16 @@
 </div>
 
 <!-- 카드 이동 화면 -->
-<div id="moveCardDiv" style="width:100%;height:100%; display: none; position:absolute; text-align: center; overflow: scroll; ">
-	<div style="width:100%;height:15%;padding-top:3%; background-color: rgba(39, 39, 39, 0.6);">
-		<img id="backToAddCardDivImg" src="assets/back_button.png" style="float:left;left:7%;top:4%;width:5% ;position:absolute; z-index:2" onclick = "goToAddCardDiv()">
+<div id="moveCardDiv">
+	<div id="moveCardDivHeader">
+		<img id="backToAddCardDivImg" src="assets/back_button.png" onclick = "goToAddCardDiv()">
 		<img src="assets/move_card_message.png" style="width:55%;"/>
 	</div>
-	<div style ="width:100%; padding-right: 10%">
-		<img style="width:8%; float:right; margin-right: 2%; position:absolute; z-index: 2; right:12%" src="assets/check_button.png" onclick = "postCard()" />
-		<img style="width:8%; float:right; margin-right: 2%; position:absolute; z-index: 2; right:2%" src="assets/x_button2.png" onclick="goToMain(false)"/>
+	<div id="moveCardDivFooter">
+		<img id="moveCardDivFooterCheckImage" src="assets/check_button.png" onclick = "postCard()" />
+		<img id="moveCardDivFooterCancelImage" src="assets/x_button2.png" onclick="goToMain(false)"/>
 	</div>
 </div>
-
-
-
 
 <div id="inputConfirm">
 	<div onclick="postCard();" class="icon-edit-sucsess">완료</div>
@@ -273,29 +155,12 @@
     }
   });
 
-  // function to initialize layout.
+  // Function to initialize layout.
   $(function() {
     initOrientation();
   });
 
-
-  // function to get uuid
-  function UUID() {
-    let d = new Date().getTime();
-
-    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
-      d += performance.now(); // use high-precision timer if available
-    }
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      let r = (d + Math.random() * 16) % 16 | 0;
-
-      d = Math.floor(d / 16);
-      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-  }
-
-  /* Set ajax */
-
+	// Template : JSON type which save renderable item's position, rotation, scale and imageUrl.
   const objectTemplate = {
     "id": null,
     "type": null,
@@ -331,6 +196,8 @@
    *  3. Third put image url and resized image url to card object and upload card object;
    */
   let prefix = "https://browser.letsee.io:8337/parse/files/awe2019wallboard/";
+
+  // Function for updating origin image (half_resized)
   const saveImage = function() {
     return new Promise((resolve, reject) => {
       axios.post('files/'+ currentCardObject.id , halfResizedFile)
@@ -344,6 +211,7 @@
     });
   };
 
+  // Function for updating thumbnail image (resized 380*380)
   const saveResizedImage =  function (imageUrl) {
     return new Promise((resolve, reject) => {
       axios.post('files/'+ currentCardObject.id + '_thumbnail' , resizedFile)
@@ -360,6 +228,7 @@
     });
   };
 
+  // Function to make card element DIV and upload to server.
   const uploadImagesAndCardObject = function(object) {
     return new Promise((resolve, reject) => {
       currentCardObject.imageUrl = object.imageUrl;
@@ -375,9 +244,6 @@
         					</div>
         				</div>
         			</div>`
-
-
-
 
       axios.post('classes/wallboard', updateCardObject(currentCardObject))
         .then((result) => {
@@ -412,12 +278,10 @@
   // 초기 화면 렌더링
   getCardData();
 
-
   /* Publish card */
   let editObject;
   let helpObject;
 
-  const cardContentInput = document.getElementById('inputArea');
   const imageObj = document.getElementById('uploadImageInput');
 
   // Function to make renderable item and renderable item's position, rotation, scale.
@@ -443,7 +307,6 @@
     return renderableEle ;
   }
 
-
   // Function to make renderable and add to world using json data
   function printCardsItemFromJson(data) {
     // let cardObjects = JSON.parse(JSON.stringify(data));
@@ -462,7 +325,6 @@
     entity[0].addRenderable(world);
     currentTarget = LetseeEngine.getEntities()[0]
   }
-
 
   // Function to create card data.
   function createCard() {
@@ -585,7 +447,6 @@
     }
   }
 
-
   let halfResizedFile = null;
   let resizedFile = null;
 
@@ -599,7 +460,7 @@
         const reader = new FileReader();
         // Set the image once loaded into file reader
         reader.onload = function(e) {
-          var img = document.createElement("img");
+          let img = document.createElement("img");
           img.src = e.target.result;
 
           resizedFile = makeResizedImage(380, 380, img, file.type);
@@ -612,13 +473,14 @@
     }
   }
 
+  // Function to resize image to input size.
   function makeResizedImage(max_width, max_height, img , type, output) {
-    var MAX_WIDTH = max_width;
-    var MAX_HEIGHT = max_height;
-    var width = img.width;
-    var height = img.height;
+    let MAX_WIDTH = max_width;
+    let MAX_HEIGHT = max_height;
+    let width = img.width;
+    let height = img.height;
 
-    var canvas = document.createElement("canvas");
+    let canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0, width, height);
 
@@ -648,7 +510,6 @@
 
     return fileFromBlob;
   }
-
 
   // Function to make dataurl image to blob type.
   let dataURLToBlob = function(dataURL) {
@@ -682,11 +543,6 @@
     return fd.get('a');
   }
 
-  function fileClick() {
-    document.all.uploadImageInput.click();
-  }
-
-
   let orientation;
   let base64data;
   let rectangleImg = document.getElementById("rectangleImg");
@@ -715,7 +571,6 @@
   };
 
   function getSizeOrientatedImageBinary (data, base64data) {
-
     let dummyImage = document.createElement('img');
     dummyImage.src = base64data;
     dummyImage.onload = () => {
@@ -775,6 +630,26 @@
       img.src = dataurl;
     }
   };
+
+  function fileClick() {
+    document.all.uploadImageInput.click();
+  }
+
+  // function to get uuid
+  function UUID() {
+    let d = new Date().getTime();
+
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+      d += performance.now(); // use high-precision timer if available
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      let r = (d + Math.random() * 16) % 16 | 0;
+
+      d = Math.floor(d / 16);
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+
 </script>
 <script type="text/javascript" src="js/hammer.js"></script>
 <script src="js/load-image.all.min.js"></script>
