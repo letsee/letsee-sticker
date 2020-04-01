@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node server.bundle.js",
-    "start:dev": "NODE_ENV=development DEBUG=letsee-sticker:* node server.bundle.js",
+    "start:dev": "NODE_ENV=development DEBUG=letsee-sticker:* node server.js",
     "dev": "webpack-dev-server",
     "build": "yarn run build:client && yarn run build:server",
     "build:client": "webpack",

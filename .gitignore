@@ -1,4 +1,4 @@
-# Logs
+ex# Logs
 logs
 *.log
 npm-debug.log*
@@ -65,5 +65,5 @@ fabric.properties
 .env.development
 .env.staging
 server.bundle.js
-views/index.ejs
+views/index.html
 public

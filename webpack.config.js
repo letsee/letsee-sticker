@@ -9,10 +9,10 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const envFile = './.env';
 dotenv.config({ path: envFile });
-const isDev = process.env.NODE_ENV !== 'production';
+// const isDev = process.env.NODE_ENV !== 'production';
 const publicPath = process.env.PUBLIC_PATH || '/';
 const outputPath = path.resolve(path.join(path.resolve(__dirname, 'public'), publicPath));
-
+const isDev = true;
 module.exports = {
   devtool: isDev ? 'source-map' : false,
   entry: {
@@ -78,7 +78,7 @@ module.exports = {
     ],
   },
   plugins: isDev ? [
-    new CleanWebpackPlugin(['public', 'views/index.ejs']),
+    new CleanWebpackPlugin(['public', 'views/index.html']),
     new DotenvWebpack({
       path: envFile,
     }),
@@ -90,11 +90,11 @@ module.exports = {
       allChunks: true,
     }),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, 'views', 'index.ejs'),
+      filename: path.resolve(__dirname, 'public', 'index.html'),
       template: 'src/index.html.ejs',
     }),
   ] : [
-    new CleanWebpackPlugin(['public', 'views/index.ejs']),
+    new CleanWebpackPlugin(['public', 'views/index.html']),
     new DotenvWebpack({
       path: envFile,
     }),
@@ -109,7 +109,7 @@ module.exports = {
       comments: false,
     }),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, 'views', 'index.ejs'),
+      filename: path.resolve(__dirname, 'views', 'index.html'),
       template: 'src/index.html.ejs',
     }),
   ],

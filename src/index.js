@@ -32,10 +32,12 @@ runSaga(sagas, getFirebase);
 const history = syncHistoryWithStore(browserHistory, store);
 
 match({ history, routes }, (err, redirect, renderProps) => {
-  Kakao.init(process.env.KAKAO_APP_KEY);
+  // Kakao.init(process.env.KAKAO_APP_KEY);
+  Kakao.init('268d83b5b3629f64b515bd27ed0aa2d2');
   const app = document.getElementById('app');
 
   const handleWindowResize = () => {
+    console.log('윈도우 리사이즈.~');
     app.style.width = `${document.documentElement.clientWidth}px`;
     app.style.height = `${document.documentElement.clientHeight}px`;
   };
@@ -50,9 +52,9 @@ match({ history, routes }, (err, redirect, renderProps) => {
       store.dispatch(setCurrentUser(e.user));
     });
 
-    if (window._app && window._app.getUser) {
-      window._app.getUser();
-    }
+    // if (window._app && window._app.getUser) {
+    //   window._app.getUser();
+    // }
 
     const loading = document.createElement('div');
     const loadingRenderable = new DOMRenderable(loading);

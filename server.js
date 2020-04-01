@@ -16,7 +16,6 @@ import helmet from 'helmet';
 import compression from 'compression';
 
 const debug = require('debug')('letsee-sticker:server');
-
 const app = express();
 
 // view engine setup
