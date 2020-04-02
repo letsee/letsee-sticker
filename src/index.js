@@ -37,13 +37,55 @@ match({ history, routes }, (err, redirect, renderProps) => {
   // Kakao.init(process.env.KAKAO_APP_KEY);
   Kakao.init('268d83b5b3629f64b515bd27ed0aa2d2');
   const app = document.getElementById('app');
-
   const handleWindowResize = () => {
     console.log('윈도우 리사이즈.~');
     app.style.width = `${document.documentElement.clientWidth}px`;
     app.style.height = `${document.documentElement.clientHeight}px`;
+    // WEBAR SDK가 아래로 오게 하기 위해 position과 z-index를 400 조정
+    app.style.position =  'fixed';
+    app.style.zIndex = '400';
   };
-
+  
+  /**
+   * 로드 스크립트 이후 콜백 실행
+   */
+  const loadScript = (url, callback) => {
+    let script = document.createElement("script")
+    script.type = "text/javascript";
+    if (script.readyState){  //IE
+      script.onreadystatechange = function(){
+        if (script.readyState === "loaded" || script.readyState === "complete"){
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else {  //Others
+      script.onload = function(){
+        callback();
+      };
+    }
+    script.src = url;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  };
+  
+  /**
+   * 렛시 0.9.20버전의 스크립트를 삽입하기 위한 함수.
+   */
+  const loadLetsee = (key) => {
+    function onLoaded() {
+      console.log("-------------Letsee started!-------------")
+    }
+    loadScript("https://intra.letsee.io:6443/webar?key="+ key +"&env=dev&version=0_9_20", () =>{
+      const config = {
+        trackerType: 'IMAGE',
+        bodyId: 'fallback-test'
+      };
+      letsee.init(config, onLoaded)
+    })
+  };
+  
+  loadLetsee('26ce1b6325d6f19712863bffb693a77c48195c3d891115530ddca014538709cc');
+  
   window.addEventListener('resize', handleWindowResize);
   handleWindowResize();
 
