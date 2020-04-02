@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const envFile = './.env';
 dotenv.config({ path: envFile });
@@ -94,6 +95,9 @@ module.exports = {
       filename: path.resolve(__dirname, 'public', 'index.html'),
       template: 'src/index.html.ejs',
     }),
+    new CopyWebpackPlugin([{
+      from: 'src/assets', to: 'assets',
+    }])
   ] : [
     new CleanWebpackPlugin(['public', 'views/index.html']),
     new DotenvWebpack({

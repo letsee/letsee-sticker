@@ -1,0 +1,9 @@
+{
+  "uri": "toystory.json",
+  "size":{
+    "width": 140,
+    "height": 200
+  },
+  "image":"toystory.jpg",
+  "scale": 1
+}

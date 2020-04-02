@@ -7,10 +7,16 @@
     <link rel="stylesheet" href="https://cdn.letsee.io/css/NotoSansKR-Black.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-    <style media="place"></style>
+    <style media="place">
+      #arContainer {
+        -letsee-target: uri('assets/toystory.json');
+        -letsee-transform: translate(0, 0, 0);
+      }
+    </style>
   </head>
 
   <body>
     <div id="app"></div>
+    <div id="arContainer"></div>
   </body>
 </html>
