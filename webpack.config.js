@@ -12,6 +12,7 @@ dotenv.config({ path: envFile });
 // const isDev = process.env.NODE_ENV !== 'production';
 const publicPath = process.env.PUBLIC_PATH || '/';
 const outputPath = path.resolve(path.join(path.resolve(__dirname, 'public'), publicPath));
+const outputPathForJs = path.resolve(path.join(path.resolve(__dirname, 'public'), publicPath));
 const isDev = true;
 module.exports = {
   devtool: isDev ? 'source-map' : false,
@@ -28,10 +29,10 @@ module.exports = {
     bundle: './src/index.js',
   },
   output: {
-    path: outputPath,
+    path: outputPathForJs,
     filename: 'js/[name].[chunkhash].js',
     chunkFilename: 'js/[name].[chunkhash].js',
-    publicPath,
+    publicPath: './',
   },
   devServer: {
     contentBase: outputPath,

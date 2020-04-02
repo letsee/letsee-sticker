@@ -8,7 +8,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { getFirebase } from 'react-redux-firebase';
-import { match, Router, browserHistory } from 'react-router';
+// 브라우저 히스토리 => 해시히스토리 : 해시히스토리를 사용해야 웹에서 돌아감.
+import { match, Router, browserHistory, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
@@ -29,8 +30,9 @@ import EntityLoader from './components/EntityLoader';
 import { MIN_DIAGONAL, MAX_DIAGONAL } from './constants';
 
 runSaga(sagas, getFirebase);
-const history = syncHistoryWithStore(browserHistory, store);
+const history = syncHistoryWithStore(hashHistory, store);
 
+// 서버사이드 렌더링..
 match({ history, routes }, (err, redirect, renderProps) => {
   // Kakao.init(process.env.KAKAO_APP_KEY);
   Kakao.init('268d83b5b3629f64b515bd27ed0aa2d2');
@@ -45,12 +47,14 @@ match({ history, routes }, (err, redirect, renderProps) => {
   window.addEventListener('resize', handleWindowResize);
   handleWindowResize();
 
+  // TODO: 렛시의 onLoad 이벤트로 바꿔주기.
   window.addEventListener('letsee.load', () => {
     store.dispatch(letseeLoad());
-
-    letsee.addEventListener('userchange', (e) => {
-      store.dispatch(setCurrentUser(e.user));
-    });
+    
+    // 유저 변경 부분 삭제
+    // letsee.addEventListener('userchange', (e) => {
+    //   store.dispatch(setCurrentUser(e.user));
+    // });
 
     // if (window._app && window._app.getUser) {
     //   window._app.getUser();
@@ -58,7 +62,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 
     const loading = document.createElement('div');
     const loadingRenderable = new DOMRenderable(loading);
-
+    
     const FrameAR = styled(Frame)`
       position: relative;
       width: ${props => props.width}px;
@@ -75,7 +79,8 @@ match({ history, routes }, (err, redirect, renderProps) => {
       top: 50%;
       transform: translate(-50%, -50%);
     `;
-
+    
+    // 뭔지는 모르겠지만 중간에 있는 로더 부분인듯하다.. 일단은 내용을 잘 모르겠음..
     letsee.setLoadingRenderable(loadingRenderable, (e) => {
       const { width, height, depth } = e.pixelSize;
       const realDiagonal = Math.sqrt((width * width) + (height * height));
@@ -107,7 +112,8 @@ match({ history, routes }, (err, redirect, renderProps) => {
     }, () => {
       store.dispatch(stopLoading());
     });
-
+  
+    // TODO: 렛시의 trackStart이벤트로 바꿔주기
     letsee.addEventListener('trackstart', (e) => {
       const {
         image,
@@ -127,6 +133,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
       store.dispatch(startTrackEntity(entity));
     });
 
+    // TODO: 렛시의 trackEnd 이벤트로 바꿔주기
     letsee.addEventListener('trackend', (e) => {
       const {
         image,
