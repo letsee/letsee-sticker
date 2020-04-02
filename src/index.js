@@ -46,49 +46,79 @@ match({ history, routes }, (err, redirect, renderProps) => {
     app.style.zIndex = '400';
   };
   
+
   /**
-   * 로드 스크립트 이후 콜백 실행
+   * 렛시 0.9.20버전의 스크립트를 삽입
+   * 이후 이벤트를 dispatch함.
    */
-  const loadScript = (url, callback) => {
-    let script = document.createElement("script")
-    script.type = "text/javascript";
-    if (script.readyState){  //IE
-      script.onreadystatechange = function(){
-        if (script.readyState === "loaded" || script.readyState === "complete"){
-          script.onreadystatechange = null;
+  const loadLetsee = () => {
+    const loadScript = (url, callback) => {
+      let script = document.createElement("script")
+      script.type = "text/javascript";
+      if (script.readyState){  //IE
+        script.onreadystatechange = function(){
+          if (script.readyState === "loaded" || script.readyState === "complete"){
+            script.onreadystatechange = null;
+            callback();
+          }
+        };
+      } else {  //Others
+        script.onload = function(){
           callback();
-        }
-      };
-    } else {  //Others
-      script.onload = function(){
-        callback();
-      };
-    }
-    script.src = url;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  };
-  
-  /**
-   * 렛시 0.9.20버전의 스크립트를 삽입하기 위한 함수.
-   */
-  const loadLetsee = (key) => {
-    function onLoaded() {
-      console.log("-------------Letsee started!-------------")
-    }
-    loadScript("https://intra.letsee.io:6443/webar?key="+ key +"&env=dev&version=0_9_20", () =>{
+        };
+      }
+      script.src = url;
+      document.getElementsByTagName("head")[0].appendChild(script);
+    };
+    const onLoaded =  () => {
+      letsee.prepare({});
       const config = {
         trackerType: 'IMAGE',
         bodyId: 'fallback-test'
       };
-      letsee.init(config, onLoaded)
-    })
+      letsee.init(config, null);
+      letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_START, e => {
+        console.log(e);
+        const {
+          image,
+          name,
+          size,
+          uri,
+        } = e.target;
+      
+        const entity = {
+          image,
+          name,
+          size,
+          uri,
+        };
+        // store.dispatch(addEntity(entity));
+        // store.dispatch(startTrackEntity(entity));
+      });
+      letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_END, e => {
+        console.log(e);
+        const {
+          image,
+          name,
+          size,
+          uri,
+        } = e.target;
+      
+        const entity = {
+          image,
+          name,
+          size,
+          uri,
+        };
+        // store.dispatch(endTrackEntity(entity));
+      });
+    };
+    loadScript("../lib/letsee-0.9.20.js", onLoaded);
   };
-  
-  loadLetsee('26ce1b6325d6f19712863bffb693a77c48195c3d891115530ddca014538709cc');
+  loadLetsee();
   
   window.addEventListener('resize', handleWindowResize);
   handleWindowResize();
-
   // TODO: 렛시의 onLoad 이벤트로 바꿔주기.
   window.addEventListener('letsee.load', () => {
     store.dispatch(letseeLoad());
@@ -123,40 +153,42 @@ match({ history, routes }, (err, redirect, renderProps) => {
     `;
     
     // 뭔지는 모르겠지만 중간에 있는 로더 부분인듯하다.. 일단은 내용을 잘 모르겠음..
-    letsee.setLoadingRenderable(loadingRenderable, (e) => {
-      const { width, height, depth } = e.pixelSize;
-      const realDiagonal = Math.sqrt((width * width) + (height * height));
-      const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
-      const realToClamped = realDiagonal / diagonal;
-
-      render(
-        <FrameAR
-          width={width / realToClamped}
-          height={height / realToClamped}
-          vertical={0}
-          horizontal={0}
-          white
-        >
-          <StyledEntityLoader size={diagonal} />
-        </FrameAR>,
-        loading,
-      );
-
-      if (realDiagonal !== diagonal) {
-        loadingRenderable.scale.setScalar(realToClamped);
-      }
-
-      if (typeof depth !== 'undefined' && depth !== null) {
-        loadingRenderable.position.setZ(depth / 2);
-      }
-
-      store.dispatch(startLoading());
-    }, () => {
-      store.dispatch(stopLoading());
-    });
-  
+    // letsee.setLoadingRenderable(loadingRenderable, (e) => {
+    //   const { width, height, depth } = e.pixelSize;
+    //   const realDiagonal = Math.sqrt((width * width) + (height * height));
+    //   const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
+    //   const realToClamped = realDiagonal / diagonal;
+    //
+    //   render(
+    //     <FrameAR
+    //       width={width / realToClamped}
+    //       height={height / realToClamped}
+    //       vertical={0}
+    //       horizontal={0}
+    //       white
+    //     >
+    //       <StyledEntityLoader size={diagonal} />
+    //     </FrameAR>,
+    //     loading,
+    //   );
+    //
+    //   if (realDiagonal !== diagonal) {
+    //     loadingRenderable.scale.setScalar(realToClamped);
+    //   }
+    //
+    //   if (typeof depth !== 'undefined' && depth !== null) {
+    //     loadingRenderable.position.setZ(depth / 2);
+    //   }
+    //
+    //   store.dispatch(startLoading());
+    // }, () => {
+    //   store.dispatch(stopLoading());
+    // });
+    
+    
     // TODO: 렛시의 trackStart이벤트로 바꿔주기
-    letsee.addEventListener('trackstart', (e) => {
+    //letsee.addEventListener('trackstart', (e) => {
+    letsee.eventManager.onTrackStart((e) => {
       const {
         image,
         name,
@@ -176,7 +208,8 @@ match({ history, routes }, (err, redirect, renderProps) => {
     });
 
     // TODO: 렛시의 trackEnd 이벤트로 바꿔주기
-    letsee.addEventListener('trackend', (e) => {
+    //letsee.addEventListener('trackend', (e) => {
+    letsee.eventManager.onTrackEnd((e) => {
       const {
         image,
         name,
