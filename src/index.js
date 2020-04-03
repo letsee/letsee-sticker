@@ -76,24 +76,34 @@ match({ history, routes }, (err, redirect, renderProps) => {
         trackerType: 'IMAGE',
         bodyId: 'fallback-test'
       };
-      letsee.init(config, null);
+      //TODO: 테스트용 코드 => 삭제 예정
+      letsee.init(config, () => {
+        letsee.videoManager.setVideoSource('0f0fae470926c565c71ef396627b7d520904a9726d5a4ae1899c6529542235ce');
+      });
+      
       letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_START, e => {
         console.log(e);
+        /**
+         * uri를 toystory로 강제 지정..
+         * LetseeBrowser => LetseeWebAR SDK에서의 entity의 의미와 관리 방식이 달라짐.
+         * 현재 firebase 데이터구조는 이전 d.letsee.io/entityUri형식의 EMS서버를 관리할떄의 방식임
+         */
+        // const uri = "https://테스트.io/toystory";
+        const uri = 'toystory';
         const {
           image,
           name,
           size,
-          uri,
         } = e.target;
-      
+        
         const entity = {
           image,
           name,
           size,
           uri,
         };
-        // store.dispatch(addEntity(entity));
-        // store.dispatch(startTrackEntity(entity));
+        store.dispatch(addEntity(entity));
+        store.dispatch(startTrackEntity(entity));
       });
       letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_END, e => {
         console.log(e);
@@ -122,18 +132,24 @@ match({ history, routes }, (err, redirect, renderProps) => {
   // TODO: 렛시의 onLoad 이벤트로 바꿔주기.
   window.addEventListener('letsee.load', () => {
     store.dispatch(letseeLoad());
-    
-    // 유저 변경 부분 삭제
-    // letsee.addEventListener('userchange', (e) => {
+  
+    /**
+     * 초기 유저 설정부분 제거 => 임의의 유저로 새로 currentUser생성
+     */
+      // letsee.addEventListener('userchange', (e) => {
     //   store.dispatch(setCurrentUser(e.user));
     // });
-
     // if (window._app && window._app.getUser) {
     //   window._app.getUser();
     // }
+    store.dispatch(setCurrentUser({
+      firstname: 'WEBARSDK-JUNGWOO',
+      lastname: 'TEST',
+      uid: "jjjjjw910911-010-6284-8051",
+    }));
 
     const loading = document.createElement('div');
-    const loadingRenderable = new DOMRenderable(loading);
+    const loadingRenderable = new letsee.DOMRenderable(loading);
     
     const FrameAR = styled(Frame)`
       position: relative;

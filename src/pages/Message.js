@@ -126,7 +126,7 @@ class Message extends Component {
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const container = document.createElement('div');
-      this.messageObject = new DOMRenderable(container);
+      this.messageObject = new letsee.DOMRenderable(container);
     }
   }
 
@@ -154,7 +154,8 @@ class Message extends Component {
 
   componentWillUnmount() {
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntity(this.props.data.entity.uri);
+      // const entity = letsee.getEntity(this.props.data.entity.uri);
+      const entity = letsee.getEntity('assets/toystory.json');
 
       if (entity) {
         entity.removeRenderable(this.messageObject);
@@ -166,7 +167,8 @@ class Message extends Component {
 
   renderAR({ data: { entity: { uri }, author } }: MessagePropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntity(uri);
+      // const entity = letsee.getEntity(uri);
+      const entity = letsee.getEntity('assets/toystory.json');
       const { width, height, depth } = entity.size;
       let realDiagonal = MAX_DIAGONAL;
 

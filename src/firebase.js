@@ -2,18 +2,30 @@
 import firebase from 'firebase';
 
 const firebaseConfig = {
-  // apiKey: `${process.env.FIREBASE_API_KEY}`,
-  // authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  // databaseURL: process.env.FIREBASE_DATABASE_URL,
-  // projectId: process.env.FIREBASE_PROJECT_ID,
-  // storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  // messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    apiKey: "AIzaSyAdY-yp074zuymgIbqeR1EKgGWwSQb0-pc",
-    authDomain: "sticker-webapp.firebaseapp.com",
-    databaseURL: "https://sticker-webapp.firebaseio.com",
-    projectId: "sticker-webapp",
+    // 서버환경에서 키 저장.
+    // apiKey: `${process.env.FIREBASE_API_KEY}`,
+    // authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    // databaseURL: process.env.FIREBASE_DATABASE_URL,
+    // projectId: process.env.FIREBASE_PROJECT_ID,
+    // storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    // messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    
+    // 기존 letsee-sticker Production
+    // apiKey: "AIzaSyAdY-yp074zuymgIbqeR1EKgGWwSQb0-pc",
+    // authDomain: "sticker-webapp.firebaseapp.com",
+    // databaseURL: "https://sticker-webapp.firebaseio.com",
+    // projectId: "sticker-webapp",
+    // storageBucket: "",
+    // messagingSenderId: "11949169975"
+    
+    // 마이그레이션 letsee-sticker webar
+    apiKey: "AIzaSyCCR5RFx0YU1rTswOZjL1FrA42S1IEaQuY",
+    authDomain: "letsee-sticker-webar.firebaseapp.com",
+    databaseURL: "https://letsee-sticker-webar.firebaseio.com",
+    projectId: "letsee-sticker-webar",
     storageBucket: "",
-    messagingSenderId: "11949169975"
+    messagingSenderId: "617007544280"
+    
 };
 
 firebase.initializeApp(firebaseConfig);

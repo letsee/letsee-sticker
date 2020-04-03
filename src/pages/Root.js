@@ -121,11 +121,16 @@ const Root = ({
           data={currentEntityData}
           currentUser={currentUser}
           onNewClick={() => {
-            if (currentUser === null) {
-              openLogin();
-            } else {
-              dispatch(initMessageForm(currentEntityData, currentUser));
-            }
+            /**
+             * 맨 처음 증강이후 스티커 추가 버튼 눌렀을시 로그인 체크하는 부분 제거
+             */
+            // if (currentUser === null) {
+            //   openLogin();
+            // } else {
+            //   dispatch(initMessageForm(currentEntityData, currentUser));
+            // }
+            currentUser = {}
+            dispatch(initMessageForm(currentEntityData, currentUser));
           }}
           onEditClick={(message: MessageWithId) => {
             if (currentUser !== null && message.author.uid === currentUser.uid) {

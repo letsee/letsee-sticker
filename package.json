@@ -8,8 +8,8 @@
   "scripts": {
     "start": "node server.bundle.js",
     "start:dev": "NODE_ENV=development DEBUG=letsee-sticker:* node server.js",
-    "dev": "webpack-dev-server",
-    "build": "yarn run build:client && yarn run build:server",
+    "dev": "webpack-dev-server --config webpack.config.js",
+    "build": "webpack",
     "build:client": "webpack",
     "build:server": "webpack --config webpack.server.config.js",
     "lint": "eslint src",

@@ -184,12 +184,12 @@ class MessageForm extends Component {
       messagePrivacyOpen: false,
     };
 
-    this.messageObject = new Object3D();
+    this.messageObject = new letsee.Object3D();
     this.selectedStickerObject = null;
 
     const tmp = document.createElement('template');
     tmp.innerHTML = renderToString(<TranslateZ />);
-    this.translateZ = new DOMRenderable(tmp.content.firstChild);
+    this.translateZ = new letsee.DOMRenderable(tmp.content.firstChild);
     this.translateZ.rotateX(Math.PI / 2);
     this.press = false;
   }
@@ -210,8 +210,10 @@ class MessageForm extends Component {
     manager.on('pressup', this.handlePressUp);
     manager.on('press', this.handlePress);
 
-    const entity = letsee.getEntity(this.props.data.entity.uri);
-    entity.removeRenderables();
+    // const entity = letsee.getEntity(this.props.data.entity.uri);
+    const entity = letsee.getEntity(`assets/toystory.json`);
+    // entity.removeRenderables();
+    entity.resetRenderables();
     this.renderAR(this.props);
   }
 
@@ -232,7 +234,7 @@ class MessageForm extends Component {
     manager.off('pressup', this.handlePressUp);
     manager.off('press', this.handlePress);
 
-    const entity = letsee.getEntity(this.props.data.entity.uri);
+    const entity = letsee.getEntity('assets/toystory.json');
     entity.removeRenderable(this.messageObject);
     this.selectedStickerObject = null;
   }
@@ -245,7 +247,7 @@ class MessageForm extends Component {
       return;
     }
 
-    const entity = letsee.getEntity(uri);
+    const entity = letsee.getEntity(`assets/toystory.json`);
     const { width, height, depth } = size;
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
     let realDiagonal = MAX_DIAGONAL;
@@ -303,7 +305,8 @@ class MessageForm extends Component {
 
       const addEmojiButton = buttonsElem.querySelectorAll('button')[0];
       const addTextButton = buttonsElem.querySelectorAll('button')[1];
-
+      
+      //TODO: 버튼이벤트가 동작하지 않음.. z-index로 가려지는 현상..
       addEmojiButton.addEventListener('click', () => {
         this.setState({ mode: 'emoji' }, () => {
           entity.removeRenderable(this.messageObject);
@@ -316,8 +319,8 @@ class MessageForm extends Component {
         });
       });
 
-      const buttonsAR = new DOMRenderable(buttonsElem);
-      const framesAR = new DOMRenderable(framesElem);
+      const buttonsAR = new letsee.DOMRenderable(buttonsElem);
+      const framesAR = new letsee.DOMRenderable(framesElem);
 
       if (realDiagonal !== diagonal) {
         buttonsAR.scale.setScalar(realToClamped);
@@ -337,7 +340,7 @@ class MessageForm extends Component {
         const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
         const objById = getObjectById(this.messageObject, id);
         let element = document.createElement('div');
-        let obj = new DOMRenderable(element);
+        let obj = new letsee.DOMRenderable(element);
 
         if (objById) {
           obj = objById;
@@ -444,8 +447,8 @@ class MessageForm extends Component {
         const { x, y, z, w } = selectedSticker.quaternion;
         const q = new Quaternion(x, y, z, w);
         const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
-        const rotateX = new Vector3(0, -1, 0).applyQuaternion(conjugate).normalize();
-        const rotateY = new Vector3(-1, 0, 0).applyQuaternion(conjugate).normalize();
+        const rotateX = new letsee.Vector(0, -1, 0).applyQuaternion(conjugate).normalize();
+        const rotateY = new letsee.Vector(-1, 0, 0).applyQuaternion(conjugate).normalize();
         q.multiply(new Quaternion().setFromAxisAngle(rotateX, deltaY * Math.PI / 180));
         q.multiply(new Quaternion().setFromAxisAngle(rotateY, deltaX * Math.PI / 180));
         this.selectedStickerObject.quaternion.copy(q);
@@ -488,8 +491,8 @@ class MessageForm extends Component {
       const { clientWidth, clientHeight } = document.documentElement;
       const ratio = realDiagonal / Math.sqrt((clientWidth * clientWidth) + (clientHeight * clientHeight)) * 2;
       const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
-      const translateX = new Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
-      const translateY = new Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
+      const translateX = new letsee.Vector(0, -1, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
+      const translateY = new letsee.Vector(1, 0, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
 
       this.selectedStickerObject.position.set(x, y, z).add(translateX).add(translateY).set(
         clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
@@ -534,7 +537,7 @@ class MessageForm extends Component {
     ) {
       const { x, y, z, w } = selectedSticker.quaternion;
       const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
-      const rotateAxis = new Vector3(0, 0, -1).applyQuaternion(conjugate).normalize();
+      const rotateAxis = new letsee.Vector(0, 0, -1).applyQuaternion(conjugate).normalize();
       const q = new Quaternion(x, y, z, w);
       q.multiply(new Quaternion().setFromAxisAngle(rotateAxis, (this.rotateStart - e.rotation) * Math.PI / 180));
       this.selectedStickerObject.quaternion.copy(q);
@@ -687,7 +690,7 @@ class MessageForm extends Component {
           <NavBottomRight key={3}>
             <AddEmojiButton
               onClick={() => this.setState({ mode: 'emoji' }, () => {
-                const e = letsee.getEntity(entity.uri);
+                const e = letsee.getEntity('assets/toystory.json');
                 e.removeRenderable(this.messageObject);
               })}
               small
@@ -695,7 +698,7 @@ class MessageForm extends Component {
 
             <StyledAddTextButton
               onTouchEnd={() => this.setState({ mode: 'text' }, () => {
-                const e = letsee.getEntity(entity.uri);
+                const e = letsee.getEntity('assets/toystory.json');
                 e.removeRenderable(this.messageObject);
               })}
               small

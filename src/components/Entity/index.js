@@ -91,9 +91,18 @@ class Entity extends Component {
     onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
   };
 
+  // UserID를 테스트용으로 => 1KPeHnwbmzWSm
+  // entityURI를 테스트용으로 => 11e7240f-2e5c-4eb3-849c-14187747588a
   componentWillMount() {
     const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
-    const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
+    
+    // const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
+    // const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
+    // const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
+    /**
+     * EntityUri를 toyStory || userId를 anonymout로 설정
+     */
+    const userId = "anonymous";
     const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
     const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
     countref.on('value', this.handleMessagesCountChange);
@@ -127,7 +136,10 @@ class Entity extends Component {
       listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
     }
   }
-
+  
+  /**
+   * props로 entityUri, meesageList, currentEntity,
+   */
   componentWillUnmount() {
     const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
     const userId = currentUser !== null && !isPublic ? currentUser.uid : null;

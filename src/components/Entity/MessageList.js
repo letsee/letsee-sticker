@@ -112,9 +112,12 @@ const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null,
   }
 };
 
+// 1. 현재 유저에 대한 메세지들의 리스트를 가져온다.
+// 2. key값으로 정렬한다.
 const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
   const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
-
+  
+  //TODO: data.current가 무엇인지 파악이 되지 않음..
   if (data.current !== null) {
     ref.equalTo(data.current).off('value', handleMessageChange);
   }
@@ -135,10 +138,9 @@ type MessageListPropTypes = {
 class MessageList extends Component {
   constructor(props: MessageListPropTypes) {
     super(props);
-
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const container = document.createElement('div');
-      this.object = new DOMRenderable(container);
+      this.object = new letsee.DOMRenderable(container);
     }
   }
 
@@ -178,7 +180,10 @@ class MessageList extends Component {
     enableManager(true);
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntity(data.entityUri);
+      console.log('ADD BUTTON 누른후 firebase로 들어오는 데이터');
+      console.log(data);
+      // const entity = letsee.getEntity(data.entityUri);
+      const entity = letsee.getEntity(`assets/toystory.json`);
       entity.removeRenderable(this.object);
     }
   }
@@ -212,8 +217,12 @@ class MessageList extends Component {
   renderAR({ entity: e, onNewClick, data }: MessageListPropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const { uri, size: { width, height, depth } } = e;
-      const entity = letsee.getEntity(uri);
-
+      /**
+       * Letsee.getEntity형식이 json파일 형식으로 바뀌었기 때문에 이를 맞춰주는 작업 필요
+       */
+      // const entity = letsee.getEntity(uri);
+      const entity = letsee.getEntity('assets/toystory.json');
+      
       if (this.object.parent !== entity.object) {
         entity.addRenderable(this.object);
       }
