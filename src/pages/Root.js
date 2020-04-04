@@ -78,6 +78,17 @@ const Root = ({
     const entityTracked = currentEntity !== null && entity.uri === currentEntity;
     const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
 
+
+    const onStickerTransForm = (id, trans) => () => {
+      dispatch(transformSticker(id, trans));
+    };
+
+    const onDelete = () => {
+      if(selectedStickerData) {
+        dispatch(deleteSticker(selectedStickerData.id))
+      }
+    };
+
     return (
       <div>
         <MessageForm
@@ -87,23 +98,23 @@ const Root = ({
           onPublicChange={newPublic => dispatch(setMessagePrivacy(newPublic))}
           onClose={() => dispatch(destroyMessageForm())}
           onSubmit={() => {
-            if (currentUser === null) {
-              openLogin();
-            } else if (messageForm !== null) {
-              dispatch(submitMessageForm(messageForm));
-            }
+            // if (currentUser === null) {
+            //   openLogin();
+            // } else if (messageForm !== null) {
+            dispatch(submitMessageForm(messageForm));
+            // }
           }}
           onStickerClick={(id) => {
             if (!selectedStickerData) {
               dispatch(selectSticker(id));
             }
           }}
-          onStickerTransform={(id, trans) => dispatch(transformSticker(id, trans))}
+          onStickerTransform={onStickerTransForm}
           onTextInput={value => dispatch(addSticker(value, 'text', entityTracked))}
           onEmojiInput={value => dispatch(addSticker(value, 'emoji', entityTracked))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
           onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
-          onDelete={() => selectedStickerData && dispatch(deleteSticker(selectedStickerData.id))}
+          onDelete={onDelete}
           onTipClick={() => dispatch(openTransformationGuide())}
           onHelpClick={() => dispatch(openHelp())}
         />
@@ -113,7 +124,11 @@ const Root = ({
 
   if (messagesList.entityUri !== null && currentEntity !== null && messagesList.entityUri === currentEntity) {
     const currentEntityData = entities.byUri[messagesList.entityUri];
-
+    const currentUser = {
+      firstname: 'WEBARSDK-JUNGWOO',
+      lastname: 'TEST',
+      uid: "jjjjjw910911-010-6284-8051",
+    };
     return (
       <div>
         <Entity
@@ -129,7 +144,7 @@ const Root = ({
             // } else {
             //   dispatch(initMessageForm(currentEntityData, currentUser));
             // }
-            currentUser = {}
+
             dispatch(initMessageForm(currentEntityData, currentUser));
           }}
           onEditClick={(message: MessageWithId) => {

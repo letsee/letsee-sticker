@@ -95,14 +95,9 @@ class Entity extends Component {
   // entityURI를 테스트용으로 => 11e7240f-2e5c-4eb3-849c-14187747588a
   componentWillMount() {
     const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
-    
-    // const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
-    // const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
-    // const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
-    /**
-     * EntityUri를 toyStory || userId를 anonymout로 설정
-     */
-    const userId = "anonymous";
+
+    // currentUser를 테스트용으로 변경
+    const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
     const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
     const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
     countref.on('value', this.handleMessagesCountChange);
@@ -136,7 +131,7 @@ class Entity extends Component {
       listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
     }
   }
-  
+
   /**
    * props로 entityUri, meesageList, currentEntity,
    */

@@ -60,7 +60,14 @@ function* submitMessageForm(getFirebase) {
     const submitAction = yield take(SUBMIT_MESSAGE_FORM);
 
     try {
-      const currentUser = yield select(state => state.currentUser);
+      // currentUser를 테스트용으로 변경
+      let currentUser = yield select(state => state.currentUser);
+      currentUser = {
+        firstname: 'WEBARSDK-JUNGWOO',
+        lastname: 'TEST',
+        uid: "jjjjjw910911-010-6284-8051",
+      };
+      console.log(currentUser);
 
       if (currentUser !== null && submitAction.payload.author.uid === currentUser.uid) {
         const {

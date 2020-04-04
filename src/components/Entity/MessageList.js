@@ -116,7 +116,7 @@ const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null,
 // 2. key값으로 정렬한다.
 const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
   const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
-  
+
   //TODO: data.current가 무엇인지 파악이 되지 않음..
   if (data.current !== null) {
     ref.equalTo(data.current).off('value', handleMessageChange);
@@ -145,7 +145,13 @@ class MessageList extends Component {
   }
 
   componentWillMount() {
-    const { firebase, data, currentUser } = this.props;
+    // currentUser를 테스트용으로 변경
+    let { firebase, data, currentUser } = this.props;
+    currentUser = {
+      firstname: 'WEBARSDK-JUNGWOO',
+      lastname: 'TEST',
+      uid: "jjjjjw910911-010-6284-8051",
+    };
     const userId = currentUser !== null && !data.public ? currentUser.uid : null;
     subscribeToCurrent(firebase, data, userId, this.handleMessageChange);
   }
@@ -222,7 +228,7 @@ class MessageList extends Component {
        */
       // const entity = letsee.getEntity(uri);
       const entity = letsee.getEntity('assets/toystory.json');
-      
+
       if (this.object.parent !== entity.object) {
         entity.addRenderable(this.object);
       }
