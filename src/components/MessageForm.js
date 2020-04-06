@@ -581,7 +581,7 @@ class MessageForm extends Component {
     }
   };
 
-  handleTransform() {
+  handleTransform = () => {
     const { width, height } = this.props.data.entity.size;
     const { position, quaternion, scale } = this.selectedStickerObject;
 

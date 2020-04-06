@@ -77,9 +77,9 @@ const Root = ({
     const { entity, stickers } = messageForm;
     const entityTracked = currentEntity !== null && entity.uri === currentEntity;
     const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
-
-
-    const onStickerTransForm = (id, trans) => () => {
+    // 스티커의 상태를 저장하는 이중 arrow function이 동작하지 않아 단일 arrow function으로 바꾸었더니
+    // onStickerTransForm이 정상적으로 호출됨.
+    const onStickerTransForm = (id, trans) => {
       dispatch(transformSticker(id, trans));
     };
 

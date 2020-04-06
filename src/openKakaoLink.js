@@ -24,6 +24,10 @@ const generateKakaoLinkUrl = (messageId: string): string => {
   return `${GOOGLE}?${qs.stringify(params)}`;
 };
 
+// TODO: browser.letsee.io가 아닌 웹주소의 링크 주소를 만드는 함수 선언.
+const generateWebArSdkKakaoLinkUrl = (messageId: string) : string => {
+};
+
 const openKakaoLink = (messageId: string, authorName: string, entityName: string, options = {}) => {
   const kakaoLinkUrl = generateKakaoLinkUrl(messageId);
 
@@ -32,7 +36,8 @@ const openKakaoLink = (messageId: string, authorName: string, entityName: string
     content: {
       title: '렛시 스티커 메세지가 도착했어요!',
       description: `${authorName}님이 ${entityName}에 스티커 메세지를 담아 보냈습니다. 지금 렛시 브라우저로 확인해보세요!`,
-      imageUrl: process.env.KAKAO_IMAGE_URL,
+      // imageUrl: process.env.KAKAO_IMAGE_URL,
+      imageUrl: 'assets/kakao_link_image.png',
       link: {
         mobileWebUrl: kakaoLinkUrl,
         webUrl: kakaoLinkUrl,
