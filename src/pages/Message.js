@@ -235,6 +235,18 @@ class Message extends Component {
         <h1>404</h1>
       );
     }
+    // data =  {
+    //   entity:{
+    //     image: "assets/toystory.jpg",
+    //     name: "",
+    //     uri: "toystory"
+    //   },
+    //   author:{
+    //     firstname: "WEBARSDK-JUNGWOO",
+    //     lastname: "TEST",
+    //     uid: "jjjjjw910911-010-6284-8051"
+    //   }
+    // }
 
     if (helpOpened) {
       return (

@@ -183,18 +183,21 @@ class Entity extends Component {
     }
   }
 
+  // 마지막 메세지의 변화를 바꿔준다.
   handleLastMessageChange = (snapshot) => {
     const messageIds = sortBy(keys(snapshot.val()));
     const messageId = messageIds.length > 0 ? messageIds[messageIds.length - 1] : null;
     this.props.dispatch(setLastCursor(messageId));
   };
-
+  
+  // 메세지의 변화를 바꿔준다.
   handleFirstMessageChange = (snapshot) => {
     const messageIds = sortBy(keys(snapshot.val()));
     const messageId = messageIds.length > 0 ? messageIds[0] : null;
     this.props.dispatch(setFirstCursor(messageId));
   };
-
+  
+  // 메세지의 갯수를 저장한다.
   handleMessagesCountChange = (snapshot) => {
     this.props.dispatch(setCount(snapshot.val() || 0));
   };

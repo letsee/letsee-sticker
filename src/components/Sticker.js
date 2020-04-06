@@ -136,6 +136,8 @@ class Sticker extends Component {
       const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
       const realToClamped = realDiagonal / diagonal;
 
+      // 에러 발생
+      // 처음 화면 -> 수정 -> 이모지/텍스트 ->  휴지통 -> x 버튼
       if (this.stickerObject.parent !== entity.object) {
         entity.addRenderable(this.stickerObject);
       }

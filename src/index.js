@@ -35,7 +35,7 @@ const history = syncHistoryWithStore(hashHistory, store);
 // 서버사이드 렌더링..
 match({ history, routes }, (err, redirect, renderProps) => {
   // Kakao.init(process.env.KAKAO_APP_KEY);
-  Kakao.init('268d83b5b3629f64b515bd27ed0aa2d2');
+  Kakao.init('e1444fec00fc98732916741894eee22f');
   const app = document.getElementById('app');
   const handleWindowResize = () => {
     console.log('윈도우 리사이즈.~');

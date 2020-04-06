@@ -229,6 +229,8 @@ class MessageList extends Component {
       // const entity = letsee.getEntity(uri);
       const entity = letsee.getEntity('assets/toystory.json');
 
+      // 에러 발생
+      // 처음 화면 -> 수정 -> 이모지/텍스트 ->  휴지통 -> x 버튼
       if (this.object.parent !== entity.object) {
         entity.addRenderable(this.object);
       }
@@ -312,6 +314,7 @@ class MessageList extends Component {
 
     const { entityUri, empty, current, message, error, loading, first, last } = messagesList;
     const dataExists = !empty && current !== null && !error;
+    console.log('MessageList 호출');
 
     return (
       <div {...other}>

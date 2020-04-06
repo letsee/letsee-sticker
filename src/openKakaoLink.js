@@ -4,33 +4,34 @@ import qs from 'qs';
 const LETSEE_BROWSER_LOAD_URL = 'https://browser.letsee.io/load';
 const GOOGLE = 'https://vm82m.app.goo.gl/';
 
-const generateKakaoLinkUrl = (messageId: string): string => {
-  const protocol = typeof window !== 'undefined' && window !== null ? window.location.protocol : 'http';
-  const host = typeof window !== 'undefined' && window !== null ? window.location.host : 'apps.letsee.io'; // TODO host
-
-  const browserParams = {
-    url: `${protocol}//${host}${process.env.PUBLIC_PATH || '/'}${messageId}`,
-  };
-
-  const link = `${LETSEE_BROWSER_LOAD_URL}?url=${browserParams.url}`;
-
-  const params = {
-    link,
-    apn: 'io.letsee.browser',
-    isi: '1215633022',
-    ibi: 'io.letsee.ios.browser',
-  };
-
-  return `${GOOGLE}?${qs.stringify(params)}`;
-};
+// const generateKakaoLinkUrl = (messageId: string): string => {
+//   const protocol = typeof window !== 'undefined' && window !== null ? window.location.protocol : 'http';
+//   const host = typeof window !== 'undefined' && window !== null ? window.location.host : 'apps.letsee.io'; // TODO host
+//
+//   const browserParams = {
+//     url: `${protocol}//${host}${process.env.PUBLIC_PATH || '/'}${messageId}`,
+//     => https://browser.letsee.io/load?url=http//app.letsee.io/KqS1YNqhXxcjCz0UQ?
+//   };
+//
+//   const link = `${LETSEE_BROWSER_LOAD_URL}?url=${browserParams.url}`;
+//
+//   const params = {
+//     link,
+//     apn: 'io.letsee.browser',
+//     isi: '1215633022',
+//     ibi: 'io.letsee.ios.browser',
+//   };
+//
+//   return `${GOOGLE}?${qs.stringify(params)}`;
+// };
 
 // TODO: browser.letsee.io가 아닌 웹주소의 링크 주소를 만드는 함수 선언.
 const generateWebArSdkKakaoLinkUrl = (messageId: string) : string => {
+  return "intent://intra.letsee.io:10002/public?#Intent;scheme=http;package=com.android.chrome;end"
 };
 
 const openKakaoLink = (messageId: string, authorName: string, entityName: string, options = {}) => {
-  const kakaoLinkUrl = generateKakaoLinkUrl(messageId);
-
+  const kakaoLinkUrl = generateWebArSdkKakaoLinkUrl(messageId);
   Kakao.Link.sendDefault({
     objectType: 'feed',
     content: {
@@ -41,8 +42,8 @@ const openKakaoLink = (messageId: string, authorName: string, entityName: string
       link: {
         mobileWebUrl: kakaoLinkUrl,
         webUrl: kakaoLinkUrl,
-        androidExecParams: kakaoLinkUrl,
-        iosExecParams: kakaoLinkUrl,
+        // androidExecParams: kakaoLinkUrl,
+        // iosExecParams: kakaoLinkUrl,
       },
     },
     buttons: [{
@@ -50,8 +51,8 @@ const openKakaoLink = (messageId: string, authorName: string, entityName: string
       link: {
         mobileWebUrl: kakaoLinkUrl,
         webUrl: kakaoLinkUrl,
-        androidExecParams: kakaoLinkUrl,
-        iosExecParams: kakaoLinkUrl,
+        // androidExecParams: kakaoLinkUrl,
+        // iosExecParams: kakaoLinkUrl,
       },
     }],
     ...options,
