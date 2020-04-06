@@ -97,9 +97,9 @@ class Entity extends Component {
     const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
 
     // currentUser를 테스트용으로 변경
-    const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
-    const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
-    const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
+    // const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
+    const countref = firebase.database().ref(getMessagesCountPath(entityUri, currentUser.uid));
+    const listRef = firebase.database().ref(getMessagesListPath(entityUri, currentUser.uid)).orderByKey();
     countref.on('value', this.handleMessagesCountChange);
     listRef.limitToLast(1).on('value', this.handleLastMessageChange);
     listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
@@ -189,14 +189,14 @@ class Entity extends Component {
     const messageId = messageIds.length > 0 ? messageIds[messageIds.length - 1] : null;
     this.props.dispatch(setLastCursor(messageId));
   };
-  
+
   // 메세지의 변화를 바꿔준다.
   handleFirstMessageChange = (snapshot) => {
     const messageIds = sortBy(keys(snapshot.val()));
     const messageId = messageIds.length > 0 ? messageIds[0] : null;
     this.props.dispatch(setFirstCursor(messageId));
   };
-  
+
   // 메세지의 갯수를 저장한다.
   handleMessagesCountChange = (snapshot) => {
     this.props.dispatch(setCount(snapshot.val() || 0));

@@ -16,10 +16,10 @@ export const entityIdToUri = (id: string): string => `https://d.letsee.io/${id}`
 
 export const getMessagesCountPath = (entityUri: string, userId: string | null): string => {
   if (userId === null) {
-    return `messagesCount/${entityUriToId(entityUri)}/publicMessages`;
+    return `messagesCount/toystory/publicMessages`;
   }
 
-  return `messagesCount/${entityUriToId(entityUri)}/authorMessages/${userId}`;
+  return `messagesCount/toystory/authorMessages/jjjjjw910911-010-6284-8051`;
 };
 /**
  * 현재 엔티티에 대한 현재 유저의 MessageList의 firebase경로를 가져오는 method
@@ -28,8 +28,8 @@ export const getMessagesCountPath = (entityUri: string, userId: string | null): 
  */
 export const getMessagesListPath = (entityUri: string, userId: string | null): string => {
   if (userId === null) {
-    return `entityMessages/${entityUriToId(entityUri)}/publicMessages`;
+    return `entityMessages/toystory/publicMessages`;
   }
 
-  return `entityMessages/${entityUriToId(entityUri)}/authorMessages/${userId}`;
+  return `entityMessages/toystory/authorMessages/jjjjjw910911-010-6284-8051`;
 };
