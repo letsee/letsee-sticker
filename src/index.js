@@ -88,8 +88,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
          * LetseeBrowser => LetseeWebAR SDK에서의 entity의 의미와 관리 방식이 달라짐.
          * 현재 firebase 데이터구조는 이전 d.letsee.io/entityUri형식의 EMS서버를 관리할떄의 방식임
          */
-        // const uri = "https://테스트.io/toystory";
-        const uri = 'toystory';
+        const uri = 'bts';
         const {
           image,
           name,

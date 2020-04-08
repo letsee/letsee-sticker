@@ -211,7 +211,6 @@ class MessageForm extends Component {
     manager.on('press', this.handlePress);
 
     // const entity = letsee.getEntity(this.props.data.entity.uri);
-    const entity = letsee.getEntity(`assets/toystory.json`);
     // entity.removeRenderables();
     this.messageObject.children.forEach((item) => {
       entity.removeRenderable(item);
@@ -236,7 +235,7 @@ class MessageForm extends Component {
     manager.off('pressup', this.handlePressUp);
     manager.off('press', this.handlePress);
 
-    const entity = letsee.getEntity('assets/toystory.json');
+    const entity = letsee.getEntity('assets/bts.json');
     
     this.messageObject.children.forEach((item) => {
       entity.removeRenderable(item);
@@ -253,7 +252,7 @@ class MessageForm extends Component {
       return;
     }
 
-    const entity = letsee.getEntity(`assets/toystory.json`);
+    const entity = letsee.getEntity(`assets/bts.json`);
     const { width, height, depth } = size;
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
     let realDiagonal = MAX_DIAGONAL;
@@ -696,16 +695,16 @@ class MessageForm extends Component {
           <NavBottomRight key={3}>
             <AddEmojiButton
               onClick={() => this.setState({ mode: 'emoji' }, () => {
-                const e = letsee.getEntity('assets/toystory.json');
-                e.removeRenderable(this.messageObject);
+                // const e = letsee.getEntity('assets/bts.json');
+                // e.removeRenderable(this.messageObject);
               })}
               small
             />
 
             <StyledAddTextButton
               onTouchEnd={() => this.setState({ mode: 'text' }, () => {
-                const e = letsee.getEntity('assets/toystory.json');
-                e.removeRenderable(this.messageObject);
+                // const e = letsee.getEntity('assets/bts.json');
+                // e.removeRenderable(this.messageObject);
               })}
               small
             />

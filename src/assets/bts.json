@@ -1,9 +1,9 @@
 {
-  "uri": "toystory.json",
+  "uri": "bts.png",
   "size":{
     "width": 140,
     "height": 200
   },
-  "image":"assets/toystory.jpg",
+  "image":"assets/bts.png",
   "scale": 1
 }

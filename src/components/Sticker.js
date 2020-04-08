@@ -112,7 +112,7 @@ class Sticker extends Component {
   componentWillUnmount() {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const entity = letsee.getEntity(this.props.entity.uri);
-      const entity = letsee.getEntity('assets/toystory.json');
+      const entity = letsee.getEntity('assets/bts.json');
 
       if (entity) {
         entity.removeRenderable(this.stickerObject);
@@ -124,7 +124,7 @@ class Sticker extends Component {
 
   renderAR({ entity: { uri }, data }: StickerPropTypes) {
     // const entity = letsee.getEntity(uri);
-    const entity = letsee.getEntity('assets/toystory.json');
+    const entity = letsee.getEntity('assets/bts.json');
     if (entity) {
       const { width, height } = entity.size;
       let realDiagonal = MAX_DIAGONAL;

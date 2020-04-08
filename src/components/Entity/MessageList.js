@@ -154,6 +154,16 @@ class MessageList extends Component {
     };
     const userId = currentUser !== null && !data.public ? currentUser.uid : null;
     subscribeToCurrent(firebase, data, userId, this.handleMessageChange);
+  
+    const entity = letsee.getEntity('assets/bts.json');
+    
+    entity.renderables.forEach((item) => {
+      if(item && item.type === 'Object3D') {
+        entity.removeRenderable(item);
+      } else if (item && item.type === 'DOMRenderable'){
+        entity.removeRenderable(item)
+      }
+    })
   }
 
   componentDidMount() {
@@ -189,7 +199,7 @@ class MessageList extends Component {
       console.log('ADD BUTTON 누른후 firebase로 들어오는 데이터');
       console.log(data);
       // const entity = letsee.getEntity(data.entityUri);
-      const entity = letsee.getEntity(`assets/toystory.json`);
+      const entity = letsee.getEntity(`assets/bts.json`);
       entity.removeRenderable(this.object);
     }
   }
@@ -227,10 +237,11 @@ class MessageList extends Component {
        * Letsee.getEntity형식이 json파일 형식으로 바뀌었기 때문에 이를 맞춰주는 작업 필요
        */
       // const entity = letsee.getEntity(uri);
-      const entity = letsee.getEntity('assets/toystory.json');
+      const entity = letsee.getEntity('assets/bts.json');
 
       // 에러 발생
       // 처음 화면 -> 수정 -> 이모지/텍스트 ->  휴지통 -> x 버튼
+      
       if (this.object.parent !== entity.object) {
         entity.addRenderable(this.object);
       }

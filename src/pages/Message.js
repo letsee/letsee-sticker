@@ -155,7 +155,7 @@ class Message extends Component {
   componentWillUnmount() {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const entity = letsee.getEntity(this.props.data.entity.uri);
-      const entity = letsee.getEntity('assets/toystory.json');
+      const entity = letsee.getEntity('assets/bts.json');
 
       if (entity) {
         entity.removeRenderable(this.messageObject);
@@ -168,7 +168,7 @@ class Message extends Component {
   renderAR({ data: { entity: { uri }, author } }: MessagePropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const entity = letsee.getEntity(uri);
-      const entity = letsee.getEntity('assets/toystory.json');
+      const entity = letsee.getEntity('assets/bts.json');
       const { width, height, depth } = entity.size;
       let realDiagonal = MAX_DIAGONAL;
 
