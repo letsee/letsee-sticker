@@ -65,7 +65,7 @@ class Message extends Component {
     const { shareModalOpened } = this.state;
 
     return (
-      <div {...other}>
+      <div>
         {entityTracked && !loadingEntity && stickers.map((sticker, i) => (
           <Sticker
             key={i}

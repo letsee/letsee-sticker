@@ -213,7 +213,9 @@ class MessageForm extends Component {
     // const entity = letsee.getEntity(this.props.data.entity.uri);
     const entity = letsee.getEntity(`assets/toystory.json`);
     // entity.removeRenderables();
-    entity.resetRenderables();
+    this.messageObject.children.forEach((item) => {
+      entity.removeRenderable(item);
+    });
     this.renderAR(this.props);
   }
 
@@ -235,7 +237,11 @@ class MessageForm extends Component {
     manager.off('press', this.handlePress);
 
     const entity = letsee.getEntity('assets/toystory.json');
-    entity.removeRenderable(this.messageObject);
+    
+    this.messageObject.children.forEach((item) => {
+      entity.removeRenderable(item);
+    });
+    // entity.removeRenderable(this.messageObject);
     this.selectedStickerObject = null;
   }
 

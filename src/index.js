@@ -78,7 +78,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
       };
       //TODO: 테스트용 코드 => 삭제 예정
       letsee.init(config, () => {
-        letsee.videoManager.setVideoSource('d881249b98338bf71d5aee0a1a96d9f3442053a2b0f987f487bd7f3c4385a8a0');
+        letsee.videoManager.setVideoSource('aff1f0367020956bf7e27e424766288314de4e61d85d202bb6e01e50f0d7aaeb');
       });
       
       letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_START, e => {
@@ -120,10 +120,10 @@ match({ history, routes }, (err, redirect, renderProps) => {
           size,
           uri,
         };
-        // store.dispatch(endTrackEntity(entity));
+        store.dispatch(endTrackEntity(entity));
       });
     };
-    loadScript("../lib/letsee-0.9.20.js", onLoaded);
+    loadScript("../lib2/letsee-0.9.20.js", onLoaded);
   };
   loadLetsee();
   
