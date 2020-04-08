@@ -19,12 +19,12 @@ const firebaseConfig = {
     // messagingSenderId: "11949169975"
     
     // 마이그레이션 letsee-sticker webar
-    apiKey: "AIzaSyCCR5RFx0YU1rTswOZjL1FrA42S1IEaQuY",
-    authDomain: "letsee-sticker-webar.firebaseapp.com",
-    databaseURL: "https://letsee-sticker-webar.firebaseio.com",
-    projectId: "letsee-sticker-webar",
+    apiKey: "AIzaSyCdeMX98pDr1eBu46x8vZDmBeUaJaIzSyU",
+    authDomain: "letsee-webar-sticker.firebaseapp.com",
+    databaseURL: "https://letsee-webar-sticker.firebaseio.com",
+    projectId: "letsee-webar-sticker",
     storageBucket: "",
-    messagingSenderId: "617007544280"
+    messagingSenderId: "630050918149",
     
 };
 
