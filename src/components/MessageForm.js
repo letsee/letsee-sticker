@@ -296,8 +296,8 @@ class MessageForm extends Component {
       framesTmp.innerHTML = renderToString(
         <div>
           <FrameAR
-            width={width}
-            height={height}
+            width={140}
+            height={140}
             vertical={0}
             horizontal={0}
             white
@@ -332,12 +332,15 @@ class MessageForm extends Component {
       }
 
       if (typeof depth !== 'undefined' && depth !== null) {
-        framesAR.position.setZ(depth / 2);
-        buttonsAR.position.setZ(depth / 2);
+        // framesAR.position.setZ(depth / 2);
+        // buttonsAR.position.setZ(depth / 2);
+        framesAR.position.setZ(10);
+        buttonsAR.position.setZ(10);
       }
 
       this.messageObject.add(framesAR);
       this.messageObject.add(buttonsAR);
+      this.messageObject.position.z = - 10;
     } else {
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale } = stickersArray[i];

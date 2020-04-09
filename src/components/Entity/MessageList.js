@@ -260,7 +260,8 @@ class MessageList extends Component {
       }
 
       if (depth !== null && typeof depth !== 'undefined') {
-        this.object.position.setZ(depth / 2);
+        // this.object.position.setZ(depth / 2);
+        this.object.position.setZ(10);
       }
 
       const buttonSize = diagonal * 0.33;
@@ -273,14 +274,14 @@ class MessageList extends Component {
             <ARContainer>
               <MessageText
                 size={diagonal}
-                height={y}
+                height={200}
               >
                 스티커를 남겨보세요!
               </MessageText>
-
+      
               <FrameAR
-                width={width / realToClamped}
-                height={height / realToClamped}
+                width={140}
+                height={200}
                 vertical={0}
                 horizontal={0}
                 white
@@ -292,9 +293,9 @@ class MessageList extends Component {
                   <img
                     src={`https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest},q_auto/v1501870222/assets/btn-add-content_3x.png`}
                     srcSet={`
-                      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
-                      https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
-                    `}
+                          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 2},q_auto/v1501870222/assets/btn-add-content_3x.png 2x,
+                          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_${nearest * 3},q_auto/v1501870222/assets/btn-add-content_3x.png 3x
+                        `}
                     alt="스티커를 남겨보세요!"
                     height={buttonSize}
                   />
