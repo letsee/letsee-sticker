@@ -78,7 +78,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
       };
       //TODO: 테스트용 코드 => 삭제 예정
       letsee.init(config, () => {
-        letsee.videoManager.setVideoSource('aff1f0367020956bf7e27e424766288314de4e61d85d202bb6e01e50f0d7aaeb');
+        // letsee.videoManager.setVideoSource('aff1f0367020956bf7e27e424766288314de4e61d85d202bb6e01e50f0d7aaeb');
       });
       
       letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_START, e => {
