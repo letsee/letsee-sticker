@@ -455,8 +455,8 @@ class MessageForm extends Component {
         const { x, y, z, w } = selectedSticker.quaternion;
         const q = new letsee.Quaternion(x, y, z, w);
         const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
-        const rotateX = new letsee.Vector3(0, -1, 0).applyQuaternion(conjugate).normalize();
-        const rotateY = new letsee.Vector3(-1, 0, 0).applyQuaternion(conjugate).normalize();
+        const rotateX = new letsee.Vector3(1, 0, 0).applyQuaternion(conjugate).normalize();
+        const rotateY = new letsee.Vector3(0, 1, 0).applyQuaternion(conjugate).normalize();
         q.multiply(new letsee.Quaternion().setFromAxisAngle(rotateX, deltaY * Math.PI / 180));
         q.multiply(new letsee.Quaternion().setFromAxisAngle(rotateY, deltaX * Math.PI / 180));
         this.selectedStickerObject.quaternion.copy(q);
@@ -499,9 +499,9 @@ class MessageForm extends Component {
       const { clientWidth, clientHeight } = document.documentElement;
       const ratio = realDiagonal / Math.sqrt((clientWidth * clientWidth) + (clientHeight * clientHeight)) * 2;
       const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
-      const translateX = new letsee.Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
-      const translateY = new letsee.Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
-
+      const translateX = new letsee.Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
+      const translateY = new letsee.Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
+      
       this.selectedStickerObject.position.set(x, y, z).add(translateX).add(translateY).set(
         clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
         clamp(this.selectedStickerObject.position.y, -1.5 * height, 1.5 * height),
