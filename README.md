@@ -50,12 +50,35 @@ Letsee Firebase 프로젝트 목록 중 ```webar-sticker``` 프로젝트를 이�
 
 #### firebase 
 - publicMessage, privateMessage 저장, 스티커들의 위치 정보데이터 저장, 조회
-- https://console.firebase.google.com/project/letsee-webar-sticker/functions/list 
+- https://console.firebase.google.com/project/letsee-webar-sticker/database/letsee-webar-sticker/data
+- 위 링크로 들어가면 Sticker데모 앱의 백엔드 데이터 구조를 확인 할 수 있다.
 
 #### cloud function 
 - Message들이 firebase에 등록될때마다 자동으로 messageCount값을 늘려주거나 줄여주는 기능을 수행함. (serverless)
 - https://console.firebase.google.com/project/letsee-webar-sticker/functions
 - 위 링크로 들어가 `자세한 사용 통계`를 확인하면 각각의 함수들에 대한 통계 및 소스코드 확인 가능
+
+
+### cloud function 실행
+
+프로젝트 루트의 `cloud` 폴더 안에서 firebase cloud function을 배포할 수 있다. 아래 단계를 통해 배포를 진행한다. 
+
+* 함수에 필요한 모듈을 설치하기 위해 `cloud/functions` 경로에서 `npm install` 명령어을 실행시켜준다. 
+
+* firebase CLI를 npm의 글로벌 패키지로 설치한다.
+```
+npm install -g firebase-tools
+```
+* 이후 Firebase CLI로 로그인을 진행한다. 로그인한 유저의 권한에는 `webar-sticker` 에 대한 접근 권한이 있어야 한다.
+```
+firebase login
+```
+- 마지막으로 cloud 폴더에서 아래 명령어로 함수를 배포해준다. 이때 `index.js`에 있는 cloud 함수들이 배포가 되며, 바로 사용할 수 있다. 
+```
+firebase deploy 
+```
+  
+  
  
 ## Run, Docker
 
