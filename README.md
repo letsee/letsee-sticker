@@ -65,7 +65,9 @@ Letsee Firebase 프로젝트 목록 중 ```webar-sticker``` 프로젝트를 이�
 
 * 함수에 필요한 모듈을 설치하기 위해 `cloud/functions` 경로에서 `npm install` 명령어을 실행시켜준다. 
 
-* firebase CLI를 npm의 글로벌 패키지로 설치한다.
+프로젝트 루트의 `cloud` 폴더 안에서 firebase cloud function을 배포할 수 있다. 아래 단계를 통해 배포를 진행한다. 
+
+* 함수에 필요한 모듈을 설치하기 위해 `cloud/functions` 경로에서 `npm install` 명령어을 실행시켜준다. 
 ```
 npm install -g firebase-tools
 ```
