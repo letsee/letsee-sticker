@@ -201,6 +201,16 @@ class Entity extends Component {
   handleMessagesCountChange = (snapshot) => {
     this.props.dispatch(setCount(snapshot.val() || 0));
   };
+  
+  onMessageReceive = (message) => {
+    const { dispatch } = this.props;
+    dispatch(setCurrentMessage(message));
+  };
+  
+  onMessageDelete = () => {
+    const { dispatch } = this.props;
+    dispatch(setCurrentCursor(null));
+  };
 
   render() {
     const {
@@ -250,8 +260,8 @@ class Entity extends Component {
           onEditClick={onEditClick}
           onPrev={() => this.handlePrev()}
           onNext={() => this.handleNext()}
-          onMessageReceive={message => dispatch(setCurrentMessage(message))}
-          onMessageDelete={() => dispatch(setCurrentCursor(null))}
+          onMessageReceive={this.onMessageReceive}
+          onMessageDelete={this.onMessageDelete}
         />
       </div>
     );

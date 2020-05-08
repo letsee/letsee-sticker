@@ -26,6 +26,7 @@ import type {
   MessageFormEntity,
 } from '../../types';
 
+// 마지막 메세지를 선택하여.. 마지막 메세지를 반환한다.
 const selectLatestMessage = (messagesObject: { [id: string]: MessageType }): MessageWithId | null => {
   const messageIds: string[] = sortBy(keys(messagesObject));
   const lastMessageId: string | null = messageIds[messageIds.length - 1] || null;
@@ -36,6 +37,7 @@ const selectLatestMessage = (messagesObject: { [id: string]: MessageType }): Mes
 
   const messageData = messagesObject[lastMessageId];
 
+  // 마지막 messageId와 messageData를 반환함.
   return {
     id: lastMessageId,
     ...messageData,
@@ -104,9 +106,13 @@ const SpinnerContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
+// 1. 파이어베이스에서 메세지를 가지고 옵니다.
+// 2. data.current를 검사합니다. (data.current는 현재 메세지의 ID이다)
+// 3. data.current가 만약 null이 아니면,
 const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
   const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
 
+  // 현재 메세지가 있다면, 현재 메세지에대한 정보를 가지고 있는 snapshot을 찍어서 handleMessageChange에 이벤트를 전달함.
   if (data.current !== null) {
     ref.equalTo(data.current).on('value', handleMessageChange);
   }
@@ -144,19 +150,13 @@ class MessageList extends Component {
     }
   }
 
+  // render가 되기 바로 직전에 수행됨.
   componentWillMount() {
     // currentUser를 테스트용으로 변경
     let { firebase, data, currentUser } = this.props;
-    currentUser = {
-      firstname: 'WEBARSDK-JUNGWOO',
-      lastname: 'TEST',
-      uid: "jjjjjw910911-010-6284-8051",
-    };
-    const userId = currentUser !== null && !data.public ? currentUser.uid : null;
-    subscribeToCurrent(firebase, data, userId, this.handleMessageChange);
-  
+    // 불필요한 메서드 삭제
+    // subscribeToCurrent(firebase, data, currentUser.uid, this.handleMessageChange);
     const entity = letsee.getEntity('assets/bts.json');
-    
     entity.renderables.forEach((item) => {
       if(item && item.type === 'Object3D') {
         entity.removeRenderable(item);
@@ -173,23 +173,28 @@ class MessageList extends Component {
     manager.on('swiperight', this.next);
     this.renderAR(this.props);
   }
-
+  
+  // props의 변경이 일어났을 때 호출됨.
   componentWillReceiveProps(nextProps: MessageListPropTypes) {
     if (this.props.data.current !== nextProps.data.current) {
-      const prevUserId = this.props.currentUser !== null && !this.props.data.public ? this.props.currentUser.uid : null;
-      const userId = nextProps.currentUser !== null && !nextProps.data.public ? nextProps.currentUser.uid : null;
+      // const prevUserId = this.props.currentUser !== null && !this.props.data.public ? this.props.currentUser.uid : null;
+      // const userId = nextProps.currentUser !== null && !nextProps.data.public ? nextProps.currentUser.uid : null;
+      const prevUserId = 'jjjjjw910911-010-6284-8051';
+      const userId = 'jjjjjw910911-010-6284-8051';
+      
       unsubscribeFromCurrent(this.props.firebase, this.props.data, prevUserId, this.handleMessageChange);
       subscribeToCurrent(nextProps.firebase, nextProps.data, userId, this.handleMessageChange);
     }
 
     this.renderAR(nextProps);
   }
-
+  
   componentWillUnmount() {
     const { firebase, data, currentUser } = this.props;
     const userId = currentUser !== null && !data.public ? currentUser.uid : null;
     unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange);
-
+  
+    // 스와이프 이벤트를 연결한다.
     manager.off('swipeleft', this.prev);
     manager.off('swiperight', this.next);
     manager.get('swipe').set({ enable: false });
@@ -205,7 +210,8 @@ class MessageList extends Component {
   }
 
   props: MessageListPropTypes;
-
+  
+  // 현재 메세지를 가지고 있는 스냅샷으로부터 메세지의 변경을 notify한다.
   handleMessageChange = (snapshot) => {
     const { onMessageDelete, onMessageReceive } = this.props;
     const messagesObject = snapshot.val();
@@ -267,7 +273,8 @@ class MessageList extends Component {
       const buttonSize = diagonal * 0.33;
       const nearest = Math.ceil(buttonSize / 100) * 100;
       const y = (height / realToClamped) + (diagonal * 0.04);
-
+      
+      // 첫번째 요소를 DomRenderable안의 Div에 삽입함.
       render(
         <div>
           {!data.loading && data.empty && (
@@ -326,7 +333,6 @@ class MessageList extends Component {
 
     const { entityUri, empty, current, message, error, loading, first, last } = messagesList;
     const dataExists = !empty && current !== null && !error;
-    console.log('MessageList 호출');
 
     return (
       <div {...other}>

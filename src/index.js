@@ -122,7 +122,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
         store.dispatch(endTrackEntity(entity));
       });
     };
-    loadScript("../lib/letsee-0.9.20.js", onLoaded);
+    loadScript("../lib2/letsee-0.9.20.js", onLoaded);
   };
   loadLetsee();
   

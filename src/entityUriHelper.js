@@ -14,6 +14,8 @@ export const entityUriToId = (uri: string): string => {
 
 export const entityIdToUri = (id: string): string => `https://d.letsee.io/${id}`;
 
+// userid가 있으면 publicMessage 경로를 가져옵니다.
+// 그렇지 않으면 privateMessage 경로를 가져옵니다.
 export const getMessagesCountPath = (entityUri: string, userId: string | null): string => {
   if (userId === null) {
     return `messagesCount/bts/publicMessages`;
