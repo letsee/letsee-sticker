@@ -1,6 +1,6 @@
 {
   "uri": "bts.png",
-  "size":{
+  "physicalSize" : {
     "width": 140,
     "height": 200
   },

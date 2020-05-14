@@ -1,3 +1,4 @@
+// 공유된 메세지를 받았을떄 열리는 페이지로 추정됨.
 // @flow
 import React, { Component } from 'react';
 import { render } from 'react-dom';

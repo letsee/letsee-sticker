@@ -37,6 +37,12 @@ type TransformationPropTypes = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
+// 스티커 이동중일 때 출력되는 버튼에 대한 컴포넌트
+// NavTopRight: 상단 완료버튼
+// StyledTipButton : 왼쪽 하단 정보표출 화면
+// StickerAction : 우측 하단 버튼
+// : StyledResetButton : 스티커를 중앙으로 이동시킴.
+// : TrashButton : 스티커를 지우고 이전 화면으로 복귀함.
 const Transformation = ({
   onTipClick,
   onComplete,

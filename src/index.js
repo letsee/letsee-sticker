@@ -71,24 +71,28 @@ match({ history, routes }, (err, redirect, renderProps) => {
       document.getElementsByTagName("head")[0].appendChild(script);
     };
     const onLoaded =  () => {
-      letsee.prepare({});
+      // letsee.prepare({});
+      console.log(letsee);
       const config = {
         trackerType: 'IMAGE',
-        bodyId: 'fallback-test'
+        // bodyId: 'fallback-test'
       };
       //TODO: 테스트용 코드 => 삭제 예정
+      // let myConfig = letsee.config;
       letsee.init(config, () => {
         // letsee.videoManager.setVideoSource('aff1f0367020956bf7e27e424766288314de4e61d85d202bb6e01e50f0d7aaeb');
       });
       
-      letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_START, e => {
+      letsee.objectTracker.notify(letsee.ENTITY_EVENT.TRACK_START, e => {
         console.log(e);
         /**
          * uri를 toystory로 강제 지정..
          * LetseeBrowser => LetseeWebAR SDK에서의 entity의 의미와 관리 방식이 달라짐.
          * 현재 firebase 데이터구조는 이전 d.letsee.io/entityUri형식의 EMS서버를 관리할떄의 방식임
          */
+        
         const uri = 'bts';
+        
         const {
           image,
           name,
@@ -104,7 +108,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
         store.dispatch(addEntity(entity));
         store.dispatch(startTrackEntity(entity));
       });
-      letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_END, e => {
+      letsee.objectTracker.notify(letsee.ENTITY_EVENT.TRACK_END, e => {
         console.log(e);
         const {
           image,
@@ -122,7 +126,8 @@ match({ history, routes }, (err, redirect, renderProps) => {
         store.dispatch(endTrackEntity(entity));
       });
     };
-    loadScript("../lib2/letsee-0.9.20.js", onLoaded);
+    // loadScript("../lib2/letsee-0.9.20.js", onLoaded);
+    loadScript("https://intra.letsee.io:10001/lib/letsee-0.9.20.js", onLoaded);
   };
   loadLetsee();
   

@@ -48,19 +48,20 @@ type RootPropTypes = {
   },
 };
 
-const Root = ({
-  helpOpened,
-  loadingEntity,
-  transformationGuideOpened,
-  currentUser,
-  entities,
-  currentEntity,
-  selectedSticker,
-  messageForm,
-  messagesList,
-  router,
-  dispatch,
-}: RootPropTypes) => {
+const Root = (
+  {
+    helpOpened,
+    loadingEntity,
+    transformationGuideOpened,
+    currentUser,
+    entities,
+    currentEntity,
+    selectedSticker,
+    messageForm,
+    messagesList,
+    router,
+    dispatch,
+  }: RootPropTypes) => {
   if (transformationGuideOpened) {
     return (
       <TransformationGuide onClose={() => dispatch(closeTransformationGuide())} />
@@ -75,7 +76,14 @@ const Root = ({
 
   if (messageForm !== null) {
     const { entity, stickers } = messageForm;
-    const entityTracked = currentEntity !== null && entity.uri === currentEntity;
+    let entityTracked;
+    
+    // 현재
+    if (currentEntity !== null && entity.uri === currentEntity)
+      entityTracked = true;
+    else
+      entityTracked = false;
+    
     const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
     // 스티커의 상태를 저장하는 이중 arrow function이 동작하지 않아 단일 arrow function으로 바꾸었더니
     // onStickerTransForm이 정상적으로 호출됨.
@@ -193,6 +201,7 @@ const Root = ({
   );
 };
 
+// connect: 해당 Root컴포넌트의 하위의 컴포넌트들이 모두 아래 Store에 접근할 수 있도록 도와주는 기능을 수행함
 export default withRouter(connect(
   ({
     letseeLoaded,
