@@ -645,6 +645,8 @@ class MessageForm extends Component {
 
     const nextDisabled = stickers.allIds.length === 0 || submitting;
 
+    // TransformGuide에 대한 props가 켜졌을때, 해당 TransformGuide를 보여주는
+    // 조건부 렌더링 컴포넌트이다.
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
       this.selectedStickerObject.uuid === selectedSticker.id
@@ -660,7 +662,8 @@ class MessageForm extends Component {
         </div>
       );
     }
-
+    
+    // text입력 모드가 켜졌을 때 동작하는 조건부 렌더링 컴포넌트이다.
     if (mode === 'text') {
       return (
         <div {...other}>

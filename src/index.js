@@ -71,7 +71,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
       document.getElementsByTagName("head")[0].appendChild(script);
     };
     const onLoaded =  () => {
-      // letsee.prepare({});
+      letsee.prepare({});
       console.log(letsee);
       const config = {
         trackerType: 'IMAGE',
@@ -80,25 +80,23 @@ match({ history, routes }, (err, redirect, renderProps) => {
       //TODO: 테스트용 코드 => 삭제 예정
       // let myConfig = letsee.config;
       letsee.init(config, () => {
-        // letsee.videoManager.setVideoSource('aff1f0367020956bf7e27e424766288314de4e61d85d202bb6e01e50f0d7aaeb');
+        letsee.videoManager.setVideoSource('caf094ac19db67b3ad13970be3e5103e79e5174187004b5cfda9e229959b6d03');
       });
-      
-      letsee.objectTracker.notify(letsee.ENTITY_EVENT.TRACK_START, e => {
+  
+      letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_START, e => {
         console.log(e);
         /**
          * uri를 toystory로 강제 지정..
          * LetseeBrowser => LetseeWebAR SDK에서의 entity의 의미와 관리 방식이 달라짐.
          * 현재 firebase 데이터구조는 이전 d.letsee.io/entityUri형식의 EMS서버를 관리할떄의 방식임
          */
-        
         const uri = 'bts';
-        
         const {
           image,
           name,
           size,
         } = e.target;
-        
+    
         const entity = {
           image,
           name,
@@ -108,7 +106,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
         store.dispatch(addEntity(entity));
         store.dispatch(startTrackEntity(entity));
       });
-      letsee.objectTracker.notify(letsee.ENTITY_EVENT.TRACK_END, e => {
+      letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_END, e => {
         console.log(e);
         const {
           image,
@@ -116,7 +114,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
           size,
           uri,
         } = e.target;
-      
+    
         const entity = {
           image,
           name,
@@ -127,7 +125,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
       });
     };
     // loadScript("../lib2/letsee-0.9.20.js", onLoaded);
-    loadScript("https://intra.letsee.io:10001/lib/letsee-0.9.20.js", onLoaded);
+    loadScript("https://intra.letsee.io/lib2/letsee-0.9.20.js", onLoaded);
   };
   loadLetsee();
   
@@ -208,44 +206,44 @@ match({ history, routes }, (err, redirect, renderProps) => {
     
     // TODO: 렛시의 trackStart이벤트로 바꿔주기
     //letsee.addEventListener('trackstart', (e) => {
-    letsee.eventManager.onTrackStart((e) => {
-      const {
-        image,
-        name,
-        size,
-        uri,
-      } = e.target;
-
-      const entity = {
-        image,
-        name,
-        size,
-        uri,
-      };
-
-      store.dispatch(addEntity(entity));
-      store.dispatch(startTrackEntity(entity));
-    });
+    // letsee.eventManager.onTrackStart((e) => {
+    //   const {
+    //     image,
+    //     name,
+    //     size,
+    //     uri,
+    //   } = e.target;
+    //
+    //   const entity = {
+    //     image,
+    //     name,
+    //     size,
+    //     uri,
+    //   };
+    //
+    //   store.dispatch(addEntity(entity));
+    //   store.dispatch(startTrackEntity(entity));
+    // });
 
     // TODO: 렛시의 trackEnd 이벤트로 바꿔주기
     //letsee.addEventListener('trackend', (e) => {
-    letsee.eventManager.onTrackEnd((e) => {
-      const {
-        image,
-        name,
-        size,
-        uri,
-      } = e.target;
-
-      const entity = {
-        image,
-        name,
-        size,
-        uri,
-      };
-
-      store.dispatch(endTrackEntity(entity));
-    });
+    // letsee.eventManager.onTrackEnd((e) => {
+    //   const {
+    //     image,
+    //     name,
+    //     size,
+    //     uri,
+    //   } = e.target;
+    //
+    //   const entity = {
+    //     image,
+    //     name,
+    //     size,
+    //     uri,
+    //   };
+    //
+    //   store.dispatch(endTrackEntity(entity));
+    // });
   });
 
   render(
