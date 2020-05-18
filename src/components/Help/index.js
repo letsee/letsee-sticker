@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/main.css';
+// import 'react-responsive-carousel/lib/styles/main.css';
 import 'react-responsive-carousel/lib/styles/carousel.css';
 import CloseButton from '../CloseButton';
 
@@ -26,7 +26,6 @@ const StyledCarousel = styled(Carousel)`
       position: absolute;
       left: 0;
       right: 0;
-      border:1px solid red;
       // top: 50%;
       // transform: translateY(-50%);
       height: 100%;
@@ -51,8 +50,9 @@ const StyledCarousel = styled(Carousel)`
       bottom: auto;
       margin: 0;
       display: flex;
-      position:absolute;
+      position: absolute;
       top: 0;
+      padding-inline-start: 0;
 
       @media (max-height: 567px) {
         top: 0px;
@@ -88,7 +88,7 @@ const Page = styled.div`
   text-align: center;
   color: #fff;
   user-select: none;
-  border: 1px solid yellow;
+ 
   
   height: 100%;
   justify-content: center;
@@ -115,6 +115,7 @@ const SkipButton = styled.button`
   background-color: transparent !important;
   background-image: none !important;
   border: 0;
+  outline: 0;
 `;
 
 const NextTutorialButton = styled.button`
@@ -123,16 +124,18 @@ const NextTutorialButton = styled.button`
   position: absolute;
   bottom: 0;
   background-color: #372B84 !important;
+  border: 1px solid #372B84;
   color: white;
   text-align: center;
-  border: 1px solid green;
   border-radius: 20px;
   left: 50%;
   transform: translateX(-50%);
   padding: 0 22px;
+  outline: 0;
+  
   
   font {
-    font-size: 14px;
+    font-size: 14px;tr
   }
   
   ${({bottom})=>
@@ -177,6 +180,11 @@ const AbsoluteImage = styled.img`
       `right: ${right};`
   }
   
+  ${({translateX})=>
+    translateX &&
+      `transform: translateX(${translateX})`
+}
+
 `;
 
 const Text = styled.div`
@@ -221,13 +229,29 @@ type HelpPropTypes = {
   children?: any, // eslint-disable-line react/require-default-props
 };
 
+let onPrevHandler, onNextHandler;
+
+const onNext = () => {
+  onNextHandler()
+}
+
 const Help = ({
   onCloseClick,
   children,
   ...other
 }: HelpPropTypes) => (
   <Container {...other}>
-    <StyledCarousel {...settings}>
+    <StyledCarousel
+      showArrows={true}
+      renderArrowPrev={(prevHandler, hasNext, label) => {
+        onPrevHandler = prevHandler
+      }}
+      renderArrowNext={(nextHandler, hasNext, label) => {
+        onNextHandler = nextHandler
+      }}
+      
+      {...settings}
+    >
       {/*튜토리얼 1*/}
       <Page>
         <Image
@@ -251,7 +275,9 @@ const Help = ({
           </Body>
         </Text>
   
-        <NextTutorialButton bottom= "100px" >
+        <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
+  
+        <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
           <font>1 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
         
@@ -275,7 +301,9 @@ const Help = ({
           </Body>
         </Text>
   
-        <NextTutorialButton bottom= "100px" >
+        <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
+  
+        <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
           <font>2 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
       </Page>
@@ -298,7 +326,9 @@ const Help = ({
           </Body>
         </Text>
   
-        <NextTutorialButton bottom= "100px" >
+        <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
+  
+        <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
           <font>3 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
       </Page>
@@ -313,37 +343,42 @@ const Help = ({
           "
           alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
+  
+        <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
         
-        <NextTutorialButton bottom= "100px" >
+        <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
           <font>4 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
       </Page>
   
       {/*튜토리얼 5*/}
       <Page>
-        <NextTutorialButton bottom= "200px" >
+        <NextTutorialButton bottom= "200px" onTouchEnd={onNext}>
           <font>5 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
   
         <AbsoluteImage bottom="50px" left="100px"
                        src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589616698/assets/ui-tutorials-2_3x.png"
                        srcSet="
-             https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-2_3x.png 2x,
-             https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-2_3x.png 3x
-          "
+                       https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-2_3x.png 2x,
+                       https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-2_3x.png 3x
+                       "
                        alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-
+  
+        <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
       </Page>
   
       {/*튜토리얼 6*/}
       <Page>
         
-        <NextTutorialButton bottom= "200px" >
+        <NextTutorialButton bottom= "200px" onTouchEnd={onNext}>
           <font>6 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
   
         <AbsoluteImage bottom="50px"
+                       left="50%"
+                       translateX="-50%"
                        src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589616698/assets/ui-tutorials-3_3x.png"
                        srcSet="
                             https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-3_3x.png 2x,
@@ -351,68 +386,79 @@ const Help = ({
                         "
                        alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
+  
+        <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
       </Page>
   
-  
+      {/*튜토리얼 7*/}
       <Page>
-        <Image
-          src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_90/v1501835747/assets/icn-detect-help-1_3x.png"
-          srcSet="
-            https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501835747/assets/icn-detect-help-1_3x.png 2x,
-            https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_270/v1501835747/assets/icn-detect-help-1_3x.png 3x
-          "
-          alt="인식 대상의 정면을 비추세요"
-        />
-
-        <Text>
-          <Title>인식 대상의 정면을 비추세요</Title>
-
-          <Body>
-            <div> 증강현실 콘텐츠를 불러올 대상의 정면을 </div>
-            <div> 화면 가득히 비추세요. </div>
-          </Body>
-        </Text>
-      </Page>
-
-      <Page>
-        <Image
-          src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_90/v1501835802/assets/icn-detect-help-2_3x.png"
-          srcSet="
-            https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_180/v1501835802/assets/icn-detect-help-2_3x.png 2x,
-            https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_270/v1501835802/assets/icn-detect-help-2_3x.png 3x
-          "
-          alt="인식이 되지 않나요?"
-        />
-
-        <Text>
-          <Title>
-            인식이 되지 않나요?
-          </Title>
-
-          <Body>
-            <div>
-              3~4초 이상 비춰도 인식이 안되면
-            </div>
-
-            <div>
-              렛시에 등록되지 않은 대상입니다.
-            </div>
-          </Body>
-
-          <Contact>
-            <div>
-              등록 문의
-            </div>
-
-            <div>
-              contact@letsee.io
-            </div>
-          </Contact>
-        </Text>
-      </Page>
-    </StyledCarousel>
     
-    <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
+        <NextTutorialButton bottom= "200px" onTouchEnd={onNext}>
+          <font>7 / 9</font>&nbsp; 계속보기
+        </NextTutorialButton>
+    
+        <AbsoluteImage bottom="50px"
+                       left="50%"
+                       translateX="-50%"
+                       src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589616698/assets/ui-tutorials-4_3x.png"
+                       srcSet="
+                            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-4_3x.png 2x,
+                            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-4_3x.png 3x
+                        "
+                       alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
+        />
+  
+        <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
+      </Page>
+      
+      {/*튜토리얼 8*/}
+      <Page>
+    
+        <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
+          <font>8 / 9</font>&nbsp; 계속보기
+        </NextTutorialButton>
+    
+        <AbsoluteImage bottom="200px"
+                       right="20px"
+                       src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589616698/assets/ui-tutorials-5_3x.png"
+                       srcSet="
+                            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-5_3x.png 2x,
+                            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-5_3x.png 3x
+                        "
+                       alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
+        />
+  
+        <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
+      </Page>
+  
+      {/*튜토리얼 9*/}
+      <Page>
+    
+        <NextTutorialButton bottom= "100px" onTouchEnd={onCloseClick}>
+          <font>9 / 9</font>&nbsp; 계속보기
+        </NextTutorialButton>
+    
+        <Image
+           src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589616698/assets/ui-tutorials-6_3x.png"
+           srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-6_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-6_3x.png 3x
+            "
+           alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
+        />
+  
+        <Text>
+          <Body>
+            <div> 다양한 손가락의 제스쳐로 </div>
+            <div> 스티커의 위치이동,크기조절,회전이 </div>
+            <div> 가능합니다. </div>
+          </Body>
+        </Text>
+    
+        <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
+      </Page>
+      
+    </StyledCarousel>
   </Container>
 );
 
