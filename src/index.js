@@ -80,7 +80,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
       //TODO: 테스트용 코드 => 삭제 예정
       // let myConfig = letsee.config;
       letsee.init(config, () => {
-        letsee.videoManager.setVideoSource('caf094ac19db67b3ad13970be3e5103e79e5174187004b5cfda9e229959b6d03');
+        letsee.videoManager.setVideoSource('ba49f16c114b1fa808c718ef2c4216bcd5a62d9e826b4888ee8e7d4565ec3d97');
       });
   
       letsee.entityObserver.subscribe(letsee.ENTITY_EVENT.TRACK_START, e => {
