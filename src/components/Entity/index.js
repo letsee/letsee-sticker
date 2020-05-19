@@ -14,6 +14,7 @@ import {
   setFirstCursor,
   setLastCursor,
   setCount,
+  setCurrentCount,
   setPublic,
   setCurrentMessage,
   fetchPrev,
@@ -44,14 +45,14 @@ const EntityName = styled.div`
   font-weight: bold;
 `;
 
-const MessagesCount = styled.span`
-  flex-shrink: 0;
-  vertical-align: middle;
-  margin-left: 5px;
-  font-family: SFUIDisplay, sans-serif;
-  font-size: 15px;
-  padding: 1px 0;
-`;
+// const MessagesCount = styled.span`
+//   flex-shrink: 0;
+//   vertical-align: middle;
+//   margin-left: 5px;
+//   font-family: SFUIDisplay, sans-serif;
+//   font-size: 15px;
+//   padding: 1px 0;
+// `;
 
 const StyledBackButton = styled(BackButton)`
   position: absolute;
@@ -61,20 +62,23 @@ const StyledBackButton = styled(BackButton)`
 
 const StyledMyMessagesButton = styled(MyMessagesButton)`
   position: absolute;
-  top: 30px;
+  top: 28px;
   right: ${props => (props.empty ? 5 : 49)}px;
 `;
 
+// props로 들어오는 각각에 Entity에 대한 체크를 진행한다.
 type EntityPropTypes = {
   messagesList: MessagesList,
   data: MessageFormEntity,
   currentUser: MessageAuthor | null,
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onHelpClick?: MouseEventHandler,
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
 };
 
 class Entity extends Component {
+  // 각 엔티티에 대한 자료형에 대해 체크를 진행한다.
   static propTypes = {
     currentUser: PropTypes.shape({ // eslint-disable-line react/require-default-props
       uid: PropTypes.string.isRequired,
@@ -89,6 +93,7 @@ class Entity extends Component {
       }).isRequired,
     }).isRequired,
     onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
+    onHelpClick: PropTypes.func,
   };
 
   // UserID를 테스트용으로 => 1KPeHnwbmzWSm
@@ -126,6 +131,7 @@ class Entity extends Component {
 
       const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
       const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
+      // messageCount 경로의 이벤트를 listening하여 변경사항이 있을시 이를 가져옵니다.
       countref.on('value', this.handleMessagesCountChange);
       listRef.limitToLast(1).on('value', this.handleLastMessageChange);
       listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
@@ -200,6 +206,8 @@ class Entity extends Component {
   // 메세지의 갯수를 저장한다.
   handleMessagesCountChange = (snapshot) => {
     this.props.dispatch(setCount(snapshot.val() || 0));
+    // this.props.dispatch(setCurrentCount(snapshot.val()) || 0);
+    this.props.dispatch(setCurrentCount(1));
   };
   
   onMessageReceive = (message) => {
@@ -222,6 +230,7 @@ class Entity extends Component {
       firebase,
       dispatch,
       children,
+      onHelpClick,
       ...other
     } = this.props;
 
@@ -234,9 +243,9 @@ class Entity extends Component {
             {messagesList.public ? data.name : '내 스티커'}
           </EntityName>
 
-          <MessagesCount>
-            ({messagesList.count})
-          </MessagesCount>
+          {/*<MessagesCount>*/}
+          {/*  ({messagesList.count})*/}
+          {/*</MessagesCount>*/}
         </Title>
 
         {!messagesList.public && (
@@ -258,6 +267,7 @@ class Entity extends Component {
           entity={data}
           onNewClick={onNewClick}
           onEditClick={onEditClick}
+          onHelpClick={onHelpClick}
           onPrev={() => this.handlePrev()}
           onNext={() => this.handleNext()}
           onMessageReceive={this.onMessageReceive}

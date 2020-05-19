@@ -8,10 +8,10 @@ const NextButton = ({ children, ...other }) => (
     {...other}
   >
     <img
-      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_55,q_auto/v1504232842/assets/btn-s-next_3x.png"
+      src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589798377/assets/btn-next_3x.png"
       srcSet="
-        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_110,q_auto/v1504232842/assets/btn-s-next_3x.png 2x,
-        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_165,q_auto/v1504232842/assets/btn-s-next_3x.png 3x
+        https://res.cloudinary.com/dkmjrt932/image/upload/v1589798377/assets/btn-next_3x.png 2x,
+        https://res.cloudinary.com/dkmjrt932/image/upload/v1589798377/assets/btn-next_3x.png 3x
       "
       alt="다음"
     />

@@ -19,6 +19,9 @@ import TranslateZ from './Transformation/TranslateZ';
 import MessagePrivacy from './MessagePrivacy';
 import manager from '../manager';
 import getObjectById from '../getObjectById';
+import { ImageButton } from './Button';
+import { BottomActionsContainer} from './Container'
+
 import {
   MAX_DIAGONAL,
   MIN_DIAGONAL,
@@ -698,28 +701,59 @@ class MessageForm extends Component {
             />
           </NavTopRight>,
 
-          <NavBottomRight key={3}>
-            <AddEmojiButton
-              onClick={() => this.setState({ mode: 'emoji' }, () => {
-                // const e = letsee.getEntity('assets/bts.json');
-                // e.removeRenderable(this.messageObject);
-              })}
-              small
-            />
+          // 우측 하단 이모지, Text 버튼 삭제
+          // <NavBottomRight key={3}>
+          //   <AddEmojiButton
+          //     onClick={() => this.setState({ mode: 'emoji' }, () => {
+          //       // const e = letsee.getEntity('assets/bts.json');
+          //       // e.removeRenderable(this.messageObject);
+          //     })}
+          //     small
+          //   />
+          //
+          //   <StyledAddTextButton
+          //     onTouchEnd={() => this.setState({ mode: 'text' }, () => {
+          //       // const e = letsee.getEntity('assets/bts.json');
+          //       // e.removeRenderable(this.messageObject);
+          //     })}
+          //     small
+          //   />
+          // </NavBottomRight>,
 
-            <StyledAddTextButton
-              onTouchEnd={() => this.setState({ mode: 'text' }, () => {
-                // const e = letsee.getEntity('assets/bts.json');
-                // e.removeRenderable(this.messageObject);
-              })}
-              small
-            />
-          </NavBottomRight>,
-
-          <StyledTipButton
-            key={4}
-            onClick={onTipClick}
-          />,
+          // 왼쪽 하단 TransformationGuide 화면 삭제
+          // <StyledTipButton
+          //   key={4}
+          //   onClick={onTipClick}
+          // />,
+          <BottomActionsContainer key={3}>
+            <ImageButton>
+              <img
+                onClick={onHelpClick}
+                src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png"
+                srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
+              "/>
+            </ImageButton>
+    
+            <ImageButton>
+              <img
+                src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png"
+                srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png 3x
+              "/>
+            </ImageButton>
+    
+            <ImageButton>
+              <img
+                src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png"
+                srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
+              "/>
+            </ImageButton>
+          </BottomActionsContainer>,
 
           messagePrivacyOpen && (
             <MessagePrivacy

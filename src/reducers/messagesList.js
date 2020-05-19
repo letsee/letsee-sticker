@@ -10,7 +10,7 @@ import {
   SET_CURRENT_MESSAGE,
   SET_CURRENT_USER,
   FETCH_PREV,
-  FETCH_NEXT,
+  FETCH_NEXT, SET_CURRENT_PAGE_COUNT, SET_CURRENT_COUNT,
 } from '../actions';
 import { messagesList as initialState } from '../initialState';
 import type { MessagesList } from '../types';
@@ -81,6 +81,15 @@ const messagesList = (state: MessagesList = initialState, action): MessagesList 
       }
 
       return state;
+      
+    case SET_CURRENT_COUNT:
+      if (state.entityUri !== null) {
+        return {
+          ...state,
+          currentCount: action.payload
+        };
+      }
+      return state;
     case SET_FIRST_CURSOR:
       if (state.entityUri !== null) {
         return {
@@ -116,10 +125,21 @@ const messagesList = (state: MessagesList = initialState, action): MessagesList 
 
       return state;
     case FETCH_PREV:
+      if (state.entityUri !== null) {
+        return {
+          ...state,
+          currentCount: state.currentCount + 1,
+          loading: true,
+          error: false,
+        };
+      }
+  
+      return state;
     case FETCH_NEXT:
       if (state.entityUri !== null) {
         return {
           ...state,
+          currentCount: state.currentCount - 1,
           loading: true,
           error: false,
         };

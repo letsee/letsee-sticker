@@ -9,6 +9,7 @@ export const SET_CURRENT_CURSOR: 'SET_CURRENT_CURSOR' = 'SET_CURRENT_CURSOR';
 export const SET_CURRENT_MESSAGE: 'SET_CURRENT_MESSAGE' = 'SET_CURRENT_MESSAGE';
 export const FETCH_PREV: 'FETCH_PREV' = 'FETCH_PREV';
 export const FETCH_NEXT: 'FETCH_NEXT' = 'FETCH_NEXT';
+export const SET_CURRENT_COUNT: 'SET_CURRENT_COUNT' = 'SET_CURRENT_COUNT';
 
 export const setPublic = (isPublic: boolean) => ({
   type: SET_PUBLIC,
@@ -17,6 +18,11 @@ export const setPublic = (isPublic: boolean) => ({
 
 export const setCount = (count: number) => ({
   type: SET_COUNT,
+  payload: count,
+});
+
+export const setCurrentCount = (count: number) => ({
+  type: SET_CURRENT_COUNT,
   payload: count,
 });
 

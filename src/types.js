@@ -109,6 +109,7 @@ export type MessagesList = {
   public: boolean,
   empty: boolean,
   count: number,
+  currentCount: number,
   first: string | null,
   last: string | null,
   current: string | null,

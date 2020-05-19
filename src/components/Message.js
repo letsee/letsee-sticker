@@ -76,10 +76,11 @@ class Message extends Component {
 
         {entityTracked && !loadingEntity && (
           <div>
-            <StyledMessageMeta
-              author={author}
-              timestamp={timestamp}
-            />
+            {/*메타 데이터 제거*/}
+            {/*<StyledMessageMeta*/}
+            {/*  author={author}*/}
+            {/*  timestamp={timestamp}*/}
+            {/*/>*/}
 
             <StyledShareButton
               onClick={shareDisabled ? null : () => this.setState({ shareModalOpened: true })}

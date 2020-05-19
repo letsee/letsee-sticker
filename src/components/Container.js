@@ -14,4 +14,14 @@ const Container = styled.div`
   scroll-behavior: smooth;
 `;
 
+export const BottomActionsContainer = styled.div`
+  position: absolute;
+  bottom: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
 export default Container;

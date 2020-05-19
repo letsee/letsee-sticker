@@ -7,6 +7,7 @@ import clamp from 'lodash/clamp';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import { ImageButton } from '../Button';
+import { BottomActionsContainer} from '../Container'
 import Frame from '../Frame';
 import Message from '../Message';
 import Spinner from '../Spinner';
@@ -48,7 +49,8 @@ const ARContainer = styled.div`
   position: relative;
 `;
 
-const StyledImageButton = ImageButton.extend`
+// extend는 이제 권장되지 않음.
+const StyledImageButton = styled(ImageButton)`
   position: absolute;
   left: 50%;
   top: 50%;
@@ -62,15 +64,23 @@ const Actions = styled.div`
 `;
 
 const StyledPrevButton = styled(PrevButton)`
-  position: absolute;
-  left: 0;
-  bottom: 0;
+  float:left
 `;
 
 const StyledNextButton = styled(NextButton)`
+  float:right;
+`;
+
+const MessagesCount = styled.div`
+  font-family: SFUIDisplay, sans-serif;
+  font-size: 15px;
   position: absolute;
-  right: 0;
-  bottom: 0;
+  display: inline-block;
+  color: white;
+  text-align: center;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  top: 50%;
 `;
 
 const MessageText = styled.div`
@@ -106,6 +116,15 @@ const SpinnerContainer = styled.div`
   transform: translate(-50%, -50%);
 `;
 
+
+const MessagesButtonContainer = styled.div`
+  position: absolute;
+  bottom: 110px;
+  left: 30%;
+  width: 40%;
+  text-align: center;
+`;
+
 // 1. 파이어베이스에서 메세지를 가지고 옵니다.
 // 2. data.current를 검사합니다. (data.current는 현재 메세지의 ID이다)
 // 3. data.current가 만약 null이 아니면,
@@ -139,6 +158,7 @@ type MessageListPropTypes = {
   onNext?: void => mixed, // eslint-disable-line react/require-default-props
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
+  onHelpClick? : MouseEventHandler,
 };
 
 class MessageList extends Component {
@@ -328,53 +348,90 @@ class MessageList extends Component {
       onPrev,
       onNext,
       firebase,
+      onHelpClick,
       ...other
     } = this.props;
 
-    const { entityUri, empty, current, message, error, loading, first, last } = messagesList;
+    const { entityUri, empty, current, message, error, loading, first, last, count, currentCount } = messagesList;
     const dataExists = !empty && current !== null && !error;
 
     return (
       <div {...other}>
-        <Actions>
-          {message !== null && dataExists && currentUser !== null && message.author.uid === currentUser.uid && (
-            <ImageButton
-              type="button"
-              onClick={loading ? null : () => onEditClick && onEditClick(message)}
-            >
-              <img
-                alt={`${message.author.firstname} ${message.author.lastname}`.trim()}
-                src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503389387/assets/btn-create-copy_3x.png"
-                srcSet="
-                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503389387/assets/btn-create-copy_3x.png 2x,
-                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503389387/assets/btn-create-copy_3x.png 3x
-                "
-              />
-            </ImageButton>
-          )}
-
+        {/*<Actions>*/}
+        {/* /!*자신의 메세지일때만 수정할수 있도록 설정하는 부분이다.*!/*/}
+        {/*  {message !== null && dataExists && currentUser !== null && message.author.uid === currentUser.uid && (*/}
+        {/*    <ImageButton*/}
+        {/*      type="button"*/}
+        {/*      onClick={loading ? null : () => onEditClick && onEditClick(message)}*/}
+        {/*    >*/}
+        {/*      <img*/}
+        {/*        alt={`${message.author.firstname} ${message.author.lastname}`.trim()}*/}
+        {/*        src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503389387/assets/btn-create-copy_3x.png"*/}
+        {/*        srcSet="*/}
+        {/*          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503389387/assets/btn-create-copy_3x.png 2x,*/}
+        {/*          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503389387/assets/btn-create-copy_3x.png 3x*/}
+        {/*        "*/}
+        {/*      />*/}
+        {/*    </ImageButton>*/}
+        {/*  )}*/}
+        
+        {/*  <ImageButton*/}
+        {/*    type="button"*/}
+        {/*    onClick={onNewClick? onNewClick : null}*/}
+        {/*  >*/}
+        {/*    <img*/}
+        {/*      alt="스티커를 남겨보세요!"*/}
+        {/*      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503047417/assets/btn-create_3x.png"*/}
+        {/*      srcSet="*/}
+        {/*        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503047417/assets/btn-create_3x.png 2x,*/}
+        {/*        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503047417/assets/btn-create_3x.png 3x*/}
+        {/*      "*/}
+        {/*    />*/}
+        {/*  </ImageButton>*/}
+        {/*</Actions>*/}
+        
+        <BottomActionsContainer>
           <ImageButton
-            type="button"
+            onClick={onHelpClick}
+          >
+            <img
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png"
+              srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
+              "/>
+          </ImageButton>
+        
+          <ImageButton
             onClick={onNewClick}
           >
             <img
-              alt="스티커를 남겨보세요!"
-              src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503047417/assets/btn-create_3x.png"
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png"
               srcSet="
-                https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503047417/assets/btn-create_3x.png 2x,
-                https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503047417/assets/btn-create_3x.png 3x
-              "
-            />
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png 3x
+              "/>
           </ImageButton>
-        </Actions>
-
-        {dataExists && message !== null && current !== first && (
-          <StyledNextButton onClick={loading ? null : () => this.prev()} />
-        )}
-
-        {dataExists && message !== null && current !== last && (
-          <StyledPrevButton onClick={loading ? null : () => this.next()} />
-        )}
+        
+          <ImageButton>
+            <img
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png"
+              srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
+              "/>
+          </ImageButton>
+        </BottomActionsContainer>
+  
+        <MessagesButtonContainer>
+          {dataExists && message !== null && current !== first && (
+            <StyledNextButton onClick={loading ? null : () => this.prev()} />
+          )}
+          <MessagesCount>{currentCount} / {count}</MessagesCount>
+          {dataExists && message !== null && current !== last && (
+            <StyledPrevButton onClick={loading ? null : () => this.next()} />
+          )}
+        </MessagesButtonContainer>
 
         {dataExists && message !== null && (
           <Message

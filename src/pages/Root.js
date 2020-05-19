@@ -155,6 +155,7 @@ const Root = (
 
             dispatch(initMessageForm(currentEntityData, currentUser));
           }}
+          onHelpClick={() => dispatch(openHelp())}
           onEditClick={(message: MessageWithId) => {
             if (currentUser !== null && message.author.uid === currentUser.uid) {
               const { author, entity, stickers, ...other } = message;
