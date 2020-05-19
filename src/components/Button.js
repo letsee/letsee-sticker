@@ -17,6 +17,13 @@ export const ImageButton = Button.extend`
   img {
     display: block;
   }
+  
+  ${({imageWidth})=>
+    imageWidth &&
+    `img {
+      width: ${imageWidth}
+    }`
+  }
 `;
 
 export default Button;

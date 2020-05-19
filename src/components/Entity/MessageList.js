@@ -403,6 +403,7 @@ class MessageList extends Component {
           </ImageButton>
         
           <ImageButton
+            imageWidth="70px"
             onClick={onNewClick}
           >
             <img

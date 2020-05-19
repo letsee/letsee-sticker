@@ -6,6 +6,9 @@ import CompleteButton from '../CompleteButton';
 import TrashButton from '../TrashButton';
 import TipButton from '../TipButton';
 import ResetButton from '../ResetButton';
+import ZoomInButton from '../ZoomInButton';
+import ZoomOutButton from '../ZoomOutButton';
+import UndoButton from '../UndoButton';
 
 const NavTopRight = styled.div`
   position: absolute;
@@ -60,6 +63,9 @@ const Transformation = ({
 
     <StickerActions>
       <StyledResetButton onClick={onReset} />
+      <ZoomInButton/>
+      <ZoomOutButton/>
+      <UndoButton/>
       <TrashButton onClick={onDelete} />
     </StickerActions>
 

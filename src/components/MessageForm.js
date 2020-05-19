@@ -156,6 +156,20 @@ const StyledTipButton = styled(TipButton)`
   left: 4px;
 `;
 
+// BottomActionsContainer
+const BottomActionsAddContent = styled.div`
+  width: 90%;
+  position: absolute;
+  top: -103%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-image : url('https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-background_3x.png');
+  background-repeat : no-repeat;
+  background-size : cover;
+  
+`;
+
 type MessageFormPropTypes = {
   data: MessageFormType,
   selectedSticker: MessageFormSticker | null,
@@ -725,7 +739,27 @@ class MessageForm extends Component {
           //   key={4}
           //   onClick={onTipClick}
           // />,
+          
+          // 하단 버튼에 대한 컨테이너를 추가한다.
           <BottomActionsContainer key={3}>
+            <ImageButton>
+              <img
+                src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png"
+                srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
+              "/>
+            </ImageButton>
+    
+            <ImageButton imageWidth="70px">
+              <img
+                src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png"
+                srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x
+              "/>
+            </ImageButton>
+  
             <ImageButton>
               <img
                 onClick={onHelpClick}
@@ -735,24 +769,34 @@ class MessageForm extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
               "/>
             </ImageButton>
-    
-            <ImageButton>
-              <img
-                src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png"
-                srcSet="
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png 2x,
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png 3x
+            
+            {/*하단 이모지 및 텍스트 추가 버튼*/}
+            <BottomActionsAddContent>
+              <ImageButton>
+                <img
+                  onClick={() => this.setState({ mode: 'emoji' }, () => {
+                    // const e = letsee.getEntity('assets/bts.json');
+                    // e.removeRenderable(this.messageObject);
+                  })}
+                  src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589874021/assets/ico-emoticon_3x.png"
+                  srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874021/assets/ico-emoticon_3x.png 1x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874021/assets/ico-emoticon_3x.png 2x
               "/>
-            </ImageButton>
-    
-            <ImageButton>
-              <img
-                src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png"
-                srcSet="
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 2x,
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
+              </ImageButton>
+              <ImageButton>
+                <img
+                  onTouchEnd={() => this.setState({ mode: 'text' }, () => {
+                    // const e = letsee.getEntity('assets/bts.json');
+                    // e.removeRenderable(this.messageObject);
+                  })}
+                  src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-text_3x.png"
+                  srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-text_3x.png 1x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-text_3x.png 2x
               "/>
-            </ImageButton>
+              </ImageButton>
+            </BottomActionsAddContent>
           </BottomActionsContainer>,
 
           messagePrivacyOpen && (
@@ -817,7 +861,8 @@ class MessageForm extends Component {
             />
           ) : null,
         ]}
-
+        
+        //
         {mode === 'emoji' && (
           <Transition
             in={mode === 'emoji'}
