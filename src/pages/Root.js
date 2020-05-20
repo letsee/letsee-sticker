@@ -17,6 +17,9 @@ import {
   selectSticker,
   deselectSticker,
   resetSticker,
+  undoSticker,
+  zoomInSticker,
+  zoomOutSticker,
   deleteSticker,
   addSticker,
   openTransformationGuide,
@@ -121,10 +124,15 @@ const Root = (
           onTextInput={value => dispatch(addSticker(value, 'text', entityTracked))}
           onEmojiInput={value => dispatch(addSticker(value, 'emoji', entityTracked))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
-          onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onDelete={onDelete}
           onTipClick={() => dispatch(openTransformationGuide())}
           onHelpClick={() => dispatch(openHelp())}
+          onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
+          onZoomIn={() => selectedStickerData && dispatch(zoomInSticker(selectedStickerData.id))}
+          onZoomOut={() => selectedStickerData && dispatch(zoomOutSticker(selectedStickerData.id))}
+          // TODO : UNDO 기능 적용
+          onUndo={() => selectedStickerData && dispatch(undoSticker(selectedStickerData.id))}
+
         />
       </div>
     );

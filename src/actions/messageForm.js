@@ -70,6 +70,9 @@ export const ADD_STICKER: 'ADD_STICKER' = 'ADD_STICKER';
 export const DELETE_STICKER: 'DELETE_STICKER' = 'DELETE_STICKER';
 export const RESET_STICKER: 'RESET_STICKER' = 'RESET_STICKER';
 export const TRANSFORM_STICKER: 'TRANSFORM_STICKER' = 'TRANSFORM_STICKER';
+export const ZOOM_IN_STICKER: 'ZOOM_IN_STICKER' = 'ZOOM_IN_STICKER';
+export const ZOOM_OUT_STICKER: 'ZOOM_OUT_STICKER' = 'ZOOM_OUT_STICKER';
+export const UNDO_STICKER: 'UNDO_STICKER' = 'UNDO_STICKER';
 
 export const addSticker = (
   text: string,
@@ -94,6 +97,27 @@ export const deleteSticker = (id: string) => ({
 
 export const resetSticker = (id: string) => ({
   type: RESET_STICKER,
+  payload: {
+    id,
+  },
+});
+
+export const zoomInSticker = (id: string) => ({
+  type: ZOOM_IN_STICKER,
+  payload: {
+    id,
+  },
+});
+
+export const zoomOutSticker = (id: string) => ({
+  type: ZOOM_OUT_STICKER,
+  payload: {
+    id,
+  },
+});
+
+export const undoSticker = (id: string) => ({
+  type: UNDO_STICKER,
   payload: {
     id,
   },

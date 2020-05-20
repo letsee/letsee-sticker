@@ -189,6 +189,9 @@ type MessageFormPropTypes = {
   onTransformationComplete?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onReset?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onZoomIn?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onZoomOut?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onUndo?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onSubmit?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onHelpClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
@@ -657,6 +660,9 @@ class MessageForm extends Component {
       onHelpClick,
       onTipClick,
       onStickerTransform,
+      onZoomIn,
+      onZoomOut,
+      onUndo,
       ...other
     } = this.props;
 
@@ -683,6 +689,9 @@ class MessageForm extends Component {
             onTipClick={onTipClick}
             onDelete={onDelete}
             onReset={onReset}
+            onZoomIn={onZoomIn}
+            onZoomOut={onZoomOut}
+            onUndo={onUndo}
           />
         </div>
       );

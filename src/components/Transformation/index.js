@@ -52,6 +52,9 @@ const Transformation = ({
   onDelete,
   onReset,
   children,
+  onZoomIn,
+  onZoomOut,
+  onUndo,
   ...other
 }: TransformationPropTypes) => (
   <div {...other}>
@@ -63,9 +66,9 @@ const Transformation = ({
 
     <StickerActions>
       <StyledResetButton onClick={onReset} />
-      <ZoomInButton/>
-      <ZoomOutButton/>
-      <UndoButton/>
+      <ZoomInButton onClick={onZoomIn} />
+      <ZoomOutButton onClick={onZoomOut}/>
+      <UndoButton onClick={onUndo}/>
       <TrashButton onClick={onDelete} />
     </StickerActions>
 

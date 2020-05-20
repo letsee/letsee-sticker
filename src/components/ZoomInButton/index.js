@@ -11,7 +11,7 @@ const ZoomInButton = ({
     {...other}
   >
     <img
-      alt="Delete"
+      alt="ZoomIN"
       src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784131/assets/zoom-in_3x.png"
       srcSet="
         https://res.cloudinary.com/dkmjrt932/image/upload/v1589784131/assets/zoom-in_3x.png 2x,

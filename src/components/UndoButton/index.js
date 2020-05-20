@@ -11,7 +11,7 @@ const UndoButton = ({
     {...other}
   >
     <img
-      alt="Delete"
+      alt="Undo"
       src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn_undo_3x.png"
       srcSet="
         https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn_undo_3x.png 2x,

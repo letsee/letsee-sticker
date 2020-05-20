@@ -12,6 +12,9 @@ import {
   DELETE_STICKER,
   RESET_STICKER,
   TRANSFORM_STICKER,
+  ZOOM_IN_STICKER,
+  ZOOM_OUT_STICKER,
+  UNDO_STICKER
 } from '../actions';
 import type { MessageForm, MessageFormSticker } from '../types';
 
@@ -53,6 +56,39 @@ const sticker = (state: MessageFormSticker | null = null, action): MessageFormSt
         },
         scale: 1,
       };
+  
+    case ZOOM_IN_STICKER:
+      const zoomInScale  = state.scale + 0.2;
+      return {
+        ...state,
+        scale: zoomInScale,
+      };
+      
+    case ZOOM_OUT_STICKER:
+      const zoomOutScale = state.scale > 0.1 ? state.scale - 0.2 : 0.1;
+      return {
+        ...state,
+        scale: zoomOutScale,
+      };
+      
+    //TODO: 스티커 UNDO 기능 구현
+    case UNDO_STICKER:
+      return {
+        ...state,
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        quaternion: {
+          x: 0,
+          y: 0,
+          z: 0,
+          w: 1,
+        },
+        scale: 1,
+      };
+  
     case TRANSFORM_STICKER:
       if (state !== null) {
         return {
@@ -72,6 +108,9 @@ const stickersById = (state: { [id: string]: MessageFormSticker } = {}, action):
     case ADD_STICKER:
     case DELETE_STICKER:
     case RESET_STICKER:
+    case ZOOM_IN_STICKER:
+    case ZOOM_OUT_STICKER:
+    case UNDO_STICKER:
     case TRANSFORM_STICKER:
       return {
         ...state,
@@ -173,8 +212,17 @@ const messageForm = (state: MessageForm | null = null, action): MessageForm | nu
       return state;
     case ADD_STICKER:
     case DELETE_STICKER:
-    case RESET_STICKER:
     case TRANSFORM_STICKER:
+    case RESET_STICKER:
+    case ZOOM_IN_STICKER:
+    case ZOOM_OUT_STICKER:
+    case UNDO_STICKER:
+      // Action을 자식으로 전달하여 결과 처리된 결과 State를 불러온뒤 byId, allIds에 저장함.
+      // 해당 결과는 MessageForom의 stickers로 저장되어진다.
+      // 하위에는 또다른 state에 대해 (MessageFormState) 상태가 갱신되어진다.
+      // <구조>
+      // messageForm (MessageForm) => stickers => byId => ([id: string]: MessageFormSticker) => (MessageFormSticker) ||
+      // messageForm (MessageForm) => stickers => AllIds => [] (string)
       if (state !== null) {
         return {
           ...state,
