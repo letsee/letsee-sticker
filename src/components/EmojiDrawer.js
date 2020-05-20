@@ -72,12 +72,7 @@ const Emoji = styled.div`
   vertical-align: middle;
 `;
 
-const Cancel = styled.div`
-  position: absolute;
-  bottom: 5%;
-  margin-left: 50%;
-  transform: translateX(-50%);
-`;
+import { BottomButtonContainer } from './Container';
 
 type EmojiDrawerPropTypes = {
   onClick?: string => mixed, // eslint-disable-line react/require-default-props
@@ -178,7 +173,7 @@ class EmojiDrawer extends Component {
             />
           )}
         </Page>
-        <Cancel>
+        <BottomButtonContainer bottom="5%">
           <ImageButton
             imageWidth="60px"
             onClick={() => {
@@ -188,13 +183,12 @@ class EmojiDrawer extends Component {
             }}
           >
             <img
-              // onClick={onHelpClick}
               src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png"
               srcSet="
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x" />
           </ImageButton>
-        </Cancel>
+        </BottomButtonContainer>
       </Drawer>
     );
   }

@@ -7,7 +7,7 @@ import clamp from 'lodash/clamp';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import { ImageButton } from '../Button';
-import { BottomActionsContainer} from '../Container'
+import { BottomButtonContainer} from '../Container'
 import Frame from '../Frame';
 import Message from '../Message';
 import Spinner from '../Spinner';
@@ -390,7 +390,9 @@ class MessageList extends Component {
         {/*  </ImageButton>*/}
         {/*</Actions>*/}
         
-        <BottomActionsContainer>
+        <BottomButtonContainer
+          bottom="20px" marginItems="15px"
+          >
           <ImageButton
             onClick={onHelpClick}
           >
@@ -416,13 +418,13 @@ class MessageList extends Component {
         
           <ImageButton>
             <img
-              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png"
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_all_3x.png"
               srcSet="
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 2x,
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_all_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_all_3x.png 3x
               "/>
           </ImageButton>
-        </BottomActionsContainer>
+        </BottomButtonContainer>
   
         <MessagesButtonContainer>
           {dataExists && message !== null && current !== first && (

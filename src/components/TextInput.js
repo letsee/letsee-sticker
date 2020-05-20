@@ -2,22 +2,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Button from './Button';
+import Button, { ImageButton } from './Button';
 import { enableManager } from '../manager';
 
-const InputButton = Button.extend`
-  position: absolute;
-  top: 25px;
-  right: 0;
-  font-family: AppleSDGothicNeo, sans-serif;
-  font-size: 17px;
-  font-weight: bold;
-  letter-spacing: 0.4px;
-  text-align: center;
-  color: #fff;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
-  padding: 17px 16.5px
-`;
+// const InputButton = Button.extend`
+//   position: absolute;
+//   top: 25px;
+//   right: 0;
+//   font-family: AppleSDGothicNeo, sans-serif;
+//   font-size: 17px;
+//   font-weight: bold;
+//   letter-spacing: 0.4px;
+//   text-align: center;
+//   color: #fff;
+//   text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+//   padding: 17px 16.5px
+// `;
 
 const TextareaContainer = styled.div`
   position: absolute;
@@ -59,6 +59,8 @@ const Textarea = styled.textarea`
   }
 `;
 
+import { BottomButtonContainer } from './Container';
+
 type TextInputPropTypes = {
   entity: {
     uri: string,
@@ -71,6 +73,7 @@ type TextInputPropTypes = {
   entityTracked: boolean,
   onComplete?: string => mixed, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
+  onClose? : TouchEventHandler,
 };
 
 class TextInput extends Component {
@@ -132,6 +135,7 @@ class TextInput extends Component {
       entityTracked,
       onComplete,
       children,
+      onClose,
       ...other
     } = this.props;
 
@@ -150,10 +154,41 @@ class TextInput extends Component {
             onBlur={() => this.setState({ focus: false })}
           />
         </TextareaContainer>
-
-        <InputButton onClick={() => onComplete && onComplete(value.trim())}>
-          입력
-        </InputButton>
+        
+        {/*<InputButton onClick={() => onComplete && onComplete(value.trim())}>*/}
+        {/*  입력*/}
+        {/*</InputButton>*/}
+  
+        <BottomButtonContainer
+          bottom="5%"
+          marginItems="8px"
+        >
+          <ImageButton
+            imageWidth="60px"
+            onClick={() => {
+              if (this.props.onClose) {
+                this.props.onClose();
+              }
+            }}
+          >
+            <img
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png"
+              srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x" />
+          </ImageButton>
+  
+          <ImageButton
+            imageWidth="60px"
+            onClick={() => onComplete && onComplete(value.trim())}
+          >
+            <img
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-confirm_3x.png"
+              srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-confirm_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-confirm_3x.png 3x" />
+          </ImageButton>
+        </BottomButtonContainer>
       </div>
     );
   }
