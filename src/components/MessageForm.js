@@ -744,6 +744,7 @@ class MessageForm extends Component {
           <BottomActionsContainer key={3}>
             <ImageButton>
               <img
+                onClick={onHelpClick}
                 src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png"
                 srcSet="
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 2x,
@@ -762,7 +763,6 @@ class MessageForm extends Component {
   
             <ImageButton>
               <img
-                onClick={onHelpClick}
                 src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png"
                 srcSet="
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 2x,
@@ -862,7 +862,7 @@ class MessageForm extends Component {
           ) : null,
         ]}
         
-        //
+        
         {mode === 'emoji' && (
           <Transition
             in={mode === 'emoji'}

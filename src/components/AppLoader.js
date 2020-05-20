@@ -30,6 +30,7 @@ const TargetGuideText = styled.p`
   font-size: 18px;
   text-align: center;
   line-height: 1.4;
+  color: black
 `;
 
 const CopyrightText = styled.p`

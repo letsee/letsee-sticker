@@ -6,6 +6,7 @@ import Waypoint from 'react-waypoint';
 import chunk from 'lodash/chunk';
 import { getNEmojis, emojiListLength } from '../emojiList';
 import { enableManager } from '../manager';
+import { ImageButton } from './Button';
 
 const PER_PAGE = 200;
 
@@ -14,17 +15,21 @@ const Drawer = styled.div`
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  top: 0;
+  // bottom: 0;
   height: ${props => props.height}px;
   background-color: rgba(0, 0, 0, 0.7);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  padding-top: 30px;
+  // border-top-left-radius: 10px;
+  // border-top-right-radius: 10px;
+  padding-top: 20px;
+  // margin-top: 30px;
+  height: 100%;
+  
 `;
 
 const Page = styled.div`
   width: 100%;
-  height: 100%;
+  height: 80%;
   overflow-x: hidden;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
@@ -67,6 +72,13 @@ const Emoji = styled.div`
   vertical-align: middle;
 `;
 
+const Cancel = styled.div`
+  position: absolute;
+  bottom: 5%;
+  margin-left: 50%;
+  transform: translateX(-50%);
+`;
+
 type EmojiDrawerPropTypes = {
   onClick?: string => mixed, // eslint-disable-line react/require-default-props
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
@@ -88,7 +100,7 @@ class EmojiDrawer extends Component {
     enableManager(false);
 
     if (typeof window !== 'undefined' && window !== null) {
-      window.addEventListener('touchend', this.handleWindowClick);
+      // window.addEventListener('touchend', this.handleWindowClick);
       window.addEventListener('resize', this.handleWindowResize);
     }
   }
@@ -97,7 +109,7 @@ class EmojiDrawer extends Component {
     enableManager(true);
 
     if (typeof window !== 'undefined' && window !== null) {
-      window.removeEventListener('touchend', this.handleWindowClick);
+      // window.removeEventListener('touchend', this.handleWindowClick);
       window.removeEventListener('resize', this.handleWindowResize);
     }
   }
@@ -108,21 +120,22 @@ class EmojiDrawer extends Component {
     this.setState({ height: document.documentElement.clientHeight - 150 });
   };
 
-  handleWindowClick = (e: TouchEvent) => {
-    let target = e.target;
-
-    while (target !== document.body) {
-      if (target === this.drawer || target === null) {
-        return;
-      }
-
-      target = target.parentNode;
-    }
-
-    if (this.props.onClose) {
-      this.props.onClose(e);
-    }
-  };
+  // X버튼이 없었을 때 EmojiDrawer를 화면에서 지우는 부분 삭제
+  // handleWindowClick = (e: TouchEvent) => {
+  //   let target = e.target;
+  //
+  //   while (target !== document.body) {
+  //     if (target === this.drawer || target === null) {
+  //       return;
+  //     }
+  //
+  //     target = target.parentNode;
+  //   }
+  //
+  //   if (this.props.onClose) {
+  //     this.props.onClose(e);
+  //   }
+  // };
 
   drawer: HTMLDivElement;
 
@@ -165,6 +178,23 @@ class EmojiDrawer extends Component {
             />
           )}
         </Page>
+        <Cancel>
+          <ImageButton
+            imageWidth="60px"
+            onClick={() => {
+              if (this.props.onClose) {
+                this.props.onClose();
+              }
+            }}
+          >
+            <img
+              // onClick={onHelpClick}
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png"
+              srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x" />
+          </ImageButton>
+        </Cancel>
       </Drawer>
     );
   }

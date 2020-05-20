@@ -357,11 +357,13 @@ const Help = ({
           <font>5 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
   
-        <AbsoluteImage bottom="50px" left="100px"
-                       src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589616698/assets/ui-tutorials-2_3x.png"
+        <AbsoluteImage bottom="50px"
+                       left="50%"
+                       translateX="-50%"
+                       src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589942809/assets/ui-tutorials-2_3x.png"
                        srcSet="
-                       https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-2_3x.png 2x,
-                       https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-2_3x.png 3x
+                       https://res.cloudinary.com/dkmjrt932/image/upload/v1589942809/assets/ui-tutorials-2_3x.png 2x,
+                       https://res.cloudinary.com/dkmjrt932/image/upload/v1589942809/assets/ui-tutorials-2_3x.png 3x
                        "
                        alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
@@ -400,10 +402,10 @@ const Help = ({
         <AbsoluteImage bottom="50px"
                        left="50%"
                        translateX="-50%"
-                       src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589616698/assets/ui-tutorials-4_3x.png"
+                       src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589942809/assets/ui-tutorials-4_3x.png"
                        srcSet="
-                            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-4_3x.png 2x,
-                            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-4_3x.png 3x
+                            https://res.cloudinary.com/dkmjrt932/image/upload/v1589942809/assets/ui-tutorials-4_3x.png 2x,
+                            https://res.cloudinary.com/dkmjrt932/image/upload/v1589942809/assets/ui-tutorials-4_3x.png 3x
                         "
                        alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
