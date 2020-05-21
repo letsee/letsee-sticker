@@ -9,6 +9,8 @@ import ResetButton from '../ResetButton';
 import ZoomInButton from '../ZoomInButton';
 import ZoomOutButton from '../ZoomOutButton';
 import UndoButton from '../UndoButton';
+import { BottomButtonContainer } from '../Container';
+import { ImageButton } from '../Button';
 
 const NavTopRight = styled.div`
   position: absolute;
@@ -58,9 +60,9 @@ const Transformation = ({
   ...other
 }: TransformationPropTypes) => (
   <div {...other}>
-    <NavTopRight>
-      <CompleteButton onClick={onComplete} />
-    </NavTopRight>
+    {/*<NavTopRight>*/}
+    {/*  <CompleteButton onClick={onComplete} />*/}
+    {/*</NavTopRight>*/}
 
     <StyledTipButton onClick={onTipClick} />
 
@@ -71,6 +73,33 @@ const Transformation = ({
       <UndoButton onClick={onUndo}/>
       <TrashButton onClick={onDelete} />
     </StickerActions>
+  
+    <BottomButtonContainer
+      bottom="5%"
+      marginItems="8px"
+    >
+      <ImageButton
+        imageWidth="60px"
+        onClick={onDelete}
+      >
+        <img
+          src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png"
+          srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x" />
+      </ImageButton>
+    
+      <ImageButton
+        imageWidth="60px"
+        onClick={onComplete}
+      >
+        <img
+          src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-confirm_3x.png"
+          srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-confirm_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-confirm_3x.png 3x" />
+      </ImageButton>
+    </BottomButtonContainer>
 
     {children}
   </div>

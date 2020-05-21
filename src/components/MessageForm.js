@@ -10,6 +10,8 @@ import CloseButton from './CloseButton';
 import CompleteButton from './CompleteButton';
 import HelpButton from './HelpButton';
 import TipButton from './TipButton';
+import SaveButton from './SaveButton';
+import DisabledSaveButton from './DisabledSaveButton';
 import EmojiDrawer from './EmojiDrawer';
 import Frame from './Frame';
 import TargetGuide from './TargetGuide';
@@ -44,11 +46,11 @@ const transitionStyles = {
   },
 };
 
-const NavTopLeft = styled.div`
-  position: absolute;
-  top: 25px;
-  left: 0;
-`;
+// const NavTopLeft = styled.div`
+//   position: absolute;
+//   top: 25px;
+//   left: 0;
+// `;
 
 const NavTopCenter = styled.div`
   position: absolute;
@@ -71,11 +73,11 @@ const NavTopRight = styled.div`
   right: 0;
 `;
 
-const NavBottomRight = styled.div`
-  position: absolute;
-  bottom: 139px;
-  right: 4px;
-`;
+// const NavBottomRight = styled.div`
+//   position: absolute;
+//   bottom: 139px;
+//   right: 4px;
+// `;
 
 const AddTextButtonAR = styled(AddTextButton)`
   display: inline-block;
@@ -111,9 +113,9 @@ const StickerFrame = styled(Frame)`
   }
 `;
 
-const StyledAddTextButton = styled(AddTextButton)`
-  margin-top: 6px;
-`;
+// const StyledAddTextButton = styled(AddTextButton)`
+//   margin-top: 6px;
+// `;
 
 const TrackMessage = styled.div`
   position: absolute;
@@ -168,14 +170,26 @@ const BottomActionsAddContent = styled.div`
   background-image : url('https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-background_3x.png');
   background-repeat : no-repeat;
   background-size : cover;
-  width: 180px;
-  height: 80px;
+  width: 133px;
+  height: 61px;
   
   img {
-    width: 75px;
-    height: 75px;
+    width: 55px;
+    height: 55px;
+    padding-bottom: 3px;
   }
-  
+`;
+
+const StyledSaveButton = styled(SaveButton)`
+  position: absolute;
+  bottom: 84px;
+  right: 3%;
+`;
+
+const StyledDisabledSaveButton = styled(DisabledSaveButton)`
+  position: absolute;
+  bottom: 84px;
+  right: 3%;
 `;
 
 type MessageFormPropTypes = {
@@ -309,7 +323,9 @@ class MessageForm extends Component {
         }
       }
     }
-
+    
+    // 스티커가 하나도 없을 때 동작된다.
+    // 최종적으로 messageObject에 스티커가 없을때 보여줄 증강 화면에대한 DomRenderable을 추가한다.
     if (stickersArray.length === 0) {
       const buttonsTmp = document.createElement('template');
       const framesTmp = document.createElement('template');
@@ -370,6 +386,7 @@ class MessageForm extends Component {
       this.messageObject.add(buttonsAR);
       this.messageObject.position.z = - 10;
     } else {
+      // 스티커가 1개 이상 있을때
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale } = stickersArray[i];
         const selected = selectedSticker && selectedSticker.id === id;
@@ -675,9 +692,9 @@ class MessageForm extends Component {
     } = data;
 
     const nextDisabled = stickers.allIds.length === 0 || submitting;
-
-    // TransformGuide에 대한 props가 켜졌을때, 해당 TransformGuide를 보여주는
-    // 조건부 렌더링 컴포넌트이다.
+    const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
+    
+    // 입력할 스티커를 선택하고, 이동할 AR컨텐츠를 touch제스쳐로 이동시킬수 있을때의 화면을 나타낸다.
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
       this.selectedStickerObject.uuid === selectedSticker.id
@@ -730,12 +747,12 @@ class MessageForm extends Component {
           //   <CloseButton onClick={onClose} />
           // </NavTopLeft>,
 
-          <NavTopRight key={1}>
-            <CompleteButton
-              onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
-              disabled={nextDisabled}
-            />
-          </NavTopRight>,
+          // <NavTopRight key={1}>
+          //   <CompleteButton
+          //     onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
+          //     disabled={nextDisabled}
+          //   />
+          // </NavTopRight>,
 
           // 우측 하단 이모지, Text 버튼 삭제
           // <NavBottomRight key={3}>
@@ -812,8 +829,8 @@ class MessageForm extends Component {
                 })}
                 src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589874021/assets/ico-emoticon_3x.png"
                 srcSet="
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874021/assets/ico-emoticon_3x.png 1x,
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874021/assets/ico-emoticon_3x.png 2x
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874021/assets/ico-emoticon_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874021/assets/ico-emoticon_3x.png 3x
               "/>
             </ImageButton>
             <ImageButton>
@@ -824,16 +841,17 @@ class MessageForm extends Component {
                 })}
                 src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-text_3x.png"
                 srcSet="
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-text_3x.png 1x,
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-text_3x.png 2x
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-text_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589874022/assets/ico-text_3x.png 3x
               "/>
             </ImageButton>
-          </BottomActionsAddContent>
-          ,
-
+          </BottomActionsAddContent>,
+          (stickersArray.length === 0) ? <StyledDisabledSaveButton key={5}/>: <StyledSaveButton key={6}/>,
+          
+          
           messagePrivacyOpen && (
             <MessagePrivacy
-              key={5}
+              key={7}
               error={error}
               submitting={submitting}
               entity={entity}
@@ -842,9 +860,9 @@ class MessageForm extends Component {
               onSubmit={onSubmit}
               onClose={() => this.setState({ messagePrivacyOpen: false })}
             />
-          ),
+          )
         ]}
-
+        {/*Entity가 Tracking 중이지 않을때 아래 가이드가 나와야 하지만 현재 entityTracked가 false일때 이벤트가 전달되지 않아서 동작하지 않음*/}
         {mode === 'default' && !entityTracked && [
           <NavTopCenter key={0}>
             스티커 만드는 중
@@ -871,12 +889,12 @@ class MessageForm extends Component {
           //   <CloseButton onClick={onClose} />
           // </NavTopLeft>,
 
-          <NavTopRight key={3}>
-            <CompleteButton
-              onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
-              disabled={nextDisabled}
-            />
-          </NavTopRight>,
+          // <NavTopRight key={3}>
+          //   <CompleteButton
+          //     onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
+          //     disabled={nextDisabled}
+          //   />
+          // </NavTopRight>,
 
           <StyledTipButton key={4} onClick={onTipClick} />,
 
