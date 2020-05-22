@@ -198,6 +198,19 @@ const StyledDisabledSaveButton = styled(DisabledSaveButton)`
   right: 3%;
 `;
 
+const InitialFrame = styled.div`
+  width: 140px;
+  height: 140px;
+  border: 1px solid #34A5AF;
+  border-radius: 15px;
+`;
+
+const InitialText = styled.div`
+  text-align: center;
+  font-size: 10px;
+  color: white;
+`;
+
 type MessageFormPropTypes = {
   data: MessageFormType,
   selectedSticker: MessageFormSticker | null,
@@ -302,6 +315,7 @@ class MessageForm extends Component {
   props: MessageFormPropTypes;
   press: boolean;
 
+  // 스티커에 표시될 DOMRenderable(AR)에 대한 화면을 표현하는 함수.
   renderAR({ data: { entity: { uri, size }, stickers }, selectedSticker }: MessageFormPropTypes) {
     if (this.state.mode !== 'default') {
       return;
@@ -336,74 +350,91 @@ class MessageForm extends Component {
         }
       }
     }
-    
-    // 스티커가 하나도 없을 때 동작된다.
-    // 최종적으로 messageObject에 스티커가 없을때 보여줄 증강 화면에대한 DomRenderable을 추가한다.
+  
+    /**
+     * 맨 처음 스티커을 등록하기전에 표시할 AR 화면을 만들고 이를 증강시켜 줌. (stickerArray가 0일때)
+     * 최종적으로 messageObject에 스티커가 없을때 보여줄 증강 화면에 대한 DomRenderable을 추가함.
+     */
     if (stickersArray.length === 0) {
-      const buttonsTmp = document.createElement('template');
-      const framesTmp = document.createElement('template');
-
-      buttonsTmp.innerHTML = renderToString(
-        <div>
-          <AddEmojiButtonAR size={diagonal} />
-          <AddTextButtonAR size={diagonal} />
-        </div>,
-      );
-
-      framesTmp.innerHTML = renderToString(
-        <div>
-          <FrameAR
-            width={140}
-            height={140}
-            vertical={0}
-            horizontal={0}
-            white
-          />
-        </div>,
-      );
-
-      const buttonsElem = buttonsTmp.content.firstChild;
-      const framesElem = framesTmp.content.firstChild;
-
-      const addEmojiButton = buttonsElem.querySelectorAll('button')[0];
-      const addTextButton = buttonsElem.querySelectorAll('button')[1];
+      // const buttonsTmp = document.createElement('template');
+      // buttonsTmp.innerHTML = renderToString(
+      //   <div>
+      //     <AddEmojiButtonAR size={diagonal} />
+      //     <AddTextButtonAR size={diagonal} />
+      //   </div>,
+      // );
+      // const addEmojiButton = buttonsElem.querySelectorAll('button')[0];
+      // const addTextButton = buttonsElem.querySelectorAll('button')[1];
+      // //TODO: 버튼이벤트가 동작하지 않음.. z-index로 가려지는 현상..
+      // addEmojiButton.addEventListener('click', () => {
+      //   this.setState({ mode: 'emoji' }, () => {
+      //     entity.removeRenderable(this.messageObject);
+      //   });
+      // });
+      //
+      // addTextButton.addEventListener('click', () => {
+      //   this.setState({ mode: 'text' }, () => {
+      //     entity.removeRenderable(this.messageObject);
+      //   });
+      // });
+      // const buttonsAR = new letsee.DOMRenderable(buttonsElem);
+      // if (realDiagonal !== diagonal) {
+      //   buttonsAR.scale.setScalar(realToClamped);
+      // }
+      // const buttonsElem = buttonsTmp.content.firstChild;
+      // buttonsAR.position.setZ(10);
+      // this.messageObject.add(buttonsAR);
       
-      //TODO: 버튼이벤트가 동작하지 않음.. z-index로 가려지는 현상..
-      addEmojiButton.addEventListener('click', () => {
-        this.setState({ mode: 'emoji' }, () => {
-          entity.removeRenderable(this.messageObject);
-        });
-      });
-
-      addTextButton.addEventListener('click', () => {
-        this.setState({ mode: 'text' }, () => {
-          entity.removeRenderable(this.messageObject);
-        });
-      });
-
-      const buttonsAR = new letsee.DOMRenderable(buttonsElem);
-      const framesAR = new letsee.DOMRenderable(framesElem);
-
-      if (realDiagonal !== diagonal) {
-        buttonsAR.scale.setScalar(realToClamped);
-      }
+      // Frame을 messageObject에 추가
+      const frameTmp = document.createElement('template');
+      frameTmp.innerHTML = renderToString(
+        <div>
+          {/*<FrameAR*/}
+          {/*  width={140}*/}
+          {/*  height={140}*/}
+          {/*  vertical={0}*/}
+          {/*  horizontal={0}*/}
+          {/*  white*/}
+          {/*/>*/}
+          <InitialFrame/>
+        </div>,
+      );
+      const frameElem = frameTmp.content.firstChild;
+      const frameAR = new letsee.DOMRenderable(frameElem);
 
       if (typeof depth !== 'undefined' && depth !== null) {
         // framesAR.position.setZ(depth / 2);
         // buttonsAR.position.setZ(depth / 2);
-        framesAR.position.setZ(10);
-        buttonsAR.position.setZ(10);
+        frameAR.position.setZ(10);
       }
-
-      this.messageObject.add(framesAR);
-      this.messageObject.add(buttonsAR);
+      this.messageObject.add(frameAR);
+  
+      // TEXT를 messageObject에 추가
+      const textTmp = document.createElement('template');
+      textTmp.innerHTML = renderToString(
+        <InitialText>
+          <div>
+            추가하고 싶은 <br/>
+            이모티콘 또는 텍스트 스티커를 <br/>
+            선택해 주세요.
+          </div>
+        </InitialText>
+      );
+      
+      const textElem = textTmp.content.firstChild;
+      const textAR = new letsee.DOMRenderable(textElem)
+      this.messageObject.add(textAR)
+      
       this.messageObject.position.z = - 10;
+      
     } else {
-      // 스티커가 1개 이상 있을때:
-      // 각각의 StickerArray에 대해서 수행됨.
-      // 현재 저장되어있는 messageObject를 순회하여 해당 id을 조회하고 해당 id가 없을시 messageObject에 새로운 DOMRenderable(obj)을 삽입시켜준다. (obj로 선언)
-      // selected : 현재 StickerArray에서 가져온 Sticker가 이미 존재하고 있는 아이인지 판단함 (root에서 선언한 SelectedStickerData를 참조함)
-      // selectedStickerObject : 우리가 계속 handle하는 DomRenderable로 스티커를 입력하게되면 null로 바뀌기 때문에 selected값에서 찾아오지 못함.
+      /**
+       * 스티커가 1개 이상 있을때:
+       * 각각의 StickerArray에 대해서 수행됨.
+       * 현재 저장되어있는 messageObject를 순회하여 해당 id을 조회하고 해당 id가 없을시 messageObject에 새로운 DOMRenderable(obj)을 삽입시켜준다. (obj로 선언)
+       * selected : 현재 StickerArray에서 가져온 Sticker가 이미 존재하고 있는 아이인지 판단함 (root에서 선언한 SelectedStickerData를 참조함)
+       * selectedStickerObject : 우리가 계속 handle하는 DomRenderable로 스티커를 입력하게되면 null로 바뀌기 때문에 selected값에서 찾아오지 못함.
+       */
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale } = stickersArray[i];
         // selectedSticker
@@ -881,8 +912,18 @@ class MessageForm extends Component {
           <Transformation
             onComplete={onTransformationComplete}
             onTipClick={onTipClick}
-            onDelete={onDelete}
-            onReset={onReset}
+            onDelete={() => {
+              this.setState({
+                currentStickerPosArray: [],
+              });
+              onDelete();
+            }}
+            onReset={() => {
+              this.setState({
+                currentStickerPosArray: [],
+              });
+              onReset();
+            }}
             onZoomIn={() => {
               this.debouncedAddStickerPos(ZOOM_IN);
               onZoomIn();

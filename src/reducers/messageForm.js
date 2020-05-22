@@ -92,7 +92,6 @@ const stickersById = (state: { [id: string]: MessageFormSticker } = {}, action):
     case RESET_STICKER:
     case ZOOM_IN_STICKER:
     case ZOOM_OUT_STICKER:
-    case UNDO_STICKER:
     case TRANSFORM_STICKER:
       return {
         ...state,
@@ -198,7 +197,6 @@ const messageForm = (state: MessageForm | null = null, action): MessageForm | nu
     case RESET_STICKER:
     case ZOOM_IN_STICKER:
     case ZOOM_OUT_STICKER:
-    case UNDO_STICKER:
       // Action을 자식으로 전달하여 결과 처리된 결과 State를 불러온뒤 byId, allIds에 저장함.
       // 해당 결과는 MessageForom의 stickers로 저장되어진다.
       // 하위에는 또다른 state에 대해 (MessageFormState) 상태가 갱신되어진다.
