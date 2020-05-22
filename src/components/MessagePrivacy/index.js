@@ -186,11 +186,7 @@ class MessagePrivacy extends Component {
           >
             <ImageButton
               imageWidth="60px"
-              onClick={() => {
-                if (this.props.onClose) {
-                  this.props.onClose();
-                }
-              }}
+              onClick={submitting ? null : onClose}
             >
               <img
                 src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png"
@@ -201,7 +197,7 @@ class MessagePrivacy extends Component {
     
             <ImageButton
               imageWidth="60px"
-              onClick={() => onComplete && onComplete(value.trim())}
+              onClick={submitting ? null : onSubmit}
             >
               <img
                 src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-confirm_3x.png"

@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CloseButton from '../CloseButton';
-import Button from '../Button';
+import Button, { ImageButton } from '../Button';
+import { BottomButtonContainer } from '../Container';
 
 const Container = styled.div`
   position: absolute;
@@ -14,22 +15,22 @@ const Container = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 `;
 
-const Body = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.4);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-`;
+// const Body = styled.div`
+//   position: absolute;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+//   background-color: rgba(255, 255, 255, 0.9);
+//   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.4);
+//   border-top-left-radius: 10px;
+//   border-top-right-radius: 10px;
+// `;
 
 const Title = styled.div`
   font-family: AppleSDGothicNeo, sans-serif;
   text-align: center;
-  color: #000;
-  font-size: 18px;
+  color: white;
+  font-size: 24px;
   font-weight: bold;
   letter-spacing: -0.5px;
   padding-top: 24px;
@@ -38,14 +39,14 @@ const Title = styled.div`
 const Subtitle = styled.div`
   font-family: AppleSDGothicNeo, sans-serif;
   text-align: center;
-  margin-top: 7px;
-  font-size: 13px;
+  margin-top: 20px;
+  font-size: 16px;
   letter-spacing: -0.5px;
-  color: rgba(0, 0, 0, 0.7);
+  color: #cccccc;
+  margin-bottom: 40px;
 `;
 
 const Actions = styled.div`
-  margin-top: 19px;
   text-align: center;
 `;
 
@@ -60,17 +61,28 @@ const Action = Button.extend`
 const ActionImage = styled.img`
   display: block;
   margin: 0 auto;
-  margin-bottom: 7px;
+  margin-bottom: 5px;
 `;
 
 const ActionText = styled.div`
   text-align: center;
-  font-size: 11px;
-  color: #000;
+  font-size: 12px;
+  color: white;
 `;
 
 const StyledCloseButton = styled(CloseButton)`
   margin: 8px auto 0 auto;
+`;
+
+const Divider = styled.div`
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 0;
+  opacity: 0.44;
+  border: solid 1px #707070;
+  margin-top: 21px;
+  margin-bottom: 21px;
 `;
 
 type ShareModalPropTypes = {
@@ -122,47 +134,99 @@ class ShareModal extends Component {
     } = this.props;
 
     return (
-      <Container {...other}>
-        <Body innerRef={(body) => { this.body = body; }}>
-          <Title>이 스티커를 친구와 공유하기</Title>
-          <Subtitle>화면 캡쳐 또는 카카오톡 링크로 공유 할 수 있습니다</Subtitle>
-
-          <Actions>
-            <Action
-              type="button"
-              onClick={onCaptureClick}
-            >
-              <ActionImage
-                src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1503282193/assets/btn-screen-share_3x.png"
-                srcSet="
-                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1503282193/assets/btn-screen-share_3x.png 2x,
-                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1503282193/assets/btn-screen-share_3x.png 3x
+      <Container {...other} innerRef={(body) => { this.body = body; }}>>
+        {/*<Body innerRef={(body) => { this.body = body; }}>*/}
+        <Title>스티커 공유하기</Title>
+        <Subtitle>
+          화면 캡쳐 또는 SNS로 <br/>
+          카카오톡 링크로 공유 할 수 있습니다
+        </Subtitle>
+  
+        <Actions>
+          <Action
+            type="button"
+            onClick={onCaptureClick}
+          >
+            <ActionImage
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-capture_3x.png"
+              srcSet="
+                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-capture_3x.png 2x,
+                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-capture_3x.png 3x
                 "
-                alt="화면 캡쳐"
-              />
-
-              <ActionText>화면 캡쳐</ActionText>
-            </Action>
-
-            <Action
-              type="button"
-              onClick={onKakaoLinkClick}
-            >
-              <ActionImage
-                src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_54,q_auto/v1503282193/assets/btn-link-share_3x.png"
-                srcSet="
-                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_108,q_auto/v1503282193/assets/btn-link-share_3x.png 2x,
-                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_162,q_auto/v1503282193/assets/btn-link-share_3x.png 3x
+              alt="화면 캡쳐"
+            />
+      
+            <ActionText>화면 캡쳐</ActionText>
+          </Action>
+        </Actions>
+        
+        <Divider/>
+        
+        <Actions>
+          <Action
+            type="button"
+            onClick={onKakaoLinkClick}
+          >
+            <ActionImage
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-kakao_3x.png"
+              srcSet="
+                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-kakao_3x.png 2x,
+                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-kakao_3x.png 3x
                 "
-                alt="카카오톡 링크"
-              />
-
-              <ActionText>카카오톡 링크</ActionText>
-            </Action>
-          </Actions>
-
-          <StyledCloseButton color="black" onClick={onClose} />
-        </Body>
+              alt="카카오톡"
+            />
+    
+            <ActionText>카카오톡</ActionText>
+          </Action>
+  
+          <Action
+            type="button"
+            onClick={onKakaoLinkClick}
+          >
+            <ActionImage
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-insta_3x.png"
+              srcSet="
+                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-insta_3x.png 2x,
+                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-insta_3x.png 3x
+                "
+              alt="인스타그램"
+            />
+    
+            <ActionText>인스타그램</ActionText>
+          </Action>
+  
+          <Action
+            type="button"
+            onClick={onKakaoLinkClick}
+          >
+            <ActionImage
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-twitter_3x.png"
+              srcSet="
+                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-twitter_3x.png 2x,
+                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-twitter_3x.png 3x
+                "
+              alt="트위터"
+            />
+    
+            <ActionText>트위터</ActionText>
+          </Action>
+        </Actions>
+  
+        <BottomButtonContainer bottom="25px">
+          <ImageButton
+            imageWidth="60px"
+            onClick={onClose}
+          >
+            <img
+              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png"
+              srcSet="
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x" />
+          </ImageButton>
+        </BottomButtonContainer>
+  
+        {/*<StyledCloseButton color="black" onClick={onClose} />*/}
+        {/*</Body>*/}
       </Container>
     );
   }
