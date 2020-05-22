@@ -255,10 +255,10 @@ const Help = ({
       {/*튜토리얼 1*/}
       <Page>
         <Image
-          src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/tutorial-pic-1_3x.png"
+          src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590129895/assets/tutorial-pic-1-gif_3x.gif"
           srcSet="
-            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/tutorial-pic-1_3x.png 2x,
-            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/tutorial-pic-1_3x.png 3x
+            https://res.cloudinary.com/dkmjrt932/image/upload/v1590129895/assets/tutorial-pic-1-gif_3x.gif 2x,
+            https://res.cloudinary.com/dkmjrt932/image/upload/v1590129895/assets/tutorial-pic-1-gif_3x.gif 3x
           "
           alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
@@ -285,10 +285,10 @@ const Help = ({
       {/*튜토리얼 2*/}
       <Page>
         <Image
-          src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/tutorial-pic-2_3x.png"
+          src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590129895/assets/tutorial-pic-2-gif_3x.gif"
           srcSet="
-            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/tutorial-pic-2_3x.png 2x,
-            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/tutorial-pic-2_3x.png 3x
+            https://res.cloudinary.com/dkmjrt932/image/upload/v1590129895/assets/tutorial-pic-2-gif_3x.gif 2x,
+            https://res.cloudinary.com/dkmjrt932/image/upload/v1590129895/assets/tutorial-pic-2-gif_3x.gif 3x
           "
           alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
@@ -310,10 +310,10 @@ const Help = ({
       {/*튜토리얼 3*/}
       <Page>
         <Image
-          src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/tutorial-pic-3_3x.png"
+          src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590129895/assets/tutorial-pic-3-gif_3x.gif"
           srcSet="
-            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/tutorial-pic-3_3x.png 2x,
-            https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/tutorial-pic-3_3x.png 3x
+            https://res.cloudinary.com/dkmjrt932/image/upload/v1590129895/assets/tutorial-pic-3-gif_3x.gif 2x,
+            https://res.cloudinary.com/dkmjrt932/image/upload/v1590129895/assets/tutorial-pic-3-gif_3x.gif 3x
           "
           alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
@@ -441,10 +441,10 @@ const Help = ({
         </NextTutorialButton>
     
         <Image
-           src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589616698/assets/ui-tutorials-6_3x.png"
+           src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590129897/assets/ui-tutorials-6-gif_3x.gif"
            srcSet="
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-6_3x.png 2x,
-                https://res.cloudinary.com/dkmjrt932/image/upload/v1589609849/assets/ui-tutorials-6_3x.png 3x
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1590129897/assets/ui-tutorials-6-gif_3x.gif 2x,
+                https://res.cloudinary.com/dkmjrt932/image/upload/v1590129897/assets/ui-tutorials-6-gif_3x.gif 3x
             "
            alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
