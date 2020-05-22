@@ -1003,7 +1003,7 @@ class MessageForm extends Component {
           //   onClick={onTipClick}
           // />,
           
-          // 하단 버튼에 대한 컨테이너를 추가한다.
+          // 하단 버튼들에 대한 컨테이너를 추가
           <BottomButtonContainer
             bottom="20px"
             marginItems="15px"
@@ -1070,8 +1070,10 @@ class MessageForm extends Component {
               "/>
             </ImageButton>
           </BottomActionsAddContent>,
-          (stickersArray.length === 0) ? <StyledDisabledSaveButton key={5}/>: <StyledSaveButton key={6}/>,
-          
+       
+          // 우측 하단의 남기기버튼
+          // 현재 추가한 스티커의 갯수를 확인하여 남긴 스티커가 있을때에만 활성화 버튼을 표시함.
+          (stickersArray.length === 0) ? <StyledDisabledSaveButton key={5}/>: <StyledSaveButton key={6} onClick={() => this.setState({ messagePrivacyOpen: true })}/>,
           
           messagePrivacyOpen && (
             <MessagePrivacy
