@@ -71,24 +71,6 @@ const sticker = (state: MessageFormSticker | null = null, action): MessageFormSt
         scale: zoomOutScale,
       };
       
-    //TODO: 스티커 UNDO 기능 구현
-    case UNDO_STICKER:
-      return {
-        ...state,
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        quaternion: {
-          x: 0,
-          y: 0,
-          z: 0,
-          w: 1,
-        },
-        scale: 1,
-      };
-  
     case TRANSFORM_STICKER:
       if (state !== null) {
         return {

@@ -87,6 +87,9 @@ const Root = (
     else
       entityTracked = false;
     
+    // selectedSticker로부터 값을 전달받아 해당 Sticker에 대한 MessageFormSticker형식을 만들어서 MessageForm으로 전달해주거나
+    // id값을 통해 SelectedSticker을 MessageForm 리듀서에서 삭제시켜준다.
+    // selectedSticker는 ADD_STCIKER Action이 dispatch 되면 자동으로 생성된다.
     const selectedStickerData = selectedSticker === null ? null : (stickers.byId[selectedSticker] || null);
     // 스티커의 상태를 저장하는 이중 arrow function이 동작하지 않아 단일 arrow function으로 바꾸었더니
     // onStickerTransForm이 정상적으로 호출됨.
@@ -131,8 +134,6 @@ const Root = (
           onZoomIn={() => selectedStickerData && dispatch(zoomInSticker(selectedStickerData.id))}
           onZoomOut={() => selectedStickerData && dispatch(zoomOutSticker(selectedStickerData.id))}
           // TODO : UNDO 기능 적용
-          onUndo={() => selectedStickerData && dispatch(undoSticker(selectedStickerData.id))}
-
         />
       </div>
     );

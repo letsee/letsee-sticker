@@ -23,6 +23,7 @@ import manager from '../manager';
 import getObjectById from '../getObjectById';
 import { ImageButton } from './Button';
 import { BottomButtonContainer} from './Container'
+import debounce from 'lodash/debounce';
 
 import {
   MAX_DIAGONAL,
@@ -45,6 +46,11 @@ const transitionStyles = {
     transition: `opacity ${transitionDuration}ms ease, transform ${transitionDuration}ms ease`,
   },
 };
+
+// STICKER pos array 매개변수 타
+const TRANSFORM: 'TRANSFORM' = 'TRANSFORM';
+const ZOOM_IN: 'ZOOM_IN' = 'ZOOM_IN';
+const ZOOM_OUT: 'ZOOM_OUT' = 'ZOOM_OUT';
 
 // const NavTopLeft = styled.div`
 //   position: absolute;
@@ -205,7 +211,6 @@ type MessageFormPropTypes = {
   onReset?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onZoomIn?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onZoomOut?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onUndo?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onSubmit?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onHelpClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
@@ -224,6 +229,7 @@ class MessageForm extends Component {
     this.state = {
       mode: 'default',
       messagePrivacyOpen: false,
+      currentStickerPosArray: [],
     };
 
     this.messageObject = new letsee.Object3D();
@@ -234,6 +240,10 @@ class MessageForm extends Component {
     this.translateZ = new letsee.DOMRenderable(tmp.content.firstChild);
     this.translateZ.rotateX(Math.PI / 2);
     this.press = false;
+  
+    // 100ms 안에 오는 이벤트는 모두 한번으로 처리함.
+    // 스티커의 Pos를 업데이트할수 있는 function을 debounce를 이용하여 선언함.
+    this.debouncedAddStickerPos = debounce(this.addStickerPos, 100);
   }
 
   state: {
@@ -276,6 +286,9 @@ class MessageForm extends Component {
     manager.off('rotateend', this.handleRotateEnd);
     manager.off('pressup', this.handlePressUp);
     manager.off('press', this.handlePress);
+  
+    // debounced 함수 해
+    this.debouncedAddStickerPos.cancel();
 
     const entity = letsee.getEntity('assets/bts.json');
     
@@ -386,9 +399,14 @@ class MessageForm extends Component {
       this.messageObject.add(buttonsAR);
       this.messageObject.position.z = - 10;
     } else {
-      // 스티커가 1개 이상 있을때
+      // 스티커가 1개 이상 있을때:
+      // 각각의 StickerArray에 대해서 수행됨.
+      // 현재 저장되어있는 messageObject를 순회하여 해당 id을 조회하고 해당 id가 없을시 messageObject에 새로운 DOMRenderable(obj)을 삽입시켜준다. (obj로 선언)
+      // selected : 현재 StickerArray에서 가져온 Sticker가 이미 존재하고 있는 아이인지 판단함 (root에서 선언한 SelectedStickerData를 참조함)
+      // selectedStickerObject : 우리가 계속 handle하는 DomRenderable로 스티커를 입력하게되면 null로 바뀌기 때문에 selected값에서 찾아오지 못함.
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale } = stickersArray[i];
+        // selectedSticker
         const selected = selectedSticker && selectedSticker.id === id;
         const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
         const objById = getObjectById(this.messageObject, id);
@@ -415,13 +433,14 @@ class MessageForm extends Component {
           element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
           element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
         }
-
+        // 선택된 Object라면 이동시 밝기값을 좀더 밝게 선언해준다.
         if (selectedSticker && !selected) {
           element.style.opacity = '0.3';
         } else {
           element.style.opacity = '0.9';
         }
 
+        // 증강된 스티커 클릭시 스티커 Select
         const onClick = () => {
           element.removeEventListener('click', onClick);
 
@@ -634,6 +653,7 @@ class MessageForm extends Component {
     }
   };
 
+  // 변경된 Sticker의 위치, 회전, 스케일을 저장 후 onStickerTransform 함수를 통해 Root로 해당 값을 전달한 뒤 Reducer에 Action을 Dispatch함.
   handleTransform = () => {
     const { width, height } = this.props.data.entity.size;
     const { position, quaternion, scale } = this.selectedStickerObject;
@@ -656,7 +676,165 @@ class MessageForm extends Component {
       },
       scale: scale.x / realToClamped,
     });
-  }
+  
+    this.debouncedAddStickerPos(TRANSFORM);
+  };
+  
+  // type => transform, zoomin, zoomout
+  addStickerPos = (type) => {
+    const { width, height } = this.props.data.entity.size;
+    const { position, quaternion, scale } = this.selectedStickerObject;
+    const realDiagonal = Math.sqrt((width * width) + (height * height));
+    const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
+    const realToClamped = realDiagonal / diagonal;
+    
+    const {currentStickerPosArray} = this.state;
+    
+    if (currentStickerPosArray.length  === 0) {
+      this.setState((prevState) => {
+        const initialStickerPos = {
+          position: {
+            x: 0,
+            y: 0,
+            z: 0,
+          },
+          quaternion: {
+            x: 0,
+            y: 0,
+            z: 0,
+            w: 0,
+          },
+          scale: 1,
+        };
+        
+        return {
+          currentStickerPosArray:
+            [...prevState.currentStickerPosArray,
+              initialStickerPos,
+              {
+                position: {
+                  x: position.x,
+                  y: position.y,
+                  z: position.z,
+                },
+                quaternion: {
+                  x: quaternion.x,
+                  y: quaternion.y,
+                  z: quaternion.z,
+                  w: quaternion.w,
+                },
+                scale: scale.x / realToClamped,
+              }
+            ]
+        }
+      });
+    }
+    
+    switch(type) {
+      case TRANSFORM :
+        this.setState((prevState) => {
+          return {
+            currentStickerPosArray:
+              [...prevState.currentStickerPosArray,
+                {
+                  position: {
+                    x: position.x,
+                    y: position.y,
+                    z: position.z,
+                  },
+                  quaternion: {
+                    x: quaternion.x,
+                    y: quaternion.y,
+                    z: quaternion.z,
+                    w: quaternion.w,
+                  },
+                  scale: scale.x / realToClamped,
+                }
+              ]
+          }
+        });
+        break;
+      case ZOOM_IN:
+        this.setState((prevState) => {
+          return {
+            currentStickerPosArray:
+              [...prevState.currentStickerPosArray,
+                {
+                  position: {
+                    x: position.x,
+                    y: position.y,
+                    z: position.z,
+                  },
+                  quaternion: {
+                    x: quaternion.x,
+                    y: quaternion.y,
+                    z: quaternion.z,
+                    w: quaternion.w,
+                  },
+                  scale: (scale.x / realToClamped) + 0.2,
+                }
+              ]
+          }
+        });
+        break;
+        
+      case ZOOM_OUT:
+        this.setState((prevState) => {
+          return {
+            currentStickerPosArray:
+              [...prevState.currentStickerPosArray,
+                {
+                  position: {
+                    x: position.x,
+                    y: position.y,
+                    z: position.z,
+                  },
+                  quaternion: {
+                    x: quaternion.x,
+                    y: quaternion.y,
+                    z: quaternion.z,
+                    w: quaternion.w,
+                  },
+                  scale: (scale.x / realToClamped) - 0.2,
+                }
+              ]
+          }
+        });
+        break;
+    }
+    console.warn(this.state.currentStickerPosArray);
+  };
+  
+  unDoStickerPos = () => {
+    const { currentStickerPosArray } = this.state;
+    const length = currentStickerPosArray.length;
+    // if (length > 0) {
+    if (length > 1) {
+      const pos = currentStickerPosArray[length - 2];
+      this.props.onStickerTransform(this.props.selectedSticker.id, {
+        position: {
+          x: pos.position.x,
+          y: pos.position.y,
+          z: pos.position.z,
+        },
+        quaternion: {
+          x: pos.quaternion.x,
+          y: pos.quaternion.y,
+          z: pos.quaternion.z,
+          w: pos.quaternion.w,
+        },
+        scale: pos.scale,
+      });
+      
+      this.setState((prevState) => {
+        return {
+          currentStickerPosArray: prevState.currentStickerPosArray.slice(0, length -1),
+        }
+      });
+      
+      console.warn(this.state.currentStickerPosArray);
+    }
+  };
 
   render() {
     const { mode, messagePrivacyOpen } = this.state;
@@ -679,7 +857,6 @@ class MessageForm extends Component {
       onStickerTransform,
       onZoomIn,
       onZoomOut,
-      onUndo,
       ...other
     } = this.props;
 
@@ -706,9 +883,15 @@ class MessageForm extends Component {
             onTipClick={onTipClick}
             onDelete={onDelete}
             onReset={onReset}
-            onZoomIn={onZoomIn}
-            onZoomOut={onZoomOut}
-            onUndo={onUndo}
+            onZoomIn={() => {
+              this.debouncedAddStickerPos(ZOOM_IN);
+              onZoomIn();
+            }}
+            onZoomOut={() => {
+              this.debouncedAddStickerPos(ZOOM_OUT);
+              onZoomOut();
+            }}
+            onUndo={this.unDoStickerPos}
           />
         </div>
       );

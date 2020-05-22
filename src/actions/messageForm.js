@@ -116,12 +116,6 @@ export const zoomOutSticker = (id: string) => ({
   },
 });
 
-export const undoSticker = (id: string) => ({
-  type: UNDO_STICKER,
-  payload: {
-    id,
-  },
-});
 
 export const transformSticker = (id: string, transform: {
   scale: number,
