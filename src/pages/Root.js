@@ -124,8 +124,9 @@ const Root = (
             }
           }}
           onStickerTransform={onStickerTransForm}
-          onTextInput={value => dispatch(addSticker(value, 'text', entityTracked))}
-          onEmojiInput={value => dispatch(addSticker(value, 'emoji', entityTracked))}
+          //TODO: 컬러값 삽입
+          onTextInput={value => dispatch(addSticker(value, 'text', entityTracked, '#AAFFCC'))}
+          onEmojiInput={value => dispatch(addSticker(value, 'emoji', entityTracked, ''))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
           onDelete={onDelete}
           onTipClick={() => dispatch(openTransformationGuide())}
@@ -133,7 +134,7 @@ const Root = (
           onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onZoomIn={() => selectedStickerData && dispatch(zoomInSticker(selectedStickerData.id))}
           onZoomOut={() => selectedStickerData && dispatch(zoomOutSticker(selectedStickerData.id))}
-          // TODO : UNDO 기능 적용
+          
         />
       </div>
     );

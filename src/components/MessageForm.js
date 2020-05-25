@@ -13,6 +13,7 @@ import TipButton from './TipButton';
 import SaveButton from './SaveButton';
 import DisabledSaveButton from './DisabledSaveButton';
 import EmojiDrawer from './EmojiDrawer';
+import ColorPicker from './ColorPicker';
 import Frame from './Frame';
 import TargetGuide from './TargetGuide';
 import TextInput from './TextInput';
@@ -241,8 +242,10 @@ class MessageForm extends Component {
 
     this.state = {
       mode: 'default',
+      isTextMode: false,
       messagePrivacyOpen: false,
       currentStickerPosArray: [],
+      selectedTextColor: '#ffffff',
     };
 
     this.messageObject = new letsee.Object3D();
@@ -323,6 +326,7 @@ class MessageForm extends Component {
 
     const entity = letsee.getEntity(`assets/bts.json`);
     const { width, height, depth } = size;
+    //
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
     let realDiagonal = MAX_DIAGONAL;
 
@@ -339,6 +343,9 @@ class MessageForm extends Component {
       entity.addRenderable(this.messageObject);
     }
 
+    // messageObject의 자식들을 조회해서 (IntialFrame, InitialText 등 messageObject에 자식으로 추가된 것들)
+    // 현재 등록되어 있는 모든 스티커들을 찾아서 스티커를 다시 추가하기전에 한번 지워주고 시작한다.
+    // messageObject에서만 지우는것이기 때문에 실제 화면에서는 지워지지 않는다.
     for (let i = this.messageObject.children.length; i >= 0; i -= 1) {
       const child = this.messageObject.children[i];
 
@@ -423,7 +430,7 @@ class MessageForm extends Component {
       
       const textElem = textTmp.content.firstChild;
       const textAR = new letsee.DOMRenderable(textElem)
-      this.messageObject.add(textAR)
+      this.messageObject.add(textAR);
       
       this.messageObject.position.z = - 10;
       
@@ -439,7 +446,12 @@ class MessageForm extends Component {
         const { id, type, text, position, quaternion, scale } = stickersArray[i];
         // selectedSticker
         const selected = selectedSticker && selectedSticker.id === id;
+        
+        // n: matches a line-feed (newline) character (라인 피드)
+        // r: matches a carriage return (캐리지 리턴)
+        // CR + LF => Enter 개행문자 => <br>태그로 바꿔줌.
         const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
+        // messageObject들 중에서 id로 검색후 해당 DomRenderable이 있는지 확인한다.
         const objById = getObjectById(this.messageObject, id);
         let element = document.createElement('div');
         let obj = new letsee.DOMRenderable(element);
@@ -448,21 +460,27 @@ class MessageForm extends Component {
           obj = objById;
           element = obj.element;
         } else {
+          // 기존에 없는 스티커라면 고유의 아이디를 지정후 messageObject에 삽입해준다.
           obj.uuid = id;
           this.messageObject.add(obj);
         }
-
+        
         element.className = styles[type];
-
+        
+        // 스티커의 타입 체크를 한뒤 각각의 타입에 맞는 DOM Element 스타일을 지정해준다.
         if (type === 'emoji') {
           const fontSize = diagonal * 0.22;
           element.style.fontSize = `${fontSize}px`;
           element.style.letterSpacing = `${-fontSize * 3 / 94}px`;
         } else if (type === 'text') {
+          const { selectedTextColor } = this.state;
           const fontSize = diagonal * 0.11;
           element.style.fontSize = `${fontSize}px`;
           element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
           element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
+          if (selectedTextColor) {
+            element.style.color = `${selectedTextColor}`;
+          }
         }
         // 선택된 Object라면 이동시 밝기값을 좀더 밝게 선언해준다.
         if (selectedSticker && !selected) {
@@ -481,7 +499,8 @@ class MessageForm extends Component {
         };
 
         element.addEventListener('click', onClick);
-
+        
+        // 각각의 DOM element에 대한 text 입력
         element.innerHTML = textWithBreaks;
 
         if (selected) {
@@ -497,6 +516,7 @@ class MessageForm extends Component {
           );
 
           const frame = frameTmp.content.firstChild;
+          // 현재 element에 frame 추가
           element.appendChild(frame);
           this.selectedStickerObject = obj;
         }
@@ -902,16 +922,23 @@ class MessageForm extends Component {
     const nextDisabled = stickers.allIds.length === 0 || submitting;
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
     
+    // 현재 조작하고있는 스티커의 Text 값을 얻어옴 (Color Picker에 전달 목적)
+    const selectedStickerText =
+      ((this.selectedStickerObject && this.selectedStickerObject.element)
+        ? this.selectedStickerObject.element.innerText
+        : null);
+    
     // 입력할 스티커를 선택하고, 이동할 AR컨텐츠를 touch제스쳐로 이동시킬수 있을때의 화면을 나타낸다.
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
-      this.selectedStickerObject.uuid === selectedSticker.id
+      this.selectedStickerObject.uuid === selectedSticker.id && mode !== 'color'
     ) {
       return (
         <div {...other}>
           <Transformation
             onComplete={onTransformationComplete}
             onTipClick={onTipClick}
+            //TODO: Transformation에 mode를 넘겨주어야 함.
             onDelete={() => {
               this.setState({
                 currentStickerPosArray: [],
@@ -933,6 +960,13 @@ class MessageForm extends Component {
               onZoomOut();
             }}
             onUndo={this.unDoStickerPos}
+            isTextMode={this.state.isTextMode}
+
+            onColorPickerOpen={() => {
+              this.setState({
+                mode: 'color',
+              })
+            }}
           />
         </div>
       );
@@ -946,11 +980,14 @@ class MessageForm extends Component {
             entity={entity}
             entityTracked={entityTracked}
             onComplete={(value) => {
+              const { selectedTextColor } = this.state;
+              
               this.setState({ mode: 'default' }, () => {
+                // 텍스트의 갯수가 0개라면 그냥 AR화면을 띄워줌.
                 if (value.length === 0) {
                   this.renderAR(this.props);
                 } else if (onTextInput) {
-                  onTextInput(value);
+                  onTextInput(value, selectedTextColor);
                 }
               });
             }}
@@ -967,47 +1004,8 @@ class MessageForm extends Component {
     return (
       <div {...other}>
         {mode === 'default' && entityTracked && [
-          // <NavTopLeft key={0}>
-          //   <CloseButton onClick={onClose} />
-          // </NavTopLeft>,
-
-          // <NavTopRight key={1}>
-          //   <CompleteButton
-          //     onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
-          //     disabled={nextDisabled}
-          //   />
-          // </NavTopRight>,
-
-          // 우측 하단 이모지, Text 버튼 삭제
-          // <NavBottomRight key={3}>
-          //   <AddEmojiButton
-          //     onClick={() => this.setState({ mode: 'emoji' }, () => {
-          //       // const e = letsee.getEntity('assets/bts.json');
-          //       // e.removeRenderable(this.messageObject);
-          //     })}
-          //     small
-          //   />
-          //
-          //   <StyledAddTextButton
-          //     onTouchEnd={() => this.setState({ mode: 'text' }, () => {
-          //       // const e = letsee.getEntity('assets/bts.json');
-          //       // e.removeRenderable(this.messageObject);
-          //     })}
-          //     small
-          //   />
-          // </NavBottomRight>,
-
-          // 왼쪽 하단 TransformationGuide 화면 삭제
-          // <StyledTipButton
-          //   key={4}
-          //   onClick={onTipClick}
-          // />,
-          
           // 하단 버튼들에 대한 컨테이너를 추가
-          <BottomButtonContainer
-            bottom="20px"
-            marginItems="15px"
-            key={3}>
+          <BottomButtonContainer bottom="20px" marginItems="15px" key={3}>
             <ImageButton>
               <img
                 onClick={onHelpClick}
@@ -1047,7 +1045,7 @@ class MessageForm extends Component {
           >
             <ImageButton>
               <img
-                onClick={() => this.setState({ mode: 'emoji' }, () => {
+                onClick={() => this.setState({ mode: 'emoji', isTextMode: false, selectedTextColor: '#ffffff' }, () => {
                   // const e = letsee.getEntity('assets/bts.json');
                   // e.removeRenderable(this.messageObject);
                 })}
@@ -1059,7 +1057,7 @@ class MessageForm extends Component {
             </ImageButton>
             <ImageButton>
               <img
-                onTouchEnd={() => this.setState({ mode: 'text' }, () => {
+                onTouchEnd={() => this.setState({ mode: 'text', isTextMode: true, selectedTextColor: '#ffffff'  }, () => {
                   // const e = letsee.getEntity('assets/bts.json');
                   // e.removeRenderable(this.messageObject);
                 })}
@@ -1138,7 +1136,6 @@ class MessageForm extends Component {
           ) : null,
         ]}
         
-        
         {mode === 'emoji' && (
           <Transition
             in={mode === 'emoji'}
@@ -1170,6 +1167,24 @@ class MessageForm extends Component {
             )}
           </Transition>
         )}
+        
+        {mode === 'color' && (
+          <ColorPicker
+            selectedStickerText={selectedStickerText}
+            onClose={() => {
+              this.setState({ mode: 'default'}, () => {
+                this.renderAR(this.props);
+              });
+            }}
+
+            onSelectedTextColor={ (color) => () => {
+              this.setState({ mode: 'default', selectedTextColor: color}, () => {
+                this.renderAR(this.props);
+              });
+            }}
+          />
+        )}
+        
       </div>
     );
   }

@@ -9,6 +9,7 @@ import ResetButton from '../ResetButton';
 import ZoomInButton from '../ZoomInButton';
 import ZoomOutButton from '../ZoomOutButton';
 import UndoButton from '../UndoButton';
+import ColorPickerButton from '../ColorPickerButton';
 import { BottomButtonContainer } from '../Container';
 import { ImageButton } from '../Button';
 
@@ -40,6 +41,8 @@ type TransformationPropTypes = {
   onDelete?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onReset?: MouseEventHandler, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
+  isTextMode?: boolean,
+  onOpenColorPicker?: MouseEventHandler,
 };
 
 // 스티커 이동중일 때 출력되는 버튼에 대한 컴포넌트
@@ -57,6 +60,8 @@ const Transformation = ({
   onZoomIn,
   onZoomOut,
   onUndo,
+  isTextMode,
+  onColorPickerOpen,
   ...other
 }: TransformationPropTypes) => (
   <div {...other}>
@@ -67,6 +72,7 @@ const Transformation = ({
     <StyledTipButton onClick={onTipClick} />
 
     <StickerActions>
+      { isTextMode ? <ColorPickerButton onClick={onColorPickerOpen}/> : null }
       <StyledResetButton onClick={onReset} />
       <ZoomInButton onClick={onZoomIn} />
       <ZoomOutButton onClick={onZoomOut}/>
@@ -74,10 +80,7 @@ const Transformation = ({
       <TrashButton onClick={onDelete} />
     </StickerActions>
   
-    <BottomButtonContainer
-      bottom="5%"
-      marginItems="8px"
-    >
+    <BottomButtonContainer bottom="5%" marginItems="8px">
       <ImageButton
         imageWidth="60px"
         onClick={onDelete}
@@ -109,6 +112,10 @@ Transformation.propTypes = {
   onTipClick: PropTypes.func, // eslint-disable-line react/require-default-props
   onComplete: PropTypes.func, // eslint-disable-line react/require-default-props
   onDelete: PropTypes.func, // eslint-disable-line react/require-default-props
+  onZoomIn: PropTypes.func,
+  onZoomOut: PropTypes.func,
+  onUndo: PropTypes.func,
+  onColorPickerOpen: PropTypes.func,
 };
 
 export default Transformation;

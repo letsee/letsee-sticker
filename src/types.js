@@ -87,6 +87,7 @@ export type MessageFormSticker = {
   scale: number,
   text: string,
   type: StickerType,
+  color: string,
 };
 
 export type MessageForm = {

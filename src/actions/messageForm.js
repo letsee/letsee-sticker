@@ -77,13 +77,15 @@ export const addSticker = (
   text: string,
   type: StickerType,
   selected: boolean = false,
+  color: string,
 ) => ({
   type: ADD_STICKER,
   payload: {
     id: uuidv4(),
     text,
     type,
-    selected,
+    selected, // selected만 reducer에 보여서 햇깔림
+    color,
   },
 });
 

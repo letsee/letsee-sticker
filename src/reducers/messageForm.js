@@ -14,7 +14,6 @@ import {
   TRANSFORM_STICKER,
   ZOOM_IN_STICKER,
   ZOOM_OUT_STICKER,
-  UNDO_STICKER
 } from '../actions';
 import type { MessageForm, MessageFormSticker } from '../types';
 
@@ -22,7 +21,12 @@ const sticker = (state: MessageFormSticker | null = null, action): MessageFormSt
   switch (action.type) {
     case ADD_STICKER:
       const { selected, ...other } = action.payload;
-
+      // ...other에 타입이 지정되어 있다.
+      // 나머지들..
+      // id: uuidv4(),
+      // text,
+      // type,
+      // color,
       return {
         ...other,
         position: {
