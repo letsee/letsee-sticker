@@ -72,6 +72,7 @@ export const RESET_STICKER: 'RESET_STICKER' = 'RESET_STICKER';
 export const TRANSFORM_STICKER: 'TRANSFORM_STICKER' = 'TRANSFORM_STICKER';
 export const ZOOM_IN_STICKER: 'ZOOM_IN_STICKER' = 'ZOOM_IN_STICKER';
 export const ZOOM_OUT_STICKER: 'ZOOM_OUT_STICKER' = 'ZOOM_OUT_STICKER';
+export const CHANGE_COLOR_STICKER: 'CHANGE_COLOR_STICKER' = 'CHANGE_COLOR_STICKER';
 
 export const addSticker = (
   text: string,
@@ -128,4 +129,12 @@ export const transformSticker = (id: string, transform: {
     id,
     transform,
   },
+});
+
+export const colorChangeSticker = (id: string, color: string) => ({
+  type: CHANGE_COLOR_STICKER,
+  payload: {
+    id,
+    color
+  }
 });

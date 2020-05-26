@@ -17,9 +17,9 @@ import {
   selectSticker,
   deselectSticker,
   resetSticker,
-  undoSticker,
   zoomInSticker,
   zoomOutSticker,
+  colorChangeSticker,
   deleteSticker,
   addSticker,
   openTransformationGuide,
@@ -124,8 +124,7 @@ const Root = (
             }
           }}
           onStickerTransform={onStickerTransForm}
-          //TODO: 컬러값 삽입
-          onTextInput={value => dispatch(addSticker(value, 'text', entityTracked, '#AAFFCC'))}
+          onTextInput={(value, color) => dispatch(addSticker(value, 'text', entityTracked, color))}
           onEmojiInput={value => dispatch(addSticker(value, 'emoji', entityTracked, ''))}
           onTransformationComplete={() => selectedStickerData && dispatch(deselectSticker(selectedStickerData.id))}
           onDelete={onDelete}
@@ -134,6 +133,7 @@ const Root = (
           onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onZoomIn={() => selectedStickerData && dispatch(zoomInSticker(selectedStickerData.id))}
           onZoomOut={() => selectedStickerData && dispatch(zoomOutSticker(selectedStickerData.id))}
+          onColorChange={(color) => dispatch(colorChangeSticker(selectedStickerData.id, color))}
           
         />
       </div>

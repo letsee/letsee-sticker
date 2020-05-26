@@ -14,6 +14,7 @@ import {
   TRANSFORM_STICKER,
   ZOOM_IN_STICKER,
   ZOOM_OUT_STICKER,
+  CHANGE_COLOR_STICKER,
 } from '../actions';
 import type { MessageForm, MessageFormSticker } from '../types';
 
@@ -82,7 +83,14 @@ const sticker = (state: MessageFormSticker | null = null, action): MessageFormSt
           ...action.payload.transform,
         };
       }
-
+      
+    case CHANGE_COLOR_STICKER:
+      const { color } = action.payload;
+      return {
+        ...state,
+        color,
+      };
+      
       return state;
     default:
       return state;
@@ -97,6 +105,7 @@ const stickersById = (state: { [id: string]: MessageFormSticker } = {}, action):
     case ZOOM_IN_STICKER:
     case ZOOM_OUT_STICKER:
     case TRANSFORM_STICKER:
+    case CHANGE_COLOR_STICKER:
       return {
         ...state,
         [action.payload.id]: sticker(state[action.payload.id], action),
@@ -201,6 +210,7 @@ const messageForm = (state: MessageForm | null = null, action): MessageForm | nu
     case RESET_STICKER:
     case ZOOM_IN_STICKER:
     case ZOOM_OUT_STICKER:
+    case CHANGE_COLOR_STICKER:
       // Action을 자식으로 전달하여 결과 처리된 결과 State를 불러온뒤 byId, allIds에 저장함.
       // 해당 결과는 MessageForom의 stickers로 저장되어진다.
       // 하위에는 또다른 state에 대해 (MessageFormState) 상태가 갱신되어진다.

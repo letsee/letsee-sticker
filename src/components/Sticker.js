@@ -43,6 +43,7 @@ const TextSticker = styled.div`
   line-height: normal;
   letter-spacing: ${props => -props.size * 0.11 * 0.8 / 48}px;
   text-shadow: 0 0 ${props => props.size * 0.11 * 12 / 48}px rgba(0, 0, 0, 0.5);
+  color: ${props => props.color}
 `;
 
 const compareQuaternions = (a: ?StickerQuaternion, b: ?StickerQuaternion): boolean => {
@@ -142,7 +143,7 @@ class Sticker extends Component {
         entity.addRenderable(this.stickerObject);
       }
 
-      const { position, rotation, quaternion, scale, text, type } = data;
+      const { position, rotation, quaternion, scale, text, type, color } = data;
       this.stickerObject.position.set(position.x, position.y, position.z);
       this.stickerObject.scale.setScalar(scale * realToClamped);
 
@@ -158,14 +159,15 @@ class Sticker extends Component {
           <br />
         </div>
       ));
-
+      
+      // 스티커들에 대한 DOM element 만들어서 이를 DomRenderable의 elemenet로 복사한다.
       render(
         type === 'emoji' ? (
           <EmojiSticker size={diagonal}>
             {textContent}
           </EmojiSticker>
         ) : (
-          <TextSticker size={diagonal}>
+          <TextSticker size={diagonal} color={color}>
             {textContent}
           </TextSticker>
         ),

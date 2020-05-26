@@ -225,6 +225,7 @@ type MessageFormPropTypes = {
   onReset?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onZoomIn?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onZoomOut?: MouseEventHandler, // eslint-disable-line react/require-default-props
+  onColorChange?: MouseEventHandler,
   onSubmit?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onHelpClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
@@ -443,7 +444,7 @@ class MessageForm extends Component {
        * selectedStickerObject : 우리가 계속 handle하는 DomRenderable로 스티커를 입력하게되면 null로 바뀌기 때문에 selected값에서 찾아오지 못함.
        */
       for (let i = 0; i < stickersArray.length; i += 1) {
-        const { id, type, text, position, quaternion, scale } = stickersArray[i];
+        const { id, type, text, position, quaternion, scale, color } = stickersArray[i];
         // selectedSticker
         const selected = selectedSticker && selectedSticker.id === id;
         
@@ -478,9 +479,10 @@ class MessageForm extends Component {
           element.style.fontSize = `${fontSize}px`;
           element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
           element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
-          if (selectedTextColor) {
-            element.style.color = `${selectedTextColor}`;
-          }
+          element.style.color= `${color}`;
+          // if (selectedTextColor) {
+          //   element.style.color = `${selectedTextColor}`;
+          // }
         }
         // 선택된 Object라면 이동시 밝기값을 좀더 밝게 선언해준다.
         if (selectedSticker && !selected) {
@@ -908,6 +910,7 @@ class MessageForm extends Component {
       onStickerTransform,
       onZoomIn,
       onZoomOut,
+      onColorChange,
       ...other
     } = this.props;
 
@@ -1177,9 +1180,11 @@ class MessageForm extends Component {
               });
             }}
 
+            // 색상이 선택되면 텍스트의 색상을 변경한뒤 messageForm store에 해당 색상 값을 갱신함.
             onSelectedTextColor={ (color) => () => {
               this.setState({ mode: 'default', selectedTextColor: color}, () => {
                 this.renderAR(this.props);
+                onColorChange(color);
               });
             }}
           />
