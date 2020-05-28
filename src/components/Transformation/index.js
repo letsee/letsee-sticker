@@ -27,8 +27,10 @@ const StyledTipButton = styled(TipButton)`
 
 const StickerActions = styled.div`
   position: absolute;
-  bottom: 139px;
+  // bottom: 139px;
   right: 4px;
+  margin-top: 50vh;
+  transform: translateY(-50%);
 `;
 
 const StyledResetButton = styled(ResetButton)`
@@ -68,8 +70,7 @@ const Transformation = ({
     {/*<NavTopRight>*/}
     {/*  <CompleteButton onClick={onComplete} />*/}
     {/*</NavTopRight>*/}
-
-    <StyledTipButton onClick={onTipClick} />
+    {/*<StyledTipButton onClick={onTipClick} />*/}
 
     <StickerActions>
       { isTextMode ? <ColorPickerButton onClick={onColorPickerOpen}/> : null }

@@ -391,7 +391,7 @@ class MessageList extends Component {
         {/*</Actions>*/}
         
         <BottomButtonContainer
-          bottom="20px" marginItems="15px"
+          bottom="12px" marginItems="2px"
           >
           <ImageButton
             onClick={onHelpClick}

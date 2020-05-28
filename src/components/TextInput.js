@@ -19,6 +19,13 @@ import { enableManager } from '../manager';
 //   padding: 17px 16.5px
 // `;
 
+const RootContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  position: absolute;
+`;
+
 const TextareaContainer = styled.div`
   position: absolute;
   left: 0;
@@ -50,8 +57,9 @@ const Textarea = styled.textarea`
   text-align: center;
   color: #fff;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-  width: 100%;
+  width: 86%;
   height: 100%;
+  margin-left: 7%;
 
   &::placeholder {
     opacity: 0.5;
@@ -140,7 +148,7 @@ class TextInput extends Component {
     } = this.props;
 
     return (
-      <div {...other}>
+      <RootContainer {...other}>
         <TextareaContainer
           focus={focus}
           height={height}
@@ -160,8 +168,8 @@ class TextInput extends Component {
         {/*</InputButton>*/}
   
         <BottomButtonContainer
-          bottom="5%"
-          marginItems="8px"
+          bottom="20px"
+          marginItems="4px"
         >
           <ImageButton
             imageWidth="60px"
@@ -189,7 +197,7 @@ class TextInput extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-confirm_3x.png 3x" />
           </ImageButton>
         </BottomButtonContainer>
-      </div>
+      </RootContainer>
     );
   }
 }

@@ -6,6 +6,15 @@ import HomeButton from './HomeButton';
 import NewsButton from './NewsButton';
 import HelpButton from './HelpButton';
 
+const Container = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
 const TopTitleImage = styled.img`
   display: block;
   position: absolute;
@@ -16,8 +25,8 @@ const TopTitleImage = styled.img`
 
 const TargetGuide = styled.div`
   width: 80%;
-  height: 70vh;
-  margin: 15vh 10%;
+  height: 68vh;
+  margin: 0 10%;
   border: 2px solid #34A5AF;
   border-radius: 20px;
   display: flex;
@@ -30,7 +39,7 @@ const TargetGuideText = styled.p`
   font-size: 18px;
   text-align: center;
   line-height: 1.4;
-  color: black
+  color: white;
 `;
 
 const CopyrightText = styled.p`
@@ -56,7 +65,7 @@ const AppLoader = ({
   children,
   ...other
 }: AppLoaderPropTypes) => (
-  <div {...other}>
+  <Container {...other}>
     {/*{!loadingEntity && (*/}
     {/*  <Title>대상 인식하기</Title>*/}
     {/*)}*/}
@@ -78,7 +87,7 @@ const AppLoader = ({
     
     <CopyrightText>Copyright (c) Letsee, Inc</CopyrightText>
     
-  </div>
+  </Container>
 );
 
 export default AppLoader;

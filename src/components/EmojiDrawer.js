@@ -18,18 +18,14 @@ const Drawer = styled.div`
   top: 0;
   // bottom: 0;
   height: ${props => props.height}px;
-  background-color: rgba(0, 0, 0, 0.7);
-  // border-top-left-radius: 10px;
-  // border-top-right-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.85);
   padding-top: 20px;
-  // margin-top: 30px;
   height: 100%;
-  
 `;
 
 const Page = styled.div`
   width: 100%;
-  height: 80%;
+  height: 87%;
   overflow-x: hidden;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
@@ -173,7 +169,7 @@ class EmojiDrawer extends Component {
             />
           )}
         </Page>
-        <BottomButtonContainer bottom="5%">
+        <BottomButtonContainer bottom="12px">
           <ImageButton
             imageWidth="60px"
             onClick={() => {

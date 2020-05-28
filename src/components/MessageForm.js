@@ -1008,7 +1008,7 @@ class MessageForm extends Component {
       <div {...other}>
         {mode === 'default' && entityTracked && [
           // 하단 버튼들에 대한 컨테이너를 추가
-          <BottomButtonContainer bottom="20px" marginItems="15px" key={3}>
+          <BottomButtonContainer bottom="12px" marginItems="2px" key={3}>
             <ImageButton>
               <img
                 onClick={onHelpClick}
