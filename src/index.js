@@ -40,7 +40,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 		app.style.position = 'fixed';
 		app.style.zIndex = '400';
 	};
-	
+
 	/**
 	 * 렛시 0.9.20버전의 스크립트를 삽입
 	 * 이후 이벤트를 dispatch함.
@@ -63,28 +63,48 @@ match({ history, routes }, (err, redirect, renderProps) => {
 		script.src = url; //  스크립트 Loading
 		document.getElementsByTagName("head")[0].appendChild(script);
 	};
-	
+
 	loadScript("https://s-developer.letsee.io/api/webar?key=598fd5bd3ec4e258d90b37f37e33992a529071e346560189fcc83e31e46b7218", () => {
 		letsee.init();
 		letsee.ready(() => {
 			letsee.start();
 		});
-		
+
 		letsee.onTrackStart((e) => {
 			// letsee.resume();
 			console.warn(e);
+			const entity = {
+				image : 'assets/bts.json',
+				name : '',
+				size : {
+					depth: 200 , height: 200, unit: 'mm', width: 140,
+				},
+				uri : 'bts',
+			};
+
+			store.dispatch(addEntity(entity));
+			store.dispatch(startTrackEntity(entity));
 		});
 		letsee.onTrackEnd((e) => {
 			// letsee.pause();
+			const entity = {
+				image : 'assets/bts.json',
+				name : '',
+				size : {
+					depth: 200 , height: 200, unit: 'mm', width: 140,
+				},
+				uri : 'bts',
+			};
+			store.dispatch(endTrackEntity(entity));
 		});
 	});
-	
+
 	window.addEventListener('resize', handleWindowResize);
 	handleWindowResize();
 	// TODO: 렛시의 onLoad 이벤트로 바꿔주기.
 	window.addEventListener('letsee.load', () => {
 		store.dispatch(letseeLoad());
-		
+
 		// 초기 유저 설정부분 제거 => 임의의 유저로 새로 currentUser생성
 		store.dispatch(setCurrentUser({
 			firstname: 'WEBARSDK-JUNGWOO',
@@ -92,7 +112,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 			uid: "jjjjjw910911-010-6284-8051",
 		}));
 	});
-	
+
 	render(
 		<Provider store={store}>
 			<Router {...renderProps} />

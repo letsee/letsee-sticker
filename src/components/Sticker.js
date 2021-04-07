@@ -81,8 +81,10 @@ class Sticker extends Component {
     super(props);
 
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const container = document.createElement('div');
-      this.stickerObject = new letsee.DOMRenderable(container);
+      // const container = document.createElement('div');
+      // this.stickerObject = new letsee.DOMRenderable(container);
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+      this.stickerObject = letsee.createXRElement('<div id="xrStickerElement"></div>', entity);
     }
   }
 
@@ -113,7 +115,7 @@ class Sticker extends Component {
   componentWillUnmount() {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const entity = letsee.getEntity(this.props.entity.uri);
-      const entity = letsee.getEntity('assets/bts.json');
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
 
       if (entity) {
         entity.removeRenderable(this.stickerObject);
@@ -125,9 +127,10 @@ class Sticker extends Component {
 
   renderAR({ entity: { uri }, data }: StickerPropTypes) {
     // const entity = letsee.getEntity(uri);
-    const entity = letsee.getEntity('assets/bts.json');
+    const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
     if (entity) {
-      const { width, height } = entity.size;
+      console.log(entity);
+      const { width, height } = entity.pixelSize;
       let realDiagonal = MAX_DIAGONAL;
 
       if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
@@ -140,7 +143,8 @@ class Sticker extends Component {
       // 에러 발생
       // 처음 화면 -> 수정 -> 이모지/텍스트 ->  휴지통 -> x 버튼
       if (this.stickerObject.parent !== entity.object) {
-        entity.addRenderable(this.stickerObject);
+        // entity.addRenderable(this.stickerObject);
+        letsee.bindXRElement(this.stickerObject, entity);
       }
 
       const { position, rotation, quaternion, scale, text, type, color } = data;
@@ -159,7 +163,7 @@ class Sticker extends Component {
           <br />
         </div>
       ));
-      
+
       // 스티커들에 대한 DOM element 만들어서 이를 DomRenderable의 elemenet로 복사한다.
       render(
         type === 'emoji' ? (

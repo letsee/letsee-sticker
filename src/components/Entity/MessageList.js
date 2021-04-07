@@ -165,8 +165,11 @@ class MessageList extends Component {
   constructor(props: MessageListPropTypes) {
     super(props);
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const container = document.createElement('div');
-      this.object = new letsee.DOMRenderable(container);
+      // const container = document.createElement('div');
+      // this.object = new letsee.DOMRenderable(container);
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+      this.object = letsee.createXRElement('<div id="xrDomElement"></div>', entity);
+
     }
   }
 
@@ -176,14 +179,22 @@ class MessageList extends Component {
     let { firebase, data, currentUser } = this.props;
     // 불필요한 메서드 삭제
     // subscribeToCurrent(firebase, data, currentUser.uid, this.handleMessageChange);
-    const entity = letsee.getEntity('assets/bts.json');
-    entity.renderables.forEach((item) => {
+    // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+    const allXRElements = letsee.getAllXRElements();
+    if (allXRElements.length > 0) {
+      console.log(allXRElements);
+      /*allXRElements.forEach((xrElement) => {
+        letsee.removeXRElement(xrElement);
+      });*/
+    }
+
+    /* entity.renderables.forEach((item) => {
       if(item && item.type === 'Object3D') {
         entity.removeRenderable(item);
       } else if (item && item.type === 'DOMRenderable'){
         entity.removeRenderable(item)
       }
-    })
+    })*/
   }
 
   componentDidMount() {
@@ -193,7 +204,7 @@ class MessageList extends Component {
     manager.on('swiperight', this.next);
     this.renderAR(this.props);
   }
-  
+
   // props의 변경이 일어났을 때 호출됨.
   componentWillReceiveProps(nextProps: MessageListPropTypes) {
     if (this.props.data.current !== nextProps.data.current) {
@@ -201,19 +212,19 @@ class MessageList extends Component {
       // const userId = nextProps.currentUser !== null && !nextProps.data.public ? nextProps.currentUser.uid : null;
       const prevUserId = 'jjjjjw910911-010-6284-8051';
       const userId = 'jjjjjw910911-010-6284-8051';
-      
+
       unsubscribeFromCurrent(this.props.firebase, this.props.data, prevUserId, this.handleMessageChange);
       subscribeToCurrent(nextProps.firebase, nextProps.data, userId, this.handleMessageChange);
     }
 
     this.renderAR(nextProps);
   }
-  
+
   componentWillUnmount() {
     const { firebase, data, currentUser } = this.props;
     const userId = currentUser !== null && !data.public ? currentUser.uid : null;
     unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange);
-  
+
     // 스와이프 이벤트를 연결한다.
     manager.off('swipeleft', this.prev);
     manager.off('swiperight', this.next);
@@ -224,13 +235,13 @@ class MessageList extends Component {
       console.log('ADD BUTTON 누른후 firebase로 들어오는 데이터');
       console.log(data);
       // const entity = letsee.getEntity(data.entityUri);
-      const entity = letsee.getEntity(`assets/bts.json`);
-      entity.removeRenderable(this.object);
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+      letsee.removeAllXRElements(entity);
     }
   }
 
   props: MessageListPropTypes;
-  
+
   // 현재 메세지를 가지고 있는 스냅샷으로부터 메세지의 변경을 notify한다.
   handleMessageChange = (snapshot) => {
     const { onMessageDelete, onMessageReceive } = this.props;
@@ -263,13 +274,14 @@ class MessageList extends Component {
        * Letsee.getEntity형식이 json파일 형식으로 바뀌었기 때문에 이를 맞춰주는 작업 필요
        */
       // const entity = letsee.getEntity(uri);
-      const entity = letsee.getEntity('assets/bts.json');
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
 
       // 에러 발생
       // 처음 화면 -> 수정 -> 이모지/텍스트 ->  휴지통 -> x 버튼
-      
+
       if (this.object.parent !== entity.object) {
-        entity.addRenderable(this.object);
+        // entity.addRenderable(this.object);
+        letsee.bindXRElement(this.object, entity);
       }
 
       let realDiagonal = MAX_DIAGONAL;
@@ -293,7 +305,7 @@ class MessageList extends Component {
       const buttonSize = diagonal * 0.33;
       const nearest = Math.ceil(buttonSize / 100) * 100;
       const y = (height / realToClamped) + (diagonal * 0.04);
-      
+
       // 첫번째 요소를 DomRenderable안의 Div에 삽입함.
       render(
         <div>
@@ -305,7 +317,7 @@ class MessageList extends Component {
               >
                 스티커를 남겨보세요!
               </MessageText>
-      
+
               <FrameAR
                 width={140}
                 height={200}
@@ -374,7 +386,7 @@ class MessageList extends Component {
         {/*      />*/}
         {/*    </ImageButton>*/}
         {/*  )}*/}
-        
+
         {/*  <ImageButton*/}
         {/*    type="button"*/}
         {/*    onClick={onNewClick? onNewClick : null}*/}
@@ -389,7 +401,7 @@ class MessageList extends Component {
         {/*    />*/}
         {/*  </ImageButton>*/}
         {/*</Actions>*/}
-        
+
         <BottomButtonContainer
           bottom="12px" marginItems="2px"
           >
@@ -403,7 +415,7 @@ class MessageList extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
               "/>
           </ImageButton>
-        
+
           <ImageButton
             imageWidth="70px"
             onClick={onNewClick}
@@ -415,7 +427,7 @@ class MessageList extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_add_3x.png 3x
               "/>
           </ImageButton>
-        
+
           <ImageButton>
             <img
               src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_all_3x.png"
@@ -425,7 +437,7 @@ class MessageList extends Component {
               "/>
           </ImageButton>
         </BottomButtonContainer>
-  
+
         <MessagesButtonContainer>
           {dataExists && message !== null && current !== first && (
             <StyledNextButton onClick={loading ? null : () => this.prev()} />
