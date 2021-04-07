@@ -18,16 +18,17 @@ import {
 } from '../actions';
 import type { MessageForm, MessageFormSticker } from '../types';
 
+// ...other에 타입이 지정되어 있다.
+// 나머지들..
+// id: uuidv4(),
+// text,
+// type,
+// color,
 const sticker = (state: MessageFormSticker | null = null, action): MessageFormSticker | null => {
   switch (action.type) {
     case ADD_STICKER:
       const { selected, ...other } = action.payload;
-      // ...other에 타입이 지정되어 있다.
-      // 나머지들..
-      // id: uuidv4(),
-      // text,
-      // type,
-      // color,
+      
       return {
         ...other,
         position: {
@@ -45,6 +46,7 @@ const sticker = (state: MessageFormSticker | null = null, action): MessageFormSt
       };
     case DELETE_STICKER:
       return null;
+      
     case RESET_STICKER:
       return {
         ...state,
@@ -63,7 +65,7 @@ const sticker = (state: MessageFormSticker | null = null, action): MessageFormSt
       };
   
     case ZOOM_IN_STICKER:
-      const zoomInScale  = state.scale + 0.2;
+      const zoomInScale = state.scale + 0.2;
       return {
         ...state,
         scale: zoomInScale,
@@ -83,6 +85,9 @@ const sticker = (state: MessageFormSticker | null = null, action): MessageFormSt
           ...action.payload.transform,
         };
       }
+      return {
+        ...state,
+      };
       
     case CHANGE_COLOR_STICKER:
       const { color } = action.payload;
@@ -91,7 +96,6 @@ const sticker = (state: MessageFormSticker | null = null, action): MessageFormSt
         color,
       };
       
-      return state;
     default:
       return state;
   }
@@ -211,12 +215,14 @@ const messageForm = (state: MessageForm | null = null, action): MessageForm | nu
     case ZOOM_IN_STICKER:
     case ZOOM_OUT_STICKER:
     case CHANGE_COLOR_STICKER:
-      // Action을 자식으로 전달하여 결과 처리된 결과 State를 불러온뒤 byId, allIds에 저장함.
-      // 해당 결과는 MessageForom의 stickers로 저장되어진다.
-      // 하위에는 또다른 state에 대해 (MessageFormState) 상태가 갱신되어진다.
-      // <구조>
-      // messageForm (MessageForm) => stickers => byId => ([id: string]: MessageFormSticker) => (MessageFormSticker) ||
-      // messageForm (MessageForm) => stickers => AllIds => [] (string)
+      /**
+       * Action을 자식으로 전달하여 결과 처리된 결과 State를 불러온뒤 byId, allIds에 저장함.
+       * 해당 결과는 MessageForom의 stickers로 저장되어진다.
+       * 하위에는 또다른 state에 대해 (MessageFormState) 상태가 갱신되어진다.
+       * 구조는 아래와 같다.
+       * messageForm (MessageForm) => stickers => byId => ([id: string]: MessageFormSticker) => (MessageFormSticker) ||
+       * messageForm (MessageForm) => stickers => AllIds => [] (string)
+       */
       if (state !== null) {
         return {
           ...state,
@@ -226,7 +232,7 @@ const messageForm = (state: MessageForm | null = null, action): MessageForm | nu
           },
         };
       }
-
+      
       return state;
     default:
       return state;

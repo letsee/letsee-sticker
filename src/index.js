@@ -46,7 +46,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 	 * 이후 이벤트를 dispatch함.
 	 */
 	const loadScript = (url, callback) => {
-		let script = document.createElement("script");
+		const script = document.createElement("script");
 		script.type = "text/javascript";
 		if (script.readyState) {  // IE Browser
 			script.onreadystatechange = function () {
@@ -81,10 +81,11 @@ match({ history, routes }, (err, redirect, renderProps) => {
 				},
 				uri : 'bts',
 			};
-
+			
 			store.dispatch(addEntity(entity));
 			store.dispatch(startTrackEntity(entity));
 		});
+		
 		letsee.onTrackEnd((e) => {
 			// letsee.pause();
 			const entity = {
@@ -94,6 +95,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 					depth: 200 , height: 200, unit: 'mm', width: 140,
 				},
 				uri : 'bts',
+
 			};
 			store.dispatch(endTrackEntity(entity));
 		});

@@ -220,7 +220,7 @@ type MessageFormPropTypes = {
   onReset?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onZoomIn?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onZoomOut?: MouseEventHandler, // eslint-disable-line react/require-default-props
-  onColorChange?: MouseEventHandler,
+  onColorChange?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onSubmit?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onClose?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onHelpClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
@@ -389,7 +389,7 @@ class MessageForm extends Component {
       const textAR = new letsee.DOMRenderable(textElem)
       this.messageObject.add(textAR);
       
-      this.messageObject.position.z = - 10;
+      this.messageObject.position.z = -10;
       
     } else {
       /**
@@ -435,7 +435,7 @@ class MessageForm extends Component {
           element.style.fontSize = `${fontSize}px`;
           element.style.letterSpacing = `${-fontSize * 0.8 / 48}px`;
           element.style.textShadow = `0 0 ${fontSize * 12 / 48}px rgba(0, 0, 0, 0.5)`;
-          element.style.color= `${color}`;
+          element.style.color = `${color}`;
           // if (selectedTextColor) {
           //   element.style.color = `${selectedTextColor}`;
           // }
@@ -697,9 +697,9 @@ class MessageForm extends Component {
     const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
     const realToClamped = realDiagonal / diagonal;
     
-    const {currentStickerPosArray} = this.state;
+    const { currentStickerPosArray } = this.state;
     
-    if (currentStickerPosArray.length  === 0) {
+    if (currentStickerPosArray.length === 0) {
       this.setState((prevState) => {
         const initialStickerPos = {
           position: {
@@ -760,7 +760,7 @@ class MessageForm extends Component {
                   scale: scale.x / realToClamped,
                 }
               ]
-          }
+          };
         });
         break;
       case ZOOM_IN:
@@ -783,7 +783,7 @@ class MessageForm extends Component {
                   scale: (scale.x / realToClamped) + 0.2,
                 }
               ]
-          }
+          };
         });
         break;
         
@@ -807,7 +807,7 @@ class MessageForm extends Component {
                   scale: (scale.x / realToClamped) - 0.2,
                 }
               ]
-          }
+          };
         });
         break;
     }
@@ -837,8 +837,8 @@ class MessageForm extends Component {
       
       this.setState((prevState) => {
         return {
-          currentStickerPosArray: prevState.currentStickerPosArray.slice(0, length -1),
-        }
+          currentStickerPosArray: prevState.currentStickerPosArray.slice(0, length - 1),
+        };
       });
       
       console.warn(this.state.currentStickerPosArray);
@@ -924,7 +924,7 @@ class MessageForm extends Component {
             onColorPickerOpen={() => {
               this.setState({
                 mode: 'color',
-              })
+              });
             }}
           />
         </div>
@@ -1043,7 +1043,7 @@ class MessageForm extends Component {
               onSubmit={onSubmit}
               onClose={() => this.setState({ messagePrivacyOpen: false })}
             />
-          )
+          ),
         ]}
         {/*Entity가 Tracking 중이지 않을때 아래 가이드가 나와야 하지만 현재 entityTracked가 false일때 이벤트가 전달되지 않아서 동작하지 않음*/}
         {mode === 'default' && !entityTracked && [
@@ -1120,21 +1120,20 @@ class MessageForm extends Component {
           <ColorPicker
             selectedStickerText={selectedStickerText}
             onClose={() => {
-              this.setState({ mode: 'default'}, () => {
+              this.setState({ mode: 'default' }, () => {
                 this.renderAR(this.props);
               });
             }}
 
             // 색상이 선택되면 텍스트의 색상을 변경한뒤 messageForm store에 해당 색상 값을 갱신함.
-            onSelectedTextColor={ (color) => () => {
-              this.setState({ mode: 'default', selectedTextColor: color}, () => {
+            onSelectedTextColor={color => () => {
+              this.setState({ mode: 'default', selectedTextColor: color }, () => {
                 this.renderAR(this.props);
                 onColorChange(color);
               });
             }}
           />
         )}
-        
       </div>
     );
   }
