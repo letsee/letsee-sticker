@@ -120,10 +120,6 @@ const StickerFrame = styled(Frame)`
   }
 `;
 
-// const StyledAddTextButton = styled(AddTextButton)`
-//   margin-top: 6px;
-// `;
-
 const TrackMessage = styled.div`
   position: absolute;
   left: 0;
@@ -165,7 +161,6 @@ const StyledTipButton = styled(TipButton)`
   left: 4px;
 `;
 
-// BottomActionsContainer
 const BottomActionsAddContent = styled.div`
   position: absolute;
   bottom: 80px;
@@ -364,46 +359,9 @@ class MessageForm extends Component {
      * 최종적으로 messageObject에 스티커가 없을때 보여줄 증강 화면에 대한 DomRenderable을 추가함.
      */
     if (stickersArray.length === 0) {
-      // const buttonsTmp = document.createElement('template');
-      // buttonsTmp.innerHTML = renderToString(
-      //   <div>
-      //     <AddEmojiButtonAR size={diagonal} />
-      //     <AddTextButtonAR size={diagonal} />
-      //   </div>,
-      // );
-      // const addEmojiButton = buttonsElem.querySelectorAll('button')[0];
-      // const addTextButton = buttonsElem.querySelectorAll('button')[1];
-      // //TODO: 버튼이벤트가 동작하지 않음.. z-index로 가려지는 현상..
-      // addEmojiButton.addEventListener('click', () => {
-      //   this.setState({ mode: 'emoji' }, () => {
-      //     entity.removeRenderable(this.messageObject);
-      //   });
-      // });
-      //
-      // addTextButton.addEventListener('click', () => {
-      //   this.setState({ mode: 'text' }, () => {
-      //     entity.removeRenderable(this.messageObject);
-      //   });
-      // });
-      // const buttonsAR = new letsee.DOMRenderable(buttonsElem);
-      // if (realDiagonal !== diagonal) {
-      //   buttonsAR.scale.setScalar(realToClamped);
-      // }
-      // const buttonsElem = buttonsTmp.content.firstChild;
-      // buttonsAR.position.setZ(10);
-      // this.messageObject.add(buttonsAR);
-      
-      // Frame을 messageObject에 추가
       const frameTmp = document.createElement('template');
       frameTmp.innerHTML = renderToString(
         <div>
-          {/*<FrameAR*/}
-          {/*  width={140}*/}
-          {/*  height={140}*/}
-          {/*  vertical={0}*/}
-          {/*  horizontal={0}*/}
-          {/*  white*/}
-          {/*/>*/}
           <InitialFrame/>
         </div>,
       );
@@ -411,8 +369,6 @@ class MessageForm extends Component {
       const frameAR = new letsee.DOMRenderable(frameElem);
 
       if (typeof depth !== 'undefined' && depth !== null) {
-        // framesAR.position.setZ(depth / 2);
-        // buttonsAR.position.setZ(depth / 2);
         frameAR.position.setZ(10);
       }
       this.messageObject.add(frameAR);
@@ -1111,17 +1067,6 @@ class MessageForm extends Component {
               </TrackMessageText>
             </TrackMessage>
           </TargetGuide>,
-
-          // <NavTopLeft key={2}>
-          //   <CloseButton onClick={onClose} />
-          // </NavTopLeft>,
-
-          // <NavTopRight key={3}>
-          //   <CompleteButton
-          //     onClick={nextDisabled ? null : () => this.setState({ messagePrivacyOpen: true })}
-          //     disabled={nextDisabled}
-          //   />
-          // </NavTopRight>,
 
           <StyledTipButton key={4} onClick={onTipClick} />,
 

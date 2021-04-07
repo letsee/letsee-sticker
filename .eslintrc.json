@@ -24,6 +24,7 @@
     "Quaternion": true,
     "Euler": true,
     "Object3D": true,
-    "Kakao": true
+    "Kakao": true,
+    "quotes": false
   }
 }
