@@ -142,7 +142,7 @@ const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null,
 const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
   const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
 
-  //TODO: data.current가 무엇인지 파악이 되지 않음..
+  // TODO: data.current가 무엇인지 파악이 되지 않음..
   if (data.current !== null) {
     ref.equalTo(data.current).off('value', handleMessageChange);
   }
@@ -176,18 +176,24 @@ class MessageList extends Component {
   // render가 되기 바로 직전에 수행됨.
   componentWillMount() {
     // currentUser를 테스트용으로 변경
-    let { firebase, data, currentUser } = this.props;
+    // let { firebase, data, currentUser } = this.props;
     // 불필요한 메서드 삭제
     // subscribeToCurrent(firebase, data, currentUser.uid, this.handleMessageChange);
     // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-    const allXRElements = letsee.getAllXRElements();
-    if (allXRElements.length > 0) {
-      console.log(allXRElements);
-      /*allXRElements.forEach((xrElement) => {
+    // const allXRElements = letsee.getAllXRElements();
+    // if (allXRElements.length > 0) {
+    //  console.log(allXRElements);
+
+      /* allXRElements.forEach((xrElement) => {
         letsee.removeXRElement(xrElement);
       });*/
-    }
-
+    // }
+    const xrElement = letsee.getXRElementById('xrDomElement');
+    console.log('xrElement : ', xrElement);
+    // TO-DO Leeseokyeon
+    /* if (xrElement) {
+      letsee.removeXRElement(xrElement);
+    }*/
     /* entity.renderables.forEach((item) => {
       if(item && item.type === 'Object3D') {
         entity.removeRenderable(item);
@@ -235,8 +241,14 @@ class MessageList extends Component {
       console.log('ADD BUTTON 누른후 firebase로 들어오는 데이터');
       console.log(data);
       // const entity = letsee.getEntity(data.entityUri);
-      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-      letsee.removeAllXRElements(entity);
+      // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+      // letsee.removeAllXRElements(entity);
+      const xrElement = letsee.getXRElementById('xrDomElement');
+      console.log('xrElement : ', xrElement);
+      // TO-DO Leeseokyeon
+      /* if (xrElement) {
+        letsee.removeXRElement(xrElement);
+      } */
     }
   }
 

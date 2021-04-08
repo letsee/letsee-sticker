@@ -118,7 +118,13 @@ class Sticker extends Component {
       const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
 
       if (entity) {
-        entity.removeRenderable(this.stickerObject);
+        const xrElement = letsee.getXRElementById('xrStickerElement');
+        console.log('xrStickerElement : ', xrElement);
+        // TO-DO Leeseokyeon
+        if (xrElement) {
+          letsee.removeXRElement(xrElement);
+        }
+       // entity.removeRenderable(this.stickerObject);
       }
     }
   }
