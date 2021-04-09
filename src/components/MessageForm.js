@@ -354,12 +354,16 @@ class MessageForm extends Component {
     // messageObject에서만 지우는것이기 때문에 실제 화면에서는 지워지지 않는다.
     for (let i = this.messageObject.children.length; i >= 0; i -= 1) {
       const child = this.messageObject.children[i];
-
+      console.log('child');
+      console.log(child);
       if (child) {
         const index = stickersArray.findIndex(sticker => sticker.id === child.uuid);
 
         if (index < 0) {
-          this.messageObject.remove(child);
+           // this.messageObject.remove(child);
+          if (typeof this.messageObject === 'XRElement') {
+            letsee.removeXRElement(child);
+          }
         }
       }
     }

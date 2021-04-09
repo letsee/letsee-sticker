@@ -206,7 +206,6 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
-    console.log('1');
     enableManager(false);
     manager.get('swipe').set({ enable: true });
     manager.on('swipeleft', this.prev);
@@ -248,7 +247,6 @@ class MessageList extends Component {
       // letsee.removeAllXRElements(entity);
       const xrElement = letsee.getXRElementById('xrDomElement');
       console.log('xrDomElementxrDomElement', xrElement);
-      // TO-DO Leeseokyeon
       if (xrElement) {
         letsee.removeXRElement(xrElement);
       };
