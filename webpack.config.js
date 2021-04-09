@@ -10,11 +10,85 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const envFile = './.env';
 dotenv.config({ path: envFile });
-// const isDev = process.env.NODE_ENV !== 'production';
+const isDev = process.env.NODE_ENV !== 'production';
 const publicPath = process.env.PUBLIC_PATH || '/';
 const outputPath = path.resolve(path.join(path.resolve(__dirname, 'public'), publicPath));
 const outputPathForJs = path.resolve(path.join(path.resolve(__dirname, 'public'), publicPath));
-const isDev = true;
+const buildType = process.env.NODE_ENV;
+
+const getPlugin = () => {
+  if (buildType === 'build') {
+    return [
+      // new CleanWebpackPlugin(['public', 'views/index.html']),
+      new DotenvWebpack({
+        path: envFile,
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        names: ['react', 'vendor', 'manifest'],
+      }),
+      new ExtractTextPlugin({
+        filename: 'css/[name].[contenthash].css',
+        allChunks: true,
+      }),
+      new HtmlWebpackPlugin({
+        filename: path.resolve(__dirname, 'public', 'index.html'),
+        template: 'src/index.html.ejs',
+      }),
+      new CopyWebpackPlugin([{
+        from: 'src/assets', to: 'assets',
+      }]),
+    ];
+  } else if (buildType === 'build:letsee') {
+    return [
+      new DotenvWebpack({
+        path: envFile,
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        names: ['react', 'vendor', 'manifest'],
+      }),
+      new ExtractTextPlugin({
+        filename: 'css/[name].[contenthash].css',
+        allChunks: true,
+      }),
+      new HtmlWebpackPlugin({
+        filename: path.resolve(__dirname, 'public', 'index.html'),
+        template: 'src/index.html.ejs',
+      }),
+      
+      new CopyWebpackPlugin([{
+        from: 'src/assets', to: 'assets',
+      }]),
+  
+      new CopyWebpackPlugin([{
+        from: 'sdk',
+        to: '../public'
+      }]),
+    ];
+  }
+  
+  return [
+    new CleanWebpackPlugin(['public', 'views/index.html']),
+    new DotenvWebpack({
+      path: envFile,
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['react', 'vendor', 'manifest'],
+    }),
+    new ExtractTextPlugin({
+      filename: 'css/[name].[contenthash].css',
+      allChunks: true,
+    }),
+    new UglifyJSPlugin({
+      comments: false,
+    }),
+    new HtmlWebpackPlugin({
+      filename: path.resolve(__dirname, 'views', 'index.html'),
+      template: 'src/index.html.ejs',
+    }),
+  ];
+};
+
+
 module.exports = {
   devtool: isDev ? 'source-map' : false,
   entry: {
@@ -79,43 +153,5 @@ module.exports = {
       },
     ],
   },
-  plugins: isDev ? [
-    new CleanWebpackPlugin(['public', 'views/index.html']),
-    new DotenvWebpack({
-      path: envFile,
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['react', 'vendor', 'manifest'],
-    }),
-    new ExtractTextPlugin({
-      filename: 'css/[name].[contenthash].css',
-      allChunks: true,
-    }),
-    new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, 'public', 'index.html'),
-      template: 'src/index.html.ejs',
-    }),
-    new CopyWebpackPlugin([{
-      from: 'src/assets', to: 'assets',
-    }])
-  ] : [
-    new CleanWebpackPlugin(['public', 'views/index.html']),
-    new DotenvWebpack({
-      path: envFile,
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['react', 'vendor', 'manifest'],
-    }),
-    new ExtractTextPlugin({
-      filename: 'css/[name].[contenthash].css',
-      allChunks: true,
-    }),
-    new UglifyJSPlugin({
-      comments: false,
-    }),
-    new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, 'views', 'index.html'),
-      template: 'src/index.html.ejs',
-    }),
-  ],
+  plugins: getPlugin()
 };
