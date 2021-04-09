@@ -192,7 +192,7 @@ class MessageList extends Component {
     console.log('xrElement : ', xrElement);
     // TO-DO Leeseokyeon
     /* if (xrElement) {
-      letsee.removeXRElement(xrElement);
+      letsee. (xrElement);
     }*/
     /* entity.renderables.forEach((item) => {
       if(item && item.type === 'Object3D') {

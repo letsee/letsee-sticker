@@ -113,7 +113,7 @@ const FrameAR = styled(Frame)`
   }
 `;
 
-const StickerFrame = styled(Frame)`
+const StickerFrame = styled.img`
   img {
     width: ${props => props.imageSize}px;
     height: ${props => props.imageSize}px;
@@ -243,16 +243,21 @@ class MessageForm extends Component {
       currentStickerPosArray: [],
       selectedTextColor: '#ffffff',
     };
-
-    this.messageObject = new letsee.Object3D();
+    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+    // this.messageObject = new letsee.Object3D();
+    this.messageObject = letsee.createXRElement('<div class="messageObject" style="border:1px solid #000000;"></div>', this.entity);
     this.selectedStickerObject = null;
+    console.log('props');
+    console.log(props);
 
     const tmp = document.createElement('template');
     tmp.innerHTML = renderToString(<TranslateZ />);
-    this.translateZ = new letsee.DOMRenderable(tmp.content.firstChild);
+    // this.translateZ = new letsee.DOMRenderable(tmp.content.firstChild);
+    this.translateZ = letsee.createXRElement(tmp.content.firstChild);
     this.translateZ.rotateX(Math.PI / 2);
+    this.messageObject.add(this.translateZ);
     this.press = false;
-  
+
     // 100ms 안에 오는 이벤트는 모두 한번으로 처리함.
     // 스티커의 Pos를 업데이트할수 있는 function을 debounce를 이용하여 선언함.
     this.debouncedAddStickerPos = debounce(this.addStickerPos, 100);
@@ -277,7 +282,7 @@ class MessageForm extends Component {
     // const entity = letsee.getEntity(this.props.data.entity.uri);
     // entity.removeRenderables();
     this.messageObject.children.forEach((item) => {
-      entity.removeRenderable(item);
+     /* letsee.removeXRElement(item);*/
     });
     this.renderAR(this.props);
   }
@@ -298,14 +303,15 @@ class MessageForm extends Component {
     manager.off('rotateend', this.handleRotateEnd);
     manager.off('pressup', this.handlePressUp);
     manager.off('press', this.handlePress);
-  
+
     // debounced 함수 해
     this.debouncedAddStickerPos.cancel();
 
-    const entity = letsee.getEntity('assets/bts.json');
-    
+    // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api/webar?key=598fd5bd3ec4e258d90b37f37e33992a529071e346560189fcc83e31e46b7218');
+
     this.messageObject.children.forEach((item) => {
-      entity.removeRenderable(item);
+      // entity.removeRenderable(item);
+      /* letsee.removeXRElement(item); */
     });
     // entity.removeRenderable(this.messageObject);
     this.selectedStickerObject = null;
@@ -320,7 +326,7 @@ class MessageForm extends Component {
       return;
     }
 
-    const entity = letsee.getEntity(`assets/bts.json`);
+    const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api/webar?key=598fd5bd3ec4e258d90b37f37e33992a529071e346560189fcc83e31e46b7218');
     const { width, height, depth } = size;
     //
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
@@ -329,15 +335,18 @@ class MessageForm extends Component {
     if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
       realDiagonal = Math.sqrt((width * width) + (height * height));
     }
-
     const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
     const realToClamped = realDiagonal / diagonal;
 
     this.selectedStickerObject = null;
 
-    if (this.messageObject.parent !== entity.object) {
+    const messageObjects = letsee.getXRElementByClassName('messageObject');
+    if (messageObjects === undefined || messageObjects === null || messageObjects.length == 0){
+      letsee.bindXRElement(this.messageObject, entity);
+    };
+    /* if (this.messageObject.parent !== entity.object) {
       entity.addRenderable(this.messageObject);
-    }
+    }*/
 
     // messageObject의 자식들을 조회해서 (IntialFrame, InitialText 등 messageObject에 자식으로 추가된 것들)
     // 현재 등록되어 있는 모든 스티커들을 찾아서 스티커를 다시 추가하기전에 한번 지워주고 시작한다.
@@ -353,7 +362,7 @@ class MessageForm extends Component {
         }
       }
     }
-  
+
     /**
      * 맨 처음 스티커을 등록하기전에 표시할 AR 화면을 만들고 이를 증강시켜 줌. (stickerArray가 0일때)
      * 최종적으로 messageObject에 스티커가 없을때 보여줄 증강 화면에 대한 DomRenderable을 추가함.
@@ -366,13 +375,15 @@ class MessageForm extends Component {
         </div>,
       );
       const frameElem = frameTmp.content.firstChild;
-      const frameAR = new letsee.DOMRenderable(frameElem);
+      const frameAR = letsee.createXRElement(frameElem);
 
       if (typeof depth !== 'undefined' && depth !== null) {
         frameAR.position.setZ(10);
       }
       this.messageObject.add(frameAR);
-  
+      // letsee.bindXRElement(this.messageObject);
+      console.log('add Message Object - + 버튼 클릭(최초)');
+      console.log(this.messageObject);
       // TEXT를 messageObject에 추가
       const textTmp = document.createElement('template');
       textTmp.innerHTML = renderToString(
@@ -384,13 +395,14 @@ class MessageForm extends Component {
           </div>
         </InitialText>
       );
-      
+
       const textElem = textTmp.content.firstChild;
-      const textAR = new letsee.DOMRenderable(textElem)
+      const textAR = letsee.createXRElement(textElem);
       this.messageObject.add(textAR);
-      
+      console.log('add Message Object - textAR');
+      // letsee.bindXRElement(this.messageObject);
       this.messageObject.position.z = -10;
-      
+
     } else {
       /**
        * 스티커가 1개 이상 있을때:
@@ -401,9 +413,10 @@ class MessageForm extends Component {
        */
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale, color } = stickersArray[i];
+        // debugger
         // selectedSticker
         const selected = selectedSticker && selectedSticker.id === id;
-        
+
         // n: matches a line-feed (newline) character (라인 피드)
         // r: matches a carriage return (캐리지 리턴)
         // CR + LF => Enter 개행문자 => <br>태그로 바꿔줌.
@@ -411,7 +424,7 @@ class MessageForm extends Component {
         // messageObject들 중에서 id로 검색후 해당 DomRenderable이 있는지 확인한다.
         const objById = getObjectById(this.messageObject, id);
         let element = document.createElement('div');
-        let obj = new letsee.DOMRenderable(element);
+        let obj = letsee.createXRElement(element);
 
         if (objById) {
           obj = objById;
@@ -420,10 +433,12 @@ class MessageForm extends Component {
           // 기존에 없는 스티커라면 고유의 아이디를 지정후 messageObject에 삽입해준다.
           obj.uuid = id;
           this.messageObject.add(obj);
+          console.log('add Message Object - sticker');
+          console.log(this.messageObject);
         }
-        
+
         element.className = styles[type];
-        
+
         // 스티커의 타입 체크를 한뒤 각각의 타입에 맞는 DOM Element 스타일을 지정해준다.
         if (type === 'emoji') {
           const fontSize = diagonal * 0.22;
@@ -457,7 +472,7 @@ class MessageForm extends Component {
         };
 
         element.addEventListener('click', onClick);
-        
+
         // 각각의 DOM element에 대한 text 입력
         element.innerHTML = textWithBreaks;
 
@@ -500,7 +515,7 @@ class MessageForm extends Component {
         const { clientWidth, clientHeight } = document.documentElement;
         const realDiagonal = Math.sqrt((width * width) + (height * height));
         const ratio = realDiagonal / Math.sqrt((clientWidth * clientWidth) + (clientHeight * clientHeight)) * 2;
-
+        // debugger
         if (this.press) {
           const { z } = selectedSticker.position;
           let max = depth;
@@ -514,22 +529,28 @@ class MessageForm extends Component {
           this.translateZ.scale.copy(this.selectedStickerObject.scale);
         } else {
           const { x, y, z } = selectedSticker.position;
-          const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
-          const translateX = new letsee.Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
-          const translateY = new letsee.Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
+          const conjugate = this.selectedStickerObject.parent.quaternion.conjugate();
+          const translateX = new THREE.Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
+          const translateY = new THREE.Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
 
-          this.selectedStickerObject.position.set(x, y, z).add(translateX).add(translateY).set(
+          console.log(this.selectedStickerObject.position);
+          this.selectedStickerObject.position.set(x + translateX.x, y + translateY.y, z).set(
+              clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
+              clamp(this.selectedStickerObject.position.y, -1.5 * height, 1.5 * height),
+              z,
+          );
+          /* this.selectedStickerObject.position.set(x, y, z).add(translateX).add(translateY).set(
             clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
             clamp(this.selectedStickerObject.position.y, -1.5 * height, 1.5 * height),
             z,
-          );
+          );*/
         }
       } else if (pointers.length === 3 && !this.press) {
         const { x, y, z, w } = selectedSticker.quaternion;
         const q = new letsee.Quaternion(x, y, z, w);
-        const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
-        const rotateX = new letsee.Vector3(1, 0, 0).applyQuaternion(conjugate).normalize();
-        const rotateY = new letsee.Vector3(0, 1, 0).applyQuaternion(conjugate).normalize();
+        const conjugate = this.selectedStickerObject.parent.quaternion.conjugate();
+        const rotateX = new THREE.Vector3(1, 0, 0).applyQuaternion(conjugate).normalize();
+        const rotateY = new THREE.Vector3(0, 1, 0).applyQuaternion(conjugate).normalize();
         q.multiply(new letsee.Quaternion().setFromAxisAngle(rotateX, deltaY * Math.PI / 180));
         q.multiply(new letsee.Quaternion().setFromAxisAngle(rotateY, deltaX * Math.PI / 180));
         this.selectedStickerObject.quaternion.copy(q);
@@ -567,14 +588,13 @@ class MessageForm extends Component {
       const realDiagonal = Math.sqrt((width * width) + (height * height));
       const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
       const realToClamped = realDiagonal / diagonal;
-
       const { x, y, z } = selectedSticker.position;
       const { clientWidth, clientHeight } = document.documentElement;
       const ratio = realDiagonal / Math.sqrt((clientWidth * clientWidth) + (clientHeight * clientHeight)) * 2;
-      const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
-      const translateX = new letsee.Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
-      const translateY = new letsee.Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
-      
+      const conjugate = this.selectedStickerObject.parent.quaternion.conjugate();
+      const translateX = new THREE.Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
+      const translateY = new THREE.Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
+
       this.selectedStickerObject.position.set(x, y, z).add(translateX).add(translateY).set(
         clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
         clamp(this.selectedStickerObject.position.y, -1.5 * height, 1.5 * height),
@@ -617,8 +637,8 @@ class MessageForm extends Component {
       !this.press
     ) {
       const { x, y, z, w } = selectedSticker.quaternion;
-      const conjugate = this.selectedStickerObject.parent.worldQuaternion.conjugate();
-      const rotateAxis = new letsee.Vector3(0, 0, 1).applyQuaternion(conjugate).normalize();
+      const conjugate = this.selectedStickerObject.parent.quaternion.conjugate();
+      const rotateAxis = new THREE.Vector3(0, 0, 1).applyQuaternion(conjugate).normalize();
       const q = new letsee.Quaternion(x, y, z, w);
       q.multiply(new letsee.Quaternion().setFromAxisAngle(rotateAxis, (this.rotateStart - e.rotation) * Math.PI / 180));
       this.selectedStickerObject.quaternion.copy(q);
@@ -685,10 +705,10 @@ class MessageForm extends Component {
       },
       scale: scale.x / realToClamped,
     });
-  
+
     this.debouncedAddStickerPos(TRANSFORM);
   };
-  
+
   // type => transform, zoomin, zoomout
   addStickerPos = (type) => {
     const { width, height } = this.props.data.entity.size;
@@ -696,9 +716,9 @@ class MessageForm extends Component {
     const realDiagonal = Math.sqrt((width * width) + (height * height));
     const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
     const realToClamped = realDiagonal / diagonal;
-    
+
     const { currentStickerPosArray } = this.state;
-    
+
     if (currentStickerPosArray.length === 0) {
       this.setState((prevState) => {
         const initialStickerPos = {
@@ -715,7 +735,7 @@ class MessageForm extends Component {
           },
           scale: 1,
         };
-        
+
         return {
           currentStickerPosArray:
             [...prevState.currentStickerPosArray,
@@ -738,7 +758,7 @@ class MessageForm extends Component {
         }
       });
     }
-    
+
     switch(type) {
       case TRANSFORM :
         this.setState((prevState) => {
@@ -786,7 +806,7 @@ class MessageForm extends Component {
           };
         });
         break;
-        
+
       case ZOOM_OUT:
         this.setState((prevState) => {
           return {
@@ -813,7 +833,7 @@ class MessageForm extends Component {
     }
     console.warn(this.state.currentStickerPosArray);
   };
-  
+
   unDoStickerPos = () => {
     const { currentStickerPosArray } = this.state;
     const length = currentStickerPosArray.length;
@@ -834,13 +854,13 @@ class MessageForm extends Component {
         },
         scale: pos.scale,
       });
-      
+
       this.setState((prevState) => {
         return {
           currentStickerPosArray: prevState.currentStickerPosArray.slice(0, length - 1),
         };
       });
-      
+
       console.warn(this.state.currentStickerPosArray);
     }
   };
@@ -880,13 +900,13 @@ class MessageForm extends Component {
 
     const nextDisabled = stickers.allIds.length === 0 || submitting;
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
-    
+
     // 현재 조작하고있는 스티커의 Text 값을 얻어옴 (Color Picker에 전달 목적)
     const selectedStickerText =
       ((this.selectedStickerObject && this.selectedStickerObject.element)
         ? this.selectedStickerObject.element.innerText
         : null);
-    
+
     // 입력할 스티커를 선택하고, 이동할 AR컨텐츠를 touch제스쳐로 이동시킬수 있을때의 화면을 나타낸다.
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -930,7 +950,7 @@ class MessageForm extends Component {
         </div>
       );
     }
-    
+
     // text입력 모드가 켜졌을 때 동작하는 조건부 렌더링 컴포넌트이다.
     if (mode === 'text') {
       return (
@@ -940,7 +960,7 @@ class MessageForm extends Component {
             entityTracked={entityTracked}
             onComplete={(value) => {
               const { selectedTextColor } = this.state;
-              
+
               this.setState({ mode: 'default' }, () => {
                 // 텍스트의 갯수가 0개라면 그냥 AR화면을 띄워줌.
                 if (value.length === 0) {
@@ -974,7 +994,7 @@ class MessageForm extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589793948/assets/btn_question_3x.png 3x
               "/>
             </ImageButton>
-    
+
             <ImageButton
               imageWidth="70px"
               onClick={onClose}
@@ -986,7 +1006,7 @@ class MessageForm extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589964785/assets/btn-remove_3x.png 3x
               "/>
             </ImageButton>
-  
+
             <ImageButton
               onClick={onClose}
             >
@@ -1027,11 +1047,11 @@ class MessageForm extends Component {
               "/>
             </ImageButton>
           </BottomActionsAddContent>,
-       
+
           // 우측 하단의 남기기버튼
           // 현재 추가한 스티커의 갯수를 확인하여 남긴 스티커가 있을때에만 활성화 버튼을 표시함.
           (stickersArray.length === 0) ? <StyledDisabledSaveButton key={5}/>: <StyledSaveButton key={6} onClick={() => this.setState({ messagePrivacyOpen: true })}/>,
-          
+
           messagePrivacyOpen && (
             <MessagePrivacy
               key={7}
@@ -1083,7 +1103,7 @@ class MessageForm extends Component {
             />
           ) : null,
         ]}
-        
+
         {mode === 'emoji' && (
           <Transition
             in={mode === 'emoji'}
@@ -1115,7 +1135,7 @@ class MessageForm extends Component {
             )}
           </Transition>
         )}
-        
+
         {mode === 'color' && (
           <ColorPicker
             selectedStickerText={selectedStickerText}
