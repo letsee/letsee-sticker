@@ -63,7 +63,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 		script.src = url; //  스크립트 Loading
 		document.getElementsByTagName("head")[0].appendChild(script);
 	};
-
+	let isStarted = false;
 	loadScript("https://s-developer.letsee.io/api/webar?key=598fd5bd3ec4e258d90b37f37e33992a529071e346560189fcc83e31e46b7218", () => {
 		letsee.init();
 		letsee.ready(() => {
@@ -74,30 +74,35 @@ match({ history, routes }, (err, redirect, renderProps) => {
 			// letsee.resume();
 			console.warn(e);
 			const entity = {
-				image : 'assets/bts.json',
+				image : 'assets/bts.png',
 				name : '',
 				size : {
-					depth: 200 , height: 200, unit: 'mm', width: 140,
+					depth: 200, height: 200, unit: 'mm', width: 140,
 				},
 				uri : 'bts',
 			};
-			
+
 			store.dispatch(addEntity(entity));
 			store.dispatch(startTrackEntity(entity));
+
+			isStarted = true;
 		});
-		
+
 		letsee.onTrackEnd((e) => {
 			// letsee.pause();
-			const entity = {
-				image : 'assets/bts.json',
-				name : '',
-				size : {
-					depth: 200 , height: 200, unit: 'mm', width: 140,
-				},
-				uri : 'bts',
+			if (isStarted) {
+				const entity = {
+					image : 'assets/bts.json',
+					name : '',
+					size : {
+						depth: 200 , height: 200, unit: 'mm', width: 140,
+					},
+					uri : 'asset/bts',
 
-			};
-			store.dispatch(endTrackEntity(entity));
+				};
+				store.dispatch(endTrackEntity(entity));
+				isStarted = false;
+			}
 		});
 	});
 

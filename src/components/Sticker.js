@@ -52,10 +52,10 @@ const compareQuaternions = (a: ?StickerQuaternion, b: ?StickerQuaternion): boole
   }
 
   return (
-    a.x === b.x &&
-    a.y === b.y &&
-    a.z === b.z &&
-    a.w === b.w
+      a.x === b.x &&
+      a.y === b.y &&
+      a.z === b.z &&
+      a.w === b.w
   );
 };
 
@@ -65,9 +65,9 @@ const compareRotations = (a: ?StickerRotation, b: ?StickerRotation): boolean => 
   }
 
   return (
-    a.x === b.x &&
-    a.y === b.y &&
-    a.z === b.z
+      a.x === b.x &&
+      a.y === b.y &&
+      a.z === b.z
   );
 };
 
@@ -84,7 +84,7 @@ class Sticker extends Component {
       // const container = document.createElement('div');
       // this.stickerObject = new letsee.DOMRenderable(container);
       const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-      this.stickerObject = letsee.createXRElement('<div id="xrStickerElement"></div>', entity);
+      this.stickerObject = letsee.createXRElement('<div></div>', entity);
     }
   }
 
@@ -97,15 +97,15 @@ class Sticker extends Component {
   componentWillReceiveProps(nextProps: StickerPropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       if (
-        nextProps.entity.uri !== this.props.entity.uri ||
-        nextProps.data.type !== this.props.data.type ||
-        nextProps.data.text !== this.props.data.text ||
-        nextProps.data.scale !== this.props.data.scale ||
-        nextProps.data.position.x !== this.props.data.position.x ||
-        nextProps.data.position.y !== this.props.data.position.y ||
-        nextProps.data.position.z !== this.props.data.position.z ||
-        !compareQuaternions(nextProps.data.quaternion, this.props.data.quaternion) ||
-        !compareRotations(nextProps.data.rotation, this.props.data.rotation)
+          nextProps.entity.uri !== this.props.entity.uri ||
+          nextProps.data.type !== this.props.data.type ||
+          nextProps.data.text !== this.props.data.text ||
+          nextProps.data.scale !== this.props.data.scale ||
+          nextProps.data.position.x !== this.props.data.position.x ||
+          nextProps.data.position.y !== this.props.data.position.y ||
+          nextProps.data.position.z !== this.props.data.position.z ||
+          !compareQuaternions(nextProps.data.quaternion, this.props.data.quaternion) ||
+          !compareRotations(nextProps.data.rotation, this.props.data.rotation)
       ) {
         this.renderAR(nextProps);
       }
@@ -115,17 +115,8 @@ class Sticker extends Component {
   componentWillUnmount() {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const entity = letsee.getEntity(this.props.entity.uri);
-      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-
-      if (entity) {
-        const xrElement = letsee.getXRElementById('xrStickerElement');
-        console.log('xrStickerElement : ', xrElement);
-        // TO-DO Leeseokyeon
-        if (xrElement) {
-          letsee.removeXRElement(xrElement);
-        }
-       // entity.removeRenderable(this.stickerObject);
-      }
+     // letsee.removeXRElement(this.stickerObject);
+      // entity.removeRenderable(this.stickerObject);
     }
   }
 
@@ -164,24 +155,24 @@ class Sticker extends Component {
       }
 
       const textContent = text.trim().split(/[\n\r]/g).map((line, i) => (
-        <div key={i}>
-          {line.length > 0 && line}
-          <br />
-        </div>
+          <div key={i}>
+            {line.length > 0 && line}
+            <br />
+          </div>
       ));
 
       // 스티커들에 대한 DOM element 만들어서 이를 DomRenderable의 elemenet로 복사한다.
       render(
-        type === 'emoji' ? (
-          <EmojiSticker size={diagonal}>
-            {textContent}
-          </EmojiSticker>
-        ) : (
-          <TextSticker size={diagonal} color={color}>
-            {textContent}
-          </TextSticker>
-        ),
-        this.stickerObject.element,
+          type === 'emoji' ? (
+              <EmojiSticker size={diagonal}>
+                {textContent}
+              </EmojiSticker>
+          ) : (
+              <TextSticker size={diagonal} color={color}>
+                {textContent}
+              </TextSticker>
+          ),
+          this.stickerObject.element,
       );
     }
   }
