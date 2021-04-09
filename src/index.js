@@ -64,7 +64,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 		document.getElementsByTagName("head")[0].appendChild(script);
 	};
 	let isStarted = false;
-	loadScript("https://s-developer.letsee.io/api/webar?key=598fd5bd3ec4e258d90b37f37e33992a529071e346560189fcc83e31e46b7218", () => {
+	loadScript("./letsee.js", () => {
 		letsee.init();
 		letsee.ready(() => {
 			letsee.start();

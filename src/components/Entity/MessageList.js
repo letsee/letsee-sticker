@@ -188,11 +188,13 @@ class MessageList extends Component {
         letsee.removeXRElement(xrElement);
       });*/
     // }
-    const xrElement = letsee.getXRElementById('xrDomElement');
+   /* const xrElement = letsee.getXRElementById('xrDomElement');
     console.log('xrElement : ', xrElement);
+    console.log('2');
     // TO-DO Leeseokyeon
-    /* if (xrElement) {
-      letsee. (xrElement);
+   if (xrElement) {
+     setTimeout( () =>{letsee.removeXRElement(xrElement);},2000);
+
     }*/
     /* entity.renderables.forEach((item) => {
       if(item && item.type === 'Object3D') {
@@ -204,6 +206,7 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
+    console.log('1');
     enableManager(false);
     manager.get('swipe').set({ enable: true });
     manager.on('swipeleft', this.prev);
@@ -236,7 +239,7 @@ class MessageList extends Component {
     manager.off('swiperight', this.next);
     manager.get('swipe').set({ enable: false });
     enableManager(true);
-
+    console.log(letsee);
     if (typeof letsee !== 'undefined' && letsee !== null) {
       console.log('ADD BUTTON 누른후 firebase로 들어오는 데이터');
       console.log(data);
@@ -244,11 +247,11 @@ class MessageList extends Component {
       // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
       // letsee.removeAllXRElements(entity);
       const xrElement = letsee.getXRElementById('xrDomElement');
-      console.log('xrElement : ', xrElement);
+      console.log('xrDomElementxrDomElement', xrElement);
       // TO-DO Leeseokyeon
-      /* if (xrElement) {
+      if (xrElement) {
         letsee.removeXRElement(xrElement);
-      } */
+      };
     }
   }
 
@@ -319,6 +322,7 @@ class MessageList extends Component {
       const y = (height / realToClamped) + (diagonal * 0.04);
 
       // 첫번째 요소를 DomRenderable안의 Div에 삽입함.
+      console.log(this.object.element);
       render(
         <div>
           {!data.loading && data.empty && (

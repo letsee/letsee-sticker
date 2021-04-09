@@ -116,6 +116,9 @@ class Sticker extends Component {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const entity = letsee.getEntity(this.props.entity.uri);
      // letsee.removeXRElement(this.stickerObject);
+      if (typeof letsee !== 'undefined' && letsee !== null) {
+        letsee.removeXRElement(this.stickerObject);
+      }
       // entity.removeRenderable(this.stickerObject);
     }
   }

@@ -113,7 +113,7 @@ const FrameAR = styled(Frame)`
   }
 `;
 
-const StickerFrame = styled.img`
+const StickerFrame = styled(Frame)`
   img {
     width: ${props => props.imageSize}px;
     height: ${props => props.imageSize}px;
@@ -281,9 +281,10 @@ class MessageForm extends Component {
 
     // const entity = letsee.getEntity(this.props.data.entity.uri);
     // entity.removeRenderables();
-    this.messageObject.children.forEach((item) => {
-     /* letsee.removeXRElement(item);*/
-    });
+    /* this.messageObject.children.forEach((item) => {
+     letsee.removeXRElement(item);
+    });*/
+
     this.renderAR(this.props);
   }
 
@@ -308,11 +309,11 @@ class MessageForm extends Component {
     this.debouncedAddStickerPos.cancel();
 
     // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api/webar?key=598fd5bd3ec4e258d90b37f37e33992a529071e346560189fcc83e31e46b7218');
-
-    this.messageObject.children.forEach((item) => {
+    letsee.removeXRElement(this.messageObject);
+    // this.messageObject.children.forEach((item) => {
       // entity.removeRenderable(item);
       /* letsee.removeXRElement(item); */
-    });
+    // });
     // entity.removeRenderable(this.messageObject);
     this.selectedStickerObject = null;
   }
