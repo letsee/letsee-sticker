@@ -95,6 +95,7 @@ class Sticker extends Component {
   }
 
   componentWillReceiveProps(nextProps: StickerPropTypes) {
+    // console.log();
     if (typeof letsee !== 'undefined' && letsee !== null) {
       if (
           nextProps.entity.uri !== this.props.entity.uri ||
@@ -113,14 +114,16 @@ class Sticker extends Component {
   }
 
   componentWillUnmount() {
-    if (typeof letsee !== 'undefined' && letsee !== null) {
+    if (this.sticker) {
       // const entity = letsee.getEntity(this.props.entity.uri);
       // letsee.removeXRElement(this.stickerObject);
       // if (typeof letsee !== 'undefined' && letsee !== null) {
       const stickers = letsee.getXRElementByClassName('stickers');
       console.log('stickers', stickers);
-      for (const sticker in stickers) {
-        letsee.removeXRElement(sticker);
+      if (stickers.length > 0) {
+        /* for(const sticker in stickers) {
+          letsee.removeXRElement(sticker);
+        } */
       }
       // }
       // entity.removeRenderable(this.stickerObject);

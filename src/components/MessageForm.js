@@ -552,12 +552,12 @@ class MessageForm extends Component {
         }
       } else if (pointers.length === 3 && !this.press) {
         const { x, y, z, w } = selectedSticker.quaternion;
-        const q = new letsee.Quaternion(x, y, z, w);
+        const q = new THREE.Quaternion(x, y, z, w);
         const conjugate = this.selectedStickerObject.parent.quaternion.conjugate();
         const rotateX = new THREE.Vector3(1, 0, 0).applyQuaternion(conjugate).normalize();
         const rotateY = new THREE.Vector3(0, 1, 0).applyQuaternion(conjugate).normalize();
-        q.multiply(new letsee.Quaternion().setFromAxisAngle(rotateX, deltaY * Math.PI / 180));
-        q.multiply(new letsee.Quaternion().setFromAxisAngle(rotateY, deltaX * Math.PI / 180));
+        q.multiply(new THREE.Quaternion().setFromAxisAngle(rotateX, deltaY * Math.PI / 180));
+        q.multiply(new THREE.Quaternion().setFromAxisAngle(rotateY, deltaX * Math.PI / 180));
         this.selectedStickerObject.quaternion.copy(q);
       }
     }
@@ -600,7 +600,7 @@ class MessageForm extends Component {
       const translateX = new THREE.Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
       const translateY = new THREE.Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
 
-      this.selectedStickerObject.position.set(x, y, z).add(translateX).add(translateY).set(
+      this.selectedStickerObject.position.set(x + translateX.x, y + translateY.y, z).set(
         clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
         clamp(this.selectedStickerObject.position.y, -1.5 * height, 1.5 * height),
         z,
@@ -644,8 +644,8 @@ class MessageForm extends Component {
       const { x, y, z, w } = selectedSticker.quaternion;
       const conjugate = this.selectedStickerObject.parent.quaternion.conjugate();
       const rotateAxis = new THREE.Vector3(0, 0, 1).applyQuaternion(conjugate).normalize();
-      const q = new letsee.Quaternion(x, y, z, w);
-      q.multiply(new letsee.Quaternion().setFromAxisAngle(rotateAxis, (this.rotateStart - e.rotation) * Math.PI / 180));
+      const q = new THREE.Quaternion(x, y, z, w);
+      q.multiply(new THREE.Quaternion().setFromAxisAngle(rotateAxis, (this.rotateStart - e.rotation) * Math.PI / 180));
       this.selectedStickerObject.quaternion.copy(q);
     }
   };
