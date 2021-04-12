@@ -309,7 +309,7 @@ class MessageForm extends Component {
     this.debouncedAddStickerPos.cancel();
 
     // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api/webar?key=598fd5bd3ec4e258d90b37f37e33992a529071e346560189fcc83e31e46b7218');
-    letsee.removeXRElement(this.messageObject);
+    letsee.removeAllXRElements();
     // this.messageObject.children.forEach((item) => {
       // entity.removeRenderable(item);
       /* letsee.removeXRElement(item); */
