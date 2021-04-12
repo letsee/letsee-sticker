@@ -168,7 +168,7 @@ class MessageList extends Component {
       // const container = document.createElement('div');
       // this.object = new letsee.DOMRenderable(container);
       const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-      this.object = letsee.createXRElement('<div id="xrDomElement"></div>', entity);
+      this.object = letsee.createXRElement('<div class="xrDomElement"></div>', entity);
 
     }
   }
@@ -245,11 +245,14 @@ class MessageList extends Component {
       // const entity = letsee.getEntity(data.entityUri);
       // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
       // letsee.removeAllXRElements(entity);
-      const xrElement = letsee.getXRElementById('xrDomElement');
-      console.log('xrDomElementxrDomElement', xrElement);
-      if (xrElement) {
-        letsee.removeXRElement(xrElement);
-      };
+      const xrElements = letsee.getXRElementByClassName('xrDomElement');
+      console.log('xrDomElementxrDomElement', xrElements);
+      letsee.removeAllXRElements();
+      /* if (xrElements.length > 0) {
+        xrElements.forEach((xrElement) => {
+          letsee.removeXRElement(xrElement);
+        });
+      }; */
     }
   }
 
@@ -260,7 +263,7 @@ class MessageList extends Component {
     const { onMessageDelete, onMessageReceive } = this.props;
     const messagesObject = snapshot.val();
     const data = selectLatestMessage(messagesObject);
-
+    letsee.removeAllXRElements();
     if (data === null) {
       onMessageDelete && onMessageDelete();
     } else {

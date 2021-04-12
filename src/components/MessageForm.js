@@ -669,8 +669,7 @@ class MessageForm extends Component {
       this.selectedStickerObject.uuid === selectedSticker.id
     ) {
       this.press = false;
-      // this.selectedStickerObject.parent.remove(this.translateZ);
-      this.selectedStickerObject.remove(this.translateZ);
+      this.selectedStickerObject.parent.remove(this.translateZ);
     }
   };
 
@@ -684,8 +683,7 @@ class MessageForm extends Component {
       this.press = true;
       this.translateZ.position.copy(this.selectedStickerObject.position);
       this.translateZ.scale.copy(this.selectedStickerObject.scale);
-      // this.selectedStickerObject.parent.add(this.translateZ);
-      this.selectedStickerObject.add(this.translateZ);
+      this.selectedStickerObject.parent.add(this.translateZ);
     }
   };
 
