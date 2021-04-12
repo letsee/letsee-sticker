@@ -114,19 +114,13 @@ class Sticker extends Component {
   }
 
   componentWillUnmount() {
-    if (this.sticker) {
+    if (this.stickerObject) {
       // const entity = letsee.getEntity(this.props.entity.uri);
-      // letsee.removeXRElement(this.stickerObject);
-      // if (typeof letsee !== 'undefined' && letsee !== null) {
-      const stickers = letsee.getXRElementByClassName('stickers');
-      console.log('stickers', stickers);
-      if (stickers.length > 0) {
-        /* for(const sticker in stickers) {
-          letsee.removeXRElement(sticker);
-        } */
+      try {
+        letsee.removeXRElement(this.stickerObject);
+      } catch (e) {
+        console.error(e);
       }
-      // }
-      // entity.removeRenderable(this.stickerObject);
     }
   }
 
