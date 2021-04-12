@@ -137,7 +137,7 @@ class Sticker extends Component {
     const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
     if (entity) {
       console.log(entity);
-      const { width, height } = entity.pixelSize;
+      const { width, height } = entity.physicalSize;
       let realDiagonal = MAX_DIAGONAL;
 
       if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {

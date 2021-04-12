@@ -95,7 +95,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 					image : 'assets/bts.json',
 					name : '',
 					size : {
-						depth: 200 , height: 200, unit: 'mm', width: 140,
+						depth: 200, height: 200, unit: 'mm', width: 140,
 					},
 					uri : 'asset/bts',
 
