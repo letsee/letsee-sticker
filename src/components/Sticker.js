@@ -84,7 +84,7 @@ class Sticker extends Component {
       // const container = document.createElement('div');
       // this.stickerObject = new letsee.DOMRenderable(container);
       const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-      this.stickerObject = letsee.createXRElement('<div></div>', entity);
+      this.stickerObject = letsee.createXRElement('<div class="stickers"></div>', entity);
     }
   }
 
@@ -115,10 +115,14 @@ class Sticker extends Component {
   componentWillUnmount() {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const entity = letsee.getEntity(this.props.entity.uri);
-     // letsee.removeXRElement(this.stickerObject);
-      if (typeof letsee !== 'undefined' && letsee !== null) {
-        letsee.removeXRElement(this.stickerObject);
+      // letsee.removeXRElement(this.stickerObject);
+      // if (typeof letsee !== 'undefined' && letsee !== null) {
+      const stickers = letsee.getXRElementByClassName('stickers');
+      console.log('stickers', stickers);
+      for (const sticker in stickers) {
+        letsee.removeXRElement(sticker);
       }
+      // }
       // entity.removeRenderable(this.stickerObject);
     }
   }
