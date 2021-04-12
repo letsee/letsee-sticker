@@ -281,10 +281,10 @@ class MessageForm extends Component {
 
     // const entity = letsee.getEntity(this.props.data.entity.uri);
     // entity.removeRenderables();
-    /* this.messageObject.children.forEach((item) => {
+  /*  this.messageObject.children.forEach((item) => {
      letsee.removeXRElement(item);
     });*/
-
+    // letsee.removeAllXRElements();
     this.renderAR(this.props);
   }
 
@@ -341,10 +341,10 @@ class MessageForm extends Component {
 
     this.selectedStickerObject = null;
 
-    const messageObjects = letsee.getXRElementByClassName('messageObject');
+   /* const messageObjects = letsee.getXRElementByClassName('messageObject');
     if (messageObjects === undefined || messageObjects === null || messageObjects.length == 0){
       letsee.bindXRElement(this.messageObject, entity);
-    };
+    };*/
     /* if (this.messageObject.parent !== entity.object) {
       entity.addRenderable(this.messageObject);
     }*/
@@ -352,7 +352,7 @@ class MessageForm extends Component {
     // messageObject의 자식들을 조회해서 (IntialFrame, InitialText 등 messageObject에 자식으로 추가된 것들)
     // 현재 등록되어 있는 모든 스티커들을 찾아서 스티커를 다시 추가하기전에 한번 지워주고 시작한다.
     // messageObject에서만 지우는것이기 때문에 실제 화면에서는 지워지지 않는다.
-    for (let i = this.messageObject.children.length; i >= 0; i -= 1) {
+/*    for (let i = this.messageObject.children.length; i >= 0; i -= 1) {
       const child = this.messageObject.children[i];
       console.log('child');
       console.log(child);
@@ -366,7 +366,7 @@ class MessageForm extends Component {
           }
         }
       }
-    }
+    }*/
 
     /**
      * 맨 처음 스티커을 등록하기전에 표시할 AR 화면을 만들고 이를 증강시켜 줌. (stickerArray가 0일때)
