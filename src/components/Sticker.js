@@ -84,7 +84,7 @@ class Sticker extends Component {
       // const container = document.createElement('div');
       // this.stickerObject = new letsee.DOMRenderable(container);
       const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-      this.stickerObject = letsee.createXRElement('<div class="stickers"></div>', entity);
+      this.stickerObject = letsee.createXRElement('<div></div>', entity);
     }
   }
 
@@ -143,10 +143,10 @@ class Sticker extends Component {
 
       // 에러 발생
       // 처음 화면 -> 수정 -> 이모지/텍스트 ->  휴지통 -> x 버튼
-      if (this.stickerObject.parent !== entity.object) {
-        // entity.addRenderable(this.stickerObject);
-        letsee.bindXRElement(this.stickerObject, entity);
-      }
+      // const xrElementId = this.stickerObject.id;
+      // if (entity.getObjectById(xrElementId) !== undefined) {
+      //   letsee.bindXRElement(this.stickerObject, entity);
+      // }
 
       const { position, rotation, quaternion, scale, text, type, color } = data;
       this.stickerObject.position.set(position.x, position.y, position.z);

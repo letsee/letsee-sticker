@@ -247,12 +247,9 @@ class MessageForm extends Component {
     // this.messageObject = new letsee.Object3D();
     this.messageObject = letsee.createXRElement('<div class="messageObject" style="border:1px solid #000000;"></div>', this.entity);
     this.selectedStickerObject = null;
-    console.log('props');
-    console.log(props);
 
     const tmp = document.createElement('template');
     tmp.innerHTML = renderToString(<TranslateZ />);
-    // this.translateZ = new letsee.DOMRenderable(tmp.content.firstChild);
     this.translateZ = letsee.createXRElement(tmp.content.firstChild);
     this.translateZ.rotateX(Math.PI / 2);
     this.messageObject.add(this.translateZ);
@@ -281,9 +278,9 @@ class MessageForm extends Component {
 
     // const entity = letsee.getEntity(this.props.data.entity.uri);
     // entity.removeRenderables();
-  /*  this.messageObject.children.forEach((item) => {
-     letsee.removeXRElement(item);
-    });*/
+    // this.messageObject.children.forEach((item) => {
+    //   letsee.removeXRElement(item);
+    // });
     // letsee.removeAllXRElements();
     this.renderAR(this.props);
   }
@@ -308,8 +305,8 @@ class MessageForm extends Component {
     // debounced 함수 해
     this.debouncedAddStickerPos.cancel();
 
-    // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api/webar?key=598fd5bd3ec4e258d90b37f37e33992a529071e346560189fcc83e31e46b7218');
-    letsee.removeAllXRElements();
+    const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+    letsee.removeAllXRElements(entity);
     // this.messageObject.children.forEach((item) => {
       // entity.removeRenderable(item);
       /* letsee.removeXRElement(item); */
@@ -326,10 +323,8 @@ class MessageForm extends Component {
     if (this.state.mode !== 'default') {
       return;
     }
-
-    const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api/webar?key=598fd5bd3ec4e258d90b37f37e33992a529071e346560189fcc83e31e46b7218');
+    
     const { width, height, depth } = size;
-    //
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
     let realDiagonal = MAX_DIAGONAL;
 
@@ -340,33 +335,33 @@ class MessageForm extends Component {
     const realToClamped = realDiagonal / diagonal;
 
     this.selectedStickerObject = null;
-
-   /* const messageObjects = letsee.getXRElementByClassName('messageObject');
-    if (messageObjects === undefined || messageObjects === null || messageObjects.length == 0){
-      letsee.bindXRElement(this.messageObject, entity);
-    };*/
-    /* if (this.messageObject.parent !== entity.object) {
-      entity.addRenderable(this.messageObject);
-    }*/
+    
+    // const messageObjects = letsee.getXRElementByClassName('messageObject');
+    // if (messageObjects === undefined || messageObjects === null || messageObjects.length == 0){
+    //   letsee.bindXRElement(this.messageObject, entity);
+    // };
+    // if (this.messageObject.parent !== entity.object) {
+    // entity.addRenderable(this.messageObject);
+    // }
 
     // messageObject의 자식들을 조회해서 (IntialFrame, InitialText 등 messageObject에 자식으로 추가된 것들)
     // 현재 등록되어 있는 모든 스티커들을 찾아서 스티커를 다시 추가하기전에 한번 지워주고 시작한다.
     // messageObject에서만 지우는것이기 때문에 실제 화면에서는 지워지지 않는다.
-/*    for (let i = this.messageObject.children.length; i >= 0; i -= 1) {
-      const child = this.messageObject.children[i];
-      console.log('child');
-      console.log(child);
-      if (child) {
-        const index = stickersArray.findIndex(sticker => sticker.id === child.uuid);
-
-        if (index < 0) {
-           // this.messageObject.remove(child);
-          if (typeof this.messageObject === 'XRElement') {
-            letsee.removeXRElement(child);
-          }
-        }
-      }
-    }*/
+    // for (let i = this.messageObject.children.length; i >= 0; i -= 1) {
+    //   const child = this.messageObject.children[i];
+    //   console.log('child');
+    //   console.log(child);
+    //   if (child) {
+    //     const index = stickersArray.findIndex(sticker => sticker.id === child.uuid);
+    //
+    //     if (index < 0) {
+    //        // this.messageObject.remove(child);
+    //       if (typeof this.messageObject === 'XRElement') {
+    //         letsee.removeXRElement(child);
+    //       }
+    //     }
+    //   }
+    // }
 
     /**
      * 맨 처음 스티커을 등록하기전에 표시할 AR 화면을 만들고 이를 증강시켜 줌. (stickerArray가 0일때)
@@ -387,8 +382,6 @@ class MessageForm extends Component {
       }
       this.messageObject.add(frameAR);
       // letsee.bindXRElement(this.messageObject);
-      console.log('add Message Object - + 버튼 클릭(최초)');
-      console.log(this.messageObject);
       // TEXT를 messageObject에 추가
       const textTmp = document.createElement('template');
       textTmp.innerHTML = renderToString(
@@ -404,6 +397,7 @@ class MessageForm extends Component {
       const textElem = textTmp.content.firstChild;
       const textAR = letsee.createXRElement(textElem);
       this.messageObject.add(textAR);
+      // this.messageObject.remove(textAR);
       console.log('add Message Object - textAR');
       // letsee.bindXRElement(this.messageObject);
       this.messageObject.position.z = -10;
@@ -418,12 +412,7 @@ class MessageForm extends Component {
        */
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale, color } = stickersArray[i];
-        // debugger
-        // selectedSticker
         const selected = selectedSticker && selectedSticker.id === id;
-
-        // n: matches a line-feed (newline) character (라인 피드)
-        // r: matches a carriage return (캐리지 리턴)
         // CR + LF => Enter 개행문자 => <br>태그로 바꿔줌.
         const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
         // messageObject들 중에서 id로 검색후 해당 DomRenderable이 있는지 확인한다.
@@ -438,8 +427,6 @@ class MessageForm extends Component {
           // 기존에 없는 스티커라면 고유의 아이디를 지정후 messageObject에 삽입해준다.
           obj.uuid = id;
           this.messageObject.add(obj);
-          console.log('add Message Object - sticker');
-          console.log(this.messageObject);
         }
 
         element.className = styles[type];
