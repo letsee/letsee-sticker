@@ -237,22 +237,7 @@ class MessageList extends Component {
     manager.off('swiperight', this.next);
     manager.get('swipe').set({ enable: false });
     enableManager(true);
-    console.log(letsee);
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      console.log('ADD BUTTON 누른후 firebase로 들어오는 데이터');
-      console.log(data);
-      // const entity = letsee.getEntity(data.entityUri);
-      // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-      // letsee.removeAllXRElements(entity);
-      const xrElements = letsee.getXRElementByClassName('xrDomElement');
-      console.log('xrDomElementxrDomElement', xrElements);
-      letsee.removeAllXRElements();
-      /* if (xrElements.length > 0) {
-        xrElements.forEach((xrElement) => {
-          letsee.removeXRElement(xrElement);
-        });
-      }; */
-    }
+    letsee.removeXRElement(this.object);
   }
 
   props: MessageListPropTypes;
@@ -289,16 +274,6 @@ class MessageList extends Component {
        * Letsee.getEntity형식이 json파일 형식으로 바뀌었기 때문에 이를 맞춰주는 작업 필요
        */
       // const entity = letsee.getEntity(uri);
-      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-
-      // 에러 발생
-      // 처음 화면 -> 수정 -> 이모지/텍스트 ->  휴지통 -> x 버튼
-
-      if (this.object.parent !== entity.object) {
-        // entity.addRenderable(this.object);
-        letsee.bindXRElement(this.object, entity);
-      }
-
       let realDiagonal = MAX_DIAGONAL;
 
       if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {

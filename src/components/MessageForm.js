@@ -247,12 +247,6 @@ class MessageForm extends Component {
     // this.messageObject = new letsee.Object3D();
     this.messageObject = letsee.createXRElement('<div class="messageObject" style="border:1px solid #000000;"></div>', this.entity);
     this.selectedStickerObject = null;
-
-    const tmp = document.createElement('template');
-    tmp.innerHTML = renderToString(<TranslateZ />);
-    this.translateZ = letsee.createXRElement(tmp.content.firstChild);
-    this.translateZ.rotateX(Math.PI / 2);
-    this.messageObject.add(this.translateZ);
     this.press = false;
 
     // 100ms 안에 오는 이벤트는 모두 한번으로 처리함.
@@ -305,8 +299,8 @@ class MessageForm extends Component {
     // debounced 함수 해
     this.debouncedAddStickerPos.cancel();
 
-    const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-    letsee.removeAllXRElements(entity);
+    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+    letsee.removeAllXRElements(this.entity);
     // this.messageObject.children.forEach((item) => {
       // entity.removeRenderable(item);
       /* letsee.removeXRElement(item); */
@@ -320,6 +314,7 @@ class MessageForm extends Component {
 
   // 스티커에 표시될 DOMRenderable(AR)에 대한 화면을 표현하는 함수.
   renderAR({ data: { entity: { uri, size }, stickers }, selectedSticker }: MessageFormPropTypes) {
+    console.warn(this.messageObject);
     if (this.state.mode !== 'default') {
       return;
     }
@@ -335,39 +330,29 @@ class MessageForm extends Component {
     const realToClamped = realDiagonal / diagonal;
 
     this.selectedStickerObject = null;
+  
+    letsee.unbindXRElement(this.messageObject);
+    // letsee.removeAllXRElements(this.entity);
+    for (const xrElement of this.messageObject.children) {
+      letsee.removeXRElement(xrElement);
+      this.messageObject.removeChildren(xrElement);
+    }
+    letsee.bindXRElement(this.messageObject, this.entity);
     
-    // const messageObjects = letsee.getXRElementByClassName('messageObject');
-    // if (messageObjects === undefined || messageObjects === null || messageObjects.length == 0){
-    //   letsee.bindXRElement(this.messageObject, entity);
-    // };
-    // if (this.messageObject.parent !== entity.object) {
-    // entity.addRenderable(this.messageObject);
-    // }
-
-    // messageObject의 자식들을 조회해서 (IntialFrame, InitialText 등 messageObject에 자식으로 추가된 것들)
-    // 현재 등록되어 있는 모든 스티커들을 찾아서 스티커를 다시 추가하기전에 한번 지워주고 시작한다.
-    // messageObject에서만 지우는것이기 때문에 실제 화면에서는 지워지지 않는다.
-    // for (let i = this.messageObject.children.length; i >= 0; i -= 1) {
-    //   const child = this.messageObject.children[i];
-    //   console.log('child');
-    //   console.log(child);
-    //   if (child) {
-    //     const index = stickersArray.findIndex(sticker => sticker.id === child.uuid);
-    //
-    //     if (index < 0) {
-    //        // this.messageObject.remove(child);
-    //       if (typeof this.messageObject === 'XRElement') {
-    //         letsee.removeXRElement(child);
-    //       }
-    //     }
-    //   }
-    // }
-
     /**
      * 맨 처음 스티커을 등록하기전에 표시할 AR 화면을 만들고 이를 증강시켜 줌. (stickerArray가 0일때)
      * 최종적으로 messageObject에 스티커가 없을때 보여줄 증강 화면에 대한 DomRenderable을 추가함.
      */
     if (stickersArray.length === 0) {
+      
+      /** 위쪽 화살표 **/
+      const translateTmp = document.createElement('template');
+      translateTmp.innerHTML = renderToString(<TranslateZ />);
+      this.translateZ = letsee.createXRElement(translateTmp.content.firstChild);
+      this.translateZ.rotateX(Math.PI / 2);
+      this.messageObject.add(this.translateZ);
+  
+      /** 프레임 **/
       const frameTmp = document.createElement('template');
       frameTmp.innerHTML = renderToString(
         <div>
@@ -375,14 +360,13 @@ class MessageForm extends Component {
         </div>,
       );
       const frameElem = frameTmp.content.firstChild;
-      const frameAR = letsee.createXRElement(frameElem);
-
+      this.frameAR = letsee.createXRElement(frameElem);
       if (typeof depth !== 'undefined' && depth !== null) {
-        frameAR.position.setZ(10);
+        this.frameAR.position.setZ(10);
       }
-      this.messageObject.add(frameAR);
-      // letsee.bindXRElement(this.messageObject);
-      // TEXT를 messageObject에 추가
+      this.messageObject.add(this.frameAR);
+  
+      /** 텍스트 **/
       const textTmp = document.createElement('template');
       textTmp.innerHTML = renderToString(
         <InitialText>
@@ -393,11 +377,10 @@ class MessageForm extends Component {
           </div>
         </InitialText>
       );
-
       const textElem = textTmp.content.firstChild;
-      const textAR = letsee.createXRElement(textElem);
-      this.messageObject.add(textAR);
-      // this.messageObject.remove(textAR);
+      this.textAR = letsee.createXRElement(textElem);
+      this.messageObject.add(this.textAR);
+      // this.messageObject.remove(this.textAR);
       console.log('add Message Object - textAR');
       // letsee.bindXRElement(this.messageObject);
       this.messageObject.position.z = -10;
@@ -410,6 +393,20 @@ class MessageForm extends Component {
        * selected : 현재 StickerArray에서 가져온 Sticker가 이미 존재하고 있는 아이인지 판단함 (root에서 선언한 SelectedStickerData를 참조함)
        * selectedStickerObject : 우리가 계속 handle하는 DomRenderable로 스티커를 입력하게되면 null로 바뀌기 때문에 selected값에서 찾아오지 못함.
        */
+      if (this.frameAR && this.textAR) {
+        // letsee.removeXRElement(this.frameAR);
+        // letsee.removeXRElement(this.textAR);
+        letsee.unbindXRElement(this.messageObject, this.entity);
+        this.messageObject.removeChildren(this.frameAR);
+        this.messageObject.removeChildren(this.translateZ);
+        this.messageObject.removeChildren(this.textAR);
+        letsee.bindXRElement(this.messageObject, this.entity);
+        
+        this.frameAR = null;
+        this.textAR = null;
+      }
+      
+      
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale, color } = stickersArray[i];
         const selected = selectedSticker && selectedSticker.id === id;
@@ -418,15 +415,15 @@ class MessageForm extends Component {
         // messageObject들 중에서 id로 검색후 해당 DomRenderable이 있는지 확인한다.
         const objById = getObjectById(this.messageObject, id);
         let element = document.createElement('div');
-        let obj = letsee.createXRElement(element);
+        let stickerObj = letsee.createXRElement(element);
 
         if (objById) {
-          obj = objById;
-          element = obj.element;
+          stickerObj = objById;
+          element = stickerObj.element;
         } else {
           // 기존에 없는 스티커라면 고유의 아이디를 지정후 messageObject에 삽입해준다.
-          obj.uuid = id;
-          this.messageObject.add(obj);
+          stickerObj.uuid = id;
+          this.messageObject.add(stickerObj);
         }
 
         element.className = styles[type];
@@ -483,16 +480,16 @@ class MessageForm extends Component {
           const frame = frameTmp.content.firstChild;
           // 현재 element에 frame 추가
           element.appendChild(frame);
-          this.selectedStickerObject = obj;
+          this.selectedStickerObject = stickerObj;
         }
-
-        obj.position.set(position.x, position.y, position.z);
-        obj.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-        obj.scale.setScalar(scale * realToClamped);
+  
+        stickerObj.position.set(position.x, position.y, position.z);
+        stickerObj.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+        stickerObj.scale.setScalar(scale * realToClamped);
       }
     }
   }
-
+  
   handlePanMove = (e) => {
     const { entityTracked, selectedSticker, data: { entity }, onStickerTransform } = this.props;
 
