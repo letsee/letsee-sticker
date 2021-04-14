@@ -23,7 +23,6 @@ const sagaMiddleware = createSagaMiddleware();
 const enhancers = composeWithDevTools(
   reactReduxFirebase(firebase, { enableLogging: process.env.NODE_ENV !== 'production' }),
   applyMiddleware(sagaMiddleware),
-
 );
 
 const store = createStore(reducers, preloadedState, enhancers);
