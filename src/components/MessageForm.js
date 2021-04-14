@@ -314,7 +314,7 @@ class MessageForm extends Component {
 
   // 스티커에 표시될 DOMRenderable(AR)에 대한 화면을 표현하는 함수.
   renderAR({ data: { entity: { uri, size }, stickers }, selectedSticker }: MessageFormPropTypes) {
-    console.warn(this.messageObject);
+    // console.warn(this.messageObject.children[this.messageObject.children.length - 1]);
     if (this.state.mode !== 'default') {
       return;
     }
@@ -332,9 +332,9 @@ class MessageForm extends Component {
     this.selectedStickerObject = null;
   
     letsee.unbindXRElement(this.messageObject);
-    // letsee.removeAllXRElements(this.entity);
-    for (const xrElement of this.messageObject.children) {
-      letsee.removeXRElement(xrElement);
+    const messageObjectLegnth = this.messageObject.children.length;
+    for (let i = messageObjectLegnth - 1; i >= 0; i--) {
+      const xrElement = this.messageObject.children[messageObjectLegnth - 1];
       this.messageObject.removeChildren(xrElement);
     }
     letsee.bindXRElement(this.messageObject, this.entity);
@@ -521,8 +521,7 @@ class MessageForm extends Component {
           const conjugate = this.selectedStickerObject.parent.quaternion.conjugate();
           const translateX = new THREE.Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
           const translateY = new THREE.Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
-
-          console.log(this.selectedStickerObject.position);
+          
           this.selectedStickerObject.position.set(x + translateX.x, y + translateY.y, z).set(
               clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
               clamp(this.selectedStickerObject.position.y, -1.5 * height, 1.5 * height),
@@ -820,7 +819,7 @@ class MessageForm extends Component {
         });
         break;
     }
-    console.warn(this.state.currentStickerPosArray);
+    // console.warn(this.state.currentStickerPosArray);
   };
 
   unDoStickerPos = () => {
