@@ -165,44 +165,13 @@ class MessageList extends Component {
   constructor(props: MessageListPropTypes) {
     super(props);
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      // const container = document.createElement('div');
-      // this.object = new letsee.DOMRenderable(container);
-      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
       this.object = letsee.createXRElement('<div class="xrDomElement"></div>', entity);
     }
   }
 
   // render가 되기 바로 직전에 수행됨.
-  componentWillMount() {
-    // currentUser를 테스트용으로 변경
-    // let { firebase, data, currentUser } = this.props;
-    // 불필요한 메서드 삭제
-    // subscribeToCurrent(firebase, data, currentUser.uid, this.handleMessageChange);
-    // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
-    // const allXRElements = letsee.getAllXRElements();
-    // if (allXRElements.length > 0) {
-    //  console.log(allXRElements);
-
-      /* allXRElements.forEach((xrElement) => {
-        letsee.removeXRElement(xrElement);
-      });*/
-    // }
-   /* const xrElement = letsee.getXRElementById('xrDomElement');
-    console.log('xrElement : ', xrElement);
-    console.log('2');
-    // TO-DO Leeseokyeon
-   if (xrElement) {
-     setTimeout( () =>{letsee.removeXRElement(xrElement);},2000);
-
-    }*/
-    /* entity.renderables.forEach((item) => {
-      if(item && item.type === 'Object3D') {
-        entity.removeRenderable(item);
-      } else if (item && item.type === 'DOMRenderable'){
-        entity.removeRenderable(item)
-      }
-    })*/
-  }
+  componentWillMount() {}
 
   componentDidMount() {
     enableManager(false);
@@ -270,11 +239,8 @@ class MessageList extends Component {
   renderAR({ entity: e, onNewClick, data }: MessageListPropTypes) {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const { uri, size: { width, height, depth } } = e;
-      /**
-       * Letsee.getEntity형식이 json파일 형식으로 바뀌었기 때문에 이를 맞춰주는 작업 필요
-       */
-      // const entity = letsee.getEntity(uri);
-      let realDiagonal = MAX_DIAGONAL;
+ 
+      let realDiagonal = MAX_DIAGONAL; // 대각
 
       if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
         realDiagonal = Math.sqrt((width * width) + (height * height));
@@ -295,9 +261,7 @@ class MessageList extends Component {
       const buttonSize = diagonal * 0.33;
       const nearest = Math.ceil(buttonSize / 100) * 100;
       const y = (height / realToClamped) + (diagonal * 0.04);
-
-      // 첫번째 요소를 DomRenderable안의 Div에 삽입함.
-      console.log(this.object.element);
+      
       render(
         <div>
           {!data.loading && data.empty && (
@@ -360,39 +324,6 @@ class MessageList extends Component {
 
     return (
       <div {...other}>
-        {/*<Actions>*/}
-        {/* /!*자신의 메세지일때만 수정할수 있도록 설정하는 부분이다.*!/*/}
-        {/*  {message !== null && dataExists && currentUser !== null && message.author.uid === currentUser.uid && (*/}
-        {/*    <ImageButton*/}
-        {/*      type="button"*/}
-        {/*      onClick={loading ? null : () => onEditClick && onEditClick(message)}*/}
-        {/*    >*/}
-        {/*      <img*/}
-        {/*        alt={`${message.author.firstname} ${message.author.lastname}`.trim()}*/}
-        {/*        src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503389387/assets/btn-create-copy_3x.png"*/}
-        {/*        srcSet="*/}
-        {/*          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503389387/assets/btn-create-copy_3x.png 2x,*/}
-        {/*          https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503389387/assets/btn-create-copy_3x.png 3x*/}
-        {/*        "*/}
-        {/*      />*/}
-        {/*    </ImageButton>*/}
-        {/*  )}*/}
-
-        {/*  <ImageButton*/}
-        {/*    type="button"*/}
-        {/*    onClick={onNewClick? onNewClick : null}*/}
-        {/*  >*/}
-        {/*    <img*/}
-        {/*      alt="스티커를 남겨보세요!"*/}
-        {/*      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503047417/assets/btn-create_3x.png"*/}
-        {/*      srcSet="*/}
-        {/*        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503047417/assets/btn-create_3x.png 2x,*/}
-        {/*        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503047417/assets/btn-create_3x.png 3x*/}
-        {/*      "*/}
-        {/*    />*/}
-        {/*  </ImageButton>*/}
-        {/*</Actions>*/}
-
         <BottomButtonContainer
           bottom="12px" marginItems="2px"
           >

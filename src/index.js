@@ -40,11 +40,8 @@ match({ history, routes }, (err, redirect, renderProps) => {
 		app.style.position = 'fixed';
 		app.style.zIndex = '400';
 	};
-
-	/**
-	 * 렛시 0.9.20버전의 스크립트를 삽입
-	 * 이후 이벤트를 dispatch함.
-	 */
+	
+	// <script>를 로드 후, head태그에 추가하는 function.
 	const loadScript = (url, callback) => {
 		const script = document.createElement("script");
 		script.type = "text/javascript";
@@ -63,16 +60,12 @@ match({ history, routes }, (err, redirect, renderProps) => {
 		script.src = url; //  스크립트 Loading
 		document.getElementsByTagName("head")[0].appendChild(script);
 	};
+	
 	let isStarted = false;
 	loadScript("./letsee.js", () => {
 		letsee.init();
 		letsee.ready(() => {
 			letsee.start();
-		});
-
-		letsee.onTrackStart((e) => {
-			// letsee.resume();
-			console.warn(e);
 			const entity = {
 				image : 'assets/bts.png',
 				name : '',
@@ -81,15 +74,18 @@ match({ history, routes }, (err, redirect, renderProps) => {
 				},
 				uri : 'bts',
 			};
-
+			
+			window.entity = entity;
+			
 			store.dispatch(addEntity(entity));
-			store.dispatch(startTrackEntity(entity));
+		});
 
+		letsee.onTrackStart(() => {
+			store.dispatch(startTrackEntity(window.entity));
 			isStarted = true;
 		});
 
-		letsee.onTrackEnd((e) => {
-			// letsee.pause();
+		letsee.onTrackEnd(() => {
 			if (isStarted) {
 				const entity = {
 					image : 'assets/bts.json',
@@ -108,11 +104,11 @@ match({ history, routes }, (err, redirect, renderProps) => {
 
 	window.addEventListener('resize', handleWindowResize);
 	handleWindowResize();
+	
 	// TODO: 렛시의 onLoad 이벤트로 바꿔주기.
 	window.addEventListener('letsee.load', () => {
 		store.dispatch(letseeLoad());
-
-		// 초기 유저 설정부분 제거 => 임의의 유저로 새로 currentUser생성
+		// 초기 유저 설정부분 제거 => 임의의 유저로 새로 currentUser 생성
 		store.dispatch(setCurrentUser({
 			firstname: 'WEBARSDK-JUNGWOO',
 			lastname: 'TEST',

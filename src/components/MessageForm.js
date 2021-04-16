@@ -243,9 +243,9 @@ class MessageForm extends Component {
       currentStickerPosArray: [],
       selectedTextColor: '#ffffff',
     };
-    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
     // this.messageObject = new letsee.Object3D();
-    this.messageObject = letsee.createXRElement('<div class="messageObject" style="border:1px solid #000000;"></div>', this.entity);
+    this.messageObject = letsee.createXRElement('<div class="messageObject"></div>', this.entity);
     this.selectedStickerObject = null;
     this.press = false;
 
@@ -269,13 +269,7 @@ class MessageForm extends Component {
     manager.on('rotateend', this.handleRotateEnd);
     manager.on('pressup', this.handlePressUp);
     manager.on('press', this.handlePress);
-
-    // const entity = letsee.getEntity(this.props.data.entity.uri);
-    // entity.removeRenderables();
-    // this.messageObject.children.forEach((item) => {
-    //   letsee.removeXRElement(item);
-    // });
-    // letsee.removeAllXRElements();
+    
     this.renderAR(this.props);
   }
 
@@ -299,13 +293,8 @@ class MessageForm extends Component {
     // debounced 함수 해
     this.debouncedAddStickerPos.cancel();
 
-    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
     letsee.removeAllXRElements(this.entity);
-    // this.messageObject.children.forEach((item) => {
-      // entity.removeRenderable(item);
-      /* letsee.removeXRElement(item); */
-    // });
-    // entity.removeRenderable(this.messageObject);
     this.selectedStickerObject = null;
   }
 
@@ -331,20 +320,13 @@ class MessageForm extends Component {
 
     this.selectedStickerObject = null;
   
-    letsee.unbindXRElement(this.messageObject);
     const messageObjectLegnth = this.messageObject.children.length;
     for (let i = messageObjectLegnth - 1; i >= 0; i--) {
-      const xrElement = this.messageObject.children[messageObjectLegnth - 1];
-      this.messageObject.removeChildren(xrElement);
+      const xrElement = this.messageObject.children[i];
+      this.messageObject.removeChild(xrElement);
     }
-    letsee.bindXRElement(this.messageObject, this.entity);
     
-    /**
-     * 맨 처음 스티커을 등록하기전에 표시할 AR 화면을 만들고 이를 증강시켜 줌. (stickerArray가 0일때)
-     * 최종적으로 messageObject에 스티커가 없을때 보여줄 증강 화면에 대한 DomRenderable을 추가함.
-     */
-    if (stickersArray.length === 0) {
-      
+    if (stickersArray.length === 0) { /** 스티커가 0개 일 때 : 초기 MessageForm 화면 **/
       /** 위쪽 화살표 **/
       const translateTmp = document.createElement('template');
       translateTmp.innerHTML = renderToString(<TranslateZ />);
@@ -380,55 +362,35 @@ class MessageForm extends Component {
       const textElem = textTmp.content.firstChild;
       this.textAR = letsee.createXRElement(textElem);
       this.messageObject.add(this.textAR);
-      // this.messageObject.remove(this.textAR);
-      console.log('add Message Object - textAR');
-      // letsee.bindXRElement(this.messageObject);
-      this.messageObject.position.z = -10;
-
-    } else {
-      /**
-       * 스티커가 1개 이상 있을때:
-       * 각각의 StickerArray에 대해서 수행됨.
-       * 현재 저장되어있는 messageObject를 순회하여 해당 id을 조회하고 해당 id가 없을시 messageObject에 새로운 DOMRenderable(obj)을 삽입시켜준다. (obj로 선언)
-       * selected : 현재 StickerArray에서 가져온 Sticker가 이미 존재하고 있는 아이인지 판단함 (root에서 선언한 SelectedStickerData를 참조함)
-       * selectedStickerObject : 우리가 계속 handle하는 DomRenderable로 스티커를 입력하게되면 null로 바뀌기 때문에 selected값에서 찾아오지 못함.
-       */
+    } else { /** 스티커가 1개 이상일 때 **/
+      // 프레임, 텍스트, 위쪽 화살표를 제거
       if (this.frameAR && this.textAR) {
-        // letsee.removeXRElement(this.frameAR);
-        // letsee.removeXRElement(this.textAR);
-        letsee.unbindXRElement(this.messageObject, this.entity);
-        this.messageObject.removeChildren(this.frameAR);
-        this.messageObject.removeChildren(this.translateZ);
-        this.messageObject.removeChildren(this.textAR);
-        letsee.bindXRElement(this.messageObject, this.entity);
-        
+        this.messageObject.removeChild(this.frameAR);
+        this.messageObject.removeChild(this.translateZ);
+        this.messageObject.removeChild(this.textAR);
         this.frameAR = null;
         this.textAR = null;
       }
       
-      
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale, color } = stickersArray[i];
-        const selected = selectedSticker && selectedSticker.id === id;
-        // CR + LF => Enter 개행문자 => <br>태그로 바꿔줌.
-        const textWithBreaks = text.replace(/[\n\r]/g, '<br />');
-        // messageObject들 중에서 id로 검색후 해당 DomRenderable이 있는지 확인한다.
+        const selected = selectedSticker && selectedSticker.id === id; // 마지막에 추가된 스티커이면 selected라고 지정. (ADD_STICKER)
+        const textWithBreaks = text.replace(/[\n\r]/g, '<br />'); // CR + LF => Enter 개행문자 => <br> 태그로 바꿔줌.
         const objById = getObjectById(this.messageObject, id);
         let element = document.createElement('div');
         let stickerObj = letsee.createXRElement(element);
-
-        if (objById) {
+        
+        if (objById) { // 기존에 있는 스티커
           stickerObj = objById;
           element = stickerObj.element;
-        } else {
-          // 기존에 없는 스티커라면 고유의 아이디를 지정후 messageObject에 삽입해준다.
+        } else { // 새롭게 만든 스티커, 다음에 getObjectById로 찾아서 css를 변경해주기 위한 uuid 지정.
           stickerObj.uuid = id;
+          /** 새로운 스티 **/
           this.messageObject.add(stickerObj);
         }
-
         element.className = styles[type];
 
-        // 스티커의 타입 체크를 한뒤 각각의 타입에 맞는 DOM Element 스타일을 지정해준다.
+        // 스티커의 타입 체크를 한뒤 각각의 타입에 맞는 DOM Element 스타일을 지정.
         if (type === 'emoji') {
           const fontSize = diagonal * 0.22;
           element.style.fontSize = `${fontSize}px`;
@@ -444,7 +406,8 @@ class MessageForm extends Component {
           //   element.style.color = `${selectedTextColor}`;
           // }
         }
-        // 선택된 Object라면 이동시 밝기값을 좀더 밝게 선언해준다.
+        
+        // 마지막에 추가된 스티커라면 밝기값을 좀더 밝게 선언, 나머지 스티커는 좀더 어둡게 선언
         if (selectedSticker && !selected) {
           element.style.opacity = '0.3';
         } else {
@@ -461,10 +424,9 @@ class MessageForm extends Component {
         };
 
         element.addEventListener('click', onClick);
+        element.innerHTML = textWithBreaks; // 내부 텍스트 추가.
 
-        // 각각의 DOM element에 대한 text 입력
-        element.innerHTML = textWithBreaks;
-
+        // 마지막에 추가된 스티커라면, Frame을 마지막에 추가된 스티커의 HTML요소에 자식으로 추가함.
         if (selected) {
           const frameTmp = document.createElement('template');
           const frameImageSize = diagonal * Math.sqrt(2) * 0.06;
@@ -478,7 +440,6 @@ class MessageForm extends Component {
           );
 
           const frame = frameTmp.content.firstChild;
-          // 현재 element에 frame 추가
           element.appendChild(frame);
           this.selectedStickerObject = stickerObj;
         }
