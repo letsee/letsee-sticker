@@ -11,6 +11,7 @@ export const FETCH_PREV: 'FETCH_PREV' = 'FETCH_PREV';
 export const FETCH_NEXT: 'FETCH_NEXT' = 'FETCH_NEXT';
 export const SET_CURRENT_COUNT: 'SET_CURRENT_COUNT' = 'SET_CURRENT_COUNT';
 
+
 export const setPublic = (isPublic: boolean) => ({
   type: SET_PUBLIC,
   payload: isPublic,
@@ -46,6 +47,10 @@ export const setCurrentMessage = (message: MessageWithId | null) => ({
   payload: {
     message,
   },
+});
+
+export const getMessageList = () => ({
+  type: GET_MESSAGE_LIST,
 });
 
 export const fetchPrev = () => ({ type: FETCH_PREV });

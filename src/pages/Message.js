@@ -3,20 +3,15 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { connect } from 'react-redux';
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-} from 'react-redux-firebase';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
 import MessageComponent from '../components/Message';
-import Spinner from '../components/Spinner';
+/* import Spinner from '../components/Spinner'; */
 import Button from '../components/Button';
 import TargetGuide from '../components/TargetGuide';
 import HelpButton from '../components/HelpButton';
 import StickerButton from '../components/StickerButton';
-import CloseButton from '../components/CloseButton';
+/* import CloseButton from '../components/CloseButton'; */
 import Envelope from '../components/Envelope';
 import Help from '../components/Help';
 import {
@@ -218,15 +213,15 @@ class Message extends Component {
       dispatch,
     } = this.props;
 
-    const loading = !isLoaded(data);
+    /* const loading = !isLoaded(data); */
 
-    if (loading) {
+/*    if (loading) {
       return (
         <SpinnerContainer>
           <Spinner />
         </SpinnerContainer>
       );
-    }
+    }*/
 
     const empty = isEmpty(data);
 
@@ -300,18 +295,4 @@ class Message extends Component {
   }
 }
 
-export default firebaseConnect(
-  ({ params: { id } }) => ([{ path: `messages/${id}`, storeAs: 'message' }]),
-)(connect(
-  ({
-    firebase: { data: { message } },
-    currentEntity,
-    loadingEntity,
-    helpOpened,
-  }) => ({
-    data: message,
-    currentEntity,
-    loadingEntity,
-    helpOpened,
-  }),
-)(Message));
+export default connect()(Message);

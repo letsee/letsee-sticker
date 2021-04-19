@@ -1,11 +1,12 @@
 // @flow
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import { firebaseConnect } from 'react-redux-firebase';
+import { Saga } from 'react-redux-saga';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
+import { connect } from 'react-redux';
 import { ImageButton } from '../Button';
 import { BottomButtonContainer} from '../Container'
 import Frame from '../Frame';
@@ -14,6 +15,7 @@ import Spinner from '../Spinner';
 import PrevButton from './PrevButton';
 import NextButton from './NextButton';
 import manager, { enableManager } from '../../manager';
+import { getEntityMessage, getMessage } from '../../api/message';
 import { getMessagesListPath } from '../../entityUriHelper';
 import {
   MAX_DIAGONAL,
@@ -133,6 +135,11 @@ const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null,
 
   // 현재 메세지가 있다면, 현재 메세지에대한 정보를 가지고 있는 snapshot을 찍어서 handleMessageChange에 이벤트를 전달함.
   if (data.current !== null) {
+    // equalTo() 는 지정된 키 또는 값과 동일한 항목을 반환 하는 메서드
+    // 반환된 이벤트에 value이벤트를 건다.
+    /* on ( eventType :  EventType , callback :  ( a :  DataSnapshot , b ? :  string | null ) => any , cancelCallbackOrContext ? :  ( ( a :  Error ) => any ) | Object | null , 컨텍스트 ? :  개체 | null ) : ( a :  DataSnapshot | null , b ? :  string | null ) => any*/
+    // value 이벤트는 최초 데이터로 한번 트리거가 된 이후에, 데이터가 변경될때마다 다시 트리거 된다.
+    // 해당 로직은 파이어 베이스에서 정렬된 데이터를 얻고 최초 한번 handleMessageChange이벤트를 일으킨 후 데이터가 변경될때마다 handleMessageChange이벤트를 발생시킨다.
     ref.equalTo(data.current).on('value', handleMessageChange);
   }
 };
@@ -144,6 +151,7 @@ const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | n
 
   // TODO: data.current가 무엇인지 파악이 되지 않음..
   if (data.current !== null) {
+    // 현재 데이터가 아닐경우 체인지 이벤트가 발생하지 않도록 한다.
     ref.equalTo(data.current).off('value', handleMessageChange);
   }
 };
@@ -167,7 +175,7 @@ class MessageList extends Component {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const container = document.createElement('div');
       // this.object = new letsee.DOMRenderable(container);
-      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
       this.object = letsee.createXRElement('<div class="xrDomElement"></div>', entity);
     }
   }
@@ -178,7 +186,7 @@ class MessageList extends Component {
     // let { firebase, data, currentUser } = this.props;
     // 불필요한 메서드 삭제
     // subscribeToCurrent(firebase, data, currentUser.uid, this.handleMessageChange);
-    // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+    // const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
     // const allXRElements = letsee.getAllXRElements();
     // if (allXRElements.length > 0) {
     //  console.log(allXRElements);
@@ -209,6 +217,8 @@ class MessageList extends Component {
     manager.get('swipe').set({ enable: true });
     manager.on('swipeleft', this.prev);
     manager.on('swiperight', this.next);
+    // store.dispatch('getMessageList');
+    store.dispatch(startTrackEntity(entity));
     this.renderAR(this.props);
   }
 
@@ -223,6 +233,7 @@ class MessageList extends Component {
       unsubscribeFromCurrent(this.props.firebase, this.props.data, prevUserId, this.handleMessageChange);
       subscribeToCurrent(nextProps.firebase, nextProps.data, userId, this.handleMessageChange);
     }
+
 
     this.renderAR(nextProps);
   }
@@ -459,4 +470,4 @@ class MessageList extends Component {
   }
 }
 
-export default firebaseConnect()(MessageList);
+export default connect()(MessageList);

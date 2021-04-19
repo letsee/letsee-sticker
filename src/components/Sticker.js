@@ -83,7 +83,7 @@ class Sticker extends Component {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const container = document.createElement('div');
       // this.stickerObject = new letsee.DOMRenderable(container);
-      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
       this.stickerObject = letsee.createXRElement('<div></div>', entity);
     }
   }
@@ -128,7 +128,7 @@ class Sticker extends Component {
 
   renderAR({ entity: { uri }, data }: StickerPropTypes) {
     // const entity = letsee.getEntity(uri);
-    const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/606d1d909fa1ce6a81a2c8cf');
+    const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
     if (entity) {
       console.log(entity);
       const { width, height } = entity.physicalSize;

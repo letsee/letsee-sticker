@@ -80,13 +80,10 @@ const Root = (
   if (messageForm !== null) {
     const { entity, stickers } = messageForm;
     let entityTracked;
-    
+
     // 현재
-    if (currentEntity !== null && entity.uri === currentEntity)
-      entityTracked = true;
-    else
-      entityTracked = false;
-    
+    if (currentEntity !== null && entity.uri === currentEntity) { entityTracked = true; } else { entityTracked = false; }
+
     // selectedSticker로부터 값을 전달받아 해당 Sticker에 대한 MessageFormSticker형식을 만들어서 MessageForm으로 전달해주거나
     // id값을 통해 SelectedSticker을 MessageForm 리듀서에서 삭제시켜준다.
     // selectedSticker는 ADD_STCIKER Action이 dispatch 되면 자동으로 생성된다.
@@ -98,8 +95,8 @@ const Root = (
     };
 
     const onDelete = () => {
-      if(selectedStickerData) {
-        dispatch(deleteSticker(selectedStickerData.id))
+      if (selectedStickerData) {
+        dispatch(deleteSticker(selectedStickerData.id));
       }
     };
 
@@ -133,8 +130,8 @@ const Root = (
           onReset={() => selectedStickerData && dispatch(resetSticker(selectedStickerData.id))}
           onZoomIn={() => selectedStickerData && dispatch(zoomInSticker(selectedStickerData.id))}
           onZoomOut={() => selectedStickerData && dispatch(zoomOutSticker(selectedStickerData.id))}
-          onColorChange={(color) => dispatch(colorChangeSticker(selectedStickerData.id, color))}
-          
+          onColorChange={color => dispatch(colorChangeSticker(selectedStickerData.id, color))}
+
         />
       </div>
     );
@@ -207,7 +204,6 @@ const Root = (
     <AppLoader
       loadingEntity={loadingEntity}
       onHelpClick={() => dispatch(openHelp())}
-      onNewsClick={() => router.push(`${process.env.PUBLIC_PATH || '/'}news`)}
     />
   );
 };
@@ -225,7 +221,9 @@ export default withRouter(connect(
     transformationGuideOpened,
     helpOpened,
     messagesList,
-  }) => ({
+    mapStateToProps,
+    mapDispachToProps
+   }) => ({
     letseeLoaded,
     loadingEntity,
     currentEntity,
@@ -236,5 +234,7 @@ export default withRouter(connect(
     transformationGuideOpened,
     helpOpened,
     messagesList,
+    mapStateToProps,
+    mapDispachToProps
   }),
 )(Root));

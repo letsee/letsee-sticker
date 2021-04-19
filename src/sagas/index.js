@@ -19,12 +19,24 @@ import {
   setCurrentCursor,
 } from '../actions';
 import { getMessagesListPath } from '../entityUriHelper';
+import {
+  createEntityMessages,
+  getEntityMessage,
+  updateEntityMessage,
+  deleteEntityMessage,
+  createMessage,
+  getMessage,
+  updateMessage,
+  deleteMessage,
+
+} from '../api/message';
 import type { Message } from '../types';
 
 function* persistToFirebase(getFirebase, id: string | null, message: Message) {
+  // firebase 데이터베이스 취득
   const firebase = getFirebase().database();
   let messageRef;
-
+  // 아이디가 존재할경우 private repo , 존재하지 않을 경우 public repo를 root로 삼음
   if (id === null) {
     messageRef = firebase.ref('messages').push();
   } else {
