@@ -1,3 +1,4 @@
+/*
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
@@ -16,7 +17,7 @@ exports.setEntityMessages = functions.database.ref('/messages/{mid}').onWrite((e
     const previousMessage = event.data.previous.val();
     const currentMessage = event.data.current.val();
     const adminRootRef = event.ref
-    
+
     const setMessage = (ref, value, message) => {
       return ref.transaction(() => {
         return value;
@@ -26,7 +27,7 @@ exports.setEntityMessages = functions.database.ref('/messages/{mid}').onWrite((e
         console.error('[setEntityMessages] Error!', e);
       });
     };
-    
+
     if (previousMessage === null) {
       // NOTE now handled by front end
       // const entityId = entityUriToId(currentMessage.entity.uri);
@@ -50,7 +51,7 @@ exports.setEntityMessages = functions.database.ref('/messages/{mid}').onWrite((e
       const entityMessageRef = adminRootRef.child(`entityMessages/${entityId}`);
       // const publicMessageRef = entityMessageRef.child(`publicMessages/${messageId}`);
       // const authorMessageRef = entityMessageRef.child(`authorMessages/${authorId}/${messageId}`);
-      
+
       if (previousMessage.entity.uri === currentMessage.entity.uri) {
         if (previousMessage.author.uid !== authorId) { // not permitted but handled
           const prevAuthorId = previousMessage.author.uid;
@@ -66,7 +67,7 @@ exports.setEntityMessages = functions.database.ref('/messages/{mid}').onWrite((e
         setMessage(prevAuthorMessageRef, null);
         setMessage(prevPublicMessageRef, null);
       }
-      
+
       // setMessage(authorMessageRef, currentMessage);
       // setMessage(publicMessageRef, currentMessage.public ? currentMessage : null);
     }
@@ -78,7 +79,7 @@ exports.setAuthorMessagesCountOnCreate = functions.database.ref('/entityMessages
   const userId = "jjjjjw910911-010-6284-8051";
   const path = `messagesCount/${entityId}/authorMessages/${userId}`;
   const messagesCountRef = event.ref.root.child(path);
-  
+
   return messagesCountRef.transaction((current) => {
     return (current || 0) + 1;
   }).then(() => {
@@ -93,7 +94,7 @@ exports.setAuthorMessagesCountOnDelete = functions.database.ref('/entityMessages
   const userId = "jjjjjw910911-010-6284-8051";
   const path = `messagesCount/${entityId}/authorMessages/${userId}`;
   const messagesCountRef = event.ref.root.child(path);
-  
+
   return messagesCountRef.transaction((current) => {
     return (current || 0) - 1;
   }).then(() => {
@@ -115,9 +116,9 @@ exports.resetAuthorMessagesCount = functions.database.ref('/messagesCount/{eid}/
 exports.setPublicMessagesCountOnCreate = functions.database.ref('/entityMessages/{eid}/publicMessages/{mid}').onCreate((event, ) => {
   const entityId = "bts";
   const path = `messagesCount/${entityId}/publicMessages`;
-  
+
   const messagesCountRef = event.ref.root.child(path);
-  
+
   return messagesCountRef.transaction((current) => {
     return (current || 0) + 1;
   }).then(() => {
@@ -131,9 +132,9 @@ exports.setPublicMessagesCountOnDelete = functions.database.ref('/entityMessages
   const entityId = "bts";
   const userId = "jjjjjw910911-010-6284-8051";
   const path = `messagesCount/${entityId}/publicMessages`;
-  
+
   const messagesCountRef = event.ref.root.child(path);
-  
+
   return messagesCountRef.transaction((current) => {
     return (current || 0) - 1;
   }).then(() => {
@@ -151,3 +152,4 @@ exports.resetPublicMessagesCount = functions.database.ref('/messagesCount/{eid}/
   const entityPublicMessagesRef = adminRootRef.child(`entityMessages/${entityId}/publicMessages`);
   return entityPublicMessagesRef.once('value').then(messagesData => counterRef.set(messagesData.numChildren()));
 });
+*/

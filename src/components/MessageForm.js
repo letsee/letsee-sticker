@@ -307,7 +307,7 @@ class MessageForm extends Component {
     if (this.state.mode !== 'default') {
       return;
     }
-    
+
     const { width, height, depth } = size;
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
     let realDiagonal = MAX_DIAGONAL;
@@ -319,7 +319,7 @@ class MessageForm extends Component {
     const realToClamped = realDiagonal / diagonal;
 
     this.selectedStickerObject = null;
-  
+
     const messageObjectLegnth = this.messageObject.children.length;
     for (let i = messageObjectLegnth - 1; i >= 0; i--) {
       const xrElement = this.messageObject.children[i];
@@ -327,13 +327,14 @@ class MessageForm extends Component {
     }
     
     if (stickersArray.length === 0) { /** 스티커가 0개 일 때 : 초기 MessageForm 화면 **/
+
       /** 위쪽 화살표 **/
       const translateTmp = document.createElement('template');
       translateTmp.innerHTML = renderToString(<TranslateZ />);
       this.translateZ = letsee.createXRElement(translateTmp.content.firstChild);
       this.translateZ.rotateX(Math.PI / 2);
       this.messageObject.add(this.translateZ);
-  
+
       /** 프레임 **/
       const frameTmp = document.createElement('template');
       frameTmp.innerHTML = renderToString(
@@ -347,7 +348,7 @@ class MessageForm extends Component {
         this.frameAR.position.setZ(10);
       }
       this.messageObject.add(this.frameAR);
-  
+
       /** 텍스트 **/
       const textTmp = document.createElement('template');
       textTmp.innerHTML = renderToString(
@@ -365,6 +366,7 @@ class MessageForm extends Component {
     } else { /** 스티커가 1개 이상일 때 **/
       // 프레임, 텍스트, 위쪽 화살표를 제거
       if (this.frameAR && this.textAR) {
+
         this.messageObject.removeChild(this.frameAR);
         this.messageObject.removeChild(this.translateZ);
         this.messageObject.removeChild(this.textAR);
@@ -372,6 +374,7 @@ class MessageForm extends Component {
         this.textAR = null;
       }
       
+
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale, color } = stickersArray[i];
         const selected = selectedSticker && selectedSticker.id === id; // 마지막에 추가된 스티커이면 selected라고 지정. (ADD_STICKER)
@@ -443,14 +446,14 @@ class MessageForm extends Component {
           element.appendChild(frame);
           this.selectedStickerObject = stickerObj;
         }
-  
+
         stickerObj.position.set(position.x, position.y, position.z);
         stickerObj.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
         stickerObj.scale.setScalar(scale * realToClamped);
       }
     }
   }
-  
+
   handlePanMove = (e) => {
     const { entityTracked, selectedSticker, data: { entity }, onStickerTransform } = this.props;
 
@@ -482,7 +485,7 @@ class MessageForm extends Component {
           const conjugate = this.selectedStickerObject.parent.quaternion.conjugate();
           const translateX = new THREE.Vector3(1, 0, 0).applyQuaternion(conjugate).setLength(deltaX * ratio);
           const translateY = new THREE.Vector3(0, -1, 0).applyQuaternion(conjugate).setLength(deltaY * ratio);
-          
+
           this.selectedStickerObject.position.set(x + translateX.x, y + translateY.y, z).set(
               clamp(this.selectedStickerObject.position.x, -1.5 * width, 1.5 * width),
               clamp(this.selectedStickerObject.position.y, -1.5 * height, 1.5 * height),

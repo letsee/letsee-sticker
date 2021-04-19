@@ -1,6 +1,6 @@
 // @flow
-import React, { Component } from 'react';
-import { firebaseConnect } from 'react-redux-firebase';
+/* import React, { Component } from 'react';
+import { Saga } from 'react-redux-saga';
 import size from 'lodash/size';
 import sortBy from 'lodash/sortBy';
 import keys from 'lodash/keys';
@@ -169,4 +169,4 @@ class News extends Component {
   }
 }
 
-export default firebaseConnect()(News);
+export default Saga()(News);*/

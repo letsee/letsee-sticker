@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { firebaseConnect } from 'react-redux-firebase';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import keys from 'lodash/keys';
@@ -68,6 +67,7 @@ const StyledMyMessagesButton = styled(MyMessagesButton)`
 
 // props로 들어오는 각각에 Entity에 대한 체크를 진행한다.
 type EntityPropTypes = {
+  saga: Object,
   messagesList: MessagesList,
   data: MessageFormEntity,
   currentUser: MessageAuthor | null,
@@ -99,14 +99,17 @@ class Entity extends Component {
   // UserID를 테스트용으로 => 1KPeHnwbmzWSm
   // entityURI를 테스트용으로 => 11e7240f-2e5c-4eb3-849c-14187747588a
   componentWillMount() {
-    const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
+    const { saga, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
 
     // currentUser를 테스트용으로 변경
     // const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
-    const countref = firebase.database().ref(getMessagesCountPath(entityUri, currentUser.uid));
-    const listRef = firebase.database().ref(getMessagesListPath(entityUri, currentUser.uid)).orderByKey();
+    // 메세지의 총 갯수를 가져오기
+    // 실제 리스트를 가져오기
+    const listRef = saga.database().ref(getMessagesListPath(entityUri, currentUser.uid)).orderByKey();
     countref.on('value', this.handleMessagesCountChange);
+    // 파이어베이스 기준 현재 레퍼런스에서 한개 후 데이터 가져오기
     listRef.limitToLast(1).on('value', this.handleLastMessageChange);
+    // 파이어베이스 기준 현재 레퍼런스에서 한개 전 데이터 가져오기
     listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
   }
 
@@ -209,12 +212,12 @@ class Entity extends Component {
     // this.props.dispatch(setCurrentCount(snapshot.val()) || 0);
     this.props.dispatch(setCurrentCount(1));
   };
-  
+
   onMessageReceive = (message) => {
     const { dispatch } = this.props;
     dispatch(setCurrentMessage(message));
   };
-  
+
   onMessageDelete = () => {
     const { dispatch } = this.props;
     dispatch(setCurrentCursor(null));
@@ -278,4 +281,4 @@ class Entity extends Component {
   }
 }
 
-export default firebaseConnect()(connect()(Entity));
+export default connect()(Entity);

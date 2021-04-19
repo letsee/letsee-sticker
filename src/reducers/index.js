@@ -1,7 +1,6 @@
 // @flow
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import { firebaseStateReducer } from 'react-redux-firebase';
 import currentEntity from './currentEntity';
 import currentUser from './currentUser';
 import entities from './entities';
@@ -25,7 +24,10 @@ const reducers = combineReducers({
   messagesList,
   selectedSticker,
   transformationGuideOpened,
-  firebase: firebaseStateReducer,
+  saga : {
+    auth : { isLoaded: true, isEmpty: true },
+    profile : { isLoaded: true, isEmpty: true },
+  },
   routing: routerReducer,
 });
 
