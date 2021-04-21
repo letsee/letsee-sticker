@@ -158,8 +158,10 @@ const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | n
 
 type MessageListPropTypes = {
   data: MessagesList,
+  messageArrayList: mixed,
   currentUser: MessageAuthor | null,
   entity: MessageFormEntity,
+  currentNumber: number,
   onMessageReceive?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
   onMessageDelete?: void => mixed, // eslint-disable-line react/require-default-props
   onPrev?: void => mixed, // eslint-disable-line react/require-default-props
@@ -167,6 +169,7 @@ type MessageListPropTypes = {
   onNewClick?: MouseEventHandler, // eslint-disable-line react/require-default-props
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
   onHelpClick? : MouseEventHandler,
+
 };
 
 class MessageList extends Component {
@@ -175,6 +178,10 @@ class MessageList extends Component {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
       this.object = letsee.createXRElement('<div class="xrDomElement"></div>', entity);
+    }
+    this.state = {
+      messageArrayList: props.messageArrayList,
+      currentNumber: props.currentNumber,
     }
   }
 
@@ -187,14 +194,12 @@ class MessageList extends Component {
     manager.get('swipe').set({ enable: true });
     manager.on('swipeleft', this.prev);
     manager.on('swiperight', this.next);
-    // store.dispatch('getMessageList');
-    store.dispatch(startTrackEntity(entity));
     this.renderAR(this.props);
   }
 
   // props의 변경이 일어났을 때 호출됨.
   componentWillReceiveProps(nextProps: MessageListPropTypes) {
-    if (this.props.data.current !== nextProps.data.current) {
+    /*if (this.props.data.current !== nextProps.data.current) {
       // const prevUserId = this.props.currentUser !== null && !this.props.data.public ? this.props.currentUser.uid : null;
       // const userId = nextProps.currentUser !== null && !nextProps.data.public ? nextProps.currentUser.uid : null;
       const prevUserId = 'jjjjjw910911-010-6284-8051';
@@ -202,16 +207,16 @@ class MessageList extends Component {
 
       unsubscribeFromCurrent(this.props.firebase, this.props.data, prevUserId, this.handleMessageChange);
       subscribeToCurrent(nextProps.firebase, nextProps.data, userId, this.handleMessageChange);
-    }
-
+    }*/
+    console.log('recive');
 
     this.renderAR(nextProps);
   }
 
   componentWillUnmount() {
-    const { firebase, data, currentUser } = this.props;
+    /*const { firebase, data, currentUser } = this.props;
     const userId = currentUser !== null && !data.public ? currentUser.uid : null;
-    unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange);
+    unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange);*/
 
     // 스와이프 이벤트를 연결한다.
     manager.off('swipeleft', this.prev);
@@ -225,7 +230,7 @@ class MessageList extends Component {
 
   // 현재 메세지를 가지고 있는 스냅샷으로부터 메세지의 변경을 notify한다.
   handleMessageChange = (snapshot) => {
-    const { onMessageDelete, onMessageReceive } = this.props;
+    /*const { onMessageDelete, onMessageReceive } = this.props;
     const messagesObject = snapshot.val();
     const data = selectLatestMessage(messagesObject);
     // letsee.removeAllXRElements();
@@ -233,7 +238,7 @@ class MessageList extends Component {
       onMessageDelete && onMessageDelete();
     } else {
       onMessageReceive && onMessageReceive(data);
-    }
+    }*/
   };
 
   prev = () => {
@@ -249,9 +254,11 @@ class MessageList extends Component {
   };
 
   renderAR({ entity: e, onNewClick, data }: MessageListPropTypes) {
+    console.log('e',e);
+    console.log('data',data);
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const { uri, size: { width, height, depth } } = e;
- 
+
       let realDiagonal = MAX_DIAGONAL; // 대각
 
       if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
@@ -273,7 +280,7 @@ class MessageList extends Component {
       const buttonSize = diagonal * 0.33;
       const nearest = Math.ceil(buttonSize / 100) * 100;
       const y = (height / realToClamped) + (diagonal * 0.04);
-      
+
       render(
         <div>
           {!data.loading && data.empty && (
@@ -316,6 +323,8 @@ class MessageList extends Component {
   }
 
   render() {
+    console.log('props',this.props);
+    console.log('state',this.state);
     const {
       data: messagesList,
       currentUser,
@@ -326,14 +335,23 @@ class MessageList extends Component {
       onNewClick,
       onPrev,
       onNext,
-      firebase,
+      messageArrayList,
+      currentNumber,
       onHelpClick,
       ...other
     } = this.props;
-
-    const { entityUri, empty, current, message, error, loading, first, last, count, currentCount } = messagesList;
-    const dataExists = !empty && current !== null && !error;
-
+    const entityUri = 'bts';
+    const count = messageArrayList ? messageArrayList.length : 0;
+    const empty = false;
+    const currentCount = currentNumber;
+    const current = currentCount;
+    const message = count > 0 ? messageArrayList[currentCount - 1] : null;
+    const first = 1;
+    const last = count;
+    const loading = false;
+  //  const {  empty, current, message, error, loading, first, last, count, currentCount } = messagesList;
+    const dataExists = !empty && current !== null ;
+    console.log(`current : ${current} first : ${first} last : ${last}`);
     return (
       <div {...other}>
         <BottomButtonContainer
@@ -373,18 +391,17 @@ class MessageList extends Component {
         </BottomButtonContainer>
 
         <MessagesButtonContainer>
-          {dataExists && message !== null && current !== first && (
-            <StyledNextButton onClick={loading ? null : () => this.prev()} />
+          {dataExists && message !== null && current !== last && (
+            <StyledNextButton onClick={ onNext} />
           )}
           <MessagesCount>{currentCount} / {count}</MessagesCount>
-          {dataExists && message !== null && current !== last && (
-            <StyledPrevButton onClick={loading ? null : () => this.next()} />
+          {dataExists && message !== null && current !== first && (
+            <StyledPrevButton onClick={ onPrev} />
           )}
         </MessagesButtonContainer>
 
-        {dataExists && message !== null && (
+        {count > 0 && (
           <Message
-            id={message.id}
             data={message}
             currentEntity={entityUri}
             loadingEntity={false}
@@ -402,4 +419,4 @@ class MessageList extends Component {
   }
 }
 
-export default connect()(MessageList);
+export default MessageList;

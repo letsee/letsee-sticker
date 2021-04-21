@@ -2,11 +2,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import keys from 'lodash/keys';
 import sortBy from 'lodash/sortBy';
 import MessageList from './MessageList';
 import MyMessagesButton from './MyMessagesButton';
+import store from '../../store'
 import BackButton from '../BackButton';
 import {
   setCurrentCursor,
@@ -20,7 +22,9 @@ import {
   fetchNext,
 } from '../../actions';
 import { getMessagesListPath, getMessagesCountPath } from '../../entityUriHelper';
+import { getEntityMessagesList } from '../../api/message'
 import type { MessageAuthor, MessageFormEntity, MessageWithId, MessagesList } from '../../types';
+import initialState from "../../initialState";
 
 const Title = styled.div`
   position: absolute;
@@ -78,6 +82,13 @@ type EntityPropTypes = {
 };
 
 class Entity extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentNumber : 1 ,
+      messageArrayList : {}
+    }
+  }
   // 각 엔티티에 대한 자료형에 대해 체크를 진행한다.
   static propTypes = {
     currentUser: PropTypes.shape({ // eslint-disable-line react/require-default-props
@@ -94,178 +105,70 @@ class Entity extends Component {
     }).isRequired,
     onNewClick: PropTypes.func, // eslint-disable-line react/require-default-props
     onHelpClick: PropTypes.func,
+    setPublicon: PropTypes.func,
   };
 
   // UserID를 테스트용으로 => 1KPeHnwbmzWSm
   // entityURI를 테스트용으로 => 11e7240f-2e5c-4eb3-849c-14187747588a
-  componentWillMount() {
-    const { saga, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
+  // componentWillMount() {
+   //  const { saga, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
 
     // currentUser를 테스트용으로 변경
     // const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
     // 메세지의 총 갯수를 가져오기
     // 실제 리스트를 가져오기
-    const listRef = saga.database().ref(getMessagesListPath(entityUri, currentUser.uid)).orderByKey();
-    countref.on('value', this.handleMessagesCountChange);
-    // 파이어베이스 기준 현재 레퍼런스에서 한개 후 데이터 가져오기
-    listRef.limitToLast(1).on('value', this.handleLastMessageChange);
-    // 파이어베이스 기준 현재 레퍼런스에서 한개 전 데이터 가져오기
-    listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
-  }
 
-  componentWillReceiveProps({
-    messagesList: { entityUri, public: isPublic },
-    firebase, dispatch, currentUser,
-  }: EntityPropTypes) {
-    const prevEntityUri = this.props.messagesList.entityUri;
-    const prevUserId = this.props.currentUser !== null && !this.props.messagesList.public ? this.props.currentUser.uid : null;
-    const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
+  // }
 
-    if (
-      entityUri !== prevEntityUri ||
-      prevUserId !== userId
-    ) {
-      const prevFirebase = this.props.firebase.database();
-      const prevCountref = prevFirebase.ref(getMessagesCountPath(prevEntityUri, prevUserId));
-      const prevListRef = prevFirebase.ref(getMessagesListPath(prevEntityUri, prevUserId)).orderByKey();
-      prevCountref.off('value', this.handleMessagesCountChange);
-      prevListRef.limitToLast(1).off('value', this.handleLastMessageChange);
-      prevListRef.limitToFirst(1).off('value', this.handleFirstMessageChange);
-
-      const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
-      const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
-      // messageCount 경로의 이벤트를 listening하여 변경사항이 있을시 이를 가져옵니다.
-      countref.on('value', this.handleMessagesCountChange);
-      listRef.limitToLast(1).on('value', this.handleLastMessageChange);
-      listRef.limitToFirst(1).on('value', this.handleFirstMessageChange);
-    }
-  }
-
-  /**
-   * props로 entityUri, meesageList, currentEntity,
-   */
-  componentWillUnmount() {
-    const { firebase, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
-    const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
-    const countref = firebase.database().ref(getMessagesCountPath(entityUri, userId));
-    const listRef = firebase.database().ref(getMessagesListPath(entityUri, userId)).orderByKey();
-    countref.off('value', this.handleMessagesCountChange);
-    listRef.limitToLast(1).off('value', this.handleLastMessageChange);
-    listRef.limitToFirst(1).off('value', this.handleFirstMessageChange);
+  async componentDidMount(){
+    const listRef = await getEntityMessagesList();
+    this.setState({messageArrayList : listRef});
   }
 
   props: EntityPropTypes;
 
   handlePrev() {
-    const { firebase, messagesList, currentUser, dispatch } = this.props;
-    const { first, current, entityUri, public: isPublic, loading } = messagesList;
-
-    if (first !== current && !loading) {
-      dispatch(fetchPrev());
-      const path = getMessagesListPath(entityUri, (currentUser !== null && !isPublic) ? currentUser.uid : null);
-      const ref = firebase.database().ref(path).orderByKey();
-      const filteredRef = current === null ? ref.limitToLast(1) : ref.endAt(current).limitToLast(2);
-
-      filteredRef.once('value', (snapshot) => {
-        const messageIds = sortBy(keys(snapshot.val()));
-        const messageId = messageIds.length > 0 ? messageIds[0] : null;
-        this.props.dispatch(setCurrentCursor(messageId));
-      });
-    }
+    const currentNumber = this.state.currentNumber;
+    const total = this.state.messageArrayList.length;
+    const prevNumber = currentNumber - 1 > 1 ? currentNumber - 1 :  1 ;
+    this.setState({currentNumber : prevNumber});
   }
 
   handleNext() {
-    const { firebase, messagesList, currentUser, dispatch } = this.props;
-    const { last, current, entityUri, public: isPublic, loading } = messagesList;
-
-    if (last !== current && !loading) {
-      dispatch(fetchNext());
-      const path = getMessagesListPath(entityUri, (currentUser !== null && !isPublic) ? currentUser.uid : null);
-      const ref = firebase.database().ref(path).orderByKey();
-      const filteredRef = current === null ? ref.limitToLast(1) : ref.startAt(current).limitToFirst(2);
-
-      filteredRef.once('value', (snapshot) => {
-        const messageIds = sortBy(keys(snapshot.val()));
-        const messageId = messageIds.length > 0 ? messageIds[messageIds.length - 1] : null;
-        this.props.dispatch(setCurrentCursor(messageId));
-      });
-    }
+    const currentNumber = this.state.currentNumber;
+    const total = this.state.messageArrayList.length;
+    const nextNumber = currentNumber + 1 > total ? currentNumber : currentNumber + 1 ;
+    this.setState({currentNumber : nextNumber});
+    // alert('test');
   }
-
-  // 마지막 메세지의 변화를 바꿔준다.
-  handleLastMessageChange = (snapshot) => {
-    const messageIds = sortBy(keys(snapshot.val()));
-    const messageId = messageIds.length > 0 ? messageIds[messageIds.length - 1] : null;
-    this.props.dispatch(setLastCursor(messageId));
-  };
-
-  // 메세지의 변화를 바꿔준다.
-  handleFirstMessageChange = (snapshot) => {
-    const messageIds = sortBy(keys(snapshot.val()));
-    const messageId = messageIds.length > 0 ? messageIds[0] : null;
-    this.props.dispatch(setFirstCursor(messageId));
-  };
-
-  // 메세지의 갯수를 저장한다.
-  handleMessagesCountChange = (snapshot) => {
-    this.props.dispatch(setCount(snapshot.val() || 0));
-    // this.props.dispatch(setCurrentCount(snapshot.val()) || 0);
-    this.props.dispatch(setCurrentCount(1));
-  };
-
-  onMessageReceive = (message) => {
-    const { dispatch } = this.props;
-    dispatch(setCurrentMessage(message));
-  };
-
-  onMessageDelete = () => {
-    const { dispatch } = this.props;
-    dispatch(setCurrentCursor(null));
-  };
 
   render() {
     const {
       messagesList,
       currentUser,
       data,
+      entity,
       onNewClick,
       onEditClick,
-      firebase,
-      dispatch,
       children,
       onHelpClick,
+        setPublic,
       ...other
     } = this.props;
-
-    const canBecomePrivate = messagesList.public && currentUser !== null;
 
     return (
       <div {...other}>
         <Title public={messagesList.public}>
           <EntityName>
-            {messagesList.public ? data.name : '내 스티커'}
+            {'내 스티커'}
           </EntityName>
-
-          {/*<MessagesCount>*/}
-          {/*  ({messagesList.count})*/}
-          {/*</MessagesCount>*/}
         </Title>
-
-        {!messagesList.public && (
-          <StyledBackButton
-            onClick={() => dispatch(setPublic(true))}
-          />
-        )}
-
-        {currentUser !== null && messagesList.public && (
           <StyledMyMessagesButton
-            empty={messagesList.message === null || messagesList.empty}
-            onClick={() => dispatch(setPublic(!canBecomePrivate))}
+            empty={messagesList.empty}
+            onClick={() => setPublic(!canBecomePrivate)}
           />
-        )}
-
         <MessageList
-          data={messagesList}
+          data={this.state.messageArrayList}
           currentUser={currentUser}
           entity={data}
           onNewClick={onNewClick}
@@ -273,12 +176,23 @@ class Entity extends Component {
           onHelpClick={onHelpClick}
           onPrev={() => this.handlePrev()}
           onNext={() => this.handleNext()}
-          onMessageReceive={this.onMessageReceive}
-          onMessageDelete={this.onMessageDelete}
+          currentNumber={this.state.currentNumber}
+          messageArrayList={this.state.messageArrayList}
         />
       </div>
     );
   }
 }
+// mapStateToProps 는 리덕스 스토어의 상태를 조회해서 어떤 것들을 props 로 넣어줄지 정의합니다.
+// 현재 리덕스 상태를 파라미터로 받아옵니다.
+const mapStateToProps = state => ({
 
-export default connect()(Entity);
+});
+
+// mapDispatchToProps 는 액션을 디스패치하는 함수를 만들어서 props로 넣어줍니다.
+// dispatch 를 파라미터로 받아옵니다.
+const mapDispatchToProps = dispatch => ({
+/*  setPublicon: (value) => dispatch(setPublic(value))*/
+});
+
+export default connect(mapStateToProps, {setPublic})(Entity);

@@ -32,6 +32,11 @@ type MessagePropTypes = {
 };
 
 class Message extends Component {
+
+  constructor(props) {
+    super(props);
+  }
+
   static defaultProps = {
     shareDisabled: false,
   };
@@ -44,9 +49,11 @@ class Message extends Component {
     shareModalOpened: boolean,
   };
 
-  props: MessagePropTypes;
+  // props: MessagePropTypes;
 
   render() {
+    console.log('message');
+    console.log('message prop', this.props);
     const {
       id,
       shareDisabled,
@@ -56,8 +63,8 @@ class Message extends Component {
       children,
       ...other
     } = this.props;
-
-    const { entity, author, timestamp, stickers } = data;
+    const {timestamp} = data;
+    const { entity, author, stickers} = data.authorMessages;
     const { uri, name } = entity;
     const entityTracked = currentEntity !== null && currentEntity === uri;
     const { firstname, lastname } = author;
@@ -66,12 +73,19 @@ class Message extends Component {
 
     return (
       <div>
-        {entityTracked && !loadingEntity && stickers.map((sticker, i) => (
+       {/* {entityTracked && !loadingEntity && stickers.map((sticker, i) => (
           <Sticker
             key={i}
             data={sticker}
             entity={entity}
           />
+        ))}*/}
+        {stickers.map((sticker, i) => (
+            <Sticker
+                key={i}
+                data={sticker}
+                entity={entity}
+            />
         ))}
 
         {entityTracked && !loadingEntity && (
@@ -82,9 +96,9 @@ class Message extends Component {
             {/*  timestamp={timestamp}*/}
             {/*/>*/}
 
-            <StyledShareButton
+           {/* <StyledShareButton
               onClick={shareDisabled ? null : () => this.setState({ shareModalOpened: true })}
-            />
+            />*/}
           </div>
         )}
 

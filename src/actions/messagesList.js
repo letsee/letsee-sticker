@@ -37,9 +37,8 @@ export const setLastCursor = (messageId: string | null) => ({
   payload: messageId,
 });
 
-export const setCurrentCursor = (messageId: string | null) => ({
+export const setCurrentCursor = () => ({
   type: SET_CURRENT_CURSOR,
-  payload: messageId,
 });
 
 export const setCurrentMessage = (message: MessageWithId | null) => ({
@@ -47,10 +46,6 @@ export const setCurrentMessage = (message: MessageWithId | null) => ({
   payload: {
     message,
   },
-});
-
-export const getMessageList = () => ({
-  type: GET_MESSAGE_LIST,
 });
 
 export const fetchPrev = () => ({ type: FETCH_PREV });

@@ -49,6 +49,7 @@ export type MessageEntity = {
 export type Message = {
   author: MessageAuthor,
   entity: MessageEntity,
+  authorMessages: Message,
   public: boolean,
   stickers: Sticker[],
   timestamp: number;
@@ -117,4 +118,8 @@ export type MessagesList = {
   message: MessageWithId | null,
   error: boolean,
   loading: boolean,
+};
+
+export type ApiMessage = {
+
 };

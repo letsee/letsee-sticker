@@ -222,7 +222,7 @@ export default withRouter(connect(
     helpOpened,
     messagesList,
     mapStateToProps,
-    mapDispachToProps
+    mapDispachToProps,
    }) => ({
     letseeLoaded,
     loadingEntity,
@@ -235,6 +235,6 @@ export default withRouter(connect(
     helpOpened,
     messagesList,
     mapStateToProps,
-    mapDispachToProps
+    mapDispachToProps,
   }),
 )(Root));

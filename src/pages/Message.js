@@ -175,9 +175,9 @@ class Message extends Component {
       const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
       const realToClamped = realDiagonal / diagonal;
 
-      if (this.messageObject.parent !== entity.object) {
+     /* if (this.messageObject.parent !== entity.object) {
         entity.addRenderable(this.messageObject);
-      }
+      }*/
 
       this.messageObject.scale.setScalar(realToClamped);
 

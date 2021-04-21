@@ -89,13 +89,14 @@ class Sticker extends Component {
   }
 
   componentDidMount() {
+    console.log('componentDidMount', this.props);
     if (typeof letsee !== 'undefined' && letsee !== null) {
       this.renderAR(this.props);
     }
   }
 
   componentWillReceiveProps(nextProps: StickerPropTypes) {
-    // console.log();
+    console.log('componentWillReceiveProps', nextProps);
     if (typeof letsee !== 'undefined' && letsee !== null) {
       if (
           nextProps.entity.uri !== this.props.entity.uri ||
@@ -149,6 +150,7 @@ class Sticker extends Component {
       // }
 
       const { position, rotation, quaternion, scale, text, type, color } = data;
+      console.log('data', data);
       this.stickerObject.position.set(position.x, position.y, position.z);
       this.stickerObject.scale.setScalar(scale * realToClamped);
 
