@@ -9,4 +9,4 @@ export * from './messageForm';
 export * from './messagesList';
 export * from './selectedSticker';
 export * from './transformationGuideOpened';
-export * from './apiAction';
+export * from './apiMessage';
