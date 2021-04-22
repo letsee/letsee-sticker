@@ -409,11 +409,11 @@ class MessageList extends Component {
           />
         )}
 
-        {loading && (
+        {/*{loading && (
           <SpinnerContainer>
             <Spinner />
           </SpinnerContainer>
-        )}
+        )}*/}
       </div>
     );
   }

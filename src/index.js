@@ -15,8 +15,6 @@ import store from './store';
 import routes from './routes';
 import {
 	letseeLoad,
-	startLoading,
-	stopLoading,
 	setCurrentUser,
 	addEntity,
 	startTrackEntity,
@@ -29,7 +27,6 @@ match({ history, routes }, (err, redirect, renderProps) => {
 	Kakao.init('e1444fec00fc98732916741894eee22f');
 	const app = document.getElementById('app');
 	const handleWindowResize = () => {
-		console.log('윈도우 리사이즈.~');
 		app.style.width = `${document.documentElement.clientWidth}px`;
 		app.style.height = `${document.documentElement.clientHeight}px`;
 		// WEBAR SDK가 아래로 오게 하기 위해 position과 z-index를 400 조정

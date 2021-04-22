@@ -17,6 +17,8 @@ import {
   setPublic,
   setCurrentCursor,
   GET_MESSAGE_LIST_REQUEST,
+  GET_MESSAGE_LIST_SUCCESS,
+  GET_MESSAGE_LIST_FAILURE,
 } from '../actions';
 import {
   createEntityMessages,
@@ -26,7 +28,17 @@ import {
 
 function* takeMessageList() {
   yield takeLatest(GET_MESSAGE_LIST_REQUEST, () => {
-    const api = getEntityMessagesList();
+    try {
+      const apiResult = race({ list: getEntityMessagesList(), timeout: delay(2000) });
+      if (apiResult.list) {
+        put({ type: GET_MESSAGE_LIST_SUCCESS });
+      } else {
+        put({ type: GET_MESSAGE_LIST_FAILURE });
+      }
+    } catch (e) {
+      console.error('getMessage fail', e);
+      put({ type: GET_MESSAGE_LIST_FAILURE });
+    }
   });
 }
 
@@ -105,7 +117,7 @@ function* submitMessageForm() {
 function* sagas() {
   yield all([
     fork(submitMessageForm),
-    fork(takeMessageList),
+    /* fork(takeMessageList), */
   ]);
 }
 

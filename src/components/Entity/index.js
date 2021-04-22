@@ -163,10 +163,10 @@ class Entity extends Component {
             {'내 스티커'}
           </EntityName>
         </Title>
-          <StyledMyMessagesButton
+          {/*<StyledMyMessagesButton
             empty={messagesList.empty}
             onClick={() => setPublic(!canBecomePrivate)}
-          />
+          />*/}
         <MessageList
           data={this.state.messageArrayList}
           currentUser={currentUser}
