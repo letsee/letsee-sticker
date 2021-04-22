@@ -52,10 +52,9 @@ export const setMessageFormId = (id: string) => ({
   },
 });
 
-export const submitMessageFormSuccess = (id: string) => ({
+export const submitMessageFormSuccess = () => ({
   type: SUBMIT_MESSAGE_FORM_SUCCESS,
   payload: {
-    id,
   },
 });
 

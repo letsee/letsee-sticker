@@ -243,7 +243,7 @@ class MessageForm extends Component {
       currentStickerPosArray: [],
       selectedTextColor: '#ffffff',
     };
-    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
+    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6080e946b74fe22a5038daaa');
     // this.messageObject = new letsee.Object3D();
     this.messageObject = letsee.createXRElement('<div class="messageObject"></div>', this.entity);
     this.selectedStickerObject = null;
@@ -269,7 +269,7 @@ class MessageForm extends Component {
     manager.on('rotateend', this.handleRotateEnd);
     manager.on('pressup', this.handlePressUp);
     manager.on('press', this.handlePress);
-    
+
     this.renderAR(this.props);
   }
 
@@ -293,7 +293,7 @@ class MessageForm extends Component {
     // debounced 함수 해
     this.debouncedAddStickerPos.cancel();
 
-    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
+    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6080e946b74fe22a5038daaa');
     letsee.removeAllXRElements(this.entity);
     this.selectedStickerObject = null;
   }
@@ -325,7 +325,7 @@ class MessageForm extends Component {
       const xrElement = this.messageObject.children[i];
       this.messageObject.removeChild(xrElement);
     }
-    
+
     if (stickersArray.length === 0) { /** 스티커가 0개 일 때 : 초기 MessageForm 화면 **/
 
       /** 위쪽 화살표 **/
@@ -373,7 +373,7 @@ class MessageForm extends Component {
         this.frameAR = null;
         this.textAR = null;
       }
-      
+
 
       for (let i = 0; i < stickersArray.length; i += 1) {
         const { id, type, text, position, quaternion, scale, color } = stickersArray[i];
@@ -382,7 +382,7 @@ class MessageForm extends Component {
         const objById = getObjectById(this.messageObject, id);
         let element = document.createElement('div');
         let stickerObj = letsee.createXRElement(element);
-        
+
         if (objById) { // 기존에 있는 스티커
           stickerObj = objById;
           element = stickerObj.element;
@@ -409,7 +409,7 @@ class MessageForm extends Component {
           //   element.style.color = `${selectedTextColor}`;
           // }
         }
-        
+
         // 마지막에 추가된 스티커라면 밝기값을 좀더 밝게 선언, 나머지 스티커는 좀더 어둡게 선언
         if (selectedSticker && !selected) {
           element.style.opacity = '0.3';

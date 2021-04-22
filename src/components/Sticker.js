@@ -83,19 +83,20 @@ class Sticker extends Component {
     if (typeof letsee !== 'undefined' && letsee !== null) {
       // const container = document.createElement('div');
       // this.stickerObject = new letsee.DOMRenderable(container);
-      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6080e946b74fe22a5038daaa');
       this.stickerObject = letsee.createXRElement('<div></div>', entity);
     }
   }
 
   componentDidMount() {
+    console.log('componentDidMount', this.props);
     if (typeof letsee !== 'undefined' && letsee !== null) {
       this.renderAR(this.props);
     }
   }
 
   componentWillReceiveProps(nextProps: StickerPropTypes) {
-    // console.log();
+    console.log('componentWillReceiveProps', nextProps);
     if (typeof letsee !== 'undefined' && letsee !== null) {
       if (
           nextProps.entity.uri !== this.props.entity.uri ||
@@ -128,7 +129,7 @@ class Sticker extends Component {
 
   renderAR({ entity: { uri }, data }: StickerPropTypes) {
     // const entity = letsee.getEntity(uri);
-    const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6077a4622b256dfa2f0dfca5');
+    const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6080e946b74fe22a5038daaa');
     if (entity) {
       console.log(entity);
       const { width, height } = entity.physicalSize;
@@ -149,6 +150,7 @@ class Sticker extends Component {
       // }
 
       const { position, rotation, quaternion, scale, text, type, color } = data;
+      console.log('data', data);
       this.stickerObject.position.set(position.x, position.y, position.z);
       this.stickerObject.scale.setScalar(scale * realToClamped);
 

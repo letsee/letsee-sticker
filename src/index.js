@@ -15,8 +15,6 @@ import store from './store';
 import routes from './routes';
 import {
 	letseeLoad,
-	startLoading,
-	stopLoading,
 	setCurrentUser,
 	addEntity,
 	startTrackEntity,
@@ -29,14 +27,13 @@ match({ history, routes }, (err, redirect, renderProps) => {
 	Kakao.init('e1444fec00fc98732916741894eee22f');
 	const app = document.getElementById('app');
 	const handleWindowResize = () => {
-		console.log('윈도우 리사이즈.~');
 		app.style.width = `${document.documentElement.clientWidth}px`;
 		app.style.height = `${document.documentElement.clientHeight}px`;
 		// WEBAR SDK가 아래로 오게 하기 위해 position과 z-index를 400 조정
 		app.style.position = 'fixed';
 		app.style.zIndex = '400';
 	};
-	
+
 	// <script>를 로드 후, head태그에 추가하는 function.
 	const loadScript = (url, callback) => {
 		const script = document.createElement("script");
@@ -56,7 +53,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 		script.src = url; //  스크립트 Loading
 		document.getElementsByTagName("head")[0].appendChild(script);
 	};
-	
+
 	let isStarted = false;
 	loadScript("./letsee.js", () => {
 		letsee.init();
@@ -64,13 +61,13 @@ match({ history, routes }, (err, redirect, renderProps) => {
 			letsee.start();
 			const entity = {
 				image : 'assets/bts.png',
-				name : '',
+				name : 'LetseeSticker',
 				size : {
 					depth: 200, height: 200, unit: 'mm', width: 140,
 				},
 				uri : 'bts',
 			};
-			
+
 			window.entity = entity;
 			store.dispatch(addEntity(entity));
 		});
@@ -85,7 +82,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 			if (isStarted) {
 				const entity = {
 					image : 'assets/bts.json',
-					name : '',
+					name : 'LetseeSticker',
 					size : {
 						depth: 200, height: 200, unit: 'mm', width: 140,
 					},
@@ -100,7 +97,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 
 	window.addEventListener('resize', handleWindowResize);
 	handleWindowResize();
-	
+
 	// TODO: 렛시의 onLoad 이벤트로 바꿔주기.
 	window.addEventListener('letsee.load', () => {
 		store.dispatch(letseeLoad());
