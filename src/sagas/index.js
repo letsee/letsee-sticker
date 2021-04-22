@@ -5,9 +5,8 @@ import {
   fork,
   all,
   put,
-  select,
   race,
-  call,
+  takeLatest,
 } from 'redux-saga/effects';
 import {
   DESTROY_MESSAGE_FORM,
@@ -17,46 +16,18 @@ import {
   destroyMessageForm,
   setPublic,
   setCurrentCursor,
+  GET_MESSAGE_LIST_REQUEST,
 } from '../actions';
-import { getMessagesListPath } from '../entityUriHelper';
 import {
   createEntityMessages,
+  getEntityMessagesList
 } from '../api/message';
-import type { Message } from '../types';
 
-function* persistToFirebase(getFirebase, id: string | null, message: Message) {
-  // firebase 데이터베이스 취득
-  const firebase = getFirebase().database();
-  let messageRef;
-  // 아이디가 존재할경우 private repo , 존재하지 않을 경우 public repo를 root로 삼음
-  if (id === null) {
-    messageRef = firebase.ref('messages').push();
-  } else {
-    messageRef = firebase.ref(`/messages/${id}`);
-  }
 
-  const messageId = messageRef.key;
-  const authorMessagesPath = getMessagesListPath(message.entity.uri, message.author.uid);
-  const publicMessagesPath = getMessagesListPath(message.entity.uri, null);
-
-  let messageSet = false;
-
-  while (!messageSet) {
-    try {
-      yield messageRef.set(message);
-      messageSet = true;
-    } catch (e) {
-      // TODO retry??
-      console.log(e);
-    }
-  }
-
-  yield all([
-    firebase.ref(`${authorMessagesPath}/${messageId}`).set(message),
-    firebase.ref(`${publicMessagesPath}/${messageId}`).set(message.public ? message : null),
-  ]);
-
-  return messageRef;
+function* takeMessageList() {
+  yield takeLatest(GET_MESSAGE_LIST_REQUEST, () => {
+    const api = getEntityMessagesList();
+  });
 }
 
 function* submitMessageForm() {
@@ -109,11 +80,8 @@ function* submitMessageForm() {
           /* timestamp: timestamp || getFirebase().database.ServerValue.TIMESTAMP, */
         };
         console.log(message);
-        const { apiSubmit, error } = yield createEntityMessages(message);
-        if (error) {
-          console.error(error);
-        }
-        if (apiSubmit) {
+        const { data } = race({ apiSubmit: createEntityMessages(message), timeout: delay(2000), destroy: take(DESTROY_MESSAGE_FORM) });
+        if (data) {
           yield put(submitMessageFormSuccess());
           yield put(destroyMessageForm());
           yield put(setPublic(false));
@@ -134,14 +102,10 @@ function* submitMessageForm() {
   }
 }
 
-function* getMessageListRequest() {
-
-}
-
 function* sagas() {
   yield all([
     fork(submitMessageForm),
-    fork(getMessageListRequest),
+    fork(takeMessageList),
   ]);
 }
 

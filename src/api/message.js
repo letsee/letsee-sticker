@@ -15,13 +15,15 @@ axios.defaults.headers.delete['Content-Type'] = 'application/json';
  * @param message
  * @returns {Promise<*>}
  */
-module.exports.createEntityMessages =  (message) => {
+module.exports.createEntityMessages = async (message) => {
     const config = {
         method: 'post',
         url: `/entityMessages`,
         data : message,
     };
-    return axios(config).then(response => response).catch(errors => errors);
+    const { data } = await axios(config);
+    console.log('data', data);
+    return data;
 };
 
 module.exports.getEntityMessagesList = async () => {

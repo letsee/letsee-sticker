@@ -2,7 +2,7 @@ import {
     GET_MESSAGE_LIST_REQUEST,
     GET_MESSAGE_LIST_SUCCESS,
     GET_MESSAGE_LIST_FAILURE,
-} from '../actions/apiAction';
+} from '../actions/apiMessage';
 
 const getMessageList = (state: string | null = null, action) => {
     switch (action.type) {
