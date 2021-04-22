@@ -22,7 +22,6 @@ module.exports.createEntityMessages = async (message) => {
         data : message,
     };
     const { data } = await axios(config);
-    console.log('data', data);
     return data;
 };
 

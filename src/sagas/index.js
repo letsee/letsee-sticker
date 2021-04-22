@@ -79,8 +79,8 @@ function* submitMessageForm() {
           }
           /* timestamp: timestamp || getFirebase().database.ServerValue.TIMESTAMP, */
         };
-        console.log(message);
-        const { data } = race({ apiSubmit: createEntityMessages(message), timeout: delay(2000), destroy: take(DESTROY_MESSAGE_FORM) });
+        const data = race({ apiSubmit: createEntityMessages(message), timeout: delay(2000), destroy: take(DESTROY_MESSAGE_FORM) });
+        console.log('saga', data);
         if (data) {
           yield put(submitMessageFormSuccess());
           yield put(destroyMessageForm());
