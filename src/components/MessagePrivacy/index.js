@@ -2,9 +2,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-// import CloseButton from '../CloseButton';
-// import Spinner from '../Spinner';
-// import Button from '../Button';
 import { BottomButtonContainer } from '../Container';
 import { ImageButton } from '../Button';
 
@@ -49,47 +46,6 @@ const Title = styled.div`
   font-weight: bold;
   color: white;
 `;
-
-// const PrivacyRadio = Button.extend`
-//   font-family: AppleSDGothicNeo, sans-serif;
-//   font-size: 15px;
-//   font-weight: bold;
-//   text-align: center;
-//   color: ${props => (props.checked ? '#000' : 'rgba(0, 0, 0, 0.4)')};
-//   margin: 11px auto 0 auto;
-//   vertical-align: middle;
-// `;
-//
-// const PrivacyRadioImage = styled.img`
-//   display: inline-block;
-//   margin-right: 5px;
-//   vertical-align: middle;
-// `;
-//
-// const SubmitButton = Button.extend`
-//   position: relative;
-//   margin: 17px auto 0 auto;
-//   border-radius: 31px;
-//   background-color: #00b1c7;
-//   padding: 12px 23.5px 9px 25.5px;
-//   font-family: AppleSDGothicNeo, sans-serif;
-//   font-size: 19px;
-//   font-weight: bold;
-//   letter-spacing: 0.4px;
-//   text-align: center;
-//   color: #fff;
-// `;
-//
-// const StyledCloseButton = styled(CloseButton)`
-//   margin: 25px auto 0 auto;
-// `;
-//
-// const SpinnerContainer = styled.div`
-//   position: absolute;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-// `;
 
 type MessagePrivacyPropTypes = {
   error: boolean,
@@ -165,9 +121,9 @@ class MessagePrivacy extends Component {
     return (
       <Container {...other}>
         <Body innerRef={(body) => { this.body = body; }}>
-          
+
           <Title> 스티커 남기기 </Title>
-          
+
           {error ? (
             <Message>
               <div>문제가 발생했어요.</div>
@@ -179,7 +135,7 @@ class MessagePrivacy extends Component {
               <div>이 스티커를 전체보기에 남길까요?</div>
             </Message>
           )}
-  
+
           <BottomButtonContainer
             bottom="5%"
             marginItems="8px"
@@ -194,7 +150,7 @@ class MessagePrivacy extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x" />
             </ImageButton>
-    
+
             <ImageButton
               imageWidth="60px"
               onClick={submitting ? null : onSubmit}
@@ -206,54 +162,6 @@ class MessagePrivacy extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-confirm_3x.png 3x" />
             </ImageButton>
           </BottomButtonContainer>
-          
-          
-          {/*기존 전체공개 Radia 버튼 및 하단 버튼 제거*/}
-          {/*<PrivacyRadio*/}
-          {/*  type="button"*/}
-          {/*  checked={isPublic}*/}
-          {/*  onClick={() => onPublicChange && onPublicChange(!this.props.public)}*/}
-          {/*>*/}
-          {/*  {isPublic ? (*/}
-          {/*    <PrivacyRadioImage*/}
-          {/*      alt="전체 공개"*/}
-          {/*      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503285514/assets/check-all_3x.png"*/}
-          {/*      srcSet="*/}
-          {/*        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503285514/assets/check-all_3x.png 2x,*/}
-          {/*        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503285514/assets/check-all_3x.png 3x*/}
-          {/*      "*/}
-          {/*    />*/}
-          {/*  ) : (*/}
-          {/*    <PrivacyRadioImage*/}
-          {/*      alt="전체 공개"*/}
-          {/*      src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_20,q_auto/v1503285514/assets/check-noall_3x.png"*/}
-          {/*      srcSet="*/}
-          {/*        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_40,q_auto/v1503285514/assets/check-noall_3x.png 2x,*/}
-          {/*        https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,h_60,q_auto/v1503285514/assets/check-noall_3x.png 3x*/}
-          {/*      "*/}
-          {/*    />*/}
-          {/*  )}*/}
-          
-          {/*  전체 공개*/}
-          {/*</PrivacyRadio>*/}
-          
-          {/*<SubmitButton*/}
-          {/*  type="button"*/}
-          {/*  onClick={submitting ? null : onSubmit}*/}
-          {/*>*/}
-          {/*  <span style={{ visibility: submitting ? 'hidden' : 'visible' }}>남기기</span>*/}
-          
-          {/*  {submitting && (*/}
-          {/*    <SpinnerContainer>*/}
-          {/*      <Spinner />*/}
-          {/*    </SpinnerContainer>*/}
-          {/*  )}*/}
-          {/*</SubmitButton>*/}
-          
-          {/*<StyledCloseButton*/}
-          {/*  color="black"*/}
-          {/*  onClick={submitting ? null : onClose}*/}
-          {/*/>*/}
         </Body>
       </Container>
     );

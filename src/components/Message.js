@@ -3,10 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import ShareButton from './ShareButton';
 import MessageMeta from './MessageMeta';
-import ShareModal from './ShareModal';
 import Sticker from './Sticker';
-import openCapture from '../openCapture';
-import openKakaoLink from '../openKakaoLink';
 import type { Message as MessageType } from '../types';
 
 const StyledMessageMeta = styled(MessageMeta)`
@@ -36,27 +33,9 @@ class Message extends Component {
   constructor(props) {
     super(props);
   }
-
-  static defaultProps = {
-    shareDisabled: false,
-  };
-
-  state = {
-    shareModalOpened: false,
-  };
-
-  state: {
-    shareModalOpened: boolean,
-  };
-
-  // props: MessagePropTypes;
-
   render() {
-    console.log('message');
-    console.log('message prop', this.props);
     const {
       id,
-      shareDisabled,
       currentEntity,
       data,
       loadingEntity,
@@ -69,17 +48,9 @@ class Message extends Component {
     const entityTracked = currentEntity !== null && currentEntity === uri;
     const { firstname, lastname } = author;
     const authorName = `${firstname} ${lastname}`.trim();
-    const { shareModalOpened } = this.state;
 
     return (
       <div>
-       {/* {entityTracked && !loadingEntity && stickers.map((sticker, i) => (
-          <Sticker
-            key={i}
-            data={sticker}
-            entity={entity}
-          />
-        ))}*/}
         {stickers.map((sticker, i) => (
             <Sticker
                 key={i}
@@ -87,38 +58,6 @@ class Message extends Component {
                 entity={entity}
             />
         ))}
-
-        {entityTracked && !loadingEntity && (
-          <div>
-            {/*메타 데이터 제거*/}
-            {/*<StyledMessageMeta*/}
-            {/*  author={author}*/}
-            {/*  timestamp={timestamp}*/}
-            {/*/>*/}
-
-           {/* <StyledShareButton
-              onClick={shareDisabled ? null : () => this.setState({ shareModalOpened: true })}
-            />*/}
-          </div>
-        )}
-
-        {shareModalOpened && (
-          <ShareModal
-            onClose={() => this.setState({ shareModalOpened: false })}
-            onCaptureClick={() => {
-              openCapture();
-              this.setState({ shareModalOpened: false });
-            }}
-            onKakaoLinkClick={() => {
-              openKakaoLink(id, authorName, name, {
-                fail: (...args) => {
-                  // TODO error
-                  console.log(args);
-                },
-              });
-            }}
-          />
-        )}
       </div>
     );
   }

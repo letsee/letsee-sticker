@@ -28,7 +28,6 @@ import {
   openHelp,
   closeHelp,
 } from '../actions';
-import openLogin from '../openLogin';
 import type {
   MessageAuthor,
   MessageForm as MessageFormType,
@@ -151,15 +150,6 @@ const Root = (
           data={currentEntityData}
           currentUser={currentUser}
           onNewClick={() => {
-            /**
-             * 맨 처음 증강이후 스티커 추가 버튼 눌렀을시 로그인 체크하는 부분 제거
-             */
-            // if (currentUser === null) {
-            //   openLogin();
-            // } else {
-            //   dispatch(initMessageForm(currentEntityData, currentUser));
-            // }
-
             dispatch(initMessageForm(currentEntityData, currentUser));
           }}
           onHelpClick={() => dispatch(openHelp())}

@@ -6,12 +6,10 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import clamp from 'lodash/clamp';
 import MessageComponent from '../components/Message';
-/* import Spinner from '../components/Spinner'; */
 import Button from '../components/Button';
 import TargetGuide from '../components/TargetGuide';
 import HelpButton from '../components/HelpButton';
 import StickerButton from '../components/StickerButton';
-/* import CloseButton from '../components/CloseButton'; */
 import Envelope from '../components/Envelope';
 import Help from '../components/Help';
 import {
@@ -115,15 +113,9 @@ type MessagePropTypes = {
 class Message extends Component {
   constructor(props: MessagePropTypes) {
     super(props);
-
     this.state = {
       opened: false,
     };
-
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      const container = document.createElement('div');
-      this.messageObject = new letsee.DOMRenderable(container);
-    }
   }
 
   state: { opened: boolean };
@@ -135,27 +127,6 @@ class Message extends Component {
       this.props.currentEntity === this.props.data.entity.uri
     ) {
       this.renderAR(this.props);
-    }
-  }
-
-  componentWillReceiveProps(nextProps: MessagePropTypes) {
-    if (
-      nextProps.data &&
-      nextProps.currentEntity !== null &&
-      nextProps.currentEntity === nextProps.data.entity.uri
-    ) {
-      this.renderAR(nextProps);
-    }
-  }
-
-  componentWillUnmount() {
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      // const entity = letsee.getEntity(this.props.data.entity.uri);
-      const entity = letsee.getEntity('assets/bts.json');
-
-      if (entity) {
-        entity.removeRenderable(this.messageObject);
-      }
     }
   }
 
@@ -174,10 +145,6 @@ class Message extends Component {
 
       const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
       const realToClamped = realDiagonal / diagonal;
-
-     /* if (this.messageObject.parent !== entity.object) {
-        entity.addRenderable(this.messageObject);
-      }*/
 
       this.messageObject.scale.setScalar(realToClamped);
 
@@ -213,15 +180,6 @@ class Message extends Component {
       dispatch,
     } = this.props;
 
-    /* const loading = !isLoaded(data); */
-
-/*    if (loading) {
-      return (
-        <SpinnerContainer>
-          <Spinner />
-        </SpinnerContainer>
-      );
-    }*/
 
     const empty = isEmpty(data);
 
@@ -231,18 +189,6 @@ class Message extends Component {
         <h1>404</h1>
       );
     }
-    // data =  {
-    //   entity:{
-    //     image: "assets/toystory.jpg",
-    //     name: "",
-    //     uri: "toystory"
-    //   },
-    //   author:{
-    //     firstname: "WEBARSDK-JUNGWOO",
-    //     lastname: "TEST",
-    //     uid: "jjjjjw910911-010-6284-8051"
-    //   }
-    // }
 
     if (helpOpened) {
       return (

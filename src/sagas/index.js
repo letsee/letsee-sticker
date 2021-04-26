@@ -6,7 +6,6 @@ import {
   all,
   put,
   race,
-  takeLatest,
 } from 'redux-saga/effects';
 import {
   DESTROY_MESSAGE_FORM,
@@ -16,31 +15,10 @@ import {
   destroyMessageForm,
   setPublic,
   setCurrentCursor,
-  GET_MESSAGE_LIST_REQUEST,
-  GET_MESSAGE_LIST_SUCCESS,
-  GET_MESSAGE_LIST_FAILURE,
 } from '../actions';
 import {
   createEntityMessages,
-  getEntityMessagesList
 } from '../api/message';
-
-
-function* takeMessageList() {
-  yield takeLatest(GET_MESSAGE_LIST_REQUEST, () => {
-    try {
-      const apiResult = race({ list: getEntityMessagesList(), timeout: delay(2000) });
-      if (apiResult.list) {
-        put({ type: GET_MESSAGE_LIST_SUCCESS });
-      } else {
-        put({ type: GET_MESSAGE_LIST_FAILURE });
-      }
-    } catch (e) {
-      console.error('getMessage fail', e);
-      put({ type: GET_MESSAGE_LIST_FAILURE });
-    }
-  });
-}
 
 function* submitMessageForm() {
   while (true) {

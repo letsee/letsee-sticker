@@ -127,35 +127,6 @@ const MessagesButtonContainer = styled.div`
   text-align: center;
 `;
 
-// 1. 파이어베이스에서 메세지를 가지고 옵니다.
-// 2. data.current를 검사합니다. (data.current는 현재 메세지의 ID이다)
-// 3. data.current가 만약 null이 아니면,
-const subscribeToCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
-  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
-
-  // 현재 메세지가 있다면, 현재 메세지에대한 정보를 가지고 있는 snapshot을 찍어서 handleMessageChange에 이벤트를 전달함.
-  if (data.current !== null) {
-    // equalTo() 는 지정된 키 또는 값과 동일한 항목을 반환 하는 메서드
-    // 반환된 이벤트에 value이벤트를 건다.
-    /* on ( eventType :  EventType , callback :  ( a :  DataSnapshot , b ? :  string | null ) => any , cancelCallbackOrContext ? :  ( ( a :  Error ) => any ) | Object | null , 컨텍스트 ? :  개체 | null ) : ( a :  DataSnapshot | null , b ? :  string | null ) => any*/
-    // value 이벤트는 최초 데이터로 한번 트리거가 된 이후에, 데이터가 변경될때마다 다시 트리거 된다.
-    // 해당 로직은 파이어 베이스에서 정렬된 데이터를 얻고 최초 한번 handleMessageChange이벤트를 일으킨 후 데이터가 변경될때마다 handleMessageChange이벤트를 발생시킨다.
-    ref.equalTo(data.current).on('value', handleMessageChange);
-  }
-};
-
-// 1. 현재 유저에 대한 메세지들의 리스트를 가져온다.
-// 2. key값으로 정렬한다.
-const unsubscribeFromCurrent = (firebase, data: MessagesList, userId: string | null, handleMessageChange) => {
-  const ref = firebase.database().ref(getMessagesListPath(data.entityUri, userId)).orderByKey();
-
-  // TODO: data.current가 무엇인지 파악이 되지 않음..
-  if (data.current !== null) {
-    // 현재 데이터가 아닐경우 체인지 이벤트가 발생하지 않도록 한다.
-    ref.equalTo(data.current).off('value', handleMessageChange);
-  }
-};
-
 type MessageListPropTypes = {
   data: MessagesList,
   messageArrayList: mixed,
@@ -176,7 +147,7 @@ class MessageList extends Component {
   constructor(props: MessageListPropTypes) {
     super(props);
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6080e946b74fe22a5038daaa');
+      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/60814943ffb936e8cd1de37c');
       this.object = letsee.createXRElement('<div class="xrDomElement"></div>', entity);
     }
     this.state = {
@@ -186,9 +157,6 @@ class MessageList extends Component {
   }
 
   // render가 되기 바로 직전에 수행됨.
-
-  componentWillMount() {}
-
   componentDidMount() {
     enableManager(false);
     manager.get('swipe').set({ enable: true });
@@ -199,25 +167,10 @@ class MessageList extends Component {
 
   // props의 변경이 일어났을 때 호출됨.
   componentWillReceiveProps(nextProps: MessageListPropTypes) {
-    /*if (this.props.data.current !== nextProps.data.current) {
-      // const prevUserId = this.props.currentUser !== null && !this.props.data.public ? this.props.currentUser.uid : null;
-      // const userId = nextProps.currentUser !== null && !nextProps.data.public ? nextProps.currentUser.uid : null;
-      const prevUserId = 'jjjjjw910911-010-6284-8051';
-      const userId = 'jjjjjw910911-010-6284-8051';
-
-      unsubscribeFromCurrent(this.props.firebase, this.props.data, prevUserId, this.handleMessageChange);
-      subscribeToCurrent(nextProps.firebase, nextProps.data, userId, this.handleMessageChange);
-    }*/
-    console.log('recive');
-
     this.renderAR(nextProps);
   }
 
   componentWillUnmount() {
-    /*const { firebase, data, currentUser } = this.props;
-    const userId = currentUser !== null && !data.public ? currentUser.uid : null;
-    unsubscribeFromCurrent(firebase, data, userId, this.handleMessageChange);*/
-
     // 스와이프 이벤트를 연결한다.
     manager.off('swipeleft', this.prev);
     manager.off('swiperight', this.next);
@@ -227,19 +180,6 @@ class MessageList extends Component {
   }
 
   props: MessageListPropTypes;
-
-  // 현재 메세지를 가지고 있는 스냅샷으로부터 메세지의 변경을 notify한다.
-  handleMessageChange = (snapshot) => {
-    /*const { onMessageDelete, onMessageReceive } = this.props;
-    const messagesObject = snapshot.val();
-    const data = selectLatestMessage(messagesObject);
-    // letsee.removeAllXRElements();
-    if (data === null) {
-      onMessageDelete && onMessageDelete();
-    } else {
-      onMessageReceive && onMessageReceive(data);
-    }*/
-  };
 
   prev = () => {
     if (this.props.onPrev) {
@@ -254,8 +194,6 @@ class MessageList extends Component {
   };
 
   renderAR({ entity: e, onNewClick, data }: MessageListPropTypes) {
-    console.log('e',e);
-    console.log('data',data);
     if (typeof letsee !== 'undefined' && letsee !== null) {
       const { uri, size: { width, height, depth } } = e;
 
@@ -349,9 +287,7 @@ class MessageList extends Component {
     const first = 1;
     const last = count;
     const loading = false;
-  //  const {  empty, current, message, error, loading, first, last, count, currentCount } = messagesList;
     const dataExists = !empty && current !== null ;
-    console.log(`current : ${current} first : ${first} last : ${last}`);
     return (
       <div {...other}>
         <BottomButtonContainer
@@ -408,12 +344,6 @@ class MessageList extends Component {
             shareDisabled={loading}
           />
         )}
-
-        {/*{loading && (
-          <SpinnerContainer>
-            <Spinner />
-          </SpinnerContainer>
-        )}*/}
       </div>
     );
   }

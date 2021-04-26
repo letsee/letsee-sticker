@@ -8,9 +8,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 // 브라우저 히스토리 => 해시히스토리 : 해시히스토리를 사용해야 웹에서 돌아감.
-import { match, Router, browserHistory, hashHistory } from 'react-router';
+import { match, Router, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import styled from 'styled-components';
 import store from './store';
 import routes from './routes';
 import {
@@ -24,7 +23,6 @@ import {
 const history = syncHistoryWithStore(hashHistory, store);
 // 서버사이드 렌더링..
 match({ history, routes }, (err, redirect, renderProps) => {
-	Kakao.init('e1444fec00fc98732916741894eee22f');
 	const app = document.getElementById('app');
 	const handleWindowResize = () => {
 		app.style.width = `${document.documentElement.clientWidth}px`;

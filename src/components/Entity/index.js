@@ -48,15 +48,6 @@ const EntityName = styled.div`
   font-weight: bold;
 `;
 
-// const MessagesCount = styled.span`
-//   flex-shrink: 0;
-//   vertical-align: middle;
-//   margin-left: 5px;
-//   font-family: SFUIDisplay, sans-serif;
-//   font-size: 15px;
-//   padding: 1px 0;
-// `;
-
 const StyledBackButton = styled(BackButton)`
   position: absolute;
   top: 25px;
@@ -108,18 +99,6 @@ class Entity extends Component {
     setPublicon: PropTypes.func,
   };
 
-  // UserID를 테스트용으로 => 1KPeHnwbmzWSm
-  // entityURI를 테스트용으로 => 11e7240f-2e5c-4eb3-849c-14187747588a
-  // componentWillMount() {
-   //  const { saga, messagesList: { entityUri, public: isPublic }, currentUser } = this.props;
-
-    // currentUser를 테스트용으로 변경
-    // const userId = currentUser !== null && !isPublic ? currentUser.uid : null;
-    // 메세지의 총 갯수를 가져오기
-    // 실제 리스트를 가져오기
-
-  // }
-
   async componentDidMount(){
     const listRef = await getEntityMessagesList();
     this.setState({messageArrayList : listRef});
@@ -139,7 +118,6 @@ class Entity extends Component {
     const total = this.state.messageArrayList.length;
     const nextNumber = currentNumber + 1 > total ? currentNumber : currentNumber + 1 ;
     this.setState({currentNumber : nextNumber});
-    // alert('test');
   }
 
   render() {
@@ -160,13 +138,9 @@ class Entity extends Component {
       <div {...other}>
         <Title public={messagesList.public}>
           <EntityName>
-            {'내 스티커'}
+            {'Letsee sticker'}
           </EntityName>
         </Title>
-          {/*<StyledMyMessagesButton
-            empty={messagesList.empty}
-            onClick={() => setPublic(!canBecomePrivate)}
-          />*/}
         <MessageList
           data={this.state.messageArrayList}
           currentUser={currentUser}
@@ -186,13 +160,5 @@ class Entity extends Component {
 // mapStateToProps 는 리덕스 스토어의 상태를 조회해서 어떤 것들을 props 로 넣어줄지 정의합니다.
 // 현재 리덕스 상태를 파라미터로 받아옵니다.
 const mapStateToProps = state => ({
-
 });
-
-// mapDispatchToProps 는 액션을 디스패치하는 함수를 만들어서 props로 넣어줍니다.
-// dispatch 를 파라미터로 받아옵니다.
-const mapDispatchToProps = dispatch => ({
-/*  setPublicon: (value) => dispatch(setPublic(value))*/
-});
-
 export default connect(mapStateToProps, {setPublic})(Entity);

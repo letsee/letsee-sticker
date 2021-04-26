@@ -243,7 +243,7 @@ class MessageForm extends Component {
       currentStickerPosArray: [],
       selectedTextColor: '#ffffff',
     };
-    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6080e946b74fe22a5038daaa');
+    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/60814943ffb936e8cd1de37c');
     // this.messageObject = new letsee.Object3D();
     this.messageObject = letsee.createXRElement('<div class="messageObject"></div>', this.entity);
     this.selectedStickerObject = null;
@@ -293,7 +293,7 @@ class MessageForm extends Component {
     // debounced 함수 해
     this.debouncedAddStickerPos.cancel();
 
-    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/6080e946b74fe22a5038daaa');
+    this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/60814943ffb936e8cd1de37c');
     letsee.removeAllXRElements(this.entity);
     this.selectedStickerObject = null;
   }
