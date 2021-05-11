@@ -37,6 +37,7 @@ const TextareaContainer = styled.div`
   -webkit-overflow-scrolling: touch;
 `;
 
+// seokyeon.lee 노영미 팀장 수정 기획안으로 white-space:preline 추가
 const Textarea = styled.textarea`
   display: block;
   -webkit-tap-highlight-color: transparent;
@@ -60,6 +61,7 @@ const Textarea = styled.textarea`
   width: 86%;
   height: 100%;
   margin-left: 7%;
+  word-break:break-all;
 
   &::placeholder {
     opacity: 0.5;
@@ -162,11 +164,11 @@ class TextInput extends Component {
             onBlur={() => this.setState({ focus: false })}
           />
         </TextareaContainer>
-        
+
         {/*<InputButton onClick={() => onComplete && onComplete(value.trim())}>*/}
         {/*  입력*/}
         {/*</InputButton>*/}
-  
+
         <BottomButtonContainer
           bottom="20px"
           marginItems="4px"
@@ -185,7 +187,7 @@ class TextInput extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x" />
           </ImageButton>
-  
+
           <ImageButton
             imageWidth="60px"
             onClick={() => onComplete && onComplete(value.trim())}

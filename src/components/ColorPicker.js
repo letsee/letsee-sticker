@@ -13,7 +13,7 @@ type ColorPickerPropTypes = {
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
   onSelectedTextColor?: TouchEventHandler, // eslint-disable-line react/require-default-props
   selectedStickerText: string,
-  
+
 };
 
 const Container = styled.div`
@@ -23,7 +23,7 @@ const Container = styled.div`
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.85);
   height: 100%;
 `;
 
@@ -71,14 +71,21 @@ const CirclePickerContainer = styled.div`
         outline-offset: none !important;
       }
     }
+    
+    .activePicker{
+       background-image:url("./assets/check.svg") !important;
+       background-repeat: no-repeat !important;
+       background-size: 40% 40% !important;
+       background-position: 53% 50% !important;
+    }
   }
 `;
 
 class ColorPicker extends Component {
-  
+
   props: ColorPickerPropTypes;
   drawer: HTMLDivElement;
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -93,39 +100,41 @@ class ColorPicker extends Component {
       textColor: '#ffffff',
     }
   }
-  
+
   handleChange = (color, event) => {
     // window.alert(color.hex + "");
     console.log(color.hex);
-    
+    console.log(event.target);
+    const target = event.target;
+    target.classList.add('activePicker');
     this.setState({
       textColor: color.hex,
     })
   };
-  
+
   componentDidMount() {
     enableManager(false);
     if (typeof window !== 'undefined' && window !== null) {
       window.addEventListener('resize', this.handleWindowResize);
     }
   }
-  
+
   componentWillUnmount() {
     enableManager(true);
-    
+
     if (typeof window !== 'undefined' && window !== null) {
       window.removeEventListener('resize', this.handleWindowResize);
     }
   }
-  
+
   handleWindowResize = () => {
     this.setState({ height: document.documentElement.clientHeight - 150 });
   };
-  
+
   render() {
     const { selectedStickerText, onClose, onSelectedTextColor } = this.props;
     const { textColor, colors } = this.state;
-    
+
     return (
       <Container>
         <ShowColorText textColor={textColor}>{selectedStickerText}</ShowColorText>
@@ -136,7 +145,7 @@ class ColorPicker extends Component {
             colors={colors}
           />
         </CirclePickerContainer>
-        
+
         <BottomButtonContainer
           bottom="5%"
           marginItems="8px"
@@ -151,7 +160,7 @@ class ColorPicker extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x"/>
           </ImageButton>
-          
+
           <ImageButton
             imageWidth="60px"
             onClick={onSelectedTextColor(this.state.textColor)}

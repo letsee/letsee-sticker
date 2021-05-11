@@ -29,8 +29,7 @@ import initialState from "../../initialState";
 const Title = styled.div`
   position: absolute;
   top: 25px;
-  left: ${props => (props.public ? 16 : 60)}px;
-  right: ${props => (props.public ? 103 : 59)}px;
+  left: 30px;
   display: flex;
   align-items: center;
   text-align: center;

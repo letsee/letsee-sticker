@@ -20,11 +20,10 @@ const Body = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.85);
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.4);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
   padding-bottom: 110px;
+  
 `;
 
 const Message = styled.div`
@@ -32,6 +31,7 @@ const Message = styled.div`
   text-align: center;
   color: #000;
   font-size: 18px;
+  line-height: 28px;
   letter-spacing: -0.5px;
   padding-top: 24px;
   color: white;

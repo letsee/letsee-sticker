@@ -28,7 +28,7 @@ const StyledTipButton = styled(TipButton)`
 const StickerActions = styled.div`
   position: absolute;
   // bottom: 139px;
-  right: 4px;
+  right: 14px;
   margin-top: 50vh;
   transform: translateY(-50%);
 `;
@@ -80,7 +80,7 @@ const Transformation = ({
       <UndoButton onClick={onUndo}/>
       <TrashButton onClick={onDelete} />
     </StickerActions>
-  
+
     <BottomButtonContainer bottom="5%" marginItems="8px">
       <ImageButton
         imageWidth="60px"
@@ -92,7 +92,7 @@ const Transformation = ({
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 2x,
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x" />
       </ImageButton>
-    
+
       <ImageButton
         imageWidth="60px"
         onClick={onComplete}

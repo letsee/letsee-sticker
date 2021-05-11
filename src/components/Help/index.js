@@ -77,7 +77,7 @@ const StyledCarousel = styled(Carousel)`
 `;
 
 const Container = styled.div`
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.85);
   position: relative;
   width: 100%;
   height: 100%;
@@ -107,7 +107,7 @@ const Page = styled.div`
 const SkipButton = styled.button`
   position: absolute;
   top: 30px;
-  left: 30px;
+  left: 20px;
   font-size: 22px;
   font-style: bold;
   text-align: center;
@@ -224,6 +224,7 @@ const StyledCloseButton = styled(CloseButton)`
   transform: translateX(-50%);
 `;
 
+
 type HelpPropTypes = {
   onCloseClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
@@ -249,7 +250,7 @@ const Help = ({
       renderArrowNext={(nextHandler, hasNext, label) => {
         onNextHandler = nextHandler
       }}
-      
+
       {...settings}
     >
       {/*튜토리얼 1*/}
@@ -262,25 +263,25 @@ const Help = ({
           "
           alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-  
+
         <Text>
           <Body>
             <div>
               원활한 AR 사용을 위해
             </div>
-      
+
             <div>
               <font color="#00b1c7">주변을 밝게 해주세요.</font>
             </div>
           </Body>
         </Text>
-  
+
         <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
-  
+
         <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
           <font>1 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
-        
+
       </Page>
       {/*튜토리얼 2*/}
       <Page>
@@ -292,17 +293,17 @@ const Help = ({
           "
           alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-    
+
         <Text>
           <Body>
             <div> 휴대폰 움직여 </div>
-            <div> 인식할 대상의 정면을 </div>
+            <div><font color="#00b1c7">인식할 대상의 정면</font>을</div>
             <div> 화면 가득히 비춰주세요. </div>
           </Body>
         </Text>
-  
+
         <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
-  
+
         <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
           <font>2 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
@@ -317,22 +318,22 @@ const Help = ({
           "
           alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-    
+
         <Text>
           <Body>
             <div> 대상인식이 잘 안될 경우 </div>
-            <div> 대상과 약간의 거리를 두고 비춰주시면 </div>
+            <div><font color="#00b1c7"> 대상과 약간의 거리를 두고</font> 비춰주시면 </div>
             <div> 보다 수월하게 인식이 됩니다. </div>
           </Body>
         </Text>
-  
+
         <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
-  
+
         <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
           <font>3 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
       </Page>
-  
+
       {/*튜토리얼 4*/}
       <Page>
         <AbsoluteImage top="25px" right="5px"
@@ -343,20 +344,20 @@ const Help = ({
           "
           alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-  
+
         <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
-        
+
         <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
           <font>4 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
       </Page>
-  
+
       {/*튜토리얼 5*/}
       <Page>
         <NextTutorialButton bottom= "200px" onTouchEnd={onNext}>
           <font>5 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
-  
+
         <AbsoluteImage bottom="50px"
                        left="50%"
                        translateX="-50%"
@@ -367,17 +368,17 @@ const Help = ({
                        "
                        alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-  
+
         <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
       </Page>
-  
+
       {/*튜토리얼 6*/}
       <Page>
-        
+
         <NextTutorialButton bottom= "200px" onTouchEnd={onNext}>
           <font>6 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
-  
+
         <AbsoluteImage bottom="50px"
                        left="50%"
                        translateX="-50%"
@@ -388,17 +389,17 @@ const Help = ({
                         "
                        alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-  
+
         <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
       </Page>
-  
+
       {/*튜토리얼 7*/}
       <Page>
-    
+
         <NextTutorialButton bottom= "200px" onTouchEnd={onNext}>
           <font>7 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
-    
+
         <AbsoluteImage bottom="50px"
                        left="50%"
                        translateX="-50%"
@@ -409,17 +410,17 @@ const Help = ({
                         "
                        alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-  
+
         <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
       </Page>
-      
+
       {/*튜토리얼 8*/}
       <Page>
-    
+
         <NextTutorialButton bottom= "100px" onTouchEnd={onNext}>
           <font>8 / 9</font>&nbsp; 계속보기
         </NextTutorialButton>
-    
+
         <AbsoluteImage bottom="200px"
                        right="20px"
                        src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589616698/assets/ui-tutorials-5_3x.png"
@@ -429,17 +430,17 @@ const Help = ({
                         "
                        alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-  
+
         <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
       </Page>
-  
+
       {/*튜토리얼 9*/}
       <Page>
-    
-        <NextTutorialButton bottom= "100px" onTouchEnd={onCloseClick}>
-          <font>9 / 9</font>&nbsp; 계속보기
+
+        <NextTutorialButton bottom= "60px" onTouchEnd={onCloseClick}>
+          <font>9 / 9</font>&nbsp; 스티커 만들기
         </NextTutorialButton>
-    
+
         <Image
            src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590129897/assets/ui-tutorials-6-gif_3x.gif"
            srcSet="
@@ -448,18 +449,18 @@ const Help = ({
             "
            alt="원활한 AR 사용을 위해 주변을 밝게 해주세요."
         />
-  
+
         <Text>
           <Body>
             <div> 다양한 손가락의 제스쳐로 </div>
-            <div> 스티커의 위치이동,크기조절,회전이 </div>
+            <div> 스티커의 <font color="#00b1c7">위치이동,크기조절,회전</font>이 </div>
             <div> 가능합니다. </div>
           </Body>
         </Text>
-    
+
         <SkipButton onTouchEnd={onCloseClick} >Skip</SkipButton>
       </Page>
-      
+
     </StyledCarousel>
   </Container>
 );

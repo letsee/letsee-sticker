@@ -84,7 +84,8 @@ const MessagesCount = styled.div`
   transform: translate(-50%,-50%);
   top: 50%;
 `;
-
+// seokyeon.lee 노영미 팀장 수정 기획안의 요구대로, 메세지의 크기를 주고 자동 줄바꿈하게 변경
+// width:86% , white-space:pre-line 추가
 const MessageText = styled.div`
   position: absolute;
   white-space: nowrap;
@@ -99,6 +100,7 @@ const MessageText = styled.div`
   text-align: center;
   color: #fff;
   text-shadow: 0 0 ${props => props.size * 0.06 * 12 / 23}px rgba(0, 0, 0, 0.5);
+  white-space:pre-line;
 `;
 
 const FrameAR = styled(Frame)`
@@ -121,7 +123,7 @@ const SpinnerContainer = styled.div`
 
 const MessagesButtonContainer = styled.div`
   position: absolute;
-  bottom: 110px;
+  bottom: 80px;
   left: 30%;
   width: 40%;
   text-align: center;

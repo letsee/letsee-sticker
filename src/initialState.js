@@ -27,4 +27,5 @@ export default {
   shareModal: null,
   transformationGuideOpened: false,
   helpOpened: false,
+  isFirstTrack:false
 };

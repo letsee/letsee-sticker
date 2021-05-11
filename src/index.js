@@ -1,5 +1,7 @@
 /* eslint-disable import/first */
 // @flow
+import {loadingEntity} from "./reducers/letsee";
+
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
@@ -17,7 +19,7 @@ import {
 	setCurrentUser,
 	addEntity,
 	startTrackEntity,
-	endTrackEntity,
+	endTrackEntity, START_LOADING, stopLoading, STOP_LOADING, startLoading
 } from './actions';
 
 const history = syncHistoryWithStore(hashHistory, store);
@@ -31,7 +33,6 @@ match({ history, routes }, (err, redirect, renderProps) => {
 		app.style.position = 'fixed';
 		app.style.zIndex = '400';
 	};
-
 	// <script>를 로드 후, head태그에 추가하는 function.
 	const loadScript = (url, callback) => {
 		const script = document.createElement("script");
@@ -73,6 +74,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 
 		letsee.onTrackStart(() => {
 			store.dispatch(startTrackEntity(window.entity));
+			store.dispatch(startLoading());
 			isStarted = true;
 		});
 
@@ -88,6 +90,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 
 				};
 				store.dispatch(endTrackEntity(entity));
+				store.dispatch(stopLoading());
 				isStarted = false;
 			}
 		});

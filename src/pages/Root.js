@@ -76,7 +76,7 @@ const Root = (
     );
   }
 
-  if (messageForm !== null) {
+  if (messageForm !== null && loadingEntity) {
     const { entity, stickers } = messageForm;
     let entityTracked;
 
@@ -136,7 +136,7 @@ const Root = (
     );
   }
 
-  if (messagesList.entityUri !== null && currentEntity !== null && messagesList.entityUri === currentEntity) {
+  if (messagesList.entityUri !== null && currentEntity !== null && messagesList.entityUri === currentEntity && loadingEntity) {
     const currentEntityData = entities.byUri[messagesList.entityUri];
     const currentUser = {
       firstname: 'WEBARSDK-JUNGWOO',
@@ -194,6 +194,7 @@ const Root = (
     <AppLoader
       loadingEntity={loadingEntity}
       onHelpClick={() => dispatch(openHelp())}
+      currentEntity = {currentEntity}
     />
   );
 };
