@@ -3,7 +3,7 @@ import axios from 'axios';
 // axios base setting
 // 기본 URL 셋팅
 // axios.defaults.baseURL = 'http://3.34.48.52:3000';
-axios.defaults.baseURL = 'https://intra.letsee.io:10005/node';
+axios.defaults.baseURL = 'https://demo.letsee.io/node';
 // 헤더 공통 셋팅 필요할 경우
 // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
