@@ -25,6 +25,7 @@ import getObjectById from '../getObjectById';
 import { ImageButton } from './Button';
 import { BottomButtonContainer} from './Container'
 import debounce from 'lodash/debounce';
+import store from '../store';
 
 import {
   MAX_DIAGONAL,
@@ -37,6 +38,7 @@ import type {
   StickerPosition,
   StickerQuaternion,
 } from '../types';
+import currentEntity from "../reducers/currentEntity";
 
 const transitionDuration = 200;
 
@@ -247,7 +249,7 @@ class MessageForm extends Component {
     this.entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/60814943ffb936e8cd1de37c');
     // this.messageObject = new letsee.Object3D();
     this.messageObject = letsee.createXRElement('<div class="messageObject"></div>', this.entity);
-    this.selectedStickerObject = null;
+    this.selectedStickerObject = this.props.selectedSticker !== null ? this.props.selectedSticker : null ;
     this.press = false;
 
     // 100ms 안에 오는 이벤트는 모두 한번으로 처리함.
@@ -275,8 +277,10 @@ class MessageForm extends Component {
   }
 
   componentWillReceiveProps(nextProps: MessageFormPropTypes) {
+    // console.log('componentWillReceiveProps', nextProps);
     if (nextProps.entityTracked) {
       this.renderAR(nextProps);
+
     }
   }
 
@@ -308,7 +312,7 @@ class MessageForm extends Component {
     if (this.state.mode !== 'default') {
       return;
     }
-
+    if(size === undefined || size === null) size = entity.size;
     const { width, height, depth } = size;
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
     let realDiagonal = MAX_DIAGONAL;
@@ -319,7 +323,7 @@ class MessageForm extends Component {
     const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
     const realToClamped = realDiagonal / diagonal;
 
-    this.selectedStickerObject = null;
+    // this.selectedStickerObject = null;
 
     const messageObjectLegnth = this.messageObject.children.length;
     for (let i = messageObjectLegnth - 1; i >= 0; i--) {
@@ -389,7 +393,7 @@ class MessageForm extends Component {
           element = stickerObj.element;
         } else { // 새롭게 만든 스티커, 다음에 getObjectById로 찾아서 css를 변경해주기 위한 uuid 지정.
           stickerObj.uuid = id;
-          /** 새로운 스티 **/
+          /** 새로운 스티커 **/
           this.messageObject.add(stickerObj);
         }
         element.className = styles[type];
@@ -457,13 +461,16 @@ class MessageForm extends Component {
 
   handlePanMove = (e) => {
     const { entityTracked, selectedSticker, data: { entity }, onStickerTransform } = this.props;
-
+    console.log(this.props);
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
       this.selectedStickerObject.uuid === selectedSticker.id
     ) {
       const { deltaX, deltaY, pointers } = e;
-
+      const reduxStore = store.getState();
+      const current = reduxStore.currentEntity;
+      const now = reduxStore.entities.byUri[current];
+      if(!entity.size) entity.size = now.size;
       if (pointers.length === 1) {
         const { width, height, depth } = entity.size;
         const { clientWidth, clientHeight } = document.documentElement;
@@ -637,7 +644,7 @@ class MessageForm extends Component {
 
   // 변경된 Sticker의 위치, 회전, 스케일을 저장 후 onStickerTransform 함수를 통해 Root로 해당 값을 전달한 뒤 Reducer에 Action을 Dispatch함.
   handleTransform = () => {
-    const { width, height } = this.props.data.entity.size;
+    const { width, height } = this.entity.physicalSize;
     const { position, quaternion, scale } = this.selectedStickerObject;
 
     const realDiagonal = Math.sqrt((width * width) + (height * height));
@@ -850,7 +857,7 @@ class MessageForm extends Component {
       entity,
       stickers,
     } = data;
-
+    entity.name = 'bts';
     const nextDisabled = stickers.allIds.length === 0 || submitting;
     const stickersArray = stickers.allIds.map(id => stickers.byId[id]);
 
@@ -859,7 +866,6 @@ class MessageForm extends Component {
       ((this.selectedStickerObject && this.selectedStickerObject.element)
         ? this.selectedStickerObject.element.innerText
         : null);
-
     // 입력할 스티커를 선택하고, 이동할 AR컨텐츠를 touch제스쳐로 이동시킬수 있을때의 화면을 나타낸다.
     if (
       entityTracked && this.selectedStickerObject && selectedSticker && onStickerTransform &&
@@ -1019,43 +1025,7 @@ class MessageForm extends Component {
           ),
         ]}
         {/*Entity가 Tracking 중이지 않을때 아래 가이드가 나와야 하지만 현재 entityTracked가 false일때 이벤트가 전달되지 않아서 동작하지 않음*/}
-        {mode === 'default' && !entityTracked && [
-          <NavTopCenter key={0}>
-            스티커 만드는 중
-          </NavTopCenter>,
 
-          <TargetGuide key={1}>
-            <TrackMessage>
-              {entity.image && (
-                <TrackMessageImage
-                  src={entity.image}
-                  alt={`${entity.name}의 정면을 비춰주세요`}
-                />
-              )}
-
-              <TrackMessageText>
-                {entity.name}의 정면을 비춰주세요
-
-                <StyledHelpButton onClick={onHelpClick} />
-              </TrackMessageText>
-            </TrackMessage>
-          </TargetGuide>,
-
-          <StyledTipButton key={4} onClick={onTipClick} />,
-
-          messagePrivacyOpen ? (
-            <MessagePrivacy
-              key={5}
-              error={error}
-              submitting={submitting}
-              entity={entity}
-              public={isPublic}
-              onPublicChange={onPublicChange}
-              onSubmit={onSubmit}
-              onClose={() => this.setState({ messagePrivacyOpen: false })}
-            />
-          ) : null,
-        ]}
 
         {mode === 'emoji' && (
           <Transition

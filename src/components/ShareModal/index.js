@@ -5,14 +5,27 @@ import styled from 'styled-components';
 import CloseButton from '../CloseButton';
 import Button, { ImageButton } from '../Button';
 import { BottomButtonContainer } from '../Container';
+import store from "../../store";
+import {closeShareModal} from '../../actions/shareModal'
+import {stopLoading, urlCopy} from "../../actions";
+import { CopyToClipboard} from 'react-copy-to-clipboard';
 
 const Container = styled.div`
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.85);
+`;
+
+const UrlCopy = styled.div`
+  position: fixed;
+  top: 80%;
+  bottom: 0;
+  left:0;
+  right:0;
+  background-color: rgba(0, 0, 0, 0.85);
 `;
 
 // const Body = styled.div`
@@ -47,12 +60,12 @@ const Subtitle = styled.div`
 `;
 
 const Actions = styled.div`
+  padding-top:25px;
   text-align: center;
 `;
 
 const Action = Button.extend`
   display: inline-block;
-
   & + & {
     margin-left: 20px;
   }
@@ -90,9 +103,16 @@ type ShareModalPropTypes = {
   onClose?: TouchEventHandler, // eslint-disable-line react/require-default-props
   onKakaoLinkClick?: TouchEventHandler, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
+  urlCopy?: boolean,
+  link: string,
 };
 
 class ShareModal extends Component {
+
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
     if (typeof window !== 'undefined' && window !== null) {
       window.addEventListener('touchend', this.handleWindowClick);
@@ -120,9 +140,12 @@ class ShareModal extends Component {
     }
 
     if (this.props.onClose) {
+      // store.dispatch(closeShareModal());
       this.props.onClose(e);
     }
   };
+
+
 
   render() {
     const {
@@ -130,18 +153,22 @@ class ShareModal extends Component {
       onCaptureClick,
       onKakaoLinkClick,
       children,
+      link,
+      urlCopy,
       ...other
     } = this.props;
-
+    console.log('props', this.props);
+    console.log('urlCopy', urlCopy);
     return (
-      <Container {...other} innerRef={(body) => { this.body = body; }}>>
+        urlCopy  ? <UrlCopy><Title> 스티커가 복사 되었습니다.</Title></UrlCopy> :
+      <Container {...other} className={'shareModalScreenShot'} innerRef={(body) => { this.body = body; }}>>
         {/*<Body innerRef={(body) => { this.body = body; }}>*/}
         <Title>스티커 공유하기</Title>
-        <Subtitle>
-          화면 캡쳐 또는 SNS로 <br/>
+        {/*<Subtitle>
+          화면 캡쳐 또는       <br/>
           카카오톡 링크로 공유 할 수 있습니다
-        </Subtitle>
-  
+        </Subtitle>*/}
+
         <Actions>
           <Action
             type="button"
@@ -155,67 +182,33 @@ class ShareModal extends Component {
                 "
               alt="화면 캡쳐"
             />
-      
+
             <ActionText>화면 캡쳐</ActionText>
           </Action>
-        </Actions>
-        
-        <Divider/>
-        
-        <Actions>
           <Action
-            type="button"
-            onClick={onKakaoLinkClick}
+              type="button"
+              onClick={ onKakaoLinkClick }
           >
+            <CopyToClipboard text = {link} onCopy = { onKakaoLinkClick}>
             <ActionImage
-              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-kakao_3x.png"
-              srcSet="
+                src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-kakao_3x.png"
+                srcSet="
                   https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-kakao_3x.png 2x,
                   https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-kakao_3x.png 3x
                 "
-              alt="카카오톡"
+                alt="URL 복사"
             />
-    
-            <ActionText>카카오톡</ActionText>
-          </Action>
-  
-          <Action
-            type="button"
-            onClick={onKakaoLinkClick}
-          >
-            <ActionImage
-              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-insta_3x.png"
-              srcSet="
-                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-insta_3x.png 2x,
-                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-insta_3x.png 3x
-                "
-              alt="인스타그램"
-            />
-    
-            <ActionText>인스타그램</ActionText>
-          </Action>
-  
-          <Action
-            type="button"
-            onClick={onKakaoLinkClick}
-          >
-            <ActionImage
-              src="https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-twitter_3x.png"
-              srcSet="
-                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-twitter_3x.png 2x,
-                  https://res.cloudinary.com/dkmjrt932/image/upload/v1590141165/assets/ico-twitter_3x.png 3x
-                "
-              alt="트위터"
-            />
-    
-            <ActionText>트위터</ActionText>
+            </CopyToClipboard>
+            <ActionText>URL 복사</ActionText>
           </Action>
         </Actions>
-  
+
+        <Divider/>
+
         <BottomButtonContainer bottom="25px">
           <ImageButton
             imageWidth="60px"
-            onClick={onClose}
+            onClick={onKakaoLinkClick}
           >
             <img
               src="https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png"
@@ -224,7 +217,7 @@ class ShareModal extends Component {
                 https://res.cloudinary.com/dkmjrt932/image/upload/v1589784130/assets/btn-cancel_3x.png 3x" />
           </ImageButton>
         </BottomButtonContainer>
-  
+
         {/*<StyledCloseButton color="black" onClick={onClose} />*/}
         {/*</Body>*/}
       </Container>

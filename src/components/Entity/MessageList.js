@@ -263,8 +263,6 @@ class MessageList extends Component {
   }
 
   render() {
-    console.log('props',this.props);
-    console.log('state',this.state);
     const {
       data: messagesList,
       currentUser,
@@ -292,6 +290,38 @@ class MessageList extends Component {
     const dataExists = !empty && current !== null ;
     return (
       <div {...other}>
+        <Actions>
+         {/*자신의 메세지일때만 수정할수 있도록 설정하는 부분이다.*/}
+          {/*{message !== null && dataExists && currentUser !== null && message.author.uid === currentUser.uid && (*/}
+            <ImageButton
+              type="button"
+              onClick={loading ? null : () => onEditClick && onEditClick(message)}
+            >
+              <img
+                alt={`Letsee sticker`}
+                src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503389387/assets/btn-create-copy_3x.png"
+                srcSet="
+                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503389387/assets/btn-create-copy_3x.png 2x,
+                  https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503389387/assets/btn-create-copy_3x.png 3x
+                "
+              />
+            </ImageButton>
+          {/*)}*/}
+
+          <ImageButton
+            type="button"
+            onClick={onNewClick? onNewClick : null}
+          >
+            <img
+              alt="스티커를 남겨보세요!"
+              src="https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_72/v1503047417/assets/btn-create_3x.png"
+              srcSet="
+                https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_144/v1503047417/assets/btn-create_3x.png 2x,
+                https://res.cloudinary.com/df9jsefb9/image/upload/c_scale,q_auto,w_216/v1503047417/assets/btn-create_3x.png 3x
+              "
+            />
+          </ImageButton>
+        </Actions>
         <BottomButtonContainer
           bottom="12px" marginItems="2px"
           >

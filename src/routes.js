@@ -1,6 +1,6 @@
 // @flow
 const routes = {
-  path: process.env.PUBLIC_PATH || '/',
+  path: process.env.PUBLIC_PATH || '/' ,
   getComponent: (nextState, callback) => {
     import('./components/App').then((module) => {
       callback(null, module.default);
@@ -23,7 +23,7 @@ const routes = {
     {
       path: ':id',
       getComponent: (nextState, callback) => {
-        import('./pages/Message').then((module) => {
+        import('./pages/Root').then((module) => {
           callback(null, module.default);
         }).catch((error) => {
           // TODO error

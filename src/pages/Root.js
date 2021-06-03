@@ -8,6 +8,7 @@ import Entity from '../components/Entity';
 import MessageForm from '../components/MessageForm';
 import TransformationGuide from '../components/TransformationGuide';
 import Help from '../components/Help';
+import store from '../store'
 import {
   initMessageForm,
   initEditMessageForm,
@@ -45,6 +46,7 @@ type RootPropTypes = {
   selectedSticker: string | null,
   messageForm: MessageFormType | null,
   messagesList: MessagesList,
+  currentId: string | null,
   entities: {
     byUri: { [uri: string]: MessageFormEntity },
   },
@@ -69,7 +71,6 @@ const Root = (
       <TransformationGuide onClose={() => dispatch(closeTransformationGuide())} />
     );
   }
-
   if (helpOpened) {
     return (
       <Help onCloseClick={() => dispatch(closeHelp())} />
@@ -77,11 +78,13 @@ const Root = (
   }
 
   if (messageForm !== null && loadingEntity) {
-    const { entity, stickers } = messageForm;
+    const { stickers } = messageForm;
+    const entity = store.getState(entities.byUri.bts);
     let entityTracked;
 
+    console.log('messageForm', messageForm);
     // 현재
-    if (currentEntity !== null && entity.uri === currentEntity) { entityTracked = true; } else { entityTracked = false; }
+    if (currentEntity !== null ) { entityTracked = true; } else { entityTracked = false; }
 
     // selectedSticker로부터 값을 전달받아 해당 Sticker에 대한 MessageFormSticker형식을 만들어서 MessageForm으로 전달해주거나
     // id값을 통해 SelectedSticker을 MessageForm 리듀서에서 삭제시켜준다.
@@ -130,7 +133,6 @@ const Root = (
           onZoomIn={() => selectedStickerData && dispatch(zoomInSticker(selectedStickerData.id))}
           onZoomOut={() => selectedStickerData && dispatch(zoomOutSticker(selectedStickerData.id))}
           onColorChange={color => dispatch(colorChangeSticker(selectedStickerData.id, color))}
-
         />
       </div>
     );
@@ -143,24 +145,37 @@ const Root = (
       lastname: 'TEST',
       uid: "jjjjjw910911-010-6284-8051",
     };
+    let currentId = router.params.id;
     return (
       <div>
         <Entity
           messagesList={messagesList}
+          currentId={ currentId }
           data={currentEntityData}
           currentUser={currentUser}
           onNewClick={() => {
             dispatch(initMessageForm(currentEntityData, currentUser));
           }}
           onHelpClick={() => dispatch(openHelp())}
-          onEditClick={(message: MessageWithId) => {
-            if (currentUser !== null && message.author.uid === currentUser.uid) {
-              const { author, entity, stickers, ...other } = message;
+          onEditClick={(message: Message) => {
+            if (currentUser !== null ) {
+              const { author, stickers, ...other } = message.authorMessages;
+              const entity = {
+                  image : 'assets/bts.json',
+                  name : 'LetseeSticker',
+                  size : {
+                    depth: 200, height: 200, unit: 'mm', width: 140,
+                  },
+                  uri : 'asset/bts',
+              };
 
-              const stickersWithId = stickers.map(sticker => ({
-                ...sticker,
-                id: uuidv4(),
-              }));
+              //  const author = 'jjjjjw910911-010-6284-8051';
+              //  const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/60814943ffb936e8cd1de37c');
+              //  const stickers = {};
+                const stickersWithId = stickers.map(sticker => ({
+                    ...sticker,
+                    id: uuidv4(),
+                }));
 
               const stickersById = stickersWithId.reduce((byId, sticker) => ({
                 ...byId,
@@ -168,11 +183,10 @@ const Root = (
               }), {});
 
               const stickerIds = stickersWithId.map(sticker => sticker.id);
-
               const messageFormData = {
                 ...other,
                 author: currentUser,
-                entity: entities.byUri[entity.uri],
+                entity: entity,
                 stickers: {
                   byId: stickersById,
                   allIds: stickerIds,
@@ -180,6 +194,7 @@ const Root = (
                 error: false,
                 submitting: false,
                 submitted: false,
+                  id: message._id,
               };
 
               dispatch(initEditMessageForm(messageFormData));

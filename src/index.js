@@ -24,7 +24,7 @@ import {
 
 const history = syncHistoryWithStore(hashHistory, store);
 // 서버사이드 렌더링..
-match({ history, routes }, (err, redirect, renderProps) => {
+match({ history, routes  }, (err, redirect, renderProps) => {
 	const app = document.getElementById('app');
 	const handleWindowResize = () => {
 		app.style.width = `${document.documentElement.clientWidth}px`;
@@ -54,7 +54,7 @@ match({ history, routes }, (err, redirect, renderProps) => {
 	};
 
 	let isStarted = false;
-	loadScript("./letsee.js", () => {
+	loadScript("https://developer.letsee.io/api/webar?key=150af59b7b85ce2526f27cd04b30f6d9e4c5bcb98dc39c78ee9b16f60d1eb430", () => {
 		letsee.init();
 		letsee.ready(() => {
 			letsee.start();

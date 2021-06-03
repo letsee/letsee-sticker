@@ -18,6 +18,8 @@ import {
 } from '../actions';
 import {
   createEntityMessages,
+    getEntityMessage,
+  updateEntityMessage,
 } from '../api/message';
 
 function* submitMessageForm() {
@@ -32,8 +34,7 @@ function* submitMessageForm() {
         lastname: 'TEST',
         uid: "jjjjjw910911-010-6284-8051",
       };
-
-      if (currentUser !== null && submitAction.payload.author.uid === currentUser.uid) {
+      console.log('submitAction.payload',submitAction.payload);
         const {
           id,
           author: {
@@ -69,8 +70,8 @@ function* submitMessageForm() {
           }
           /* timestamp: timestamp || getFirebase().database.ServerValue.TIMESTAMP, */
         };
-        const data = race({ apiSubmit: createEntityMessages(message), timeout: delay(2000), destroy: take(DESTROY_MESSAGE_FORM) });
-        console.log('saga', data);
+
+        const {data , timeout, destroy} = yield race({ data: id === null ? createEntityMessages(message) : updateEntityMessage(id, message), timeout: delay(2000), destroy: take(DESTROY_MESSAGE_FORM) });
         if (data) {
           yield put(submitMessageFormSuccess());
           yield put(destroyMessageForm());
@@ -80,10 +81,6 @@ function* submitMessageForm() {
           // TODO error
           yield put(submitMessageFormError(new Error('form destroyed')));
         }
-      } else {
-        // TODO error
-        yield put(submitMessageFormError(new Error('user changed')));
-      }
     } catch (e) {
       // TODO error
       console.log(e);

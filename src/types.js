@@ -52,7 +52,8 @@ export type Message = {
   authorMessages: Message,
   public: boolean,
   stickers: Sticker[],
-  timestamp: number;
+  timestamp: number,
+  _id: String,
 };
 
 export type MessageWithId = {
@@ -62,6 +63,7 @@ export type MessageWithId = {
   public: boolean,
   stickers: Sticker[],
   timestamp: number,
+
 };
 
 export type News = {

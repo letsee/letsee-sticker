@@ -21,7 +21,7 @@ module.exports.createEntityMessages = async (message) => {
         url: `/entityMessages`,
         data : message,
     };
-    const { data } = await axios(config);
+    const  data  = await axios(config);
     return data;
 };
 
@@ -43,12 +43,17 @@ module.exports.getEntityMessagesList = async () => {
  * @param id
  * @returns {Promise<*>}
  */
-module.exports.getEntityMessage = (id) => {
+module.exports.getEntityMessage = async (id) => {
     const config = {
         method: 'get',
         url: `/entityMessages/${id}`,
     };
-    return axios(config).then(response => response).catch(errors => errors);
+    try {
+        const { data } = await axios(config);
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 /**
@@ -56,12 +61,19 @@ module.exports.getEntityMessage = (id) => {
  * @param id
  * @returns {Promise<*>}
  */
-module.exports.updateEntityMessage = (id) => {
+module.exports.updateEntityMessage = async (id, message) => {
+
     const config = {
         method: 'put',
         url: `/entityMessages/${id}`,
+        data : message,
     };
-    return axios(config).then(response => response).catch(errors => errors);
+    try {
+        const { data } = await axios(config);
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 /**

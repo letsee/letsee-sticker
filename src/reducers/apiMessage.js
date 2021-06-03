@@ -27,3 +27,27 @@ const getMessageList = (state: string | null = null, action) => {
             return state;
     }
 };
+
+const getMessageOne = (state: string | null = null, action) => {
+    switch (action.type) {
+        case GET_MESSAGE_ONE_REQUEST:
+            if (state === null) {
+                return action.payload;
+            }
+
+            return state;
+        case GET_MESSAGE_ONE_SUCCESS:
+            if (state === action.payload) {
+                return null;
+            }
+
+            return state;
+        case GET_MESSAGE_ONE_FAILURE:
+            if (state === action.payload) {
+                return null;
+            }
+            return state;
+        default:
+            return state;
+    }
+};

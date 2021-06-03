@@ -69,6 +69,7 @@ type EntityPropTypes = {
   onHelpClick?: MouseEventHandler,
   onEditClick?: MessageWithId => mixed, // eslint-disable-line react/require-default-props
   children?: any, // eslint-disable-line react/require-default-props
+  currentId?: any | null
 };
 
 class Entity extends Component {
@@ -100,6 +101,15 @@ class Entity extends Component {
 
   async componentDidMount(){
     const listRef = await getEntityMessagesList();
+    const { currentId } = this.props;
+    if(listRef && (currentId != '' && currentId)) {
+      for(const sequence in listRef ){
+        if(listRef[sequence]._id === currentId ) {
+          this.setState({currentNumber : (Number(sequence) + 1)});
+          break;
+        }
+      }
+    }
     this.setState({messageArrayList : listRef});
   }
 

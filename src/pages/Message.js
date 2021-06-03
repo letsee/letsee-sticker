@@ -13,12 +13,12 @@ import StickerButton from '../components/StickerButton';
 import Envelope from '../components/Envelope';
 import Help from '../components/Help';
 import {
-  openHelp,
-  closeHelp,
+    openHelp,
+    closeHelp,
 } from '../actions';
 import {
-  MIN_DIAGONAL,
-  MAX_DIAGONAL,
+    MIN_DIAGONAL,
+    MAX_DIAGONAL,
 } from '../constants';
 import type { Message as MessageType } from '../types';
 
@@ -103,142 +103,142 @@ const CloseTextButton = Button.extend`
 `;
 
 type MessagePropTypes = {
-  params: { id: string },
-  currentEntity: string | null,
-  loadingEntity: boolean,
-  data: MessageType,
-  helpOpened: boolean,
+    params: { id: string },
+    currentEntity: string | null,
+    loadingEntity: boolean,
+    data: MessageType,
+    helpOpened: boolean,
 };
 
 class Message extends Component {
-  constructor(props: MessagePropTypes) {
-    super(props);
-    this.state = {
-      opened: false,
-    };
-  }
-
-  state: { opened: boolean };
-
-  componentDidMount() {
-    if (
-      this.props.data &&
-      this.props.currentEntity !== null &&
-      this.props.currentEntity === this.props.data.entity.uri
-    ) {
-      this.renderAR(this.props);
-    }
-  }
-
-  props: MessagePropTypes;
-
-  renderAR({ data: { entity: { uri }, author } }: MessagePropTypes) {
-    if (typeof letsee !== 'undefined' && letsee !== null) {
-      // const entity = letsee.getEntity(uri);
-      const entity = letsee.getEntity('assets/bts.json');
-      const { width, height, depth } = entity.size;
-      let realDiagonal = MAX_DIAGONAL;
-
-      if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
-        realDiagonal = Math.sqrt((width * width) + (height * height));
-      }
-
-      const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
-      const realToClamped = realDiagonal / diagonal;
-
-      this.messageObject.scale.setScalar(realToClamped);
-
-      if (typeof depth !== 'undefined' && depth !== null) {
-        this.messageObject.position.setZ(depth / 2);
-      }
-
-      const element = this.state.opened ? (
-        <div />
-      ) : (
-        <Envelope
-          data={author}
-          size={diagonal}
-          onClick={() => this.setState({ opened: true }, () => { this.renderAR(this.props); })}
-        />
-      );
-
-      render(
-        element,
-        this.messageObject.element,
-      );
-    }
-  }
-
-  render() {
-    const {
-      params: { id },
-      router,
-      data,
-      helpOpened,
-      currentEntity,
-      loadingEntity,
-      dispatch,
-    } = this.props;
-
-
-    const empty = isEmpty(data);
-
-    if (empty || !data) {
-      // TODO
-      return (
-        <h1>404</h1>
-      );
+    constructor(props: MessagePropTypes) {
+        super(props);
+        this.state = {
+            opened: false,
+        };
     }
 
-    if (helpOpened) {
-      return (
-        <Help onCloseClick={() => dispatch(closeHelp())} />
-      );
+    state: { opened: boolean };
+
+    componentDidMount() {
+        if (
+            this.props.data &&
+            this.props.currentEntity !== null &&
+            this.props.currentEntity === this.props.data.entity.uri
+        ) {
+            this.renderAR(this.props);
+        }
     }
 
-    const { opened } = this.state;
-    const { entity: { uri, name, image }, author } = data;
-    const entityTracked = currentEntity !== null && currentEntity === uri;
-    const { firstname, lastname } = author;
-    const authorName = `${firstname} ${lastname}`.trim();
+    props: MessagePropTypes;
 
-    return (
-      <div>
-        {!loadingEntity && !entityTracked && (
-          <div>
-            <Title>{authorName}님의 스티커 메세지</Title>
+    renderAR({ data: { entity: { uri }, author } }: MessagePropTypes) {
+        if (typeof letsee !== 'undefined' && letsee !== null) {
+            // const entity = letsee.getEntity(uri);
+            const entity = letsee.getEntity('assets/bts.json');
+            const { width, height, depth } = entity.size;
+            let realDiagonal = MAX_DIAGONAL;
 
-            <TargetGuide>
-              <TrackMessage>
-                {image && (
-                  <TrackMessageImage src={image} />
+            if (typeof width !== 'undefined' && width !== null && typeof height !== 'undefined' && height !== null) {
+                realDiagonal = Math.sqrt((width * width) + (height * height));
+            }
+
+            const diagonal = clamp(realDiagonal, MIN_DIAGONAL, MAX_DIAGONAL);
+            const realToClamped = realDiagonal / diagonal;
+
+            this.messageObject.scale.setScalar(realToClamped);
+
+            if (typeof depth !== 'undefined' && depth !== null) {
+                this.messageObject.position.setZ(depth / 2);
+            }
+
+            const element = this.state.opened ? (
+                <div />
+            ) : (
+                <Envelope
+                    data={author}
+                    size={diagonal}
+                    onClick={() => this.setState({ opened: true }, () => { this.renderAR(this.props); })}
+                />
+            );
+
+            render(
+                element,
+                this.messageObject.element,
+            );
+        }
+    }
+
+    render() {
+        const {
+            params: { id },
+            router,
+            data,
+            helpOpened,
+            currentEntity,
+            loadingEntity,
+            dispatch,
+        } = this.props;
+
+
+        const empty = isEmpty(data);
+
+        if (empty || !data) {
+            // TODO
+            return (
+                <h1>404</h1>
+            );
+        }
+
+        if (helpOpened) {
+            return (
+                <Help onCloseClick={() => dispatch(closeHelp())} />
+            );
+        }
+
+        const { opened } = this.state;
+        const { entity: { uri, name, image }, author } = data;
+        const entityTracked = currentEntity !== null && currentEntity === uri;
+        const { firstname, lastname } = author;
+        const authorName = `${firstname} ${lastname}`.trim();
+
+        return (
+            <div>
+                {!loadingEntity && !entityTracked && (
+                    <div>
+                        <Title>{authorName}님의 스티커 메세지</Title>
+
+                        <TargetGuide>
+                            <TrackMessage>
+                                {image && (
+                                    <TrackMessageImage src={image} />
+                                )}
+
+                                <TrackMessageText>
+                                    {name}의 정면을 비춰주세요
+
+                                    <StyledHelpButton onTouchEnd={() => dispatch(openHelp())} />
+                                </TrackMessageText>
+                            </TrackMessage>
+                        </TargetGuide>
+                    </div>
                 )}
 
-                <TrackMessageText>
-                  {name}의 정면을 비춰주세요
+                {opened && (
+                    <MessageComponent
+                        id={id}
+                        data={data}
+                        currentEntity={currentEntity}
+                        loadingEntity={loadingEntity}
+                    />
+                )}
 
-                  <StyledHelpButton onTouchEnd={() => dispatch(openHelp())} />
-                </TrackMessageText>
-              </TrackMessage>
-            </TargetGuide>
-          </div>
-        )}
-
-        {opened && (
-          <MessageComponent
-            id={id}
-            data={data}
-            currentEntity={currentEntity}
-            loadingEntity={loadingEntity}
-          />
-        )}
-
-        {!loadingEntity && (!entityTracked || opened) && (
-          <StyledStickerButton onClick={() => router.push(process.env.PUBLIC_PATH || '/')} />
-        )}
-      </div>
-    );
-  }
+                {!loadingEntity && (!entityTracked || opened) && (
+                    <StyledStickerButton onClick={() => router.push(process.env.PUBLIC_PATH || '/')} />
+                )}
+            </div>
+        );
+    }
 }
 
 export default connect()(Message);
