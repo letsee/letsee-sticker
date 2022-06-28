@@ -54,7 +54,7 @@ match({ history, routes  }, (err, redirect, renderProps) => {
 	};
 
 	let isStarted = false;
-	loadScript("https://developer.letsee.io/api/webar?key=5f8641f43aa3e8b682d9550e95405a1f02b611b75b8ad968d5209db3e6eb3ea8", () => {
+	loadScript("https://developer.letsee.io/api/webar?key=ae5100be033df4900c95ccc37f66b5a54e5c3445477b97ffdee126df0ddd634a", () => {
 		letsee.init();
 		letsee.ready(() => {
 			letsee.start();

@@ -149,7 +149,7 @@ class MessageList extends Component {
   constructor(props: MessageListPropTypes) {
     super(props);
     if (typeof letsee !== 'undefined' && letsee !== null) {
-      const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/60814943ffb936e8cd1de37c');
+      const entity = letsee.getEntityByUri('https://developer.letsee.io/api-tm/target-manager/target-uid/62bad0ca26fba01a54f9cb4b');
       this.object = letsee.createXRElement('<div class="xrDomElement"></div>', entity);
     }
     this.state = {

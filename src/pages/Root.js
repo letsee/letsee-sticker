@@ -170,7 +170,7 @@ const Root = (
               };
 
               //  const author = 'jjjjjw910911-010-6284-8051';
-              //  const entity = letsee.getEntityByUri('https://s-developer.letsee.io/api-tm/target-manager/target-uid/60814943ffb936e8cd1de37c');
+              //  const entity = letsee.getEntityByUri('https://developer.letsee.io/api-tm/target-manager/target-uid/62bad0ca26fba01a54f9cb4b');
               //  const stickers = {};
                 const stickersWithId = stickers.map(sticker => ({
                     ...sticker,
